@@ -190,8 +190,8 @@ export default function ExperienceTable({ experiences, loading, onStatusChange, 
             <tr key={exp.$id} className="border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors">
               <td className="px-4 py-3">
                 <div>
-                  <p className="font-medium text-charcoal truncate max-w-50">{exp.publicName}</p>
-                  <p className="text-xs text-charcoal-subtle truncate max-w-50">{exp.name}</p>
+                  <p className="font-medium text-charcoal truncate max-w-xs">{exp.publicName}</p>
+                  <p className="text-xs text-charcoal-subtle truncate max-w-xs">{exp.name}</p>
                 </div>
               </td>
               <td className="px-4 py-3 text-charcoal-subtle">

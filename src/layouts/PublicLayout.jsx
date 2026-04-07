@@ -40,7 +40,7 @@ export default function PublicLayout() {
       <StructuredData data={ORGANIZATION_SCHEMA} />
       <Navbar />
 
-      <main className={isHome ? "flex-1" : "flex-1 pt-4"}>
+      <main className={isHome ? "flex-1" : "flex-1 pt-20"}>
         <Outlet />
       </main>
 

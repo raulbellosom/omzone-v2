@@ -67,6 +67,12 @@ const env = {
   collectionAdminActivityLogs:
     import.meta.env.VITE_APPWRITE_COLLECTION_ADMIN_ACTIVITY_LOGS ??
     "admin_activity_logs",
+  collectionNotificationTemplates:
+    import.meta.env.VITE_APPWRITE_COLLECTION_NOTIFICATION_TEMPLATES ??
+    "notification_templates",
+  collectionContactMessages:
+    import.meta.env.VITE_APPWRITE_COLLECTION_CONTACT_MESSAGES ??
+    "contact_messages",
 
   // ─── Buckets ───
   bucketExperienceMedia:

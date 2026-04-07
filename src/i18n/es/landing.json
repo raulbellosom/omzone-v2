@@ -30,8 +30,59 @@
     "crafted": "Creado con intención"
   },
   "home": {
-    "headline": "Descubre experiencias de bienestar transformadoras diseñadas para tu mente, cuerpo y alma.",
-    "placeholder": "Página de inicio — próximamente"
+    "hero": {
+      "title": "Respira. Entrégate. Regresa.",
+      "subtitle": "Donde la Sierra Madre se encuentra con el Pacífico, un espacio sagrado te espera — creado para quienes están listos para disolver el ruido y recordar lo que se siente la quietud.",
+      "cta": "Entra a la Experiencia"
+    },
+    "discover": {
+      "eyebrow": "Descubre",
+      "title": "Encuentra Tu Camino Hacia la Presencia",
+      "subtitle": "Cada viaje comienza con una sola respiración. Elige la profundidad que te llama.",
+      "sessions": {
+        "title": "Sesiones",
+        "description": "Prácticas guiadas de breathwork, sanación con sonido y meditación. Una sesión, una intención, una transformación."
+      },
+      "immersions": {
+        "title": "Inmersiones",
+        "description": "Exploraciones sensoriales de medio día y día completo en la naturaleza. Desacelera, sintoniza y deja que el entorno te sostenga."
+      },
+      "retreats": {
+        "title": "Retiros",
+        "description": "Escapadas de varios días hacia el descanso intencional. Yoga, comidas nutritivas, trabajo corporal y el silencio que has estado necesitando."
+      },
+      "stays": {
+        "title": "Experiencias Privadas",
+        "description": "Rituales a la medida para parejas y grupos pequeños. Tu tiempo, tu ritmo, tu santuario."
+      }
+    },
+    "why": {
+      "eyebrow": "Por qué OMZONE",
+      "title": "Diseñado para la Profundidad, No la Distracción",
+      "pillars": {
+        "curated": {
+          "title": "Curado con Intención",
+          "description": "Cada experiencia está cuidadosamente diseñada — desde la selección del facilitador hasta el paisaje sonoro ambiental. Nada es accidental."
+        },
+        "setting": {
+          "title": "Entorno Puerto Vallarta",
+          "description": "Donde la Sierra Madre se encuentra con el Pacífico. Una geografía que sana — bosque tropical, aire de montaña, brisa oceánica."
+        },
+        "transformative": {
+          "title": "Bienestar Transformador",
+          "description": "No vendemos actividades. Creamos las condiciones para que algo cambie — en tu cuerpo, tu respiración, tu perspectiva."
+        },
+        "intimate": {
+          "title": "Íntimo y Premium",
+          "description": "Grupos pequeños. Atención personalizada. Cada detalle considerado para que dejes de pensar y comiences a sentir."
+        }
+      }
+    },
+    "cta": {
+      "title": "Tu Viaje Comienza Aquí",
+      "subtitle": "El mejor momento para pausar fue ayer. El siguiente mejor momento es ahora.",
+      "button": "Comenzar a Explorar"
+    }
   },
   "experienceList": {
     "title": "Experiencias",
@@ -41,7 +92,10 @@
     "emptyTitle": "No hay experiencias disponibles por el momento.",
     "emptySubtitle": "Vuelve pronto — siempre hay nuevas experiencias en camino.",
     "noFilterResults": "Ninguna experiencia coincide con los filtros seleccionados.",
-    "clearFilters": "Limpiar filtros"
+    "clearFilters": "Limpiar filtros",
+    "heroTitle": "Experiencias Que Se Quedan Contigo",
+    "heroSubtitle": "Cada viaje es una invitación a desacelerar, respirar más profundo y reconectarte con lo que tu cuerpo ya sabe.",
+    "discoverCta": "Descubre esta experiencia"
   },
   "experienceDetail": {
     "allExperiences": "Todas las Experiencias",
@@ -84,21 +138,97 @@
     "free": "Gratis"
   },
   "about": {
-    "seoTitle": "Sobre OMZONE — Bienestar en Puerto Vallarta",
-    "seoDescription": "Experiencias de bienestar premium en Puerto Vallarta y Bahía de Banderas. Nuestra historia, filosofía y compromiso con la transformación.",
-    "title": "Sobre OMZONE",
-    "intro": "Curamos experiencias de bienestar transformadoras — sesiones, inmersiones, retiros y estancias — diseñadas para nutrir tu cuerpo, mente y espíritu.",
-    "placeholder": "Contenido completo próximamente.",
-    "exploreLink": "Explora nuestras experiencias →"
+    "seoTitle": "Sobre OMZONE — Experiencias de Bienestar en Puerto Vallarta",
+    "seoDescription": "Descubre OMZONE: experiencias de bienestar curadas en Puerto Vallarta, Bahía de Banderas y Riviera Nayarit. Nuestra misión, filosofía y el entorno del Pacífico que inspira la transformación.",
+    "hero": {
+      "eyebrow": "Nuestra Esencia",
+      "title": "Donde la Calma Se Vuelve una Forma de Vivir",
+      "subtitle": "Nacido en la costa del Pacífico mexicano, OMZONE es una invitación a detenerte — a redescubrir esa sabiduría silenciosa que vive en tu cuerpo, en tu respiración y en los espacios que habitas."
+    },
+    "mission": {
+      "eyebrow": "Por Qué Existimos",
+      "title": "Experiencias Curadas para Reconectarte Contigo",
+      "body1": "OMZONE nació de una convicción sencilla y profunda: los viajes más transformadores no requieren un destino — requieren presencia. Curamos experiencias de bienestar extraordinarias donde la única agenda es tu propia reconexión.",
+      "body2": "Cada sesión, inmersión, retiro y estancia ha sido diseñada con el mismo cuidado que se le da a un ritual — intencional, sin prisas, sostenida en espacios donde la naturaleza hace la mayor parte de la sanación. No vendemos horarios. Sostenemos el espacio para lo que tu cuerpo y tu mente llevan tiempo pidiendo.",
+      "body3": "Esto no es otro directorio de bienestar. Es una colección viva de experiencias creadas por practicantes, facilitadores y personas que entienden que el bienestar real no es un lujo — es un regreso a casa.",
+      "visionTitle": "Un Mundo Donde el Bienestar Vuelve a Ser Sagrado",
+      "visionBody1": "Imaginamos un mundo donde cuidarte no sea una ocurrencia tardía ni una tendencia, sino un acto de reverencia silenciosa. Donde desacelerar no sea un privilegio, sino una práctica al alcance de quien esté dispuesto a pausar.",
+      "visionBody2": "OMZONE existe para hacer que el bienestar intencional sea accesible, cuidadosamente curado y profundamente personal — una experiencia a la vez."
+    },
+    "location": {
+      "eyebrow": "Puerto Vallarta y Bahía de Banderas",
+      "title": "La Costa del Pacífico Como Tu Santuario",
+      "body1": "Hay lugares en la Tierra donde el territorio mismo parece respirar. Puerto Vallarta, entre la Sierra Madre y el Océano Pacífico, es uno de ellos. Aquí la selva desciende hasta el mar, el aire lleva el aroma de tierra tropical después de la lluvia y el horizonte se extiende como una invitación sin final.",
+      "body2": "La Bahía de Banderas — una de las bahías naturales más grandes del mundo — abraza esta costa con una calidez que es a la vez física y espiritual. Hacia el norte, la Riviera Nayarit se despliega en un mosaico de playas escondidas, pueblos de pescadores silenciosos y senderos de montaña donde el único sonido es el canto de los pájaros y el agua que corre.",
+      "body3": "Este no es un escenario que elegimos. Es la razón por la que OMZONE existe. El clima tropical, la proximidad entre selva y océano, la luz dorada del amanecer — cada elemento conspira para crear las condiciones de la transformación. Hay lugares que visitas. Este te sostiene."
+    },
+    "philosophy": {
+      "eyebrow": "Lo Que Nos Guía",
+      "title": "Cuatro Pilares de Presencia",
+      "intention": {
+        "title": "Intención",
+        "description": "Cada experiencia en OMZONE comienza con una elección deliberada — no un scroll, no un impulso, sino la decisión consciente de aparecer por ti mismo. Creemos que el bienestar sin intención es solo consumo."
+      },
+      "transformation": {
+        "title": "Transformación",
+        "description": "No nos interesa la performance ni la estética superficial. Nos importan los cambios silenciosos — la respiración que por fin se profundiza, la tensión que se libera, la claridad que llega cuando dejas de buscarla."
+      },
+      "sanctuary": {
+        "title": "Santuario",
+        "description": "Cada espacio que sostenemos está diseñado para proteger tu proceso. La naturaleza te rodea. Las distracciones se desvanecen. Lo que queda es un santuario — no solo un lugar, sino la sensación de estar verdaderamente a salvo para soltar."
+      },
+      "connection": {
+        "title": "Conexión",
+        "description": "Contigo primero. Después con las personas que comparten la experiencia. Y finalmente, con el mundo al que regresas — llevando algo más quieto, más profundo y más tuyo que antes."
+      }
+    },
+    "cta": {
+      "title": "Tu Próxima Experiencia Ya Te Está Esperando",
+      "subtitle": "Explora nuestra colección curada de sesiones, inmersiones, retiros y estancias en Puerto Vallarta. El único paso que falta es el tuyo.",
+      "button": "Explorar Experiencias"
+    }
   },
   "contact": {
     "seoTitle": "Contacto — OMZONE",
     "seoDescription": "Ponte en contacto con OMZONE en Puerto Vallarta. Nos encantaría saber de ti sobre nuestras experiencias de bienestar.",
-    "title": "Contacto",
-    "intro": "Nos encantaría saber de ti. Escríbenos y nos pondremos en contacto lo antes posible.",
-    "email": "hello@omzone.com",
-    "locationPlaceholder": "Ubicación próximamente",
-    "formPlaceholder": "Formulario de contacto completo próximamente."
+    "hero": {
+      "eyebrow": "Te Escuchamos",
+      "title": "Contáctanos",
+      "subtitle": "Ya sea una pregunta, una petición especial o simplemente un saludo — nos encantaría saber de ti."
+    },
+    "form": {
+      "nameLabel": "Nombre Completo",
+      "namePlaceholder": "Tu nombre",
+      "emailLabel": "Correo Electrónico",
+      "emailPlaceholder": "tu@ejemplo.com",
+      "subjectLabel": "Asunto",
+      "subjectPlaceholder": "¿De qué se trata? (opcional)",
+      "messageLabel": "Mensaje",
+      "messagePlaceholder": "Cuéntanos lo que tienes en mente…",
+      "send": "Enviar Mensaje",
+      "sending": "Enviando…",
+      "successTitle": "Mensaje Enviado",
+      "successBody": "Gracias por escribirnos. Te responderemos pronto.",
+      "sendAnother": "Enviar Otro Mensaje",
+      "errorTitle": "Algo salió mal",
+      "errorBody": "No pudimos enviar tu mensaje. Por favor intenta de nuevo.",
+      "retry": "Intentar de Nuevo"
+    },
+    "validation": {
+      "nameRequired": "Por favor ingresa tu nombre.",
+      "emailRequired": "Por favor ingresa tu correo electrónico.",
+      "emailInvalid": "Por favor ingresa un correo electrónico válido.",
+      "messageRequired": "Por favor ingresa un mensaje.",
+      "messageTooLong": "El mensaje no puede exceder 5,000 caracteres."
+    },
+    "info": {
+      "title": "Otras Formas de Contactarnos",
+      "emailLabel": "Correo",
+      "email": "hello@omzone.com",
+      "locationLabel": "Ubicación",
+      "location": "Puerto Vallarta, Jalisco, México",
+      "socialLabel": "Síguenos"
+    }
   },
   "privacy": {
     "seoTitle": "Política de Privacidad — OMZONE",

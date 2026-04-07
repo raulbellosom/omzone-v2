@@ -1,20 +1,4 @@
-import { X, ChevronDown, SlidersHorizontal } from "lucide-react";
-import Button from "@/components/common/Button";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/common/select";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuCheckboxItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "@/components/common/dropdown-menu";
+import { X } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 
 const TYPE_OPTIONS = [
@@ -36,132 +20,80 @@ export default function ExperienceFilters({
   const { t } = useLanguage();
   const hasFilters = selectedTags.length > 0 || selectedType !== "";
 
-  const selectedTagNames = tags
-    .filter((t) => selectedTags.includes(t.$id))
-    .map((t) => t.name);
-
-  const tagSummary =
-    selectedTagNames.length === 0
-      ? null
-      : selectedTagNames.length <= 2
-        ? selectedTagNames.join(", ")
-        : `${selectedTagNames.length} selected`;
-
   return (
     <div className="space-y-4">
-      {/* Dropdown row */}
-      <div className="flex flex-wrap items-center gap-3">
-        <SlidersHorizontal className="hidden sm:block h-4 w-4 text-charcoal-subtle" />
-
-        {/* Type select */}
-        <Select
-          value={selectedType || "__all__"}
-          onValueChange={(v) => onSelectType(v === "__all__" ? "" : v)}
+      {/* Type pills */}
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          onClick={() => onSelectType("")}
+          className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${
+            !selectedType
+              ? "bg-charcoal text-white shadow-sm"
+              : "bg-warm-gray text-charcoal-muted hover:bg-sand hover:text-charcoal"
+          }`}
         >
-          <SelectTrigger className="w-[160px] h-10 text-sm">
-            <SelectValue placeholder={t("filters.allTypes")} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="__all__">{t("filters.allTypes")}</SelectItem>
-            {TYPE_OPTIONS.map(({ value, labelKey }) => (
-              <SelectItem key={value} value={value}>
-                {t(labelKey)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        {/* Tags multi-select dropdown */}
-        {tags.length > 0 && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                className={
-                  "flex h-10 items-center justify-between gap-2 rounded-xl border px-4 text-sm transition-colors cursor-pointer " +
-                  (selectedTags.length > 0
-                    ? "border-sage bg-sage/5 text-charcoal"
-                    : "border-sand-dark bg-white text-charcoal-subtle hover:border-sage/50")
-                }
-              >
-                <span className="truncate max-w-[140px]">
-                  {tagSummary || t("filters.tags")}
-                </span>
-                <ChevronDown className="h-4 w-4 shrink-0 text-charcoal-muted" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-[220px] max-h-[280px] overflow-y-auto">
-              <DropdownMenuLabel>{t("filters.tags")}</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {tags.map((tag) => (
-                <DropdownMenuCheckboxItem
-                  key={tag.$id}
-                  checked={selectedTags.includes(tag.$id)}
-                  onCheckedChange={() => onToggleTag(tag.$id)}
-                  onSelect={(e) => e.preventDefault()}
-                >
-                  {tag.name}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
-
-        {/* Clear filters */}
-        {hasFilters && (
-          <Button variant="ghost" size="sm" onClick={onClear} className="gap-1.5 text-charcoal-muted hover:text-charcoal">
-            <X className="h-3.5 w-3.5" />
-            {t("filters.clear")}
-          </Button>
-        )}
+          {t("filters.allTypes")}
+        </button>
+        {TYPE_OPTIONS.map(({ value, labelKey }) => (
+          <button
+            key={value}
+            onClick={() => onSelectType(selectedType === value ? "" : value)}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${
+              selectedType === value
+                ? "bg-charcoal text-white shadow-sm"
+                : "bg-warm-gray text-charcoal-muted hover:bg-sand hover:text-charcoal"
+            }`}
+          >
+            {t(labelKey)}
+          </button>
+        ))}
       </div>
 
-      {/* Active filter pills */}
-      {hasFilters && (
-        <div className="flex flex-wrap items-center gap-2">
-          {selectedType && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-charcoal text-white text-xs font-medium px-3 py-1">
-              {TYPE_OPTIONS.find((o) => o.value === selectedType)?.labelKey ? t(TYPE_OPTIONS.find((o) => o.value === selectedType).labelKey) : selectedType}
-              <button
-                onClick={() => onSelectType("")}
-                className="ml-0.5 hover:text-white/70 transition-colors cursor-pointer"
-                aria-label={`Remove ${selectedType} filter`}
-              >
-                <X className="h-3 w-3" />
-              </button>
-            </span>
+      {/* Tag pills — horizontal scroll on mobile */}
+      {tags.length > 0 && (
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none -mx-1 px-1 [mask-image:linear-gradient(90deg,transparent,black_8px,black_calc(100%-8px),transparent)]">
+          {tags.map((tag) => (
+            <button
+              key={tag.$id}
+              onClick={() => onToggleTag(tag.$id)}
+              className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 cursor-pointer ${
+                selectedTags.includes(tag.$id)
+                  ? "bg-sage/15 border-sage text-sage-dark"
+                  : "bg-transparent border-warm-gray-dark/40 text-charcoal-subtle hover:border-sage/50 hover:text-charcoal-muted"
+              }`}
+            >
+              {tag.name}
+            </button>
+          ))}
+
+          {hasFilters && (
+            <button
+              onClick={onClear}
+              className="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium text-charcoal-subtle hover:text-charcoal transition-colors cursor-pointer"
+            >
+              <X className="h-3 w-3" />
+              {t("filters.clear")}
+            </button>
           )}
-          {tags
-            .filter((t) => selectedTags.includes(t.$id))
-            .map((tag) => (
-              <span
-                key={tag.$id}
-                className="inline-flex items-center gap-1 rounded-full bg-sage/15 text-sage-dark text-xs font-medium px-3 py-1"
-              >
-                {tag.name}
-                <button
-                  onClick={() => onToggleTag(tag.$id)}
-                  className="ml-0.5 hover:text-sage transition-colors cursor-pointer"
-                  aria-label={`Remove ${tag.name} filter`}
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </span>
-            ))}
         </div>
       )}
     </div>
   );
 }
 
-/**
- * Skeleton placeholder matching the filter row height.
- */
 export function ExperienceFiltersSkeleton() {
   return (
-    <div className="flex items-center gap-3">
-      <div className="h-4 w-4 rounded bg-warm-gray animate-pulse hidden sm:block" />
-      <div className="h-10 w-[160px] rounded-xl bg-warm-gray animate-pulse" />
-      <div className="h-10 w-[140px] rounded-xl bg-warm-gray animate-pulse" />
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i} className="h-9 w-24 rounded-full bg-warm-gray animate-pulse" />
+        ))}
+      </div>
+      <div className="flex items-center gap-2">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="h-7 w-20 rounded-full bg-warm-gray animate-pulse" />
+        ))}
+      </div>
     </div>
   );
 }

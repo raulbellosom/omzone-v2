@@ -6,13 +6,16 @@ const LANGS = [
   { code: "es", label: "ES" },
 ];
 
-export default function LanguageSwitcher({ className }) {
+export default function LanguageSwitcher({ className, transparent = false }) {
   const { language, setLanguage } = useLanguage();
 
   return (
     <div
       className={cn(
-        "inline-flex items-center rounded-full border border-warm-gray-dark/40 bg-white/60 p-0.5",
+        "inline-flex items-center rounded-full p-0.5 transition-colors duration-300",
+        transparent
+          ? "border border-white/30 bg-white/10"
+          : "border border-warm-gray-dark/40 bg-white/60",
         className,
       )}
       role="radiogroup"
@@ -28,8 +31,12 @@ export default function LanguageSwitcher({ className }) {
           className={cn(
             "px-2.5 py-1 text-xs font-medium rounded-full transition-all duration-200 min-w-[36px] min-h-[28px]",
             language === code
-              ? "bg-charcoal text-white shadow-sm"
-              : "text-charcoal-muted hover:text-charcoal",
+              ? transparent
+                ? "bg-white text-charcoal shadow-sm"
+                : "bg-charcoal text-white shadow-sm"
+              : transparent
+                ? "text-white/70 hover:text-white"
+                : "text-charcoal-muted hover:text-charcoal",
           )}
         >
           {label}

@@ -373,3 +373,31 @@ Una fase se considera completada cuando:
 2. Se ha ejecutado QA funcional sobre los flujos de la fase.
 3. No hay errores críticos pendientes.
 4. La fase siguiente tiene sus dependencias resueltas.
+
+---
+
+## 6. Estado de fases (última actualización: 2025-07-26)
+
+| Fase | Estado | Nota |
+|---|---|---|
+| 0 — Setup | ✅ Completada | — |
+| 1 — Schema | ✅ Completada | — |
+| 2 — Auth | ✅ Completada | — |
+| 3 — CRUD Admin | ✅ Completada | — |
+| 4 — Catálogo | ✅ Completada | — |
+| 5 — Checkout | ✅ Completada | TASK-029 saltada (requiere Stripe keys) |
+| 6 — Webhooks | ✅ Completada | — |
+| 7 — Tickets | ✅ Completada | — |
+| 8 — Pases/Paquetes | ✅ Completada | — |
+| 9 — Portal cliente | ✅ Completada | — |
+| 10 — CMS | ✅ Completada | — |
+| 11 — Media | ✅ Completada | — |
+| 12 — Venta asistida | ✅ Completada | — |
+| 13 — Notificaciones | ✅ Completada | — |
+| 14 — SEO/i18n | ✅ Completada | — |
+| 15 — QA/Deploy | ✅ Completada | TASK-050 pendiente (deploy a producción) |
+| A — Páginas públicas | ✅ Completada | TASK-051, 052, 053 |
+| B — Catálogo editorial | ✅ Completada | TASK-054 |
+| C — Admin secciones | ✅ Completada | TASK-055, 056, 057, 058 |
+| D — Seed + QA | ✅ Completada | TASK-059, 060, 061 |
+| E — Limpieza | ✅ Completada | TASK-062 |

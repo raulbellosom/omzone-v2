@@ -141,7 +141,7 @@ export default function ReviewConfirmStep({ wizard, setWizardField, submitting, 
         )}
         <ReviewRow icon={Users} label="Cantidad" value={`${quantity} participante${quantity !== 1 ? "s" : ""}`} />
         {selectedAddonIds.length > 0 && (
-          <ReviewRow icon={Tag} label="Addons" value={`${selectedAddonIds.length} seleccionado${selectedAddonIds.length > 1 ? "s" : ""}`} />
+          <ReviewRow icon={Tag} label="Complementos" value={`${selectedAddonIds.length} seleccionado${selectedAddonIds.length > 1 ? "s" : ""}`} />
         )}
         <div className="flex justify-between items-center py-2.5 px-0 font-bold text-charcoal">
           <span className="text-sm">Total estimado</span>

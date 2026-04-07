@@ -116,6 +116,7 @@ async function handleSignupEvent({ req, res, log, error }) {
         firstName,
         lastName,
         language: "es",
+        role: "client",
       },
       [
         `read("user:${userId}")`,
@@ -295,6 +296,16 @@ async function handleManualAssignment({ req, res, log, error }) {
 
     const updatedLabels = [...targetLabels, label];
     await users.updateLabels(targetUserId.trim(), updatedLabels);
+
+    // Sync role to user_profiles for ghost-user filtering
+    try {
+      const db = new Databases(client);
+      await db.updateDocument(DB, COLLECTION_PROFILES, targetUserId.trim(), {
+        role: label,
+      });
+    } catch {
+      log(`Could not sync role to profile for ${targetUserId} — profile may not exist`);
+    }
 
     log(`Label '${label}' assigned to user ${targetUserId} by ${callerId}`);
 

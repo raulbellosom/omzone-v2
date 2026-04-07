@@ -38,7 +38,7 @@ export default function PortalBottomTabs() {
             }
           >
             <tab.icon className="w-5 h-5" />
-            <span className="text-[10px] font-medium leading-tight">
+            <span className="text-xs font-medium leading-tight">
               {tab.name}
             </span>
           </NavLink>

@@ -86,15 +86,15 @@ function Toggle({ checked, onChange, label, disabled }) {
         onClick={() => onChange(!checked)}
         disabled={disabled}
         className={cn(
-          "relative w-10 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-sage/40",
+          "relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-sage/40",
           checked ? "bg-sage" : "bg-sand-dark",
           "disabled:opacity-50 disabled:cursor-not-allowed",
         )}
       >
         <span
           className={cn(
-            "absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform",
-            checked ? "translate-x-5" : "translate-x-1",
+            "pointer-events-none block h-5 w-5 rounded-full bg-white shadow-sm transition-transform",
+            checked ? "translate-x-5" : "translate-x-0",
           )}
         />
       </button>
@@ -114,7 +114,7 @@ function Textarea({
 }) {
   return (
     <textarea
-      value={value}
+      value={value ?? ""}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       disabled={disabled}

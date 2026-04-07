@@ -73,7 +73,7 @@ export default function QuantityStep({ wizard, setWizardField }) {
           />
           {wizard.selectedAddonIds.length > 0 && (
             <SummaryRow
-              label={`Addons (${wizard.selectedAddonIds.length})`}
+              label={`Complementos (${wizard.selectedAddonIds.length})`}
               value="Ver en revisión"
             />
           )}

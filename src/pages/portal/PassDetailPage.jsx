@@ -161,7 +161,7 @@ export default function PassDetailPage() {
       </button>
 
       {/* Main card */}
-      <div className="bg-white rounded-2xl border border-warm-gray-dark/10 shadow-sm p-6 md:p-8 space-y-6">
+      <div className="bg-white rounded-2xl border border-warm-gray-dark/10 shadow-sm p-4 sm:p-6 md:p-8 space-y-6">
         {/* Title + status */}
         <div className="text-center space-y-2">
           <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center mx-auto">

@@ -2,6 +2,14 @@ import { storage } from "@/lib/appwrite";
 import env from "@/config/env";
 
 /**
+ * Modern output format for preview URLs — webp for smaller file sizes.
+ * Appwrite getFilePreview signature:
+ *   (bucketId, fileId, width, height, gravity, quality,
+ *    borderWidth, borderColor, borderRadius, opacity, rotation, background, output)
+ */
+const OUTPUT_FORMAT = "webp";
+
+/**
  * Standard breakpoint widths for responsive srcSet generation.
  * thumbnail → card listings, card → mobile cards, medium → tablet,
  * hero → desktop hero, full → retina/wide.
@@ -36,23 +44,23 @@ export function getPreviewUrl(
 ) {
   if (!fileId) return null;
   try {
-    return height
-      ? storage.getFilePreview(
-          bucketId,
-          fileId,
-          width,
-          height,
-          undefined,
-          quality,
-        )
-      : storage.getFilePreview(
-          bucketId,
-          fileId,
-          width,
-          undefined,
-          undefined,
-          quality,
-        );
+    // params: bucketId, fileId, width, height, gravity, quality,
+    //         borderWidth, borderColor, borderRadius, opacity, rotation, background, output
+    return storage.getFilePreview(
+      bucketId,
+      fileId,
+      width,
+      height ?? undefined,
+      undefined,    // gravity
+      quality,
+      undefined,    // borderWidth
+      undefined,    // borderColor
+      undefined,    // borderRadius
+      undefined,    // opacity
+      undefined,    // rotation
+      undefined,    // background
+      OUTPUT_FORMAT,
+    );
   } catch {
     return null;
   }

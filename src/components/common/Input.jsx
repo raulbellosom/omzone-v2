@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
-const Input = forwardRef(({ className, type, icon: Icon, rightElement, ...props }, ref) => {
+const Input = forwardRef(({ className, type, icon: Icon, rightElement, value, ...props }, ref) => {
   const hasIcon = !!Icon;
   const hasRight = !!rightElement;
 
@@ -14,6 +14,7 @@ const Input = forwardRef(({ className, type, icon: Icon, rightElement, ...props 
       )}
       <input
         type={type ?? "text"}
+        value={value ?? ""}
         className={cn(
           "flex h-11 w-full rounded-xl border border-sand-dark bg-white py-2 text-sm text-charcoal placeholder:text-charcoal-subtle transition-colors",
           "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20",

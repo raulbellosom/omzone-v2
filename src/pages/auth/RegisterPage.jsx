@@ -112,7 +112,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Glass card */}
-        <div className="backdrop-blur-xl bg-white/90 rounded-2xl border border-white/40 shadow-premium p-8 sm:p-10">
+        <div className="backdrop-blur-xl bg-white/90 rounded-2xl border border-white/40 shadow-premium p-6 sm:p-8 md:p-10">
           {/* Back to home — inside card */}
           <Link
             to={ROUTES.HOME}

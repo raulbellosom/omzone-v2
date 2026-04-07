@@ -5,8 +5,6 @@ import { useLanguage } from "@/hooks/useLanguage";
 import {
   LayoutDashboard,
   Sparkles,
-  CalendarRange,
-  DollarSign,
   Puzzle,
   Package,
   Ticket,
@@ -40,16 +38,6 @@ const NAV_SECTIONS = [
         nameKey: "admin.sidebar.experiences",
         path: ROUTES.ADMIN_EXPERIENCES,
         icon: Sparkles,
-      },
-      {
-        nameKey: "admin.sidebar.editions",
-        path: ROUTES.ADMIN_EDITIONS,
-        icon: CalendarRange,
-      },
-      {
-        nameKey: "admin.sidebar.pricing",
-        path: ROUTES.ADMIN_PRICING,
-        icon: DollarSign,
       },
       {
         nameKey: "admin.sidebar.addons",

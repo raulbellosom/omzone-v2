@@ -3,7 +3,8 @@ import { usePublicExperiences } from "@/hooks/usePublicExperiences";
 import { useLanguage } from "@/hooks/useLanguage";
 import SEOHead from "@/components/common/SEOHead";
 import env from "@/config/env";
-import ExperienceCard from "@/components/public/experiences/ExperienceCard";
+import CatalogHero from "@/components/public/experiences/CatalogHero";
+import ExperienceArticle from "@/components/public/experiences/ExperienceArticle";
 import ExperienceFilters, {
   ExperienceFiltersSkeleton,
 } from "@/components/public/experiences/ExperienceFilters";
@@ -16,7 +17,6 @@ export default function ExperiencesListPage() {
     experiences,
     tags,
     experienceTagMap,
-    priceMap,
     loading,
     error,
     refetch,
@@ -40,8 +40,19 @@ export default function ExperiencesListPage() {
     setSelectedType("");
   }
 
+  // Enrich experiences with tag names for display in articles
+  const enriched = useMemo(() => {
+    return experiences.map((exp) => {
+      const tagIds = experienceTagMap[exp.$id] || [];
+      const tagNames = tags
+        .filter((t) => tagIds.includes(t.$id))
+        .map((t) => t.name);
+      return { ...exp, tagNames };
+    });
+  }, [experiences, experienceTagMap, tags]);
+
   const filtered = useMemo(() => {
-    return experiences.filter((exp) => {
+    return enriched.filter((exp) => {
       if (selectedType && exp.type !== selectedType) return false;
       if (selectedTags.length > 0) {
         const expTags = experienceTagMap[exp.$id] || [];
@@ -50,12 +61,12 @@ export default function ExperiencesListPage() {
       }
       return true;
     });
-  }, [experiences, selectedType, selectedTags, experienceTagMap]);
+  }, [enriched, selectedType, selectedTags, experienceTagMap]);
 
   const hasFilters = selectedTags.length > 0 || selectedType !== "";
 
   return (
-    <section className="container-shell pb-16 pt-2">
+    <>
       <SEOHead
         title={
           t("experienceList.title") + " — OMZONE | Wellness Puerto Vallarta"
@@ -64,114 +75,120 @@ export default function ExperiencesListPage() {
         canonical={`${env.siteUrl}/experiences`}
       />
 
-      {/* Header */}
-      <div className="mb-8 md:mb-10">
-        <h1 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-charcoal">
-          {t("experienceList.title")}
-        </h1>
-        <p className="mt-2 text-charcoal-muted text-base md:text-lg max-w-2xl">
-          {t("experienceList.subtitle")}
-        </p>
+      {/* Hero banner */}
+      <CatalogHero />
+
+      {/* Filters bar — full-width, sticky */}
+      <div className="sticky top-16 z-30 bg-cream/90 backdrop-blur-md border-b border-sand/60">
+        <div className="container-shell py-4">
+          {loading && <ExperienceFiltersSkeleton />}
+          {!loading && experiences.length > 0 && (
+            <ExperienceFilters
+              tags={tags}
+              selectedTags={selectedTags}
+              selectedType={selectedType}
+              onToggleTag={handleToggleTag}
+              onSelectType={setSelectedType}
+              onClear={handleClearFilters}
+            />
+          )}
+        </div>
       </div>
 
-      {/* Filters — skeleton while loading, real once loaded */}
-      {loading && (
-        <div className="mb-8">
-          <ExperienceFiltersSkeleton />
-        </div>
-      )}
-      {!loading && experiences.length > 0 && (
-        <div className="mb-8">
-          <ExperienceFilters
-            tags={tags}
-            selectedTags={selectedTags}
-            selectedType={selectedType}
-            onToggleTag={handleToggleTag}
-            onSelectType={setSelectedType}
-            onClear={handleClearFilters}
-          />
-        </div>
-      )}
+      {/* Articles — full-width, no container */}
+      <div className="bg-cream">
+        {/* Loading skeleton */}
+        {loading && (
+          <div className="container-shell py-16">
+            <ArticlesSkeleton />
+          </div>
+        )}
 
-      {/* Loading skeleton — cards */}
-      {loading && <LoadingSkeleton />}
-
-      {/* Error state */}
-      {!loading && error && (
-        <div className="text-center py-16">
-          <p className="text-charcoal-muted mb-4">
-            {t("experienceList.errorLoading")}
-          </p>
-          <Button variant="outline" onClick={refetch}>
-            {t("experienceList.tryAgain")}
-          </Button>
-        </div>
-      )}
-
-      {/* Empty — no experiences published */}
-      {!loading && !error && experiences.length === 0 && (
-        <div className="text-center py-16">
-          <Compass className="mx-auto h-10 w-10 text-charcoal-subtle mb-4" />
-          <p className="text-charcoal-muted text-lg">
-            {t("experienceList.emptyTitle")}
-          </p>
-          <p className="text-charcoal-subtle text-sm mt-1">
-            {t("experienceList.emptySubtitle")}
-          </p>
-        </div>
-      )}
-
-      {/* Empty — filters have no results */}
-      {!loading &&
-        !error &&
-        experiences.length > 0 &&
-        filtered.length === 0 && (
-          <div className="text-center py-16">
-            <p className="text-charcoal-muted text-lg mb-4">
-              {t("experienceList.noFilterResults")}
+        {/* Error state */}
+        {!loading && error && (
+          <div className="text-center py-20">
+            <p className="text-charcoal-muted mb-4">
+              {t("experienceList.errorLoading")}
             </p>
-            <Button variant="outline" onClick={handleClearFilters}>
-              {t("experienceList.clearFilters")}
+            <Button variant="outline" onClick={refetch}>
+              {t("experienceList.tryAgain")}
             </Button>
           </div>
         )}
 
-      {/* Grid */}
-      {!loading && !error && filtered.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-          {filtered.map((exp) => (
-            <ExperienceCard
-              key={exp.$id}
-              experience={exp}
-              priceInfo={priceMap[exp.$id] || null}
-            />
-          ))}
-        </div>
-      )}
-    </section>
+        {/* Empty — no experiences published */}
+        {!loading && !error && experiences.length === 0 && (
+          <div className="text-center py-20">
+            <Compass className="mx-auto h-10 w-10 text-charcoal-subtle mb-4" />
+            <p className="text-charcoal-muted text-lg">
+              {t("experienceList.emptyTitle")}
+            </p>
+            <p className="text-charcoal-subtle text-sm mt-1">
+              {t("experienceList.emptySubtitle")}
+            </p>
+          </div>
+        )}
+
+        {/* Empty — filters have no results */}
+        {!loading &&
+          !error &&
+          experiences.length > 0 &&
+          filtered.length === 0 && (
+            <div className="text-center py-20">
+              <p className="text-charcoal-muted text-lg mb-4">
+                {t("experienceList.noFilterResults")}
+              </p>
+              <Button variant="outline" onClick={handleClearFilters}>
+                {t("experienceList.clearFilters")}
+              </Button>
+            </div>
+          )}
+
+        {/* Editorial articles — full-width, variant layouts cycle every 4 */}
+        {!loading && !error && filtered.length > 0 && (
+          <div className="flex flex-col">
+            {filtered.map((exp, i) => (
+              <ExperienceArticle
+                key={exp.$id}
+                experience={exp}
+                index={i}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 }
 
-function LoadingSkeleton() {
+function ArticlesSkeleton() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div
-          key={i}
-          className="rounded-2xl bg-white border border-warm-gray-dark/30 overflow-hidden"
-        >
-          <Skeleton className="aspect-4/3 w-full rounded-none" />
-          <div className="p-5 space-y-3">
-            <Skeleton className="h-5 w-20 rounded-full" />
-            <Skeleton className="h-5 w-3/4" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-2/3" />
-            <div className="pt-3 border-t border-warm-gray-dark/20">
-              <Skeleton className="h-4 w-24" />
-            </div>
+    <div className="flex flex-col gap-12">
+      {/* Cinematic skeleton */}
+      <Skeleton className="w-full h-[50vh] min-h-[400px] rounded-none" />
+      {/* Split skeleton */}
+      <div className="flex flex-col lg:flex-row gap-0">
+        <Skeleton className="w-full lg:w-[55%] aspect-[16/10] lg:aspect-auto lg:min-h-[480px] rounded-none" />
+        <div className="w-full lg:w-[45%] p-10 space-y-4">
+          <Skeleton className="h-8 w-3/4" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-5/6" />
+          <Skeleton className="h-4 w-2/3" />
+          <div className="flex gap-2 pt-4">
+            <Skeleton className="h-6 w-16 rounded-full" />
+            <Skeleton className="h-6 w-20 rounded-full" />
           </div>
         </div>
-      ))}
+      </div>
+      {/* Split reverse skeleton */}
+      <div className="flex flex-col lg:flex-row-reverse gap-0">
+        <Skeleton className="w-full lg:w-[55%] aspect-[16/10] lg:aspect-auto lg:min-h-[480px] rounded-none" />
+        <div className="w-full lg:w-[45%] p-10 space-y-4">
+          <Skeleton className="h-8 w-3/4" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-5/6" />
+        </div>
+      </div>
     </div>
   );
 }

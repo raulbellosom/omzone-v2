@@ -34,7 +34,7 @@ function StatCard({ icon: Icon, label, value, to, color = "sage" }) {
         <p className="text-xs text-charcoal-muted font-medium">{label}</p>
         <p className="text-xl font-bold text-charcoal">{value}</p>
       </div>
-      <ArrowRight className="w-4 h-4 text-charcoal-muted opacity-0 group-hover:opacity-100 transition-opacity" />
+      <ArrowRight className="w-4 h-4 text-charcoal-muted opacity-40 group-hover:opacity-100 transition-opacity" />
     </Link>
   );
 }

@@ -1,7 +1,7 @@
 # OMZONE — Pendientes del Proyecto
 
-> Última actualización: 2025-07-25
-> Estado: Fases 0–15 completadas (excepto TASK-029 y TASK-050) · Fases A–E en planificación
+> Última actualización: 2025-07-26
+> Estado: Fases 0–15 + A–E completadas (excepto TASK-029 y TASK-050)
 
 ---
 
@@ -13,51 +13,49 @@ Las fases 0–15 se consideran completadas salvo dos excepciones:
 |---|---|---|---|
 | TASK-001 a TASK-028 | Fases 0–8 completas | ✅ | — |
 | TASK-029 | Checkout adaptado para pases/paquetes | ⏭️ Saltada | Requiere Stripe test keys configuradas |
-| TASK-030 a TASK-050 | Fases 9–15 completas | ✅ | — |
-| TASK-050 | Deploy a producción | ⏳ Pendiente | Requiere finalizar fases A–E |
+| TASK-030 a TASK-049 | Fases 9–14 + QA completas | ✅ | — |
+| TASK-050 | Deploy a producción | ⏳ Pendiente | Requiere configuración Stripe y deploy final |
 
 ---
 
-## 2. Tasks nuevas — Fases A–E (post-fase 15)
-
-Estas tareas abordan pendientes descubiertos tras la auditoría de completitud: páginas públicas placeholder, secciones admin sin implementar, ausencia de datos de demostración, y falta de QA integral.
+## 2. Tasks — Fases A–E (post-fase 15)
 
 ### Fase A — Páginas públicas (landing, about, contact)
 
 | Task | Título | Estado |
 |---|---|---|
-| TASK-051 | Landing page completa (hero, secciones, CTA) | 🔴 Pendiente |
-| TASK-052 | About page completa (misión, ubicación, filosofía) | 🔴 Pendiente |
-| TASK-053 | Contact page completa (formulario + collection) | 🔴 Pendiente |
+| TASK-051 | Landing page completa (hero, secciones, CTA) | ✅ Completada |
+| TASK-052 | About page completa (misión, ubicación, filosofía) | ✅ Completada |
+| TASK-053 | Contact page completa (formulario + collection) | ✅ Completada |
 
 ### Fase B — Experiencias editorial redesign
 
 | Task | Título | Estado |
 |---|---|---|
-| TASK-054 | Catálogo de experiencias: rediseño editorial vertical (sin precios visibles) | 🔴 Pendiente |
+| TASK-054 | Catálogo de experiencias: rediseño editorial vertical (sin precios visibles) | ✅ Completada |
 
 ### Fase C — Admin: secciones faltantes
 
 | Task | Título | Estado |
 |---|---|---|
-| TASK-055 | Admin — Tickets: listado + detalle | 🔴 Pendiente |
-| TASK-056 | Admin — Clientes: listado + detalle (user_profiles + Auth) | 🔴 Pendiente |
-| TASK-057 | Admin — Media manager: explorador por bucket | 🔴 Pendiente |
-| TASK-058 | Admin — Settings: templates + system info | 🔴 Pendiente |
+| TASK-055 | Admin — Tickets: listado + detalle | ✅ Completada |
+| TASK-056 | Admin — Clientes: listado + detalle (user_profiles + Auth) | ✅ Completada |
+| TASK-057 | Admin — Media manager: explorador por bucket | ✅ Completada |
+| TASK-058 | Admin — Settings: templates + system info | ✅ Completada |
 
 ### Fase D — Datos de demostración y QA
 
 | Task | Título | Estado |
 |---|---|---|
-| TASK-059 | Seed: experiencias, ediciones, publicaciones, media de demostración | 🔴 Pendiente |
-| TASK-060 | QA integral: flujos completos, permisos, responsive, edge cases | 🔴 Pendiente |
-| TASK-061 | Responsive audit: verificación y correcciones 375/768/1024/1280 | 🔴 Pendiente |
+| TASK-059 | Seed: experiencias, ediciones, publicaciones, media de demostración | ✅ Completada |
+| TASK-060 | QA integral: flujos completos, permisos, responsive, edge cases | ✅ Completada |
+| TASK-061 | Responsive audit: verificación y correcciones 375/768/1024/1280 | ✅ Completada |
 
 ### Fase E — Limpieza y cierre
 
 | Task | Título | Estado |
 |---|---|---|
-| TASK-062 | Limpieza: eliminar placeholders, rutas redundantes, actualizar docs | 🔴 Pendiente |
+| TASK-062 | Limpieza: eliminar placeholders, rutas redundantes, actualizar docs | ✅ Completada |
 
 ---
 
@@ -115,29 +113,22 @@ Las variables `VITE_APPWRITE_*` ya están configuradas localmente. Pendiente par
 
 ---
 
-## 5. Frontend — placeholders activos
+## 5. Frontend — estado actual
 
-### Admin (rutas con `AdminPlaceholder`)
+### Admin
 
-| Ruta | Placeholder | Task que lo reemplaza |
-|---|---|---|
-| `/admin/editions` | "Ediciones" | Ruta redundante — evaluar eliminar (TASK-062) |
-| `/admin/pricing` | "Precios" | Ruta redundante — evaluar eliminar (TASK-062) |
-| `/admin/tickets` | "Tickets" | **TASK-055** |
-| `/admin/clients` | "Clientes" | **TASK-056** |
-| `/admin/media` | "Media" | **TASK-057** |
-| `/admin/settings` | "Configuración" | **TASK-058** |
+✅ Todas las secciones del panel admin están implementadas. No quedan placeholders.
 
-> Las rutas de paquetes, pases, órdenes, check-in y publicaciones ya fueron implementadas.
+Rutas redundantes `/admin/editions` y `/admin/pricing` eliminadas en TASK-062 (ediciones y precios se gestionan por experiencia).
 
-### Público (páginas placeholder)
+### Público
 
-| Página | Task que lo reemplaza |
+| Página | Estado |
 |---|---|
-| Landing (HomePage) | **TASK-051** |
-| About | **TASK-052** |
-| Contact | **TASK-053** |
-| Experiences listing (rediseño) | **TASK-054** |
+| Landing (HomePage) | ✅ Completada (TASK-051) |
+| About | ✅ Completada (TASK-052) |
+| Contact | ✅ Completada (TASK-053) |
+| Experiences listing (rediseño) | ✅ Completada (TASK-054) |
 | Privacy | Pendiente (fuera de alcance actual) |
 | Terms | Pendiente (fuera de alcance actual) |
 
@@ -151,9 +142,11 @@ Las variables `VITE_APPWRITE_*` ya están configuradas localmente. Pendiente par
 - [ ] `appwrite deploy` de colecciones
 - [ ] `appwrite deploy function` de las 3 functions
 - [ ] Frontend build y deploy vía Appwrite Sites o servicio externo
-- [ ] Responsive audit (TASK-047)
-- [ ] QA de permisos (TASK-048)
-- [ ] QA de flujos transaccionales (TASK-049)
+- [x] Responsive audit (TASK-061)
+- [x] QA de permisos (TASK-060)
+- [x] QA de flujos transaccionales (TASK-060)
 - [ ] Verificar `payments` collection: evaluar agregar `receiptUrl`
-- [ ] Contenido real en About, Contact, Privacy, Terms
-- [ ] SEO, meta tags, sitemap (TASK-044)
+- [x] Contenido editorial en Landing, About, Contact, Catálogo
+- [ ] Contenido real en Privacy, Terms
+- [x] SEO, meta tags, sitemap (TASK-044)
+- [x] Limpieza de placeholders y rutas redundantes (TASK-062)

@@ -50,7 +50,7 @@ export default function PortalSidebar({ open, onClose }) {
       <aside
         className={`
           fixed top-0 left-0 h-full z-50 bg-white border-r border-warm-gray-dark/20
-          w-72 max-w-[80vw] flex flex-col
+          w-72 max-w-[75vw] sm:max-w-[80vw] flex flex-col
           transition-transform duration-300 ease-out
           lg:relative lg:translate-x-0 lg:z-auto
           ${open ? "translate-x-0" : "-translate-x-full"}

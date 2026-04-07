@@ -17,6 +17,7 @@ import { Card } from "@/components/common/Card";
 import { useLanguage } from "@/hooks/useLanguage";
 
 function TableSkeleton() {
+  const { t } = useLanguage();
   return (
     <div className="hidden md:block overflow-x-auto rounded-xl border border-sand-dark">
       <table className="w-full text-sm">

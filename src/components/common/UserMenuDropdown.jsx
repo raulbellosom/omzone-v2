@@ -31,7 +31,7 @@ function getInitials(name) {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
-export default function UserMenuDropdown() {
+export default function UserMenuDropdown({ transparent = false }) {
   const { user, labels, logout, isAdmin, isClient } = useAuth();
   const navigate = useNavigate();
 
@@ -55,7 +55,7 @@ export default function UserMenuDropdown() {
           className="flex items-center gap-2 rounded-full px-1 py-1 hover:bg-warm-gray/60 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sage/50 cursor-pointer"
           aria-label="Menú de usuario"
         >
-          <span className="hidden sm:block text-sm font-medium text-charcoal truncate max-w-32">
+          <span className={`hidden sm:block text-sm font-medium truncate max-w-32 transition-colors duration-300 ${transparent ? "text-white" : "text-charcoal"}`}>
             {user.name?.split(" ")[0] || "User"}
           </span>
           <Avatar className="h-8 w-8">

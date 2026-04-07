@@ -98,6 +98,12 @@ const RoomCreatePage = lazy(
 const RoomEditPage = lazy(() => import("@/pages/admin/resources/RoomEditPage"));
 const OrderListPage = lazy(() => import("@/pages/admin/OrderListPage"));
 const OrderDetailPage = lazy(() => import("@/pages/admin/OrderDetailPage"));
+const AdminTicketListPage = lazy(() => import("@/pages/admin/TicketListPage"));
+const AdminTicketDetailPage = lazy(() => import("@/pages/admin/TicketDetailPage"));
+const MediaManagerPage = lazy(() => import("@/pages/admin/MediaManagerPage"));
+const ClientListPage = lazy(() => import("@/pages/admin/ClientListPage"));
+const ClientDetailPage = lazy(() => import("@/pages/admin/ClientDetailPage"));
+const SettingsPage = lazy(() => import("@/pages/admin/SettingsPage"));
 const CheckInPage = lazy(() => import("@/pages/admin/CheckInPage"));
 const PassListPage = lazy(() => import("@/pages/admin/PassListPage"));
 const PassCreatePage = lazy(() => import("@/pages/admin/PassCreatePage"));
@@ -152,15 +158,6 @@ const PortalProfilePage = lazy(
 // ─── Error pages ───
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const ForbiddenPage = lazy(() => import("@/pages/ForbiddenPage"));
-
-function AdminPlaceholder({ title }) {
-  return (
-    <div>
-      <h1 className="text-2xl font-semibold text-charcoal mb-2">{title}</h1>
-      <p className="text-charcoal-muted">Próximamente</p>
-    </div>
-  );
-}
 
 function PageLoader() {
   return (
@@ -286,14 +283,6 @@ export default function App() {
               <Route path="addons" element={<AddonListPage />} />
               <Route path="addons/new" element={<AddonCreatePage />} />
               <Route path="addons/:addonId/edit" element={<AddonEditPage />} />
-              <Route
-                path="editions"
-                element={<AdminPlaceholder title="Ediciones" />}
-              />
-              <Route
-                path="pricing"
-                element={<AdminPlaceholder title="Precios" />}
-              />
               <Route path="packages" element={<PackageListPage />} />
               <Route path="packages/new" element={<PackageCreatePage />} />
               <Route
@@ -332,14 +321,16 @@ export default function App() {
               />
               <Route path="orders" element={<OrderListPage />} />
               <Route path="orders/:orderId" element={<OrderDetailPage />} />
-              <Route
-                path="tickets"
-                element={<AdminPlaceholder title="Tickets" />}
-              />
+              <Route path="tickets" element={<AdminTicketListPage />} />
+              <Route path="tickets/:ticketId" element={<AdminTicketDetailPage />} />
               <Route path="check-in" element={<CheckInPage />} />
               <Route
                 path="clients"
-                element={<AdminPlaceholder title="Clientes" />}
+                element={<ClientListPage />}
+              />
+              <Route
+                path="clients/:userId"
+                element={<ClientDetailPage />}
               />
               <Route path="publications" element={<PublicationListPage />} />
               <Route
@@ -354,14 +345,8 @@ export default function App() {
                 path="publications/:id/sections"
                 element={<PublicationSectionsPage />}
               />
-              <Route
-                path="media"
-                element={<AdminPlaceholder title="Media" />}
-              />
-              <Route
-                path="settings"
-                element={<AdminPlaceholder title="Configuración" />}
-              />
+              <Route path="media" element={<MediaManagerPage />} />
+              <Route path="settings" element={<SettingsPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Route>

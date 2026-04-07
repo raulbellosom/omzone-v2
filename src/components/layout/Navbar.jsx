@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
@@ -26,7 +26,21 @@ export default function Navbar() {
   const { user, isAdmin, isClient, isOperator, loading, logout } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  const isHome = location.pathname === "/";
+  const isTransparent = isHome && !scrolled;
+
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 40);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   async function handleLogout() {
     setMobileOpen(false);
@@ -35,11 +49,19 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-40 h-16 border-b border-warm-gray-dark/40 bg-white/80 backdrop-blur-md flex items-center px-5 sm:px-6">
+    <header
+      className={`fixed top-0 left-0 w-full z-40 h-16 flex items-center px-4 sm:px-5 md:px-6 transition-all duration-300 ${
+        isTransparent
+          ? "bg-transparent border-b border-transparent"
+          : "bg-white/80 backdrop-blur-md border-b border-warm-gray-dark/40"
+      }`}
+    >
       {/* Logo */}
       <Link
         to={ROUTES.HOME}
-        className="font-display text-lg font-semibold text-charcoal tracking-widest"
+        className={`font-display text-lg font-semibold tracking-widest transition-colors duration-300 ${
+          isTransparent ? "text-white" : "text-charcoal"
+        }`}
       >
         OMZONE
       </Link>
@@ -53,9 +75,13 @@ export default function Navbar() {
             end={end}
             className={({ isActive }) =>
               `px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
-                isActive
-                  ? "text-sage bg-sage/8"
-                  : "text-charcoal-muted hover:text-charcoal hover:bg-warm-gray/60"
+                isTransparent
+                  ? isActive
+                    ? "text-white bg-white/15"
+                    : "text-white/75 hover:text-white hover:bg-white/10"
+                  : isActive
+                    ? "text-sage bg-sage/8"
+                    : "text-charcoal-muted hover:text-charcoal hover:bg-warm-gray/60"
               }`
             }
           >
@@ -69,12 +95,16 @@ export default function Navbar() {
       {/* Desktop auth area */}
       {!loading && (
         <div className="hidden lg:flex items-center gap-3">
-          <LanguageSwitcher />
+          <LanguageSwitcher transparent={isTransparent} />
           {!user ? (
             <>
               <Link
                 to={ROUTES.LOGIN}
-                className="text-sm font-medium text-charcoal hover:text-sage transition-colors"
+                className={`text-sm font-medium transition-colors ${
+                  isTransparent
+                    ? "text-white/85 hover:text-white"
+                    : "text-charcoal hover:text-sage"
+                }`}
               >
                 {t("nav.login")}
               </Link>
@@ -83,7 +113,7 @@ export default function Navbar() {
               </Button>
             </>
           ) : (
-            <UserMenuDropdown />
+            <UserMenuDropdown transparent={isTransparent} />
           )}
         </div>
       )}
@@ -93,7 +123,11 @@ export default function Navbar() {
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
             <button
-              className="lg:hidden p-2 -mr-2 text-charcoal hover:text-sage transition-colors"
+              className={`lg:hidden p-2 -mr-2 transition-colors ${
+                isTransparent
+                  ? "text-white hover:text-white/80"
+                  : "text-charcoal hover:text-sage"
+              }`}
               aria-label="Open menu"
             >
               <Menu className="h-5 w-5" />

@@ -159,6 +159,7 @@ function BrowseTab({
 // ─── Upload tab ───────────────────────────────────────────────────────────────
 
 function UploadTab({ bucketId, onUploaded }) {
+  const { t } = useLanguage();
   const {
     upload,
     validate,
@@ -284,6 +285,7 @@ export default function MediaPicker({
   onSelect,
   isAdmin = false,
 }) {
+  const { t } = useLanguage();
   const [tab, setTab] = useState("browse");
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(externalSelected);
