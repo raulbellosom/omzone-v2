@@ -6,7 +6,7 @@ import ExperienceCard from "@/components/public/experiences/ExperienceCard";
 import ExperienceFilters, {
   ExperienceFiltersSkeleton,
 } from "@/components/public/experiences/ExperienceFilters";
-import { Skeleton } from "@/components/common/skeleton";
+import { Skeleton } from "@/components/common/Skeleton";
 import Button from "@/components/common/Button";
 import { Compass } from "lucide-react";
 
