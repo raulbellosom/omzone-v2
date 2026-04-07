@@ -4,15 +4,17 @@ import ResourceListTab from "@/components/admin/resources/ResourceListTab";
 import LocationListTab from "@/components/admin/resources/LocationListTab";
 import RoomListTab from "@/components/admin/resources/RoomListTab";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const TABS = [
-  { id: "resources", label: "Recursos" },
-  { id: "locations", label: "Locaciones" },
-  { id: "rooms",     label: "Cuartos" },
+  { id: "resources", i18nKey: "admin.resources.tabResources" },
+  { id: "locations", i18nKey: "admin.resources.tabLocations" },
+  { id: "rooms", i18nKey: "admin.resources.tabRooms" },
 ];
 
 export default function ResourcesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { t } = useLanguage();
   const activeTab = searchParams.get("tab") ?? "resources";
 
   function setTab(id) {
@@ -23,9 +25,11 @@ export default function ResourcesPage() {
     <div className="space-y-5">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Recursos operativos</h1>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.resources.title")}
+        </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5">
-          Gestiona instructores, espacios, locaciones y cuartos para las experiencias.
+          {t("admin.resources.subtitle")}
         </p>
       </div>
 
@@ -41,10 +45,10 @@ export default function ResourcesPage() {
                 "px-5 py-2.5 text-sm font-medium border-b-2 transition-colors whitespace-nowrap",
                 activeTab === tab.id
                   ? "border-sage text-sage"
-                  : "border-transparent text-charcoal-subtle hover:text-charcoal hover:border-sand-dark"
+                  : "border-transparent text-charcoal-subtle hover:text-charcoal hover:border-sand-dark",
               )}
             >
-              {tab.label}
+              {t(tab.i18nKey)}
             </button>
           ))}
         </nav>
@@ -54,7 +58,7 @@ export default function ResourcesPage() {
       <div>
         {activeTab === "resources" && <ResourceListTab />}
         {activeTab === "locations" && <LocationListTab />}
-        {activeTab === "rooms"     && <RoomListTab />}
+        {activeTab === "rooms" && <RoomListTab />}
       </div>
     </div>
   );

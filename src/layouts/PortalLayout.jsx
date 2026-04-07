@@ -3,6 +3,7 @@ import { Outlet, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import PortalSidebar from "@/components/portal/layout/PortalSidebar";
 import PortalBottomTabs from "@/components/portal/layout/PortalBottomTabs";
+import LanguageSwitcher from "@/components/common/LanguageSwitcher";
 import { Menu } from "lucide-react";
 
 export default function PortalLayout() {
@@ -42,6 +43,8 @@ export default function PortalLayout() {
           </span>
 
           <div className="flex-1" />
+
+          <LanguageSwitcher />
         </header>
 
         {/* Page content */}

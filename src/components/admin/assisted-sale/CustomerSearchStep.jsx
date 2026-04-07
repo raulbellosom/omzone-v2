@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Search, UserPlus, CheckCircle2 } from "lucide-react";
 import { useCustomerSearch } from "@/hooks/useCustomerSearch";
 import { Input } from "@/components/common/Input";
 import { Button } from "@/components/common/Button";
 import WizardStepWrapper from "./WizardStepWrapper";
-import { cn } from "@/lib/utils";
+import { cn, isValidPhone } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 function CustomerCard({ profile, selected, onSelect }) {
   return (
@@ -15,13 +16,15 @@ function CustomerCard({ profile, selected, onSelect }) {
         "w-full text-left rounded-xl border-2 px-4 py-3 transition-all",
         selected
           ? "border-sage bg-sage/5"
-          : "border-sand-dark/40 hover:border-sage/50"
+          : "border-sand-dark/40 hover:border-sage/50",
       )}
     >
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-sm font-medium text-charcoal">
-            {profile.displayName || `${profile.firstName ?? ""} ${profile.lastName ?? ""}`.trim() || "Sin nombre"}
+            {profile.displayName ||
+              `${profile.firstName ?? ""} ${profile.lastName ?? ""}`.trim() ||
+              "Sin nombre"}
           </p>
           <p className="text-xs text-charcoal-muted">{profile.email}</p>
           {profile.phone && (
@@ -35,8 +38,10 @@ function CustomerCard({ profile, selected, onSelect }) {
 }
 
 export default function CustomerSearchStep({ wizard, setWizardField }) {
+  const { t } = useLanguage();
   const [emailQuery, setEmailQuery] = useState(wizard.customerEmail || "");
   const [showNewForm, setShowNewForm] = useState(wizard.isNewCustomer || false);
+  const [phoneTouched, setPhoneTouched] = useState(false);
   const { results, loading, search } = useCustomerSearch();
   const debounceRef = useRef(null);
 
@@ -49,7 +54,11 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
 
   function handleSelectExisting(profile) {
     setWizardField("customer", profile);
-    setWizardField("customerName", profile.displayName || `${profile.firstName ?? ""} ${profile.lastName ?? ""}`.trim());
+    setWizardField(
+      "customerName",
+      profile.displayName ||
+        `${profile.firstName ?? ""} ${profile.lastName ?? ""}`.trim(),
+    );
     setWizardField("customerEmail", profile.email || "");
     setWizardField("customerPhone", profile.phone || "");
     setWizardField("isNewCustomer", false);
@@ -64,7 +73,10 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
     if (emailQuery.trim()) setWizardField("customerEmail", emailQuery.trim());
   }
 
-  const hasSelection = !!(wizard.customer || (wizard.isNewCustomer && wizard.customerName && wizard.customerEmail));
+  const hasSelection = !!(
+    wizard.customer ||
+    (wizard.isNewCustomer && wizard.customerName && wizard.customerEmail)
+  );
 
   return (
     <WizardStepWrapper
@@ -88,7 +100,7 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
           placeholder="Buscar por email..."
           className={cn(
             "h-11 w-full rounded-xl border border-sand-dark bg-white pl-9 pr-3 text-sm text-charcoal",
-            "placeholder:text-charcoal-subtle focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20"
+            "placeholder:text-charcoal-subtle focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20",
           )}
         />
         {loading && (
@@ -99,7 +111,9 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
       {/* Search results */}
       {results.length > 0 && !showNewForm && (
         <div className="space-y-2 mb-4">
-          <p className="text-xs text-charcoal-subtle uppercase tracking-wide font-medium">Clientes encontrados</p>
+          <p className="text-xs text-charcoal-subtle uppercase tracking-wide font-medium">
+            Clientes encontrados
+          </p>
           {results.map((profile) => (
             <CustomerCard
               key={profile.$id}
@@ -112,15 +126,23 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
       )}
 
       {/* No results + email looks valid */}
-      {results.length === 0 && emailQuery.trim().length >= 5 && !loading && !showNewForm && (
-        <p className="text-sm text-charcoal-muted mb-4">
-          No se encontró ningún cliente con ese email.
-        </p>
-      )}
+      {results.length === 0 &&
+        emailQuery.trim().length >= 5 &&
+        !loading &&
+        !showNewForm && (
+          <p className="text-sm text-charcoal-muted mb-4">
+            No se encontró ningún cliente con ese email.
+          </p>
+        )}
 
       {/* Create new customer button */}
       {!showNewForm && !wizard.customer && (
-        <Button type="button" variant="outline" size="sm" onClick={handleNewCustomer}>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleNewCustomer}
+        >
           <UserPlus className="h-4 w-4" />
           Crear cliente nuevo
         </Button>
@@ -148,23 +170,42 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
               <Input
                 type="email"
                 value={wizard.customerEmail}
-                onChange={(e) => setWizardField("customerEmail", e.target.value)}
+                onChange={(e) =>
+                  setWizardField("customerEmail", e.target.value)
+                }
                 placeholder="cliente@email.com"
               />
             </div>
             <div className="space-y-1.5 sm:col-span-2">
-              <label className="text-xs font-medium text-charcoal">Teléfono</label>
+              <label className="text-xs font-medium text-charcoal">
+                Teléfono
+              </label>
               <Input
                 type="tel"
                 value={wizard.customerPhone}
-                onChange={(e) => setWizardField("customerPhone", e.target.value)}
+                onChange={(e) => {
+                  setWizardField("customerPhone", e.target.value);
+                  if (!e.target.value.trim()) setPhoneTouched(false);
+                }}
+                onBlur={() => setPhoneTouched(true)}
                 placeholder="+52 984 123 4567"
               />
+              {phoneTouched &&
+                wizard.customerPhone?.trim() &&
+                !isValidPhone(wizard.customerPhone) && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {t("common.phoneError")}
+                  </p>
+                )}
             </div>
           </div>
           <button
             type="button"
-            onClick={() => { setShowNewForm(false); setWizardField("isNewCustomer", false); setWizardField("customer", null); }}
+            onClick={() => {
+              setShowNewForm(false);
+              setWizardField("isNewCustomer", false);
+              setWizardField("customer", null);
+            }}
             className="text-xs text-charcoal-subtle hover:text-charcoal underline"
           >
             Cancelar — buscar existente
@@ -177,8 +218,11 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
         <div className="mt-3 flex items-center gap-2 rounded-lg bg-sage/10 border border-sage/20 px-3 py-2">
           <CheckCircle2 className="h-4 w-4 text-sage shrink-0" />
           <span className="text-sm text-charcoal">
-            <strong>{wizard.customer.displayName || wizard.customerName}</strong>
-            {" — "}{wizard.customer.email || wizard.customerEmail}
+            <strong>
+              {wizard.customer.displayName || wizard.customerName}
+            </strong>
+            {" — "}
+            {wizard.customer.email || wizard.customerEmail}
           </span>
         </div>
       )}

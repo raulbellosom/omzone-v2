@@ -3,6 +3,7 @@ import {
   useBookingRequests,
   REQUEST_STATUSES,
 } from "@/hooks/useBookingRequests";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Card } from "@/components/common/Card";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
@@ -15,11 +16,12 @@ import { cn } from "@/lib/utils";
 const PAGE_SIZE = 25;
 
 const STATUS_OPTIONS = [
-  { value: "", label: "All statuses" },
+  { value: "", i18nKey: "admin.bookingRequests.allStatuses" },
   ...REQUEST_STATUSES.map((s) => ({ value: s.value, label: s.label })),
 ];
 
 export default function BookingRequestListPage() {
+  const { t } = useLanguage();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(0);
@@ -34,6 +36,11 @@ export default function BookingRequestListPage() {
   const totalPages = Math.ceil(total / PAGE_SIZE);
   const hasFilters = search || status;
 
+  const resolvedStatusOptions = STATUS_OPTIONS.map((s) => ({
+    value: s.value,
+    label: s.i18nKey ? t(s.i18nKey) : s.label,
+  }));
+
   const clearFilters = () => {
     setSearch("");
     setStatus("");
@@ -45,11 +52,13 @@ export default function BookingRequestListPage() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-semibold text-charcoal">
-          Booking Requests
+          {t("admin.bookingRequests.title")}
         </h1>
         {!loading && (
           <p className="text-sm text-charcoal-muted mt-1">
-            {total} request{total !== 1 ? "s" : ""}
+            {total === 1
+              ? t("admin.bookingRequests.countOne")
+              : t("admin.bookingRequests.countOther").replace("{count}", total)}
           </p>
         )}
       </div>
@@ -64,7 +73,7 @@ export default function BookingRequestListPage() {
               setSearch(e.target.value);
               setPage(0);
             }}
-            placeholder="Search by contact name..."
+            placeholder={t("admin.bookingRequests.searchPlaceholder")}
             className="pl-9 h-10"
           />
         </div>
@@ -74,7 +83,7 @@ export default function BookingRequestListPage() {
             setStatus(v);
             setPage(0);
           }}
-          options={STATUS_OPTIONS}
+          options={resolvedStatusOptions}
           fullWidth={false}
         />
         {hasFilters && (
@@ -83,7 +92,7 @@ export default function BookingRequestListPage() {
             className="flex items-center gap-1 text-xs text-charcoal-muted hover:text-charcoal transition-colors"
           >
             <X className="h-3.5 w-3.5" />
-            Clear
+            {t("admin.bookingRequests.clear")}
           </button>
         )}
       </div>
@@ -100,12 +109,12 @@ export default function BookingRequestListPage() {
         <Card className="p-10 text-center">
           <MessageSquare className="h-10 w-10 text-charcoal-muted mx-auto mb-3" />
           <h2 className="text-lg font-semibold text-charcoal mb-1">
-            No booking requests
+            {t("admin.bookingRequests.emptyTitle")}
           </h2>
           <p className="text-sm text-charcoal-muted">
             {hasFilters
-              ? "No requests match your filters. Try clearing them."
-              : "Booking requests will appear here when customers submit inquiries."}
+              ? t("admin.bookingRequests.emptyFiltered")
+              : t("admin.bookingRequests.emptyDefault")}
           </p>
         </Card>
       )}
@@ -143,7 +152,9 @@ export default function BookingRequestListPage() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between pt-2">
           <p className="text-sm text-charcoal-subtle">
-            Page {page + 1} of {totalPages}
+            {t("admin.common.pageOf")
+              .replace("{page}", page + 1)
+              .replace("{total}", totalPages)}
           </p>
           <div className="flex items-center gap-2">
             <Button
@@ -152,7 +163,7 @@ export default function BookingRequestListPage() {
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={page === 0}
             >
-              Previous
+              {t("admin.common.previous")}
             </Button>
             <Button
               variant="outline"
@@ -160,7 +171,7 @@ export default function BookingRequestListPage() {
               onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
               disabled={page >= totalPages - 1}
             >
-              Next
+              {t("admin.common.next")}
             </Button>
           </div>
         </div>

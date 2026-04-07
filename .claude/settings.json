@@ -16,7 +16,12 @@
       "Bash(grep '\"\\\\$id\"')",
       "Bash(ls src/hooks/use*auth*)",
       "Bash(ls src/hooks/useUser*)",
-      "Bash(grep -n \"useAddonAssignments\\\\|addon_assignments\\\\|collectionAddonAssign\" src/hooks/*.js)"
+      "Bash(grep -n \"useAddonAssignments\\\\|addon_assignments\\\\|collectionAddonAssign\" src/hooks/*.js)",
+      "Bash(npm run:*)",
+      "Read(//d d:/RacoonDevs/**)",
+      "Bash(grep -A 10 '\"$id\":' appwrite.json)",
+      "Bash(grep -E '\"\\\\$id\"|\"\\\\$permissions\"')",
+      "Bash(grep -A 10 '\"$id\":' /d/RacoonDevs/omzone-v2/appwrite.json)"
     ]
   }
 }

@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 import Button from "@/components/common/Button";
 import UserMenuDropdown from "@/components/common/UserMenuDropdown";
+import LanguageSwitcher from "@/components/common/LanguageSwitcher";
 import {
   Sheet,
   SheetTrigger,
@@ -14,14 +16,15 @@ import {
 import { Menu, ArrowRight } from "lucide-react";
 
 const NAV_LINKS = [
-  { to: ROUTES.HOME, label: "Home", end: true },
-  { to: ROUTES.EXPERIENCES, label: "Experiences" },
-  { to: ROUTES.ABOUT, label: "About" },
-  { to: ROUTES.CONTACT, label: "Contact" },
+  { to: ROUTES.HOME, key: "nav.home", end: true },
+  { to: ROUTES.EXPERIENCES, key: "nav.experiences" },
+  { to: ROUTES.ABOUT, key: "nav.about" },
+  { to: ROUTES.CONTACT, key: "nav.contact" },
 ];
 
 export default function Navbar() {
   const { user, isAdmin, isClient, isOperator, loading, logout } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -43,7 +46,7 @@ export default function Navbar() {
 
       {/* Desktop navigation links — centered */}
       <nav className="hidden lg:flex items-center gap-1 ml-10">
-        {NAV_LINKS.map(({ to, label, end }) => (
+        {NAV_LINKS.map(({ to, key, end }) => (
           <NavLink
             key={to}
             to={to}
@@ -56,7 +59,7 @@ export default function Navbar() {
               }`
             }
           >
-            {label}
+            {t(key)}
           </NavLink>
         ))}
       </nav>
@@ -66,16 +69,17 @@ export default function Navbar() {
       {/* Desktop auth area */}
       {!loading && (
         <div className="hidden lg:flex items-center gap-3">
+          <LanguageSwitcher />
           {!user ? (
             <>
               <Link
                 to={ROUTES.LOGIN}
                 className="text-sm font-medium text-charcoal hover:text-sage transition-colors"
               >
-                Login
+                {t("nav.login")}
               </Link>
               <Button asChild size="sm">
-                <Link to={ROUTES.REGISTER}>Register</Link>
+                <Link to={ROUTES.REGISTER}>{t("nav.register")}</Link>
               </Button>
             </>
           ) : (
@@ -103,7 +107,7 @@ export default function Navbar() {
             </SheetHeader>
             <nav className="flex flex-col gap-1 px-5 mt-4">
               {/* Navigation links */}
-              {NAV_LINKS.map(({ to, label, end }) => (
+              {NAV_LINKS.map(({ to, key, end }) => (
                 <NavLink
                   key={to}
                   to={to}
@@ -117,9 +121,14 @@ export default function Navbar() {
                     }`
                   }
                 >
-                  {label}
+                  {t(key)}
                 </NavLink>
               ))}
+
+              {/* Language switcher — mobile */}
+              <div className="px-3 pt-1">
+                <LanguageSwitcher />
+              </div>
 
               <div className="my-2 border-t border-warm-gray-dark/40" />
 
@@ -136,19 +145,15 @@ export default function Navbar() {
                       to={ROUTES.LOGIN}
                       onClick={() => setMobileOpen(false)}
                     >
-                      Login
+                      {t("nav.login")}
                     </Link>
                   </Button>
-                  <Button
-                    asChild
-                    size="sm"
-                    className="w-full justify-center"
-                  >
+                  <Button asChild size="sm" className="w-full justify-center">
                     <Link
                       to={ROUTES.REGISTER}
                       onClick={() => setMobileOpen(false)}
                     >
-                      Register
+                      {t("nav.register")}
                     </Link>
                   </Button>
                 </div>
@@ -160,7 +165,7 @@ export default function Navbar() {
                       onClick={() => setMobileOpen(false)}
                       className="py-3 px-3 text-sm font-medium text-charcoal hover:bg-warm-gray rounded-xl transition-colors flex items-center justify-between"
                     >
-                      Admin Panel
+                      {t("nav.adminPanel")}
                       <ArrowRight className="h-4 w-4 text-charcoal-subtle" />
                     </Link>
                   )}
@@ -170,7 +175,7 @@ export default function Navbar() {
                       onClick={() => setMobileOpen(false)}
                       className="py-3 px-3 text-sm font-medium text-charcoal hover:bg-warm-gray rounded-xl transition-colors flex items-center justify-between"
                     >
-                      Mi Portal
+                      {t("nav.myPortal")}
                       <ArrowRight className="h-4 w-4 text-charcoal-subtle" />
                     </Link>
                   )}
@@ -183,7 +188,7 @@ export default function Navbar() {
                     onClick={handleLogout}
                     className="py-3 px-3 text-sm font-medium text-left text-charcoal hover:bg-warm-gray rounded-xl transition-colors cursor-pointer"
                   >
-                    Logout
+                    {t("nav.logout")}
                   </button>
                 </>
               )}

@@ -2,19 +2,23 @@ import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Settings2 } from "lucide-react";
 import { useUserPass, updateUserPass } from "@/hooks/useUserPasses";
-import { usePassConsumptions, createConsumption } from "@/hooks/usePassConsumptions";
+import {
+  usePassConsumptions,
+  createConsumption,
+} from "@/hooks/usePassConsumptions";
 import CreditAdjustForm from "@/components/admin/passes/CreditAdjustForm";
 import { Button } from "@/components/common/Button";
 import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const STATUS_BADGE = {
-  active: { variant: "success", label: "Activo" },
-  exhausted: { variant: "warm", label: "Agotado" },
-  expired: { variant: "default", label: "Expirado" },
-  cancelled: { variant: "destructive", label: "Cancelado" },
+  active: { variant: "success", i18nKey: "admin.userPasses.active" },
+  exhausted: { variant: "warm", i18nKey: "admin.userPasses.depleted" },
+  expired: { variant: "default", i18nKey: "admin.userPasses.expired" },
+  cancelled: { variant: "destructive", i18nKey: "admin.userPasses.cancelled" },
 };
 
 function parseSnapshot(text) {
@@ -42,9 +46,13 @@ function ProgressBar({ used, total }) {
     <div className="space-y-1">
       <div className="flex justify-between text-xs text-charcoal-muted">
         <span>
-          {used} usados de {total}
+          {t("admin.userPassDetail.usedOfTotal")
+            .replace("{used}", used)
+            .replace("{total}", total)}
         </span>
-        <span>{total - used} disponibles</span>
+        <span>
+          {t("admin.userPassDetail.available").replace("{count}", total - used)}
+        </span>
       </div>
       <div className="h-3 rounded-full bg-warm-gray overflow-hidden">
         <div
@@ -76,6 +84,7 @@ function LoadingSkeleton() {
 }
 
 export default function UserPassDetailPage() {
+  const { t } = useLanguage();
   const { userPassId } = useParams();
   const { data: userPass, loading, error, refetch } = useUserPass(userPassId);
   const {
@@ -95,7 +104,10 @@ export default function UserPassDetailPage() {
     const updatePayload = { usedCredits: newUsed };
     if (newUsed >= userPass.totalCredits) {
       updatePayload.status = "exhausted";
-    } else if (userPass.status === "exhausted" && newUsed < userPass.totalCredits) {
+    } else if (
+      userPass.status === "exhausted" &&
+      newUsed < userPass.totalCredits
+    ) {
       updatePayload.status = "active";
     }
     await updateUserPass(userPassId, updatePayload);
@@ -105,7 +117,9 @@ export default function UserPassDetailPage() {
       userPassId,
       creditsUsed: mode === "consume" ? credits : -credits,
       consumedAt: new Date().toISOString(),
-      notes: notes || `Ajuste manual: ${mode === "consume" ? "consumo" : "restauración"}`,
+      notes:
+        notes ||
+        `Ajuste manual: ${mode === "consume" ? "consumo" : "restauración"}`,
     });
 
     setShowAdjust(false);
@@ -120,7 +134,7 @@ export default function UserPassDetailPage() {
       <div className="max-w-4xl">
         <Card className="p-6 border-red-200 bg-red-50">
           <p className="text-sm text-red-700">
-            {error ?? "No se encontró el pase de usuario."}
+            {error ?? t("admin.userPassDetail.notFound")}
           </p>
         </Card>
       </div>
@@ -130,7 +144,7 @@ export default function UserPassDetailPage() {
   const snap = parseSnapshot(userPass.passSnapshot);
   const statusCfg = STATUS_BADGE[userPass.status] ?? {
     variant: "default",
-    label: userPass.status,
+    i18nKey: null,
   };
 
   return (
@@ -143,13 +157,13 @@ export default function UserPassDetailPage() {
             className="inline-flex items-center gap-1 text-sm text-charcoal-muted hover:text-sage transition-colors mb-2"
           >
             <ArrowLeft className="h-4 w-4" />
-            Pases asignados
+            {t("admin.userPassDetail.assignedPasses")}
           </Link>
           <h1 className="text-xl font-semibold text-charcoal">
             {snap?.name ?? userPass.passId}
           </h1>
           <p className="text-xs text-charcoal-muted font-mono mt-0.5">
-            Usuario: {userPass.userId}
+            {t("admin.userPassDetail.user")} {userPass.userId}
           </p>
         </div>
         <Button
@@ -159,7 +173,9 @@ export default function UserPassDetailPage() {
           disabled={userPass.status === "cancelled"}
         >
           <Settings2 className="h-4 w-4" />
-          <span className="hidden sm:inline">Ajustar créditos</span>
+          <span className="hidden sm:inline">
+            {t("admin.userPassDetail.adjustCredits")}
+          </span>
         </Button>
       </div>
 
@@ -167,31 +183,41 @@ export default function UserPassDetailPage() {
       <div className="grid gap-4 sm:grid-cols-2">
         <Card className="p-4 space-y-3">
           <h2 className="text-sm font-medium text-charcoal-muted">
-            Estado del pase
+            {t("admin.userPassDetail.passStatus")}
           </h2>
-          <Badge variant={statusCfg.variant}>{statusCfg.label}</Badge>
+          <Badge variant={statusCfg.variant}>
+            {statusCfg.i18nKey ? t(statusCfg.i18nKey) : userPass.status}
+          </Badge>
           <ProgressBar
             used={userPass.usedCredits}
             total={userPass.totalCredits}
           />
         </Card>
         <Card className="p-4 space-y-2">
-          <h2 className="text-sm font-medium text-charcoal-muted">Detalles</h2>
+          <h2 className="text-sm font-medium text-charcoal-muted">
+            {t("admin.userPassDetail.details")}
+          </h2>
           <dl className="text-sm space-y-1">
             <div className="flex justify-between">
-              <dt className="text-charcoal-muted">Orden</dt>
+              <dt className="text-charcoal-muted">
+                {t("admin.userPassDetail.order")}
+              </dt>
               <dd className="text-charcoal font-mono text-xs truncate max-w-[140px]">
                 {userPass.orderId}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-charcoal-muted">Creado</dt>
+              <dt className="text-charcoal-muted">
+                {t("admin.userPassDetail.created")}
+              </dt>
               <dd className="text-charcoal">
                 {formatDate(userPass.$createdAt)}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-charcoal-muted">Vence</dt>
+              <dt className="text-charcoal-muted">
+                {t("admin.userPassDetail.expires")}
+              </dt>
               <dd className="text-charcoal">
                 {formatDate(userPass.expiresAt)}
               </dd>
@@ -278,12 +304,12 @@ export default function UserPassDetailPage() {
                       <span
                         className={cn(
                           "font-medium",
-                          c.creditsUsed > 0
-                            ? "text-red-600"
-                            : "text-green-600",
+                          c.creditsUsed > 0 ? "text-red-600" : "text-green-600",
                         )}
                       >
-                        {c.creditsUsed > 0 ? `-${c.creditsUsed}` : `+${Math.abs(c.creditsUsed)}`}
+                        {c.creditsUsed > 0
+                          ? `-${c.creditsUsed}`
+                          : `+${Math.abs(c.creditsUsed)}`}
                       </span>
                     </td>
                     <td className="px-4 py-2 text-charcoal-muted text-xs truncate max-w-[120px]">

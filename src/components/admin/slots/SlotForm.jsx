@@ -9,25 +9,32 @@ import { useEditions } from "@/hooks/useEditions";
 import AdminSelect from "@/components/common/AdminSelect";
 import SearchCombobox from "@/components/common/SearchCombobox";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const SLOT_TYPE_OPTIONS = [
-  { value: "single_session", label: "Sesión única" },
-  { value: "multi_day", label: "Multi-día" },
-  { value: "retreat_day", label: "Día de retiro" },
-  { value: "private", label: "Privada" },
+  { value: "single_session", i18nKey: "admin.slotForm.typeSingle" },
+  { value: "multi_day", i18nKey: "admin.slotForm.typeMultiDay" },
+  { value: "retreat_day", i18nKey: "admin.slotForm.typeRetreatDay" },
+  { value: "private", i18nKey: "admin.slotForm.typePrivate" },
 ];
 
 const STATUS_OPTIONS = [
-  { value: "draft", label: "Borrador" },
-  { value: "published", label: "Publicado" },
+  { value: "draft", i18nKey: "admin.statuses.draft" },
+  { value: "published", i18nKey: "admin.statuses.published" },
 ];
 
 const TIMEZONE_OPTIONS = [
-  { value: "America/Mexico_City", label: "Ciudad de México (CST)" },
-  { value: "America/Cancun", label: "Cancún (EST)" },
-  { value: "America/Tijuana", label: "Tijuana (PST)" },
-  { value: "America/Los_Angeles", label: "Los Ángeles (PST)" },
-  { value: "America/New_York", label: "Nueva York (EST)" },
+  {
+    value: "America/Mexico_City",
+    i18nKey: "admin.slotQuickCreate.timezoneMexico",
+  },
+  { value: "America/Cancun", i18nKey: "admin.slotQuickCreate.timezoneCancun" },
+  {
+    value: "America/Tijuana",
+    i18nKey: "admin.slotQuickCreate.timezoneTijuana",
+  },
+  { value: "America/Los_Angeles", label: "Los Angeles (PST)" },
+  { value: "America/New_York", label: "New York (EST)" },
   { value: "UTC", label: "UTC" },
 ];
 
@@ -70,8 +77,9 @@ export default function SlotForm({
   initialData = null,
   onSubmit,
   submitting = false,
-  submitLabel = "Crear slot",
+  submitLabel = "Create slot",
 }) {
+  const { t } = useLanguage();
   const isEdit = !!initialData;
   const [form, setForm] = useState(() => {
     if (initialData) {
@@ -110,19 +118,21 @@ export default function SlotForm({
 
   function validate() {
     const errs = {};
-    if (!form.startDatetime) errs.startDatetime = "Requerido";
-    if (!form.endDatetime) errs.endDatetime = "Requerido";
+    if (!form.startDatetime)
+      errs.startDatetime = t("admin.slotQuickCreate.required");
+    if (!form.endDatetime)
+      errs.endDatetime = t("admin.slotQuickCreate.required");
     if (
       form.startDatetime &&
       form.endDatetime &&
       new Date(form.startDatetime) >= new Date(form.endDatetime)
     ) {
-      errs.endDatetime = "Debe ser posterior a la fecha de inicio";
+      errs.endDatetime = t("admin.slotForm.endDateError");
     }
     if (!form.capacity || parseInt(form.capacity, 10) <= 0) {
-      errs.capacity = "Debe ser mayor a 0";
+      errs.capacity = t("admin.slotForm.capacityError");
     }
-    if (!form.timezone) errs.timezone = "Requerido";
+    if (!form.timezone) errs.timezone = t("admin.slotQuickCreate.required");
     return errs;
   }
 
@@ -163,27 +173,30 @@ export default function SlotForm({
       {/* Basic info */}
       <Card className="p-5 space-y-4">
         <h2 className="text-base font-semibold text-charcoal">
-          Información básica
+          {t("admin.slotForm.sectionBasicInfo")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Tipo de slot" required>
+          <Field label={t("admin.slotForm.slotType")} required>
             <AdminSelect
               value={form.slotType}
               onChange={(v) => set("slotType", v)}
-              options={SLOT_TYPE_OPTIONS}
+              options={SLOT_TYPE_OPTIONS.map((o) => ({
+                ...o,
+                label: t(o.i18nKey),
+              }))}
             />
           </Field>
           <Field
-            label="Edición"
-            hint="Opcional — vincular a una edición específica"
+            label={t("admin.slotForm.edition")}
+            hint={t("admin.slotForm.editionHint")}
           >
             <SearchCombobox
               value={form.editionId}
               onValueChange={(v) => set("editionId", v)}
               options={editionOptions}
-              placeholder="Sin edición"
-              searchPlaceholder="Buscar edición"
-              emptyMessage="No se encontraron ediciones."
+              placeholder={t("admin.slotForm.noEdition")}
+              searchPlaceholder={t("admin.slotForm.searchEdition")}
+              emptyMessage={t("admin.common.noResults")}
             />
           </Field>
         </div>
@@ -192,10 +205,14 @@ export default function SlotForm({
       {/* Date & time */}
       <Card className="p-5 space-y-4">
         <h2 className="text-base font-semibold text-charcoal">
-          Fecha y horario
+          {t("admin.slotForm.sectionDateTime")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Inicio" required error={errors.startDatetime}>
+          <Field
+            label={t("admin.slotForm.startDate")}
+            required
+            error={errors.startDatetime}
+          >
             <Input
               type="datetime-local"
               value={form.startDatetime}
@@ -203,7 +220,11 @@ export default function SlotForm({
               className={errors.startDatetime ? "border-red-400" : ""}
             />
           </Field>
-          <Field label="Fin" required error={errors.endDatetime}>
+          <Field
+            label={t("admin.slotForm.endDate")}
+            required
+            error={errors.endDatetime}
+          >
             <Input
               type="datetime-local"
               value={form.endDatetime}
@@ -213,21 +234,32 @@ export default function SlotForm({
           </Field>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Zona horaria" required error={errors.timezone}>
+          <Field
+            label={t("admin.slotForm.timezone")}
+            required
+            error={errors.timezone}
+          >
             <AdminSelect
               value={form.timezone}
               onChange={(v) => set("timezone", v)}
-              options={TIMEZONE_OPTIONS}
+              options={TIMEZONE_OPTIONS.map((o) => ({
+                ...o,
+                label: o.i18nKey ? t(o.i18nKey) : o.label,
+              }))}
               error={!!errors.timezone}
             />
           </Field>
-          <Field label="Capacidad" required error={errors.capacity}>
+          <Field
+            label={t("admin.slotForm.capacity")}
+            required
+            error={errors.capacity}
+          >
             <Input
               type="number"
               min="1"
               value={form.capacity}
               onChange={(e) => set("capacity", e.target.value)}
-              placeholder="Ej: 20"
+              placeholder={t("admin.slotForm.capacityPlaceholder")}
               className={errors.capacity ? "border-red-400" : ""}
             />
           </Field>
@@ -236,29 +268,31 @@ export default function SlotForm({
 
       {/* Location */}
       <Card className="p-5 space-y-4">
-        <h2 className="text-base font-semibold text-charcoal">Ubicación</h2>
+        <h2 className="text-base font-semibold text-charcoal">
+          {t("admin.slotForm.sectionLocation")}
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field
-            label="Locación"
-            hint={locations.length === 0 ? "No hay locaciones registradas" : ""}
+            label={t("admin.slotForm.locationLabel")}
+            hint={locations.length === 0 ? t("admin.slotForm.noLocations") : ""}
           >
             <SearchCombobox
               value={form.locationId}
               onValueChange={(v) => set("locationId", v)}
               options={locationOptions}
-              placeholder="Seleccionar locación"
-              searchPlaceholder="Buscar locación"
-              emptyMessage="No hay locaciones."
+              placeholder={t("admin.slotForm.selectLocation")}
+              searchPlaceholder={t("admin.slotForm.searchLocation")}
+              emptyMessage={t("admin.common.noResults")}
               disabled={locations.length === 0}
             />
           </Field>
           <Field
-            label="Sala / espacio"
+            label={t("admin.slotForm.room")}
             hint={
               !form.locationId
-                ? "Selecciona una locación primero"
+                ? t("admin.slotForm.selectLocationFirst")
                 : rooms.length === 0
-                  ? "No hay salas en esta locación"
+                  ? t("admin.slotForm.noLocations")
                   : ""
             }
           >
@@ -266,9 +300,9 @@ export default function SlotForm({
               value={form.roomId}
               onValueChange={(v) => set("roomId", v)}
               options={roomOptions}
-              placeholder="Seleccionar sala"
-              searchPlaceholder="Buscar sala"
-              emptyMessage="No hay salas."
+              placeholder={t("admin.slotForm.selectRoom")}
+              searchPlaceholder={t("admin.slotForm.searchRoom")}
+              emptyMessage={t("admin.common.noResults")}
               disabled={!form.locationId || rooms.length === 0}
             />
           </Field>
@@ -278,23 +312,29 @@ export default function SlotForm({
       {/* Status & notes */}
       <Card className="p-5 space-y-4">
         <h2 className="text-base font-semibold text-charcoal">
-          Estado y notas
+          {t("admin.slotForm.sectionStatusNotes")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Estado">
+          <Field label={t("admin.slotForm.status")}>
             <AdminSelect
               value={form.status}
               onChange={(v) => set("status", v)}
-              options={STATUS_OPTIONS}
+              options={STATUS_OPTIONS.map((o) => ({
+                ...o,
+                label: t(o.i18nKey),
+              }))}
             />
           </Field>
         </div>
-        <Field label="Notas internas" hint="Solo visibles para el equipo">
+        <Field
+          label={t("admin.slotForm.internalNotes")}
+          hint={t("admin.slotForm.internalNotesHint")}
+        >
           <Textarea
             value={form.notes}
             onChange={(e) => set("notes", e.target.value)}
             rows={3}
-            placeholder="Notas opcionales..."
+            placeholder={t("admin.slotForm.notesPlaceholder")}
           />
         </Field>
       </Card>
@@ -302,7 +342,7 @@ export default function SlotForm({
       {/* Submit */}
       <div className="flex justify-end gap-3">
         <Button type="submit" disabled={submitting}>
-          {submitting ? "Guardando..." : submitLabel}
+          {submitting ? t("admin.common.saving") : submitLabel}
         </Button>
       </div>
     </form>

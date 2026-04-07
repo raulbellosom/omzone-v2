@@ -1,6 +1,7 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 import {
   LayoutDashboard,
   Sparkles,
@@ -22,10 +23,10 @@ import {
 
 const NAV_SECTIONS = [
   {
-    label: "General",
+    labelKey: "admin.sidebar.general",
     items: [
       {
-        name: "Dashboard",
+        nameKey: "admin.sidebar.dashboard",
         path: ROUTES.ADMIN,
         icon: LayoutDashboard,
         end: true,
@@ -33,58 +34,111 @@ const NAV_SECTIONS = [
     ],
   },
   {
-    label: "Catálogo",
-    items: [
-      { name: "Experiencias", path: ROUTES.ADMIN_EXPERIENCES, icon: Sparkles },
-      { name: "Ediciones", path: ROUTES.ADMIN_EDITIONS, icon: CalendarRange },
-      { name: "Precios", path: ROUTES.ADMIN_PRICING, icon: DollarSign },
-      { name: "Addons", path: ROUTES.ADMIN_ADDONS, icon: Puzzle },
-      { name: "Paquetes", path: ROUTES.ADMIN_PACKAGES, icon: Package },
-      { name: "Pases", path: ROUTES.ADMIN_PASSES, icon: Ticket },
-    ],
-  },
-  {
-    label: "Operación",
-    items: [
-      { name: "Agenda", path: ROUTES.ADMIN_SLOTS, icon: CalendarDays },
-      { name: "Recursos", path: ROUTES.ADMIN_RESOURCES, icon: Warehouse },
-    ],
-  },
-  {
-    label: "Ventas",
-    items: [
-      { name: "Solicitudes", path: ROUTES.ADMIN_BOOKING_REQUESTS, icon: MessageSquare },
-      { name: "Órdenes", path: ROUTES.ADMIN_ORDERS, icon: ShoppingCart },
-      { name: "Tickets", path: ROUTES.ADMIN_TICKETS, icon: TicketCheck },
-      { name: "Clientes", path: ROUTES.ADMIN_CLIENTS, icon: Users },
-    ],
-  },
-  {
-    label: "Contenido",
+    labelKey: "admin.sidebar.catalog",
     items: [
       {
-        name: "Publicaciones",
+        nameKey: "admin.sidebar.experiences",
+        path: ROUTES.ADMIN_EXPERIENCES,
+        icon: Sparkles,
+      },
+      {
+        nameKey: "admin.sidebar.editions",
+        path: ROUTES.ADMIN_EDITIONS,
+        icon: CalendarRange,
+      },
+      {
+        nameKey: "admin.sidebar.pricing",
+        path: ROUTES.ADMIN_PRICING,
+        icon: DollarSign,
+      },
+      {
+        nameKey: "admin.sidebar.addons",
+        path: ROUTES.ADMIN_ADDONS,
+        icon: Puzzle,
+      },
+      {
+        nameKey: "admin.sidebar.packages",
+        path: ROUTES.ADMIN_PACKAGES,
+        icon: Package,
+      },
+      {
+        nameKey: "admin.sidebar.passes",
+        path: ROUTES.ADMIN_PASSES,
+        icon: Ticket,
+      },
+    ],
+  },
+  {
+    labelKey: "admin.sidebar.operations",
+    items: [
+      {
+        nameKey: "admin.sidebar.agenda",
+        path: ROUTES.ADMIN_SLOTS,
+        icon: CalendarDays,
+      },
+      {
+        nameKey: "admin.sidebar.resources",
+        path: ROUTES.ADMIN_RESOURCES,
+        icon: Warehouse,
+      },
+    ],
+  },
+  {
+    labelKey: "admin.sidebar.sales",
+    items: [
+      {
+        nameKey: "admin.sidebar.bookingRequests",
+        path: ROUTES.ADMIN_BOOKING_REQUESTS,
+        icon: MessageSquare,
+      },
+      {
+        nameKey: "admin.sidebar.orders",
+        path: ROUTES.ADMIN_ORDERS,
+        icon: ShoppingCart,
+      },
+      {
+        nameKey: "admin.sidebar.tickets",
+        path: ROUTES.ADMIN_TICKETS,
+        icon: TicketCheck,
+      },
+      {
+        nameKey: "admin.sidebar.clients",
+        path: ROUTES.ADMIN_CLIENTS,
+        icon: Users,
+      },
+    ],
+  },
+  {
+    labelKey: "admin.sidebar.content",
+    items: [
+      {
+        nameKey: "admin.sidebar.publications",
         path: ROUTES.ADMIN_PUBLICATIONS,
         icon: FileText,
       },
-      { name: "Media", path: ROUTES.ADMIN_MEDIA, icon: Image },
+      { nameKey: "admin.sidebar.media", path: ROUTES.ADMIN_MEDIA, icon: Image },
     ],
   },
   {
-    label: "Sistema",
+    labelKey: "admin.sidebar.system",
     items: [
-      { name: "Configuración", path: ROUTES.ADMIN_SETTINGS, icon: Settings },
+      {
+        nameKey: "admin.sidebar.settings",
+        path: ROUTES.ADMIN_SETTINGS,
+        icon: Settings,
+      },
     ],
   },
 ];
 
 function SidebarNav({ onNavigate }) {
+  const { t } = useLanguage();
   return (
     <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
       {NAV_SECTIONS.map((section) => (
-        <div key={section.label}>
+        <div key={section.labelKey}>
           <p className="px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-charcoal-subtle">
-            {section.label}
+            {t(section.labelKey)}
           </p>
           <ul className="space-y-0.5">
             {section.items.map((item) => (
@@ -95,7 +149,7 @@ function SidebarNav({ onNavigate }) {
                   onClick={onNavigate}
                   className={({ isActive }) =>
                     cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors min-h-11",
                       isActive
                         ? "bg-sage/10 text-sage-dark"
                         : "text-charcoal-muted hover:bg-warm-gray hover:text-charcoal",
@@ -103,7 +157,7 @@ function SidebarNav({ onNavigate }) {
                   }
                 >
                   <item.icon className="h-4 w-4 shrink-0" />
-                  <span>{item.name}</span>
+                  <span>{t(item.nameKey)}</span>
                 </NavLink>
               </li>
             ))}
@@ -115,13 +169,14 @@ function SidebarNav({ onNavigate }) {
 }
 
 function SidebarHeader() {
+  const { t } = useLanguage();
   return (
-    <div className="flex items-center gap-2 px-5 py-4 border-b border-warm-gray-dark/40">
+    <div className="flex items-center gap-2 px-5 h-14 shrink-0 border-b border-warm-gray-dark/40">
       <span className="font-display text-lg font-semibold text-charcoal">
         OMZONE
       </span>
       <span className="text-[11px] font-medium text-charcoal-subtle uppercase tracking-wider">
-        Admin
+        {t("admin.sidebar.admin")}
       </span>
     </div>
   );

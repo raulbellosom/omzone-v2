@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PassForm from "@/components/admin/passes/PassForm";
 import { usePass, updatePass } from "@/hooks/usePasses";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Card } from "@/components/common/Card";
 import { ROUTES } from "@/constants/routes";
 
@@ -24,6 +25,7 @@ function LoadingSkeleton() {
 export default function PassEditPage() {
   const { passId } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { data: pass, loading, error: loadError } = usePass(passId);
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
@@ -48,7 +50,7 @@ export default function PassEditPage() {
       <div className="max-w-4xl">
         <Card className="p-6 border-red-200 bg-red-50">
           <p className="text-sm text-red-700">
-            {loadError ?? "No se encontró el pase."}
+            {loadError ?? t("admin.passes.notFound")}
           </p>
         </Card>
       </div>
@@ -58,7 +60,9 @@ export default function PassEditPage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Editar pase</h1>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.passes.editTitle")}
+        </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
           {pass.name}
         </p>
@@ -74,7 +78,7 @@ export default function PassEditPage() {
         initialData={pass}
         onSubmit={handleSubmit}
         submitting={submitting}
-        submitLabel="Guardar cambios"
+        submitLabel={t("admin.passes.saveChanges")}
       />
     </div>
   );

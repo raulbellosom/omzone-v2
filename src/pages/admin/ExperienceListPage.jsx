@@ -8,25 +8,26 @@ import ExperienceTable from "@/components/admin/experiences/ExperienceTable";
 import ExperienceCard from "@/components/admin/experiences/ExperienceCard";
 import { useExperiences, updateExperience } from "@/hooks/useExperiences";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
 
 const TYPE_OPTIONS = [
-  { value: "", label: "Todos los tipos" },
-  { value: "session", label: "Sesión" },
-  { value: "immersion", label: "Inmersión" },
-  { value: "retreat", label: "Retiro" },
-  { value: "stay", label: "Estancia" },
-  { value: "private", label: "Privada" },
-  { value: "package", label: "Paquete" },
+  { value: "", i18nKey: "admin.experienceTypes.all" },
+  { value: "session", i18nKey: "admin.experienceTypes.session" },
+  { value: "immersion", i18nKey: "admin.experienceTypes.immersion" },
+  { value: "retreat", i18nKey: "admin.experienceTypes.retreat" },
+  { value: "stay", i18nKey: "admin.experienceTypes.stay" },
+  { value: "private", i18nKey: "admin.experienceTypes.private" },
+  { value: "package", i18nKey: "admin.experienceTypes.package" },
 ];
 
 const STATUS_OPTIONS = [
-  { value: "", label: "Todos los estados" },
-  { value: "draft", label: "Borrador" },
-  { value: "published", label: "Publicada" },
-  { value: "archived", label: "Archivada" },
+  { value: "", i18nKey: "admin.statuses.all" },
+  { value: "draft", i18nKey: "admin.statuses.draft" },
+  { value: "published", i18nKey: "admin.statuses.published" },
+  { value: "archived", i18nKey: "admin.statuses.archived" },
 ];
 
 const PAGE_SIZE = 25;
@@ -34,6 +35,7 @@ const PAGE_SIZE = 25;
 export default function ExperienceListPage() {
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
+  const { t } = useLanguage();
 
   const [search, setSearch] = useState("");
   const [type, setType] = useState("");
@@ -87,10 +89,14 @@ export default function ExperienceListPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">Experiencias</h1>
+          <h1 className="text-xl font-semibold text-charcoal">
+            {t("admin.experiences.title")}
+          </h1>
           {!loading && (
             <p className="text-sm text-charcoal-subtle mt-0.5">
-              {total} {total === 1 ? "experiencia" : "experiencias"}
+              {total === 1
+                ? t("admin.experiences.countOne")
+                : t("admin.experiences.countOther").replace("{count}", total)}
             </p>
           )}
         </div>
@@ -101,7 +107,7 @@ export default function ExperienceListPage() {
             onClick={() => navigate(ROUTES.ADMIN_EXPERIENCE_NEW)}
           >
             <Plus className="h-4 w-4" />
-            Nueva experiencia
+            {t("admin.experiences.newExperience")}
           </Button>
         )}
       </div>
@@ -113,20 +119,20 @@ export default function ExperienceListPage() {
           <Input
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder="Buscar por nombre..."
+            placeholder={t("admin.experiences.searchPlaceholder")}
             className="pl-9 h-10"
           />
         </div>
         <AdminSelect
           value={type}
           onChange={handleTypeChange}
-          options={TYPE_OPTIONS}
+          options={TYPE_OPTIONS.map((o) => ({ ...o, label: t(o.i18nKey) }))}
           fullWidth={false}
         />
         <AdminSelect
           value={status}
           onChange={handleStatusChange}
-          options={STATUS_OPTIONS}
+          options={STATUS_OPTIONS.map((o) => ({ ...o, label: t(o.i18nKey) }))}
           fullWidth={false}
         />
         {hasFilters && (
@@ -141,7 +147,7 @@ export default function ExperienceListPage() {
             className="flex items-center gap-1 text-sm text-charcoal-subtle hover:text-charcoal"
           >
             <X className="h-4 w-4" />
-            Limpiar
+            {t("admin.common.clear")}
           </button>
         )}
       </div>
@@ -158,10 +164,10 @@ export default function ExperienceListPage() {
         <Card className="p-10 text-center">
           <Sparkles className="h-10 w-10 text-charcoal-muted mx-auto mb-3" />
           <h2 className="text-lg font-semibold text-charcoal mb-1">
-            Sin experiencias
+            {t("admin.experiences.emptyTitle")}
           </h2>
           <p className="text-sm text-charcoal-muted mb-4">
-            Crea la primera experiencia para empezar a construir tu catálogo.
+            {t("admin.experiences.emptyMessage")}
           </p>
           {isAdmin && (
             <Button
@@ -170,7 +176,7 @@ export default function ExperienceListPage() {
               onClick={() => navigate(ROUTES.ADMIN_EXPERIENCE_NEW)}
             >
               <Plus className="h-4 w-4" />
-              Crear primera experiencia
+              {t("admin.experiences.emptyButton")}
             </Button>
           )}
         </Card>
@@ -231,7 +237,9 @@ export default function ExperienceListPage() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between pt-2">
           <p className="text-sm text-charcoal-subtle">
-            Página {page + 1} de {totalPages}
+            {t("admin.common.pageOf")
+              .replace("{page}", page + 1)
+              .replace("{total}", totalPages)}
           </p>
           <div className="flex items-center gap-2">
             <Button
@@ -241,7 +249,7 @@ export default function ExperienceListPage() {
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={page === 0}
             >
-              Anterior
+              {t("admin.common.previous")}
             </Button>
             <Button
               type="button"
@@ -250,7 +258,7 @@ export default function ExperienceListPage() {
               onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
               disabled={page >= totalPages - 1}
             >
-              Siguiente
+              {t("admin.common.next")}
             </Button>
           </div>
         </div>

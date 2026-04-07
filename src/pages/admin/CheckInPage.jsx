@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useValidateTicket } from "@/hooks/useValidateTicket";
+import { useLanguage } from "@/hooks/useLanguage";
 import CheckInResult from "@/components/admin/checkin/CheckInResult";
 import Button from "@/components/common/Button";
 import { ScanLine, RotateCcw } from "lucide-react";
@@ -11,6 +12,7 @@ export default function CheckInPage() {
   const [history, setHistory] = useState([]);
   const inputRef = useRef(null);
   const { validate, result, loading, error, reset } = useValidateTicket();
+  const { t } = useLanguage();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,10 +39,10 @@ export default function CheckInPage() {
         </div>
         <div>
           <h1 className="text-xl md:text-2xl font-display font-bold text-charcoal">
-            Check-in
+            {t("admin.checkin.title")}
           </h1>
           <p className="text-sm text-charcoal-muted">
-            Validate tickets by entering the ticket code
+            {t("admin.checkin.subtitle")}
           </p>
         </div>
       </div>
@@ -54,7 +56,7 @@ export default function CheckInPage() {
           htmlFor="ticket-code-input"
           className="block text-sm font-medium text-charcoal"
         >
-          Ticket Code
+          {t("admin.checkin.ticketCode")}
         </label>
         <div className="flex gap-3">
           <input
@@ -63,7 +65,7 @@ export default function CheckInPage() {
             type="text"
             value={ticketCode}
             onChange={(e) => setTicketCode(e.target.value)}
-            placeholder="OMZ-TKT-XXXXXXXXXXXX"
+            placeholder={t("admin.checkin.placeholder")}
             autoFocus
             autoComplete="off"
             className="flex-1 h-12 rounded-xl border border-sand-dark bg-white px-4 text-charcoal font-mono text-sm placeholder:text-charcoal-muted/40 focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20"
@@ -73,12 +75,12 @@ export default function CheckInPage() {
             size="lg"
             disabled={loading || !ticketCode.trim()}
           >
-            {loading ? "Validating…" : "Validate"}
+            {loading
+              ? t("admin.checkin.validating")
+              : t("admin.checkin.validate")}
           </Button>
         </div>
-        {error && (
-          <p className="text-sm text-red-600">{error}</p>
-        )}
+        {error && <p className="text-sm text-red-600">{error}</p>}
       </form>
 
       {/* Latest result */}
@@ -91,7 +93,7 @@ export default function CheckInPage() {
               className="inline-flex items-center gap-1.5 text-sm text-charcoal-muted hover:text-charcoal cursor-pointer transition-colors"
             >
               <RotateCcw className="h-3.5 w-3.5" />
-              Clear
+              {t("admin.checkin.clear")}
             </button>
           </div>
         </div>
@@ -101,7 +103,7 @@ export default function CheckInPage() {
       {history.length > 1 && (
         <div className="space-y-3">
           <h2 className="text-sm font-semibold text-charcoal-muted uppercase tracking-wider">
-            Recent Check-ins
+            {t("admin.checkin.recentCheckins")}
           </h2>
           <div className="space-y-2">
             {history.slice(1).map((entry, idx) => (

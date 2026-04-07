@@ -15,13 +15,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/common/dropdown-menu";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const TYPE_OPTIONS = [
-  { value: "session", label: "Session" },
-  { value: "immersion", label: "Immersion" },
-  { value: "retreat", label: "Retreat" },
-  { value: "stay", label: "Stay" },
-  { value: "private", label: "Private" },
+  { value: "session", labelKey: "experienceTypes.session" },
+  { value: "immersion", labelKey: "experienceTypes.immersion" },
+  { value: "retreat", labelKey: "experienceTypes.retreat" },
+  { value: "stay", labelKey: "experienceTypes.stay" },
+  { value: "private", labelKey: "experienceTypes.private" },
 ];
 
 export default function ExperienceFilters({
@@ -32,6 +33,7 @@ export default function ExperienceFilters({
   onSelectType,
   onClear,
 }) {
+  const { t } = useLanguage();
   const hasFilters = selectedTags.length > 0 || selectedType !== "";
 
   const selectedTagNames = tags
@@ -57,13 +59,13 @@ export default function ExperienceFilters({
           onValueChange={(v) => onSelectType(v === "__all__" ? "" : v)}
         >
           <SelectTrigger className="w-[160px] h-10 text-sm">
-            <SelectValue placeholder="All types" />
+            <SelectValue placeholder={t("filters.allTypes")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__all__">All types</SelectItem>
-            {TYPE_OPTIONS.map(({ value, label }) => (
+            <SelectItem value="__all__">{t("filters.allTypes")}</SelectItem>
+            {TYPE_OPTIONS.map(({ value, labelKey }) => (
               <SelectItem key={value} value={value}>
-                {label}
+                {t(labelKey)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -82,13 +84,13 @@ export default function ExperienceFilters({
                 }
               >
                 <span className="truncate max-w-[140px]">
-                  {tagSummary || "Tags"}
+                  {tagSummary || t("filters.tags")}
                 </span>
                 <ChevronDown className="h-4 w-4 shrink-0 text-charcoal-muted" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-[220px] max-h-[280px] overflow-y-auto">
-              <DropdownMenuLabel>Filter by tags</DropdownMenuLabel>
+              <DropdownMenuLabel>{t("filters.tags")}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {tags.map((tag) => (
                 <DropdownMenuCheckboxItem
@@ -108,7 +110,7 @@ export default function ExperienceFilters({
         {hasFilters && (
           <Button variant="ghost" size="sm" onClick={onClear} className="gap-1.5 text-charcoal-muted hover:text-charcoal">
             <X className="h-3.5 w-3.5" />
-            Clear
+            {t("filters.clear")}
           </Button>
         )}
       </div>
@@ -118,7 +120,7 @@ export default function ExperienceFilters({
         <div className="flex flex-wrap items-center gap-2">
           {selectedType && (
             <span className="inline-flex items-center gap-1 rounded-full bg-charcoal text-white text-xs font-medium px-3 py-1">
-              {TYPE_OPTIONS.find((o) => o.value === selectedType)?.label}
+              {TYPE_OPTIONS.find((o) => o.value === selectedType)?.labelKey ? t(TYPE_OPTIONS.find((o) => o.value === selectedType).labelKey) : selectedType}
               <button
                 onClick={() => onSelectType("")}
                 className="ml-0.5 hover:text-white/70 transition-colors cursor-pointer"

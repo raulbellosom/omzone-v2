@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import ResourceForm from "@/components/admin/resources/ResourceForm";
 import { createResource } from "@/hooks/useResources";
 import { ROUTES } from "@/constants/routes";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function ResourceCreatePage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
 
@@ -25,8 +27,12 @@ export default function ResourceCreatePage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Nuevo recurso</h1>
-        <p className="text-sm text-charcoal-subtle mt-0.5">Crea un instructor, facilitador, terapeuta o equipo.</p>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.resources.createTitle")}
+        </h1>
+        <p className="text-sm text-charcoal-subtle mt-0.5">
+          {t("admin.resources.createSubtitle")}
+        </p>
       </div>
 
       {serverError && (
@@ -35,7 +41,11 @@ export default function ResourceCreatePage() {
         </div>
       )}
 
-      <ResourceForm onSubmit={handleSubmit} submitting={submitting} submitLabel="Crear recurso" />
+      <ResourceForm
+        onSubmit={handleSubmit}
+        submitting={submitting}
+        submitLabel={t("admin.resources.createButton")}
+      />
     </div>
   );
 }

@@ -3,12 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import EditionForm from "@/components/admin/experiences/EditionForm";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
 import { useExperience } from "@/hooks/useExperiences";
+import { useLanguage } from "@/hooks/useLanguage";
 import { createEdition } from "@/hooks/useEditions";
 
 export default function EditionCreatePage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: experience } = useExperience(id);
+  const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
 
@@ -28,7 +30,9 @@ export default function EditionCreatePage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Nueva edición</h1>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.editions.createTitle")}
+        </h1>
         {experience && (
           <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
             {experience.publicName}
@@ -47,7 +51,7 @@ export default function EditionCreatePage() {
       <EditionForm
         onSubmit={handleSubmit}
         submitting={submitting}
-        submitLabel="Crear edición"
+        submitLabel={t("admin.editions.createButton")}
       />
     </div>
   );

@@ -2,6 +2,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Calendar, Clock, Users } from "lucide-react";
 import { useExperienceDetail } from "@/hooks/useExperienceDetail";
 import { useExperienceSEO } from "@/hooks/useSEO";
+import { useLanguage } from "@/hooks/useLanguage";
 import SEOHead from "@/components/common/SEOHead";
 import StructuredData from "@/components/common/StructuredData";
 import ExperienceHero from "@/components/public/experience-detail/ExperienceHero";
@@ -49,6 +50,7 @@ function LoadingSkeleton() {
 // ─── Back link ────────────────────────────────────────────────────────────────
 
 function BackLink() {
+  const { t } = useLanguage();
   return (
     <div className="container-shell pt-4 pb-0">
       <Link
@@ -56,7 +58,7 @@ function BackLink() {
         className="inline-flex items-center gap-1.5 text-sm text-charcoal-subtle hover:text-charcoal transition-colors group"
       >
         <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-        All Experiences
+        {t("experienceDetail.allExperiences")}
       </Link>
     </div>
   );
@@ -89,12 +91,19 @@ function formatPrice(amount, currency = "MXN") {
 
 function PricingSidebar({ tiers, experience }) {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const CTA_CONFIG = {
-    direct: { label: "Book Now", variant: "default" },
-    request: { label: "Request Information", variant: "outline" },
-    assisted: { label: "Check Availability", variant: "outline" },
-    pass: { label: "View Passes", variant: "outline" },
+    direct: { label: t("experienceDetail.bookNow"), variant: "default" },
+    request: {
+      label: t("experienceDetail.requestInformation"),
+      variant: "outline",
+    },
+    assisted: {
+      label: t("experienceDetail.checkAvailability"),
+      variant: "outline",
+    },
+    pass: { label: t("experienceDetail.viewPasses"), variant: "outline" },
   };
   const cta = CTA_CONFIG[experience.saleMode] ?? CTA_CONFIG.direct;
 
@@ -117,7 +126,7 @@ function PricingSidebar({ tiers, experience }) {
             {minTier && (
               <div>
                 <p className="text-xs text-charcoal-subtle uppercase tracking-wider mb-1">
-                  From
+                  {t("experienceDetail.from")}
                 </p>
                 <p className="text-3xl font-bold text-charcoal">
                   {formatPrice(minTier.basePrice, minTier.currency)}
@@ -179,7 +188,7 @@ function PricingSidebar({ tiers, experience }) {
 
             {tiers.length === 0 && (
               <p className="text-sm text-charcoal-muted text-center italic">
-                Inquire for pricing
+                {t("experienceDetail.inquireForPricing")}
               </p>
             )}
           </>
@@ -195,6 +204,8 @@ export default function ExperienceDetailPage() {
   const { slug } = useParams();
   const { experience, pricingTiers, slots, addons, sections, loading, error } =
     useExperienceDetail(slug);
+  const { t } = useLanguage();
+  const seo = useExperienceSEO(experience, { slots, pricingTiers });
 
   if (loading) return <LoadingSkeleton />;
   if (error === "not_found" || !experience) return <NotFoundPage />;
@@ -202,7 +213,7 @@ export default function ExperienceDetailPage() {
     return (
       <div className="container-shell py-20 text-center">
         <p className="text-charcoal-muted">
-          Something went wrong. Please try again.
+          {t("experienceDetail.somethingWrong")}
         </p>
       </div>
     );
@@ -210,8 +221,6 @@ export default function ExperienceDetailPage() {
 
   const hasPublication = sections.length > 0;
   const showAgenda = experience.requiresSchedule && slots.length > 0;
-
-  const seo = useExperienceSEO(experience, { slots, pricingTiers });
 
   return (
     <div className="min-h-screen bg-cream">

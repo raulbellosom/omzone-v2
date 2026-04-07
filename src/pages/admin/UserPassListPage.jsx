@@ -9,20 +9,21 @@ import { Input } from "@/components/common/Input";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/constants/routes";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const STATUS_OPTIONS = [
-  { value: "", label: "Todos" },
-  { value: "active", label: "Activos" },
-  { value: "exhausted", label: "Agotados" },
-  { value: "expired", label: "Expirados" },
-  { value: "cancelled", label: "Cancelados" },
+  { value: "", i18nKey: "admin.userPasses.all" },
+  { value: "active", i18nKey: "admin.userPasses.active" },
+  { value: "exhausted", i18nKey: "admin.userPasses.depleted" },
+  { value: "expired", i18nKey: "admin.userPasses.expired" },
+  { value: "cancelled", i18nKey: "admin.userPasses.cancelled" },
 ];
 
 const STATUS_BADGE = {
-  active: { variant: "success", label: "Activo" },
-  exhausted: { variant: "warm", label: "Agotado" },
-  expired: { variant: "default", label: "Expirado" },
-  cancelled: { variant: "destructive", label: "Cancelado" },
+  active: { variant: "success", i18nKey: "admin.userPasses.active" },
+  exhausted: { variant: "warm", i18nKey: "admin.userPasses.depleted" },
+  expired: { variant: "default", i18nKey: "admin.userPasses.expired" },
+  cancelled: { variant: "destructive", i18nKey: "admin.userPasses.cancelled" },
 };
 
 function parseSnapshot(snapshotText) {
@@ -59,11 +60,21 @@ function TableSkeleton() {
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
-            <th className="px-4 py-3 font-medium">Pase</th>
-            <th className="px-4 py-3 font-medium">Usuario</th>
-            <th className="px-4 py-3 font-medium">Créditos</th>
-            <th className="px-4 py-3 font-medium">Vence</th>
-            <th className="px-4 py-3 font-medium">Estado</th>
+            <th className="px-4 py-3 font-medium">
+              {t("admin.userPasses.pass")}
+            </th>
+            <th className="px-4 py-3 font-medium">
+              {t("admin.userPasses.user")}
+            </th>
+            <th className="px-4 py-3 font-medium">
+              {t("admin.userPasses.credits")}
+            </th>
+            <th className="px-4 py-3 font-medium">
+              {t("admin.userPasses.expires")}
+            </th>
+            <th className="px-4 py-3 font-medium">
+              {t("admin.userPasses.status")}
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-sand-dark">
@@ -102,6 +113,7 @@ function CardSkeleton() {
 }
 
 export default function UserPassListPage() {
+  const { t } = useLanguage();
   const [userSearch, setUserSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const navigate = useNavigate();
@@ -116,8 +128,12 @@ export default function UserPassListPage() {
   });
 
   function getStatusBadge(status) {
-    const cfg = STATUS_BADGE[status] ?? { variant: "default", label: status };
-    return <Badge variant={cfg.variant}>{cfg.label}</Badge>;
+    const cfg = STATUS_BADGE[status] ?? { variant: "default", i18nKey: null };
+    return (
+      <Badge variant={cfg.variant}>
+        {cfg.i18nKey ? t(cfg.i18nKey) : status}
+      </Badge>
+    );
   }
 
   function formatDate(dateStr) {
@@ -135,16 +151,18 @@ export default function UserPassListPage() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-xl font-semibold text-charcoal">
-            Pases asignados
+            {t("admin.userPasses.title")}
           </h1>
           <p className="text-sm text-charcoal-subtle mt-0.5">
-            Pases de crédito asignados a usuarios
+            {t("admin.userPasses.subtitle")}
           </p>
         </div>
         <Link to={ROUTES.ADMIN_PASSES}>
           <Button size="sm" variant="ghost">
             <ArrowLeft className="h-4 w-4" />
-            <span className="hidden sm:inline">Volver a pases</span>
+            <span className="hidden sm:inline">
+              {t("admin.userPasses.backToPasses")}
+            </span>
           </Button>
         </Link>
       </div>
@@ -156,14 +174,14 @@ export default function UserPassListPage() {
           <Input
             value={userSearch}
             onChange={(e) => setUserSearch(e.target.value)}
-            placeholder="Buscar por userId..."
+            placeholder={t("admin.userPasses.searchPlaceholder")}
             className="pl-9"
           />
         </div>
         <AdminSelect
           value={statusFilter}
           onChange={setStatusFilter}
-          options={STATUS_OPTIONS}
+          options={STATUS_OPTIONS.map((o) => ({ ...o, label: t(o.i18nKey) }))}
           fullWidth={false}
         />
       </div>
@@ -178,10 +196,10 @@ export default function UserPassListPage() {
         <Card className="p-10 text-center">
           <CreditCard className="h-10 w-10 text-charcoal-muted mx-auto mb-3" />
           <h2 className="text-lg font-semibold text-charcoal mb-1">
-            Sin pases asignados
+            {t("admin.userPasses.emptyTitle")}
           </h2>
           <p className="text-sm text-charcoal-muted">
-            Los pases se asignan cuando un usuario compra uno via checkout.
+            {t("admin.userPasses.emptyMessage")}
           </p>
         </Card>
       )}
@@ -199,11 +217,21 @@ export default function UserPassListPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
-                <th className="px-4 py-3 font-medium">Pase</th>
-                <th className="px-4 py-3 font-medium">Usuario</th>
-                <th className="px-4 py-3 font-medium">Créditos</th>
-                <th className="px-4 py-3 font-medium">Vence</th>
-                <th className="px-4 py-3 font-medium">Estado</th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.userPasses.pass")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.userPasses.user")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.userPasses.credits")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.userPasses.expires")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.userPasses.status")}
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-sand-dark">
@@ -261,7 +289,9 @@ export default function UserPassListPage() {
                   <span className="font-mono truncate max-w-[120px]">
                     {up.userId}
                   </span>
-                  <span>Vence: {formatDate(up.expiresAt)}</span>
+                  <span>
+                    {t("admin.userPasses.expires")}: {formatDate(up.expiresAt)}
+                  </span>
                 </div>
               </Card>
             );

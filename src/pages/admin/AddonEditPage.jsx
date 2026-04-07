@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AddonForm from "@/components/admin/addons/AddonForm";
 import { useAddon, updateAddon } from "@/hooks/useAddons";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Card } from "@/components/common/Card";
 import { ROUTES } from "@/constants/routes";
 
@@ -24,6 +25,7 @@ function LoadingSkeleton() {
 export default function AddonEditPage() {
   const { addonId } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { data: addon, loading, error: loadError } = useAddon(addonId);
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
@@ -48,7 +50,7 @@ export default function AddonEditPage() {
       <div className="max-w-4xl">
         <Card className="p-6 border-red-200 bg-red-50">
           <p className="text-sm text-red-700">
-            {loadError ?? "No se encontró el addon."}
+            {loadError ?? t("admin.addons.notFound")}
           </p>
         </Card>
       </div>
@@ -58,7 +60,9 @@ export default function AddonEditPage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Editar addon</h1>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.addons.editTitle")}
+        </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
           {addon.name}
         </p>
@@ -74,7 +78,7 @@ export default function AddonEditPage() {
         initialData={addon}
         onSubmit={handleSubmit}
         submitting={submitting}
-        submitLabel="Guardar cambios"
+        submitLabel={t("admin.addons.saveChanges")}
       />
     </div>
   );

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { ROUTES } from "@/constants/routes";
@@ -11,6 +12,7 @@ export default function LoginPage() {
   const { login, getLandingRoute } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useLanguage();
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
@@ -40,7 +42,7 @@ export default function LoginPage() {
         });
         return;
       }
-      setError("Invalid credentials. Please try again.");
+      setError(t("auth.login.errorInvalidCredentials"));
     } finally {
       setSubmitting(false);
     }
@@ -52,7 +54,7 @@ export default function LoginPage() {
       tabIndex={-1}
       onClick={() => setShowPassword((v) => !v)}
       className="text-charcoal-subtle hover:text-charcoal transition-colors"
-      aria-label={showPassword ? "Hide password" : "Show password"}
+      aria-label={showPassword ? t("auth.login.hidePassword") : t("auth.login.showPassword")}
     >
       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
     </button>
@@ -61,7 +63,7 @@ export default function LoginPage() {
   return (
     <>
       <Helmet>
-        <title>Sign In — OMZONE</title>
+        <title>{t("auth.login.pageTitle")}</title>
       </Helmet>
 
       <div className="mx-auto max-w-md animate-fade-in-up">
@@ -73,18 +75,27 @@ export default function LoginPage() {
             </span>
           </Link>
           <p className="mt-2 text-sm text-white/60 tracking-wide">
-            Wellness Experiences
+            {t("auth.brandTagline")}
           </p>
         </div>
 
         {/* Glass card */}
         <div className="backdrop-blur-xl bg-white/90 rounded-2xl border border-white/40 shadow-premium p-8 sm:p-10">
+          {/* Back to home — inside card */}
+          <Link
+            to={ROUTES.HOME}
+            className="inline-flex items-center gap-1.5 text-xs text-charcoal-subtle hover:text-charcoal transition-colors mb-5"
+          >
+            <ArrowLeft size={14} />
+            {t("auth.backToOmzone")}
+          </Link>
+
           <div className="mb-6">
             <h1 className="font-display text-2xl font-semibold text-charcoal">
-              Welcome back
+              {t("auth.login.heading")}
             </h1>
             <p className="text-sm text-charcoal-muted mt-1">
-              Sign in to your account
+              {t("auth.login.subtitle")}
             </p>
           </div>
 
@@ -94,13 +105,13 @@ export default function LoginPage() {
                 htmlFor="login-email"
                 className="text-sm font-medium text-charcoal"
               >
-                Email
+                {t("auth.login.emailLabel")}
               </label>
               <Input
                 id="login-email"
                 name="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder={t("auth.login.emailPlaceholder")}
                 icon={Mail}
                 value={form.email}
                 onChange={handleChange}
@@ -114,13 +125,13 @@ export default function LoginPage() {
                 htmlFor="login-password"
                 className="text-sm font-medium text-charcoal"
               >
-                Password
+                {t("auth.login.passwordLabel")}
               </label>
               <Input
                 id="login-password"
                 name="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
+                placeholder={t("auth.login.passwordPlaceholder")}
                 icon={Lock}
                 rightElement={eyeToggle}
                 value={form.password}
@@ -142,31 +153,21 @@ export default function LoginPage() {
               size="lg"
               disabled={submitting}
             >
-              {submitting ? "Signing in…" : "Sign In"}
+              {submitting ? t("auth.login.submitting") : t("auth.login.submit")}
             </Button>
           </form>
 
           <div className="mt-6 pt-6 border-t border-charcoal/10 text-center">
             <p className="text-sm text-charcoal-muted">
-              Don&apos;t have an account?{" "}
+              {t("auth.login.noAccount")}{" "}
               <Link
                 to={ROUTES.REGISTER}
                 className="text-sage-dark font-medium hover:text-sage transition-colors"
               >
-                Create one
+                {t("auth.login.createOne")}
               </Link>
             </p>
           </div>
-        </div>
-
-        {/* Back to home */}
-        <div className="mt-6 text-center">
-          <Link
-            to={ROUTES.HOME}
-            className="text-xs text-white/50 hover:text-white/80 transition-colors"
-          >
-            &larr; Back to OMZONE
-          </Link>
         </div>
       </div>
     </>

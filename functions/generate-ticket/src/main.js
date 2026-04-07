@@ -41,7 +41,7 @@
  * @returns {Object} { ok: true, data: { tickets: [...], bookings: [...], generated: boolean } }
  */
 
-import { Client, Databases, Functions, Query, ID, Users } from "node-appwrite";
+import { Client, Databases, Functions, Query, ID, Users, Permission, Role } from "node-appwrite";
 import { randomUUID } from "node:crypto";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -67,6 +67,20 @@ function initClient(req) {
 function generateTicketCode() {
   const hex = randomUUID().replace(/-/g, "").slice(0, 12).toUpperCase();
   return `${TICKET_CODE_PREFIX}${hex}`;
+}
+
+/**
+ * Build document-level permissions so the ticket owner and admins can access the document.
+ */
+function buildDocPermissions(userId) {
+  return [
+    Permission.read(Role.user(userId)),
+    Permission.read(Role.label("admin")),
+    Permission.read(Role.label("operator")),
+    Permission.read(Role.label("root")),
+    Permission.update(Role.label("admin")),
+    Permission.update(Role.label("root")),
+  ];
 }
 
 /**
@@ -306,7 +320,7 @@ export default async ({ req, res, log, error }) => {
           participantEmail: order.customerEmail || null,
           status: "valid",
           ticketSnapshot,
-        });
+        }, buildDocPermissions(order.userId));
 
         createdTickets.push({
           $id: ticket.$id,
@@ -332,6 +346,7 @@ export default async ({ req, res, log, error }) => {
               participantCount: quantity,
               status: "confirmed",
             },
+            buildDocPermissions(order.userId),
           );
 
           createdBookings.push({

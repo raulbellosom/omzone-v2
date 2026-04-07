@@ -10,6 +10,7 @@ import {
   deletePackageItem,
 } from "@/hooks/usePackageItems";
 import { Card } from "@/components/common/Card";
+import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 
 function LoadingSkeleton() {
@@ -31,6 +32,7 @@ function LoadingSkeleton() {
 export default function PackageEditPage() {
   const { packageId } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const {
     data: pkg,
     loading: loadingPkg,
@@ -92,7 +94,7 @@ export default function PackageEditPage() {
       <div className="max-w-4xl">
         <Card className="p-6 border-red-200 bg-red-50">
           <p className="text-sm text-red-700">
-            {loadError ?? "No se encontró el paquete."}
+            {loadError ?? t("admin.packages.notFound")}
           </p>
         </Card>
       </div>
@@ -102,7 +104,9 @@ export default function PackageEditPage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Editar paquete</h1>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.packages.editTitle")}
+        </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
           {pkg.name}
         </p>
@@ -119,13 +123,13 @@ export default function PackageEditPage() {
         initialItems={existingItems}
         onSubmit={handleSubmit}
         submitting={submitting}
-        submitLabel="Guardar cambios"
+        submitLabel={t("admin.packages.saveChanges")}
       />
 
       {/* Preview */}
       <div className="mt-8">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider mb-3">
-          Vista previa
+          {t("admin.packages.preview")}
         </h2>
         <PackagePreview pkg={pkg} items={existingItems} />
       </div>

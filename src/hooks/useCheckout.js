@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { databases, functions, Query } from "@/lib/appwrite";
 import { useAuth } from "@/hooks/useAuth";
+import { sanitizePhone } from "@/lib/utils";
 import env from "@/config/env";
 
 const DB = env.appwriteDatabaseId;
@@ -111,9 +112,7 @@ export function useCheckout() {
         // Fetch addon details
         let addonsData = [];
         if (assignments.length > 0) {
-          const addonIds = assignments
-            .map((a) => a.addonId)
-            .filter(Boolean);
+          const addonIds = assignments.map((a) => a.addonId).filter(Boolean);
           if (addonIds.length > 0) {
             try {
               const addonsRes = await databases.listDocuments(
@@ -198,9 +197,7 @@ export function useCheckout() {
   /** Addons enriched with assignment data (overridePrice, isRequired) */
   const enrichedAddons = useMemo(() => {
     return addons.map((addon) => {
-      const assignment = addonAssignments.find(
-        (a) => a.addonId === addon.$id,
-      );
+      const assignment = addonAssignments.find((a) => a.addonId === addon.$id);
       return {
         ...addon,
         isRequired: assignment?.isRequired || false,
@@ -288,14 +285,14 @@ export function useCheckout() {
         payload.slotId = selectedSlotId;
       }
       if (customerPhone.trim()) {
-        payload.customerPhone = customerPhone.trim();
+        payload.customerPhone = sanitizePhone(customerPhone);
       }
 
       const execution = await functions.createExecution(
         env.functionCreateCheckout,
         JSON.stringify(payload),
         false, // async = false
-        "/",   // path
+        "/", // path
         "POST",
       );
 

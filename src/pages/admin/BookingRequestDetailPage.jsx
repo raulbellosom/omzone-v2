@@ -9,6 +9,7 @@ import {
   getStatusBadgeClass,
 } from "@/hooks/useBookingRequests";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
 import { ROLES } from "@/constants/roles";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/common/Card";
@@ -91,32 +92,44 @@ function InfoRow({ icon: Icon, label, value }) {
 
 // ─── Status actions ─────────────────────────────────────────────────────────
 
-function StatusActions({ request, isAdmin, onAction, acting }) {
+function StatusActions({ request, isAdmin, onAction, acting, t }) {
   const transitions = VALID_TRANSITIONS[request.status] || [];
   if (transitions.length === 0) return null;
 
   const btnConfig = {
-    reviewing: { label: "Start Review", variant: "outline" },
-    approved: { label: "Approve & Quote", variant: "default" },
-    rejected: { label: "Decline", variant: "destructive" },
-    converted: { label: "Convert to Order", variant: "default" },
+    reviewing: {
+      i18nKey: "admin.bookingRequests.startReview",
+      variant: "outline",
+    },
+    approved: {
+      i18nKey: "admin.bookingRequests.approveQuote",
+      variant: "default",
+    },
+    rejected: {
+      i18nKey: "admin.bookingRequests.decline",
+      variant: "destructive",
+    },
+    converted: {
+      i18nKey: "admin.bookingRequests.convertToOrder",
+      variant: "default",
+    },
   };
 
   return (
     <div className="flex flex-wrap gap-2">
-      {transitions.map((t) => {
+      {transitions.map((tr) => {
         // Only admin can convert
-        if (t === "converted" && !isAdmin) return null;
-        const cfg = btnConfig[t] || { label: t, variant: "outline" };
+        if (tr === "converted" && !isAdmin) return null;
+        const cfg = btnConfig[tr] || { i18nKey: null, variant: "outline" };
         return (
           <Button
-            key={t}
+            key={tr}
             variant={cfg.variant}
             size="sm"
-            onClick={() => onAction(t)}
+            onClick={() => onAction(tr)}
             disabled={acting}
           >
-            {cfg.label}
+            {cfg.i18nKey ? t(cfg.i18nKey) : tr}
           </Button>
         );
       })}
@@ -133,7 +146,9 @@ export default function BookingRequestDetailPage() {
   const isAdmin =
     user?.labels?.includes(ROLES.ADMIN) || user?.labels?.includes(ROLES.ROOT);
 
-  const { request, experience, loading, error, refetch } = useBookingRequestDetail(id);
+  const { request, experience, loading, error, refetch } =
+    useBookingRequestDetail(id);
+  const { t } = useLanguage();
 
   const [adminNotes, setAdminNotes] = useState("");
   const [quotedAmount, setQuotedAmount] = useState("");
@@ -147,7 +162,9 @@ export default function BookingRequestDetailPage() {
   // Sync form once request loads
   if (request && !notesLoaded) {
     setAdminNotes(request.adminNotes || "");
-    setQuotedAmount(request.quotedAmount != null ? String(request.quotedAmount) : "");
+    setQuotedAmount(
+      request.quotedAmount != null ? String(request.quotedAmount) : "",
+    );
     setNotesLoaded(true);
   }
 
@@ -198,7 +215,7 @@ export default function BookingRequestDetailPage() {
   // ── Convert to order ───────────────────────────────────────────────────────
   async function handleConvert() {
     if (!quotedAmount || parseFloat(quotedAmount) <= 0) {
-      setActionError("A quoted amount is required to convert to an order.");
+      setActionError(t("admin.bookingRequests.quoteRequired"));
       return;
     }
 
@@ -302,7 +319,10 @@ export default function BookingRequestDetailPage() {
             Order created: {conversionResult.orderNumber}
           </p>
           <Link
-            to={ROUTES.ADMIN_ORDER_DETAIL.replace(":orderId", conversionResult.orderId)}
+            to={ROUTES.ADMIN_ORDER_DETAIL.replace(
+              ":orderId",
+              conversionResult.orderId,
+            )}
             className="text-sm text-emerald-700 underline mt-1 inline-flex items-center gap-1"
           >
             View Order <ExternalLink className="h-3.5 w-3.5" />
@@ -314,18 +334,38 @@ export default function BookingRequestDetailPage() {
       <div className="grid md:grid-cols-2 gap-6">
         {/* Contact info */}
         <Card className="p-6 space-y-4">
-          <h2 className="text-base font-semibold text-charcoal mb-2">Contact Information</h2>
-          <InfoRow icon={User} label="Name" value={request.contactName} />
-          <InfoRow icon={Mail} label="Email" value={request.contactEmail} />
+          <h2 className="text-base font-semibold text-charcoal mb-2">
+            Contact Information
+          </h2>
+          <InfoRow
+            icon={User}
+            label={t("admin.orderDetail.name")}
+            value={request.contactName}
+          />
+          <InfoRow
+            icon={Mail}
+            label={t("admin.orderDetail.email")}
+            value={request.contactEmail}
+          />
           <InfoRow icon={Phone} label="Phone" value={request.contactPhone} />
-          <InfoRow icon={Users} label="Participants" value={request.participants} />
-          <InfoRow icon={Calendar} label="Preferred Date" value={formatDate(request.requestedDate)} />
+          <InfoRow
+            icon={Users}
+            label={t("admin.bookingRequests.participant")}
+            value={request.participants}
+          />
+          <InfoRow
+            icon={Calendar}
+            label={t("admin.bookingRequests.date")}
+            value={formatDate(request.requestedDate)}
+          />
           {request.message && (
             <div className="flex items-start gap-3">
               <MessageSquare className="h-4 w-4 text-charcoal-subtle mt-0.5 shrink-0" />
               <div>
                 <p className="text-xs text-charcoal-subtle">Message</p>
-                <p className="text-sm text-charcoal whitespace-pre-wrap">{request.message}</p>
+                <p className="text-sm text-charcoal whitespace-pre-wrap">
+                  {request.message}
+                </p>
               </div>
             </div>
           )}
@@ -333,13 +373,20 @@ export default function BookingRequestDetailPage() {
 
         {/* Experience info */}
         <Card className="p-6 space-y-4">
-          <h2 className="text-base font-semibold text-charcoal mb-2">Experience</h2>
+          <h2 className="text-base font-semibold text-charcoal mb-2">
+            {t("admin.bookingRequests.experience")}
+          </h2>
           {experience ? (
             <>
-              <p className="text-sm font-medium text-charcoal">{experience.publicName}</p>
-              <p className="text-xs text-charcoal-subtle capitalize">{experience.type}</p>
+              <p className="text-sm font-medium text-charcoal">
+                {experience.publicName}
+              </p>
+              <p className="text-xs text-charcoal-subtle capitalize">
+                {experience.type}
+              </p>
               <p className="text-xs text-charcoal-subtle">
-                Sale mode: <span className="font-medium">{experience.saleMode}</span>
+                Sale mode:{" "}
+                <span className="font-medium">{experience.saleMode}</span>
               </p>
               <Link
                 to={`/experiences/${experience.slug}`}
@@ -350,14 +397,19 @@ export default function BookingRequestDetailPage() {
               </Link>
             </>
           ) : (
-            <p className="text-sm text-charcoal-muted italic">Experience not found</p>
+            <p className="text-sm text-charcoal-muted italic">
+              Experience not found
+            </p>
           )}
 
           {request.convertedOrderId && (
             <div className="pt-3 border-t border-sand-dark/40">
               <p className="text-xs text-charcoal-subtle">Converted Order</p>
               <Link
-                to={ROUTES.ADMIN_ORDER_DETAIL.replace(":orderId", request.convertedOrderId)}
+                to={ROUTES.ADMIN_ORDER_DETAIL.replace(
+                  ":orderId",
+                  request.convertedOrderId,
+                )}
                 className="text-sm text-sage font-medium hover:underline inline-flex items-center gap-1"
               >
                 {request.convertedOrderId} <ExternalLink className="h-3 w-3" />
@@ -368,7 +420,9 @@ export default function BookingRequestDetailPage() {
           {request.respondedAt && (
             <div>
               <p className="text-xs text-charcoal-subtle">Responded At</p>
-              <p className="text-sm text-charcoal">{formatDate(request.respondedAt)}</p>
+              <p className="text-sm text-charcoal">
+                {formatDate(request.respondedAt)}
+              </p>
             </div>
           )}
         </Card>
@@ -376,7 +430,9 @@ export default function BookingRequestDetailPage() {
 
       {/* Admin notes & quoted amount */}
       <Card className="p-6 space-y-4">
-        <h2 className="text-base font-semibold text-charcoal">Admin Notes & Pricing</h2>
+        <h2 className="text-base font-semibold text-charcoal">
+          Admin Notes & Pricing
+        </h2>
 
         <div>
           <label className="block text-sm font-medium text-charcoal mb-1">
@@ -430,9 +486,12 @@ export default function BookingRequestDetailPage() {
             isAdmin={isAdmin}
             onAction={handleStatusAction}
             acting={acting || converting}
+            t={t}
           />
           {converting && (
-            <p className="text-sm text-charcoal-muted animate-pulse">Converting to order...</p>
+            <p className="text-sm text-charcoal-muted animate-pulse">
+              Converting to order...
+            </p>
           )}
         </Card>
       )}

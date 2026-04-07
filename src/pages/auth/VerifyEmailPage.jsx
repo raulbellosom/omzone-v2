@@ -3,11 +3,13 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { account } from "@/lib/appwrite";
+import { useLanguage } from "@/hooks/useLanguage";
 import Button from "@/components/common/Button";
 import { ROUTES } from "@/constants/routes";
 
 export default function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
+  const { t } = useLanguage();
   const [status, setStatus] = useState("loading"); // loading | success | error
 
   useEffect(() => {
@@ -29,7 +31,7 @@ export default function VerifyEmailPage() {
     <>
       <Helmet>
         <title>
-          {status === "success" ? "Email Verified" : "Verify Email"} — OMZONE
+          {status === "success" ? t("auth.verify.pageTitleSuccess") : t("auth.verify.pageTitleDefault")}
         </title>
       </Helmet>
 
@@ -42,7 +44,7 @@ export default function VerifyEmailPage() {
             </span>
           </Link>
           <p className="mt-2 text-sm text-white/60 tracking-wide">
-            Wellness Experiences
+            {t("auth.brandTagline")}
           </p>
         </div>
 
@@ -54,7 +56,7 @@ export default function VerifyEmailPage() {
                 <div className="h-10 w-10 rounded-full border-2 border-sage border-t-transparent animate-spin" />
               </div>
               <h1 className="font-display text-2xl font-semibold text-charcoal">
-                Verifying your email…
+                {t("auth.verify.loadingHeading")}
               </h1>
             </>
           )}
@@ -69,16 +71,15 @@ export default function VerifyEmailPage() {
                 />
               </div>
               <h1 className="font-display text-2xl font-semibold text-charcoal mb-2">
-                Email verified!
+                {t("auth.verify.successHeading")}
               </h1>
               <p className="text-sm text-charcoal-muted leading-relaxed">
-                Your account is now active. Sign in to begin your wellness
-                journey.
+                {t("auth.verify.successMessage")}
               </p>
               <div className="mt-6">
                 <Link to={ROUTES.LOGIN}>
                   <Button size="lg" className="w-full">
-                    Sign In
+                    {t("auth.verify.successButton")}
                   </Button>
                 </Link>
               </div>
@@ -95,16 +96,15 @@ export default function VerifyEmailPage() {
                 />
               </div>
               <h1 className="font-display text-2xl font-semibold text-charcoal mb-2">
-                Verification failed
+                {t("auth.verify.errorHeading")}
               </h1>
               <p className="text-sm text-charcoal-muted leading-relaxed">
-                The verification link may be expired or invalid. Please try
-                signing in to receive a new verification email.
+                {t("auth.verify.errorMessage")}
               </p>
               <div className="mt-6">
                 <Link to={ROUTES.LOGIN}>
                   <Button variant="outline" size="lg" className="w-full">
-                    Back to Sign In
+                    {t("auth.verify.errorButton")}
                   </Button>
                 </Link>
               </div>

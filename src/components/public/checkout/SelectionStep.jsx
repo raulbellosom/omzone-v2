@@ -1,5 +1,6 @@
 import { formatPrice } from "@/components/public/checkout/utils";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function SelectionStep({
   experience,
@@ -12,6 +13,7 @@ export default function SelectionStep({
   quantity,
   setQuantity,
 }) {
+  const { t } = useLanguage();
   const minQty = experience.minQuantity || 1;
   const maxQty = experience.maxQuantity || 20;
 
@@ -35,7 +37,7 @@ export default function SelectionStep({
       {/* Pricing tier selection */}
       <fieldset className="space-y-3">
         <legend className="text-sm font-semibold text-charcoal mb-2">
-          Select your option
+          {t("selection.selectOption")}
         </legend>
         <div className="grid gap-2">
           {pricingTiers.map((tier) => (
@@ -85,14 +87,14 @@ export default function SelectionStep({
       {experience.requiresSchedule && slots.length > 0 && (
         <fieldset className="space-y-2">
           <legend className="text-sm font-semibold text-charcoal mb-2">
-            Choose a date & time
+            {t("selection.chooseDateTime")}
           </legend>
           <select
             value={selectedSlotId}
             onChange={(e) => setSelectedSlotId(e.target.value)}
             className="w-full rounded-xl border border-warm-gray-dark/20 bg-white px-4 py-3 text-sm text-charcoal focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
           >
-            <option value="">Select a time slot</option>
+            <option value="">{t("selection.selectTimeSlot")}</option>
             {slots.map((slot) => {
               const start = new Date(slot.startDatetime);
               const end = new Date(slot.endDatetime);
@@ -114,7 +116,7 @@ export default function SelectionStep({
                     hour: "numeric",
                     minute: "2-digit",
                   })}{" "}
-                  ({available} {available === 1 ? "spot" : "spots"} left)
+                  ({available} {available === 1 ? t("selection.spot") : t("selection.spots")} left)
                 </option>
               );
             })}
@@ -126,7 +128,7 @@ export default function SelectionStep({
       {experience.allowQuantity && (
         <fieldset className="space-y-2">
           <legend className="text-sm font-semibold text-charcoal mb-2">
-            Number of attendees
+            {t("selection.attendees")}
           </legend>
           <div className="flex items-center gap-3">
             <button

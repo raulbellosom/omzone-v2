@@ -1,0 +1,77 @@
+{
+  "checkout": {
+    "title": "Checkout",
+    "orderSummary": "Order Summary",
+    "noExperience": "No experience selected",
+    "noExperienceDesc": "Please choose an experience first.",
+    "unavailable": "Experience unavailable",
+    "unavailableDesc": "This experience is not available for direct purchase.",
+    "somethingWrong": "Something went wrong",
+    "tryAgainDesc": "Please try again.",
+    "exploreExperiences": "Explore Experiences",
+    "next": "Next",
+    "back": "Back",
+    "pay": "Pay",
+    "processing": "Processing…",
+    "step1": "Selection",
+    "step2": "Addons",
+    "step3": "Details",
+    "step4": "Summary"
+  },
+  "checkoutSuccess": {
+    "thankYou": "Thank you!",
+    "confirmed": "Your booking has been confirmed. Here's a summary of your order.",
+    "processingTitle": "Processing your booking",
+    "processingDesc": "Your payment is being confirmed. This usually takes just a few seconds. You'll receive a confirmation email shortly.",
+    "viewOrders": "View My Orders",
+    "exploreMore": "Explore More",
+    "orderSummary": "Order Summary",
+    "orderLabel": "Order",
+    "dateLabel": "Date",
+    "tickets": "Your Tickets",
+    "total": "Total",
+    "status": "Status"
+  },
+  "checkoutCancel": {
+    "title": "Payment cancelled",
+    "subtitle": "Your payment was not processed. No charges have been made to your account. You can try again anytime.",
+    "tryAgain": "Try Again",
+    "exploreExperiences": "Explore Experiences"
+  },
+  "selection": {
+    "selectOption": "Select your option",
+    "chooseDateTime": "Choose a date & time",
+    "selectTimeSlot": "Select a time slot",
+    "spot": "spot",
+    "spots": "spots",
+    "attendees": "Number of attendees"
+  },
+  "addonsStep": {
+    "noAddons": "No add-ons available for this experience.",
+    "canContinue": "You can continue to the next step.",
+    "enhance": "Enhance your experience with optional add-ons.",
+    "required": "Required"
+  },
+  "customerInfo": {
+    "intro": "We'll use this to send your order confirmation and tickets.",
+    "nameLabel": "Full name",
+    "namePlaceholder": "Your full name",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@email.com",
+    "emailError": "Please enter a valid email address.",
+    "phoneLabel": "Phone",
+    "phoneOptional": "(optional)",
+    "phonePlaceholder": "+52 55 1234 5678"
+  },
+  "orderSummary": {
+    "title": "Order Summary",
+    "total": "Total",
+    "disclaimer": "This total is indicative. The final amount will be confirmed at checkout."
+  },
+  "reviewStep": {
+    "estimatedTotal": "Estimated Total",
+    "disclaimer": "The final amount will be verified before payment is processed.",
+    "processing": "Processing…",
+    "confirmPay": "Confirm & Pay"
+  }
+}

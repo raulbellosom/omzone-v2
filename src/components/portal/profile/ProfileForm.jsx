@@ -3,17 +3,18 @@ import { User, Phone, Globe, FileText, Check } from "lucide-react";
 import { Input } from "@/components/common/Input";
 import { Textarea } from "@/components/common/Textarea";
 import { Button } from "@/components/common/Button";
+import { isValidPhone } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
-const PHONE_REGEX = /^[\d\s+()-]{10,}$/;
 const BIO_MAX = 1000;
 
-function validate(form) {
+function validate(form, t) {
   const errors = {};
   if (!form.displayName?.trim() && !form.firstName?.trim()) {
     errors.displayName = "Se requiere al menos nombre visible o nombre.";
   }
-  if (form.phone?.trim() && !PHONE_REGEX.test(form.phone.trim())) {
-    errors.phone = "Formato inválido. Usa dígitos, +, espacios (mín. 10 caracteres).";
+  if (form.phone?.trim() && !isValidPhone(form.phone)) {
+    errors.phone = t("common.phoneError");
   }
   if (form.bio && form.bio.length > BIO_MAX) {
     errors.bio = `Máximo ${BIO_MAX} caracteres.`;
@@ -22,6 +23,7 @@ function validate(form) {
 }
 
 export default function ProfileForm({ profile, email, onSave, saving }) {
+  const { t } = useLanguage();
   const [form, setForm] = useState({
     displayName: "",
     firstName: "",
@@ -52,6 +54,12 @@ export default function ProfileForm({ profile, email, onSave, saving }) {
     setSuccess(false);
   }
 
+  function handlePhoneBlur() {
+    if (form.phone?.trim() && !isValidPhone(form.phone)) {
+      setErrors((prev) => ({ ...prev, phone: t("common.phoneError") }));
+    }
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     const trimmed = {
@@ -62,7 +70,7 @@ export default function ProfileForm({ profile, email, onSave, saving }) {
       language: form.language,
       bio: form.bio.trim(),
     };
-    const errs = validate(trimmed);
+    const errs = validate(trimmed, t);
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
       return;
@@ -143,6 +151,7 @@ export default function ProfileForm({ profile, email, onSave, saving }) {
           type="tel"
           value={form.phone}
           onChange={(e) => handleChange("phone", e.target.value)}
+          onBlur={handlePhoneBlur}
           placeholder="+52 55 1234 5678"
         />
         {errors.phone && (

@@ -4,6 +4,7 @@ import ResourceForm from "@/components/admin/resources/ResourceForm";
 import { useResource, updateResource } from "@/hooks/useResources";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/common/Card";
+import { useLanguage } from "@/hooks/useLanguage";
 
 function LoadingSkeleton() {
   return (
@@ -24,6 +25,7 @@ function LoadingSkeleton() {
 export default function ResourceEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { data: resource, loading, error: loadError } = useResource(id);
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
@@ -47,7 +49,9 @@ export default function ResourceEditPage() {
     return (
       <div className="max-w-4xl">
         <Card className="p-6 border-red-200 bg-red-50">
-          <p className="text-sm text-red-700">{loadError ?? "No se encontró el recurso."}</p>
+          <p className="text-sm text-red-700">
+            {loadError ?? t("admin.resources.notFound")}
+          </p>
         </Card>
       </div>
     );
@@ -56,8 +60,12 @@ export default function ResourceEditPage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Editar recurso</h1>
-        <p className="text-sm text-charcoal-subtle mt-0.5 truncate">{resource.name}</p>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.resources.editTitle")}
+        </h1>
+        <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
+          {resource.name}
+        </p>
       </div>
 
       {serverError && (
@@ -66,7 +74,12 @@ export default function ResourceEditPage() {
         </div>
       )}
 
-      <ResourceForm initialData={resource} onSubmit={handleSubmit} submitting={submitting} submitLabel="Guardar cambios" />
+      <ResourceForm
+        initialData={resource}
+        onSubmit={handleSubmit}
+        submitting={submitting}
+        submitLabel={t("admin.resources.saveChanges")}
+      />
     </div>
   );
 }

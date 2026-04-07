@@ -7,32 +7,33 @@ import ImageUpload from "./ImageUpload";
 import GalleryManager from "@/components/admin/media/GalleryManager";
 import { slugify, checkSlugAvailable } from "@/hooks/useExperiences";
 import AdminSelect from "@/components/common/AdminSelect";
+import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 
 const TYPE_OPTIONS = [
-  { value: "session", label: "Sesión" },
-  { value: "immersion", label: "Inmersión" },
-  { value: "retreat", label: "Retiro" },
-  { value: "stay", label: "Estancia" },
-  { value: "private", label: "Privada" },
-  { value: "package", label: "Paquete" },
+  { value: "session", i18nKey: "admin.experienceTypes.session" },
+  { value: "immersion", i18nKey: "admin.experienceTypes.immersion" },
+  { value: "retreat", i18nKey: "admin.experienceTypes.retreat" },
+  { value: "stay", i18nKey: "admin.experienceTypes.stay" },
+  { value: "private", i18nKey: "admin.experienceTypes.private" },
+  { value: "package", i18nKey: "admin.experienceTypes.package" },
 ];
 const SALE_MODE_OPTIONS = [
-  { value: "direct", label: "Directa" },
-  { value: "request", label: "Por solicitud" },
-  { value: "assisted", label: "Asistida" },
-  { value: "pass", label: "Por pase" },
+  { value: "direct", i18nKey: "admin.saleModes.direct" },
+  { value: "request", i18nKey: "admin.saleModes.request" },
+  { value: "assisted", i18nKey: "admin.saleModes.assisted" },
+  { value: "pass", i18nKey: "admin.saleModes.pass" },
 ];
 const FULFILLMENT_OPTIONS = [
-  { value: "ticket", label: "Ticket" },
-  { value: "booking", label: "Reserva" },
-  { value: "pass", label: "Pase" },
-  { value: "package", label: "Paquete" },
+  { value: "ticket", i18nKey: "admin.fulfillmentTypes.ticket" },
+  { value: "booking", i18nKey: "admin.fulfillmentTypes.booking" },
+  { value: "pass", i18nKey: "admin.fulfillmentTypes.pass" },
+  { value: "package", i18nKey: "admin.fulfillmentTypes.package" },
 ];
 const STATUS_OPTIONS = [
-  { value: "draft", label: "Borrador" },
-  { value: "published", label: "Publicada" },
-  { value: "archived", label: "Archivada" },
+  { value: "draft", i18nKey: "admin.statuses.draft" },
+  { value: "published", i18nKey: "admin.statuses.published" },
+  { value: "archived", i18nKey: "admin.statuses.archived" },
 ];
 
 const EMPTY = {
@@ -145,6 +146,7 @@ export default function ExperienceForm({
   submitting,
   submitLabel = "Guardar",
 }) {
+  const { t } = useLanguage();
   const [form, setForm] = useState(() => ({
     ...EMPTY,
     ...initialData,
@@ -251,36 +253,48 @@ export default function ExperienceForm({
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Identidad
+          {t("admin.experienceForm.sectionIdentity")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Nombre interno" required error={errors.name}>
+          <Field
+            label={t("admin.experienceForm.internalName")}
+            required
+            error={errors.name}
+          >
             <Input
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
-              placeholder="Yoga Sunrise — nombre operativo"
+              placeholder={t("admin.experienceForm.placeholderInternalName")}
               disabled={isDisabled}
               className={errors.name ? "border-red-400" : ""}
             />
           </Field>
-          <Field label="Nombre público (EN)" required error={errors.publicName}>
+          <Field
+            label={t("admin.experienceForm.publicNameEn")}
+            required
+            error={errors.publicName}
+          >
             <Input
               value={form.publicName}
               onChange={(e) => handlePublicName(e.target.value)}
-              placeholder="Sunrise Yoga Experience"
+              placeholder={t("admin.experienceForm.placeholderPublicNameEn")}
               disabled={isDisabled}
               className={errors.publicName ? "border-red-400" : ""}
             />
           </Field>
-          <Field label="Nombre público (ES)">
+          <Field label={t("admin.experienceForm.publicNameEs")}>
             <Input
               value={form.publicNameEs}
               onChange={(e) => set("publicNameEs", e.target.value)}
-              placeholder="Experiencia de Yoga al Amanecer"
+              placeholder={t("admin.experienceForm.placeholderPublicNameEs")}
               disabled={isDisabled}
             />
           </Field>
-          <Field label="Slug (URL)" required error={errors.slug}>
+          <Field
+            label={t("admin.experienceForm.slug")}
+            required
+            error={errors.slug}
+          >
             <SlugInput
               value={form.slug}
               onChange={handleSlugChange}
@@ -294,32 +308,50 @@ export default function ExperienceForm({
       {/* Clasificación */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Clasificación
+          {t("admin.experienceForm.sectionClassification")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Field label="Tipo" required error={errors.type}>
+          <Field
+            label={t("admin.experienceForm.type")}
+            required
+            error={errors.type}
+          >
             <AdminSelect
               value={form.type}
               onChange={(v) => set("type", v)}
-              options={TYPE_OPTIONS}
+              options={TYPE_OPTIONS.map((o) => ({ ...o, label: t(o.i18nKey) }))}
               disabled={isDisabled}
               error={errors.type}
             />
           </Field>
-          <Field label="Modo de venta" required error={errors.saleMode}>
+          <Field
+            label={t("admin.experienceForm.saleMode")}
+            required
+            error={errors.saleMode}
+          >
             <AdminSelect
               value={form.saleMode}
               onChange={(v) => set("saleMode", v)}
-              options={SALE_MODE_OPTIONS}
+              options={SALE_MODE_OPTIONS.map((o) => ({
+                ...o,
+                label: t(o.i18nKey),
+              }))}
               disabled={isDisabled}
               error={errors.saleMode}
             />
           </Field>
-          <Field label="Fulfillment" required error={errors.fulfillmentType}>
+          <Field
+            label={t("admin.experienceForm.fulfillment")}
+            required
+            error={errors.fulfillmentType}
+          >
             <AdminSelect
               value={form.fulfillmentType}
               onChange={(v) => set("fulfillmentType", v)}
-              options={FULFILLMENT_OPTIONS}
+              options={FULFILLMENT_OPTIONS.map((o) => ({
+                ...o,
+                label: t(o.i18nKey),
+              }))}
               disabled={isDisabled}
               error={errors.fulfillmentType}
             />
@@ -330,19 +362,22 @@ export default function ExperienceForm({
       {/* Descripción */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Descripción
+          {t("admin.experienceForm.sectionDescription")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Descripción corta (EN)" hint="Máx. 500 caracteres">
+          <Field
+            label={t("admin.experienceForm.shortDescriptionEn")}
+            hint={t("admin.experienceForm.maxChars500")}
+          >
             <Textarea
               value={form.shortDescription}
               onChange={(v) => set("shortDescription", v)}
-              placeholder="A transformative sunrise yoga session..."
+              placeholder={t("admin.experienceForm.placeholderShortDescEn")}
               disabled={isDisabled}
               maxLength={500}
             />
           </Field>
-          <Field label="Descripción corta (ES)">
+          <Field label={t("admin.experienceForm.shortDescriptionEs")}>
             <Textarea
               value={form.shortDescriptionEs}
               onChange={(v) => set("shortDescriptionEs", v)}
@@ -351,21 +386,24 @@ export default function ExperienceForm({
               maxLength={500}
             />
           </Field>
-          <Field label="Descripción larga (EN)" hint="Máx. 5000 caracteres">
+          <Field
+            label={t("admin.experienceForm.longDescriptionEn")}
+            hint={t("admin.experienceForm.maxChars5000")}
+          >
             <Textarea
               value={form.longDescription}
               onChange={(v) => set("longDescription", v)}
-              placeholder="Full description in English..."
+              placeholder={t("admin.experienceForm.placeholderLongDescEn")}
               disabled={isDisabled}
               rows={5}
               maxLength={5000}
             />
           </Field>
-          <Field label="Descripción larga (ES)">
+          <Field label={t("admin.experienceForm.longDescriptionEs")}>
             <Textarea
               value={form.longDescriptionEs}
               onChange={(v) => set("longDescriptionEs", v)}
-              placeholder="Descripción completa en español..."
+              placeholder={t("admin.experienceForm.placeholderLongDescEs")}
               disabled={isDisabled}
               rows={5}
               maxLength={5000}
@@ -377,7 +415,7 @@ export default function ExperienceForm({
       {/* Imagen de portada */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Imagen de portada
+          {t("admin.experienceForm.sectionCoverImage")}
         </h2>
         <div className="max-w-lg">
           <ImageUpload
@@ -392,7 +430,7 @@ export default function ExperienceForm({
       {/* Galería de imágenes */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Galería
+          {t("admin.experienceForm.sectionGallery")}
         </h2>
         <GalleryManager
           value={form.galleryImageIds}
@@ -411,31 +449,31 @@ export default function ExperienceForm({
           <Toggle
             checked={form.requiresSchedule}
             onChange={(v) => set("requiresSchedule", v)}
-            label="Requiere selección de fecha/slot"
+            label={t("admin.experienceForm.requiresSlot")}
             disabled={isDisabled}
           />
           <Toggle
             checked={form.requiresDate}
             onChange={(v) => set("requiresDate", v)}
-            label="Requiere fecha específica"
+            label={t("admin.experienceForm.requiresDate")}
             disabled={isDisabled}
           />
           <Toggle
             checked={form.generatesTickets}
             onChange={(v) => set("generatesTickets", v)}
-            label="Genera tickets tras compra"
+            label={t("admin.experienceForm.generatesTickets")}
             disabled={isDisabled}
           />
           <Toggle
             checked={form.allowQuantity}
             onChange={(v) => set("allowQuantity", v)}
-            label="Permite múltiples asistentes"
+            label={t("admin.experienceForm.multipleAttendees")}
             disabled={isDisabled}
           />
         </div>
         {form.allowQuantity && (
           <div className="grid grid-cols-2 gap-4 pt-2">
-            <Field label="Mínimo de asistentes">
+            <Field label={t("admin.experienceForm.minAttendees")}>
               <Input
                 type="number"
                 min={1}
@@ -445,7 +483,7 @@ export default function ExperienceForm({
                 disabled={isDisabled}
               />
             </Field>
-            <Field label="Máximo de asistentes">
+            <Field label={t("admin.experienceForm.maxAttendees")}>
               <Input
                 type="number"
                 min={1}
@@ -465,16 +503,19 @@ export default function ExperienceForm({
           Publicación
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Estado" required>
+          <Field label={t("admin.experienceForm.status")} required>
             <AdminSelect
               value={form.status}
               onChange={(v) => set("status", v)}
-              options={STATUS_OPTIONS}
+              options={STATUS_OPTIONS.map((o) => ({
+                ...o,
+                label: t(o.i18nKey),
+              }))}
               disabled={isDisabled}
             />
           </Field>
           <Field
-            label="Orden de visualización"
+            label={t("admin.experienceForm.displayOrder")}
             hint="Número para ordenar en listado público"
           >
             <Input
@@ -495,7 +536,10 @@ export default function ExperienceForm({
           SEO
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="SEO Title" hint="Máx. 255 caracteres">
+          <Field
+            label={t("admin.experienceForm.seoTitle")}
+            hint={t("admin.experienceForm.maxChars500")}
+          >
             <Input
               value={form.seoTitle}
               onChange={(e) => set("seoTitle", e.target.value)}
@@ -504,7 +548,10 @@ export default function ExperienceForm({
               maxLength={255}
             />
           </Field>
-          <Field label="SEO Description" hint="Máx. 500 caracteres">
+          <Field
+            label={t("admin.experienceForm.seoDescription")}
+            hint={t("admin.experienceForm.maxChars500")}
+          >
             <Textarea
               value={form.seoDescription}
               onChange={(v) => set("seoDescription", v)}

@@ -2,8 +2,10 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function CreditAdjustForm({ userPass, onSubmit, onClose }) {
+  const { t } = useLanguage();
   const [credits, setCredits] = useState(1);
   const [notes, setNotes] = useState("");
   const [mode, setMode] = useState("consume"); // consume | restore
@@ -20,15 +22,19 @@ export default function CreditAdjustForm({ userPass, onSubmit, onClose }) {
 
     const val = parseInt(credits, 10);
     if (!val || val < 1) {
-      setError("Ingresa al menos 1 crédito.");
+      setError(t("admin.creditAdjust.errorMinCredit"));
       return;
     }
     if (mode === "consume" && val > maxConsume) {
-      setError(`Máximo ${maxConsume} créditos disponibles para consumir.`);
+      setError(
+        t("admin.creditAdjust.errorMaxConsume").replace("{max}", maxConsume),
+      );
       return;
     }
     if (mode === "restore" && val > maxRestore) {
-      setError(`Máximo ${maxRestore} créditos disponibles para restaurar.`);
+      setError(
+        t("admin.creditAdjust.errorMaxRestore").replace("{max}", maxRestore),
+      );
       return;
     }
 
@@ -51,17 +57,19 @@ export default function CreditAdjustForm({ userPass, onSubmit, onClose }) {
         <button
           onClick={onClose}
           className="absolute top-3 right-3 p-1 rounded-lg text-charcoal-muted hover:text-charcoal hover:bg-warm-gray transition-colors"
-          aria-label="Cerrar"
+          aria-label={t("admin.creditAdjust.cancel")}
         >
           <X className="h-5 w-5" />
         </button>
 
         <div>
           <h2 className="text-lg font-semibold text-charcoal">
-            Ajustar créditos
+            {t("admin.creditAdjust.title")}
           </h2>
           <p className="text-sm text-charcoal-muted mt-0.5">
-            Disponibles: {remaining} / {userPass.totalCredits}
+            {t("admin.creditAdjust.subtitle")
+              .replace("{remaining}", remaining)
+              .replace("{total}", userPass.totalCredits)}
           </p>
         </div>
 
@@ -83,7 +91,7 @@ export default function CreditAdjustForm({ userPass, onSubmit, onClose }) {
                   : "border-sand-dark bg-white text-charcoal-muted hover:bg-warm-gray/30"
               }`}
             >
-              Consumir
+              {t("admin.creditAdjust.consume")}
             </button>
             <button
               type="button"
@@ -94,14 +102,14 @@ export default function CreditAdjustForm({ userPass, onSubmit, onClose }) {
                   : "border-sand-dark bg-white text-charcoal-muted hover:bg-warm-gray/30"
               }`}
             >
-              Restaurar
+              {t("admin.creditAdjust.restore")}
             </button>
           </div>
 
           {/* Credits input */}
           <div>
             <label className="block text-sm font-medium text-charcoal mb-1">
-              Créditos
+              {t("admin.creditAdjust.credits")}
             </label>
             <input
               type="number"
@@ -116,7 +124,7 @@ export default function CreditAdjustForm({ userPass, onSubmit, onClose }) {
           {/* Notes */}
           <div>
             <label className="block text-sm font-medium text-charcoal mb-1">
-              Notas (opcional)
+              {t("admin.creditAdjust.notes")}
             </label>
             <textarea
               value={notes}
@@ -124,7 +132,7 @@ export default function CreditAdjustForm({ userPass, onSubmit, onClose }) {
               maxLength={500}
               rows={2}
               className="w-full rounded-xl border border-sand-dark bg-white px-3 py-2 text-sm text-charcoal focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-none"
-              placeholder="Motivo del ajuste manual..."
+              placeholder={t("admin.creditAdjust.notesPlaceholder")}
             />
           </div>
 
@@ -136,14 +144,14 @@ export default function CreditAdjustForm({ userPass, onSubmit, onClose }) {
               onClick={onClose}
               disabled={submitting}
             >
-              Cancelar
+              {t("admin.creditAdjust.cancel")}
             </Button>
             <Button type="submit" size="sm" disabled={submitting}>
               {submitting
-                ? "Guardando..."
+                ? t("admin.common.saving")
                 : mode === "consume"
-                  ? "Consumir créditos"
-                  : "Restaurar créditos"}
+                  ? t("admin.creditAdjust.consumeButton")
+                  : t("admin.creditAdjust.restoreButton")}
             </Button>
           </div>
         </form>

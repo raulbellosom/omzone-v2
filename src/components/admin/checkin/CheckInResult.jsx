@@ -1,4 +1,5 @@
 import { CheckCircle, XCircle, AlertTriangle } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 
 function formatDateTime(iso) {
@@ -13,6 +14,8 @@ function formatDateTime(iso) {
 }
 
 export default function CheckInResult({ result }) {
+  const { t } = useLanguage();
+
   if (!result) return null;
 
   const isSuccess = result.success;
@@ -43,7 +46,7 @@ export default function CheckInResult({ result }) {
               isSuccess ? "text-emerald-800" : "text-red-800",
             )}
           >
-            {isSuccess ? "Check-in Successful" : "Check-in Failed"}
+            {isSuccess ? t("admin.checkin.success") : t("admin.checkin.failed")}
           </p>
           <p
             className={cn(
@@ -61,7 +64,9 @@ export default function CheckInResult({ result }) {
         <div className="bg-white/70 rounded-xl p-4 space-y-2 text-sm">
           {ticket.experienceName && (
             <div className="flex justify-between">
-              <span className="text-charcoal-muted">Experience</span>
+              <span className="text-charcoal-muted">
+                {t("admin.checkin.experience")}
+              </span>
               <span className="font-medium text-charcoal">
                 {ticket.experienceName}
               </span>
@@ -69,19 +74,25 @@ export default function CheckInResult({ result }) {
           )}
           {ticket.editionDate && (
             <div className="flex justify-between">
-              <span className="text-charcoal-muted">Date</span>
+              <span className="text-charcoal-muted">
+                {t("admin.checkin.date")}
+              </span>
               <span className="text-charcoal">{ticket.editionDate}</span>
             </div>
           )}
           {ticket.tierName && (
             <div className="flex justify-between">
-              <span className="text-charcoal-muted">Tier</span>
+              <span className="text-charcoal-muted">
+                {t("admin.checkin.tier")}
+              </span>
               <span className="text-charcoal">{ticket.tierName}</span>
             </div>
           )}
           {ticket.holderName && (
             <div className="flex justify-between">
-              <span className="text-charcoal-muted">Participant</span>
+              <span className="text-charcoal-muted">
+                {t("admin.checkin.participant")}
+              </span>
               <span className="text-charcoal">{ticket.holderName}</span>
             </div>
           )}
@@ -91,7 +102,10 @@ export default function CheckInResult({ result }) {
       {/* Used at info for already-used tickets */}
       {!isSuccess && result.usedAt && (
         <p className="text-sm text-red-700">
-          Previously checked in: {formatDateTime(result.usedAt)}
+          {t("admin.checkin.previouslyCheckedIn").replace(
+            "{date}",
+            formatDateTime(result.usedAt),
+          )}
         </p>
       )}
 

@@ -11,21 +11,25 @@ import { useAuth } from "@/hooks/useAuth";
 import { ROUTES } from "@/constants/routes";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const CATEGORY_OPTIONS = [
-  { value: "", label: "Todas las categorías" },
-  { value: "landing", label: "Landing" },
-  { value: "blog", label: "Blog" },
-  { value: "highlight", label: "Highlight" },
-  { value: "institutional", label: "Institucional" },
-  { value: "faq", label: "FAQ" },
+  { value: "", i18nKey: "admin.publicationCategories.all" },
+  { value: "landing", i18nKey: "admin.publicationCategories.landing" },
+  { value: "blog", i18nKey: "admin.publicationCategories.blog" },
+  { value: "highlight", i18nKey: "admin.publicationCategories.highlight" },
+  {
+    value: "institutional",
+    i18nKey: "admin.publicationCategories.institutional",
+  },
+  { value: "faq", i18nKey: "admin.publicationCategories.faq" },
 ];
 
 const STATUS_OPTIONS = [
-  { value: "", label: "Todos los estados" },
-  { value: "draft", label: "Borrador" },
-  { value: "published", label: "Publicada" },
-  { value: "archived", label: "Archivada" },
+  { value: "", i18nKey: "admin.statuses.all" },
+  { value: "draft", i18nKey: "admin.statuses.draft" },
+  { value: "published", i18nKey: "admin.statuses.published" },
+  { value: "archived", i18nKey: "admin.statuses.archived" },
 ];
 
 const PAGE_SIZE = 25;
@@ -33,6 +37,7 @@ const PAGE_SIZE = 25;
 export default function PublicationListPage() {
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
+  const { t } = useLanguage();
 
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
@@ -87,10 +92,14 @@ export default function PublicationListPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">Publicaciones</h1>
+          <h1 className="text-xl font-semibold text-charcoal">
+            {t("admin.publications.title")}
+          </h1>
           {!loading && (
             <p className="text-sm text-charcoal-subtle mt-0.5">
-              {total} {total === 1 ? "publicación" : "publicaciones"}
+              {total === 1
+                ? t("admin.publications.countOne")
+                : t("admin.publications.countOther").replace("{count}", total)}
             </p>
           )}
         </div>
@@ -101,7 +110,7 @@ export default function PublicationListPage() {
             onClick={() => navigate(ROUTES.ADMIN_PUBLICATION_NEW)}
           >
             <Plus className="h-4 w-4" />
-            Nueva publicación
+            {t("admin.publications.newPublication")}
           </Button>
         )}
       </div>
@@ -113,20 +122,20 @@ export default function PublicationListPage() {
           <Input
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder="Buscar por título..."
+            placeholder={t("admin.publications.searchPlaceholder")}
             className="pl-9 h-10"
           />
         </div>
         <AdminSelect
           value={category}
           onChange={handleCategoryChange}
-          options={CATEGORY_OPTIONS}
+          options={CATEGORY_OPTIONS.map((o) => ({ ...o, label: t(o.i18nKey) }))}
           fullWidth={false}
         />
         <AdminSelect
           value={status}
           onChange={handleStatusChange}
-          options={STATUS_OPTIONS}
+          options={STATUS_OPTIONS.map((o) => ({ ...o, label: t(o.i18nKey) }))}
           fullWidth={false}
         />
         {hasFilters && (
@@ -141,7 +150,7 @@ export default function PublicationListPage() {
             className="flex items-center gap-1 text-sm text-charcoal-subtle hover:text-charcoal"
           >
             <X className="h-4 w-4" />
-            Limpiar
+            {t("admin.publications.clearFilters")}
           </button>
         )}
       </div>
@@ -158,11 +167,10 @@ export default function PublicationListPage() {
         <Card className="p-10 text-center">
           <FileText className="h-10 w-10 text-charcoal-muted mx-auto mb-3" />
           <h2 className="text-lg font-semibold text-charcoal mb-1">
-            Sin publicaciones
+            {t("admin.publications.emptyTitle")}
           </h2>
           <p className="text-sm text-charcoal-muted mb-4">
-            Crea la primera publicación para empezar a construir tu contenido
-            editorial.
+            {t("admin.publications.emptyMessage")}
           </p>
           {isAdmin && (
             <Button
@@ -171,7 +179,7 @@ export default function PublicationListPage() {
               onClick={() => navigate(ROUTES.ADMIN_PUBLICATION_NEW)}
             >
               <Plus className="h-4 w-4" />
-              Crear primera publicación
+              {t("admin.publications.emptyButton")}
             </Button>
           )}
         </Card>
@@ -227,7 +235,9 @@ export default function PublicationListPage() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between pt-2">
           <p className="text-sm text-charcoal-subtle">
-            Página {page + 1} de {totalPages}
+            {t("admin.common.pageOf")
+              .replace("{page}", page + 1)
+              .replace("{total}", totalPages)}
           </p>
           <div className="flex items-center gap-2">
             <Button
@@ -237,7 +247,7 @@ export default function PublicationListPage() {
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={page === 0}
             >
-              Anterior
+              {t("admin.common.previous")}
             </Button>
             <Button
               type="button"
@@ -246,7 +256,7 @@ export default function PublicationListPage() {
               onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
               disabled={page >= totalPages - 1}
             >
-              Siguiente
+              {t("admin.common.next")}
             </Button>
           </div>
         </div>

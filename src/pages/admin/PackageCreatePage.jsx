@@ -2,13 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PackageForm from "@/components/admin/packages/PackageForm";
 import { createPackage } from "@/hooks/usePackages";
-import {
-  createPackageItem,
-} from "@/hooks/usePackageItems";
+import { useLanguage } from "@/hooks/useLanguage";
+import { createPackageItem } from "@/hooks/usePackageItems";
 import { ROUTES } from "@/constants/routes";
 
 export default function PackageCreatePage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
 
@@ -38,9 +38,11 @@ export default function PackageCreatePage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Nuevo paquete</h1>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.packages.createTitle")}
+        </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5">
-          Crea un paquete de experiencias con elementos incluidos
+          {t("admin.packages.createSubtitle")}
         </p>
       </div>
 
@@ -53,7 +55,7 @@ export default function PackageCreatePage() {
       <PackageForm
         onSubmit={handleSubmit}
         submitting={submitting}
-        submitLabel="Crear paquete"
+        submitLabel={t("admin.packages.createButton")}
       />
     </div>
   );

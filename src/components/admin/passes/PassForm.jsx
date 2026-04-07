@@ -6,11 +6,12 @@ import ImageUpload from "@/components/admin/experiences/ImageUpload";
 import ExperiencePicker from "@/components/admin/passes/ExperiencePicker";
 import { slugify, checkPassSlugAvailable } from "@/hooks/usePasses";
 import AdminSelect from "@/components/common/AdminSelect";
+import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 
 const STATUS_OPTIONS = [
-  { value: "active", label: "Activo" },
-  { value: "inactive", label: "Inactivo" },
+  { value: "active", i18nKey: "admin.statuses.active" },
+  { value: "inactive", i18nKey: "admin.statuses.inactive" },
 ];
 
 const CURRENCY_OPTIONS = [
@@ -83,6 +84,7 @@ export default function PassForm({
   submitting,
   submitLabel = "Guardar",
 }) {
+  const { t } = useLanguage();
   const init = initialData
     ? {
         ...EMPTY,
@@ -178,32 +180,32 @@ export default function PassForm({
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Identidad
+          {t("admin.passForm.sectionIdentity")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Nombre" required error={errors.name}>
+          <Field label={t("admin.passForm.name")} required error={errors.name}>
             <Input
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
-              placeholder="Pase Breath & Move"
+              placeholder={t("admin.passForm.placeholderName")}
               disabled={isDisabled}
               className={errors.name ? "border-red-400" : ""}
             />
           </Field>
-          <Field label="Nombre (ES)">
+          <Field label={t("admin.passForm.nameEs")}>
             <Input
               value={form.nameEs}
               onChange={(e) => set("nameEs", e.target.value)}
-              placeholder="Pase Respira y Muévete"
+              placeholder={t("admin.passForm.placeholderNameEs")}
               disabled={isDisabled}
             />
           </Field>
         </div>
         <Field
-          label="Slug"
+          label={t("admin.passForm.slug")}
           required
           error={errors.slug}
-          hint="Se genera automáticamente, editable manualmente"
+          hint={t("admin.passForm.slugHint")}
         >
           <Input
             value={form.slug}
@@ -221,23 +223,23 @@ export default function PassForm({
       {/* Descripción */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Descripción
+          {t("admin.passForm.sectionDescription")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Descripción (EN)">
+          <Field label={t("admin.passForm.descriptionEn")}>
             <Textarea
               value={form.description}
               onChange={(v) => set("description", v)}
-              placeholder="Multi-session pass for wellness experiences..."
+              placeholder={t("admin.passForm.placeholderDescEn")}
               disabled={isDisabled}
               rows={4}
             />
           </Field>
-          <Field label="Descripción (ES)">
+          <Field label={t("admin.passForm.descriptionEs")}>
             <Textarea
               value={form.descriptionEs}
               onChange={(v) => set("descriptionEs", v)}
-              placeholder="Pase multi-sesión para experiencias de bienestar..."
+              placeholder={t("admin.passForm.placeholderDescEs")}
               disabled={isDisabled}
               rows={4}
             />
@@ -248,14 +250,14 @@ export default function PassForm({
       {/* Créditos y precio */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Créditos y precio
+          {t("admin.passForm.sectionCreditsPrice")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field
-            label="Total de créditos"
+            label={t("admin.passForm.totalCredits")}
             required
             error={errors.totalCredits}
-            hint="Número de sesiones/usos incluidos"
+            hint={t("admin.passForm.totalCreditsHint")}
           >
             <Input
               type="number"
@@ -267,7 +269,10 @@ export default function PassForm({
               className={errors.totalCredits ? "border-red-400" : ""}
             />
           </Field>
-          <Field label="Vigencia (días)" hint="Dejar vacío si no vence">
+          <Field
+            label={t("admin.passForm.validityDays")}
+            hint={t("admin.passForm.validityHint")}
+          >
             <Input
               type="number"
               min={1}
@@ -277,7 +282,11 @@ export default function PassForm({
               disabled={isDisabled}
             />
           </Field>
-          <Field label="Precio base" required error={errors.basePrice}>
+          <Field
+            label={t("admin.passForm.basePrice")}
+            required
+            error={errors.basePrice}
+          >
             <Input
               type="number"
               min={0}
@@ -289,7 +298,11 @@ export default function PassForm({
               className={errors.basePrice ? "border-red-400" : ""}
             />
           </Field>
-          <Field label="Moneda" required error={errors.currency}>
+          <Field
+            label={t("admin.passForm.currency")}
+            required
+            error={errors.currency}
+          >
             <AdminSelect
               value={form.currency}
               onChange={(v) => set("currency", v)}
@@ -304,9 +317,9 @@ export default function PassForm({
       {/* Experiencias válidas */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Experiencias válidas
+          {t("admin.passForm.sectionValidExperiences")}
         </h2>
-        <Field hint="Si no seleccionas ninguna, el pase aplica para todas las experiencias">
+        <Field hint={t("admin.passForm.validExperiencesHint")}>
           <ExperiencePicker
             value={form.validExperienceIds}
             onChange={(v) => set("validExperienceIds", v)}
@@ -318,19 +331,29 @@ export default function PassForm({
       {/* Estado y orden */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Estado y orden
+          {t("admin.passForm.sectionStatusOrder")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Estado" required error={errors.status}>
+          <Field
+            label={t("admin.passForm.status")}
+            required
+            error={errors.status}
+          >
             <AdminSelect
               value={form.status}
               onChange={(v) => set("status", v)}
-              options={STATUS_OPTIONS}
+              options={STATUS_OPTIONS.map((o) => ({
+                ...o,
+                label: t(o.i18nKey),
+              }))}
               disabled={isDisabled}
               error={errors.status}
             />
           </Field>
-          <Field label="Orden" hint="Orden de aparición (menor = primero)">
+          <Field
+            label={t("admin.passForm.displayOrder")}
+            hint={t("admin.passForm.displayOrderHint")}
+          >
             <Input
               type="number"
               min={0}
@@ -346,7 +369,7 @@ export default function PassForm({
       {/* Imagen */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Imagen de portada
+          {t("admin.passForm.sectionCoverImage")}
         </h2>
         <div className="max-w-lg">
           <ImageUpload
@@ -364,7 +387,7 @@ export default function PassForm({
           {submitting ? (
             <span className="flex items-center gap-2">
               <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-              Guardando...
+              {t("admin.common.saving")}
             </span>
           ) : (
             submitLabel

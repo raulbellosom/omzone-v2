@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import env from "@/config/env";
 import { getPreviewUrl } from "@/hooks/useImagePreview";
 import { getPublicationPreviewUrl } from "@/hooks/usePublicationBySlug";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 
 const OG_WIDTH = 1200;
 const OG_HEIGHT = 630;
@@ -15,15 +16,17 @@ export function useExperienceSEO(
   { slots = [], pricingTiers = [] } = {},
 ) {
   const location = useLocation();
+  const { language } = useLanguage();
 
   return useMemo(() => {
     if (!experience) return {};
 
-    const title = experience.seoTitle || experience.publicName;
+    const title =
+      localizedField(experience, "seoTitle", language) ||
+      localizedField(experience, "publicName", language);
     const description =
-      experience.seoDescription ||
-      experience.shortDescription ||
-      experience.shortDescriptionEs ||
+      localizedField(experience, "seoDescription", language) ||
+      localizedField(experience, "shortDescription", language) ||
       "";
     const ogImageId = experience.ogImageId || experience.heroImageId;
     const ogImage = ogImageId
@@ -89,7 +92,7 @@ export function useExperienceSEO(
       canonical,
       structuredData,
     };
-  }, [experience, slots, pricingTiers, location.pathname]);
+  }, [experience, slots, pricingTiers, location.pathname, language]);
 }
 
 /**
@@ -97,15 +100,17 @@ export function useExperienceSEO(
  */
 export function usePublicationSEO(publication) {
   const location = useLocation();
+  const { language } = useLanguage();
 
   return useMemo(() => {
     if (!publication) return {};
 
-    const title = publication.seoTitle || publication.title;
+    const title =
+      localizedField(publication, "seoTitle", language) ||
+      localizedField(publication, "title", language);
     const description =
-      publication.seoDescription ||
-      publication.excerpt ||
-      publication.excerptEs ||
+      localizedField(publication, "seoDescription", language) ||
+      localizedField(publication, "excerpt", language) ||
       "";
     const ogImageId = publication.ogImageId || publication.heroImageId;
     const ogImage = ogImageId
@@ -119,5 +124,5 @@ export function usePublicationSEO(publication) {
     const canonical = `${env.siteUrl}/p/${publication.slug}`;
 
     return { title, description, ogImage, ogType: "article", canonical };
-  }, [publication, location.pathname]);
+  }, [publication, location.pathname, language]);
 }

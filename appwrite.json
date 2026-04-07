@@ -3078,7 +3078,7 @@
         },
         {
           "key": "idx_stripePaymentIntentId",
-          "type": "key",
+          "type": "unique",
           "status": "available",
           "columns": [
             "stripePaymentIntentId"

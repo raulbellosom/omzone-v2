@@ -352,11 +352,15 @@ export default async ({ req, res, log, error }) => {
       log(`Warning: booking creation failed: ${e.message}`);
     }
 
-    // 3. Increment slot bookedCount
+    // 3. Increment slot bookedCount (mark full if capacity reached)
     try {
-      await db.updateDocument(DB, COL_SLOTS, slotId, {
-        bookedCount: slot.bookedCount + 1,
-      });
+      const newBookedCount = slot.bookedCount + 1;
+      const slotUpdate = { bookedCount: newBookedCount };
+      if (slot.capacity > 0 && newBookedCount >= slot.capacity) {
+        slotUpdate.status = "full";
+        log(`Slot ${slotId} will be marked as full (${newBookedCount}/${slot.capacity})`);
+      }
+      await db.updateDocument(DB, COL_SLOTS, slotId, slotUpdate);
     } catch (e) {
       log(`Warning: slot bookedCount update failed: ${e.message}`);
     }

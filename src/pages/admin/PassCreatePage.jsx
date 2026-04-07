@@ -2,10 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PassForm from "@/components/admin/passes/PassForm";
 import { createPass } from "@/hooks/usePasses";
+import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 
 export default function PassCreatePage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
 
@@ -25,9 +27,11 @@ export default function PassCreatePage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Nuevo pase</h1>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.passes.createTitle")}
+        </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5">
-          Crea un pase consumible de créditos de experiencias
+          {t("admin.passes.createSubtitle")}
         </p>
       </div>
 
@@ -40,7 +44,7 @@ export default function PassCreatePage() {
       <PassForm
         onSubmit={handleSubmit}
         submitting={submitting}
-        submitLabel="Crear pase"
+        submitLabel={t("admin.passes.createButton")}
       />
     </div>
   );

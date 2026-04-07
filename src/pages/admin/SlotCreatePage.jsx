@@ -4,10 +4,12 @@ import SlotForm from "@/components/admin/slots/SlotForm";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
 import { createSlot } from "@/hooks/useSlots";
 import { useExperience } from "@/hooks/useExperiences";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function SlotCreatePage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { data: experience } = useExperience(id);
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
@@ -28,7 +30,9 @@ export default function SlotCreatePage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Nuevo slot</h1>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.slots.createTitle")}
+        </h1>
         {experience && (
           <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
             {experience.publicName}
@@ -48,7 +52,7 @@ export default function SlotCreatePage() {
         experienceId={id}
         onSubmit={handleSubmit}
         submitting={submitting}
-        submitLabel="Crear slot"
+        submitLabel={t("admin.slots.createButton")}
       />
     </div>
   );

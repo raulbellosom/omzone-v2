@@ -18,20 +18,21 @@ import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const STATUS_FILTER_OPTIONS = [
-  { value: "", label: "Todos" },
-  { value: "draft", label: "Borrador" },
-  { value: "published", label: "Publicados" },
-  { value: "full", label: "Llenos" },
-  { value: "cancelled", label: "Cancelados" },
+  { value: "", i18nKey: "admin.statuses.all" },
+  { value: "draft", i18nKey: "admin.statuses.draft" },
+  { value: "published", i18nKey: "admin.statuses.published" },
+  { value: "full", i18nKey: "admin.statuses.full" },
+  { value: "cancelled", i18nKey: "admin.statuses.cancelled" },
 ];
 
 const STATUS_LABELS = {
-  draft: { text: "Borrador", variant: "warm" },
-  published: { text: "Publicado", variant: "success" },
-  full: { text: "Lleno", variant: "destructive" },
-  cancelled: { text: "Cancelado", variant: "default" },
+  draft: { i18nKey: "admin.statuses.draft", variant: "warm" },
+  published: { i18nKey: "admin.statuses.published", variant: "success" },
+  full: { i18nKey: "admin.statuses.full", variant: "destructive" },
+  cancelled: { i18nKey: "admin.statuses.cancelled", variant: "default" },
 };
 
 function formatDatetime(iso) {
@@ -108,17 +109,20 @@ function CardSkeleton() {
 }
 
 function EmptyState({ experienceId }) {
+  const { t } = useLanguage();
   return (
     <Card className="p-10 text-center">
       <CalendarDays className="h-10 w-10 text-charcoal-muted mx-auto mb-3" />
-      <h2 className="text-lg font-semibold text-charcoal mb-1">Sin slots</h2>
+      <h2 className="text-lg font-semibold text-charcoal mb-1">
+        {t("admin.slots.emptyTitle")}
+      </h2>
       <p className="text-sm text-charcoal-muted mb-4">
-        Crea el primer slot de agenda para esta experiencia.
+        {t("admin.slots.emptyMessage")}
       </p>
       <Link to={`/admin/experiences/${experienceId}/slots/create`}>
         <Button size="sm">
           <Plus className="h-4 w-4" />
-          Crear primer slot
+          {t("admin.slots.emptyButton")}
         </Button>
       </Link>
     </Card>
@@ -126,6 +130,7 @@ function EmptyState({ experienceId }) {
 }
 
 export default function SlotListPage() {
+  const { t } = useLanguage();
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: experience } = useExperience(id);
@@ -152,8 +157,11 @@ export default function SlotListPage() {
   async function handleCancel(slot) {
     const hasBookings = slot.bookedCount > 0;
     const msg = hasBookings
-      ? `Este slot tiene ${slot.bookedCount} reserva(s) activa(s). ¿Estás seguro de que deseas cancelarlo?`
-      : "¿Cancelar este slot?";
+      ? t("admin.slots.cancelConfirmMessage").replace(
+          "{count}",
+          slot.bookedCount,
+        )
+      : t("admin.slots.cancelConfirmTitle");
     if (!window.confirm(msg)) return;
 
     setCancelling(slot.$id);
@@ -175,7 +183,7 @@ export default function SlotListPage() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-xl font-semibold text-charcoal">
-            Agenda / Slots
+            {t("admin.slots.title")}
           </h1>
           {experience && (
             <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
@@ -187,13 +195,17 @@ export default function SlotListPage() {
           <Link to={`/admin/experiences/${id}/slots/quick-create`}>
             <Button variant="outline" size="sm">
               <CalendarPlus className="h-4 w-4" />
-              <span className="hidden sm:inline">Recurrentes</span>
+              <span className="hidden sm:inline">
+                {t("admin.slots.recurring")}
+              </span>
             </Button>
           </Link>
           <Link to={`/admin/experiences/${id}/slots/create`}>
             <Button size="sm">
               <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline">Nuevo slot</span>
+              <span className="hidden sm:inline">
+                {t("admin.slots.newSlot")}
+              </span>
             </Button>
           </Link>
         </div>
@@ -206,7 +218,10 @@ export default function SlotListPage() {
         <AdminSelect
           value={statusFilter}
           onChange={setStatusFilter}
-          options={STATUS_FILTER_OPTIONS}
+          options={STATUS_FILTER_OPTIONS.map((o) => ({
+            ...o,
+            label: t(o.i18nKey),
+          }))}
           fullWidth={false}
         />
         <input
@@ -232,7 +247,7 @@ export default function SlotListPage() {
                 ? "bg-sage/20 text-sage"
                 : "text-charcoal-muted hover:bg-warm-gray",
             )}
-            aria-label="Vista tabla"
+            aria-label={t("admin.slots.tableView")}
           >
             <List className="h-4 w-4" />
           </button>
@@ -244,7 +259,7 @@ export default function SlotListPage() {
                 ? "bg-sage/20 text-sage"
                 : "text-charcoal-muted hover:bg-warm-gray",
             )}
-            aria-label="Vista calendario"
+            aria-label={t("admin.slots.calendarView")}
           >
             <CalendarDays className="h-4 w-4" />
           </button>
@@ -285,12 +300,24 @@ export default function SlotListPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
-                  <th className="px-4 py-3 font-medium">Fecha</th>
-                  <th className="px-4 py-3 font-medium">Horario</th>
-                  <th className="px-4 py-3 font-medium">Capacidad</th>
-                  <th className="px-4 py-3 font-medium">Locación</th>
-                  <th className="px-4 py-3 font-medium">Estado</th>
-                  <th className="px-4 py-3 font-medium text-right">Acciones</th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("admin.slots.date")}
+                  </th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("admin.slots.schedule")}
+                  </th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("admin.slots.capacity")}
+                  </th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("admin.slots.location")}
+                  </th>
+                  <th className="px-4 py-3 font-medium">
+                    {t("admin.slots.status")}
+                  </th>
+                  <th className="px-4 py-3 font-medium text-right">
+                    {t("admin.slots.actions")}
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-sand-dark">
@@ -318,7 +345,7 @@ export default function SlotListPage() {
                         {locationMap[slot.locationId] || "—"}
                       </td>
                       <td className="px-4 py-3">
-                        <Badge variant={st.variant}>{st.text}</Badge>
+                        <Badge variant={st.variant}>{t(st.i18nKey)}</Badge>
                       </td>
                       <td className="px-4 py-3 text-right space-x-1">
                         <button
@@ -328,7 +355,7 @@ export default function SlotListPage() {
                             )
                           }
                           className="p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
-                          aria-label="Editar slot"
+                          aria-label={t("admin.common.edit")}
                         >
                           <Pencil className="h-4 w-4" />
                         </button>
@@ -337,7 +364,7 @@ export default function SlotListPage() {
                             onClick={() => handleCancel(slot)}
                             disabled={cancelling === slot.$id}
                             className="p-1.5 rounded-lg text-charcoal-muted hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
-                            aria-label="Cancelar slot"
+                            aria-label={t("admin.common.cancel")}
                           >
                             <XCircle className="h-4 w-4" />
                           </button>
@@ -374,7 +401,7 @@ export default function SlotListPage() {
                       )}
                     </div>
                     <Badge variant={st.variant} className="shrink-0">
-                      {st.text}
+                      {t(st.i18nKey)}
                     </Badge>
                   </div>
                   <div className="flex justify-end gap-2 mt-3">
@@ -388,7 +415,7 @@ export default function SlotListPage() {
                       }
                     >
                       <Pencil className="h-3.5 w-3.5" />
-                      Editar
+                      {t("admin.common.edit")}
                     </Button>
                     {slot.status !== "cancelled" && (
                       <Button
@@ -399,7 +426,7 @@ export default function SlotListPage() {
                         className="text-red-600 hover:bg-red-50"
                       >
                         <XCircle className="h-3.5 w-3.5" />
-                        Cancelar
+                        {t("admin.common.cancel")}
                       </Button>
                     )}
                   </div>

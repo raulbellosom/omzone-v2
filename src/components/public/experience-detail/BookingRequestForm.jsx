@@ -4,11 +4,14 @@ import { createBookingRequest } from "@/hooks/useBookingRequests";
 import Input from "@/components/common/Input";
 import { Button } from "@/components/common/Button";
 import { Send, CheckCircle } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
+import { isValidPhone } from "@/lib/utils";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function BookingRequestForm({ experience }) {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [form, setForm] = useState({
     contactName: user?.name || "",
     contactEmail: user?.email || "",
@@ -23,10 +26,16 @@ export default function BookingRequestForm({ experience }) {
 
   function validate() {
     const e = {};
-    if (!form.contactName.trim()) e.contactName = "Name is required";
-    if (!form.contactEmail.trim()) e.contactEmail = "Email is required";
-    else if (!EMAIL_RE.test(form.contactEmail.trim())) e.contactEmail = "Invalid email address";
-    if (!form.participants || form.participants < 1) e.participants = "Minimum 1 participant";
+    if (!form.contactName.trim())
+      e.contactName = t("bookingRequest.nameRequired");
+    if (!form.contactEmail.trim())
+      e.contactEmail = t("bookingRequest.emailRequired");
+    else if (!EMAIL_RE.test(form.contactEmail.trim()))
+      e.contactEmail = t("bookingRequest.emailInvalid");
+    if (!form.participants || form.participants < 1)
+      e.participants = t("bookingRequest.participantsMin");
+    if (form.contactPhone.trim() && !isValidPhone(form.contactPhone))
+      e.contactPhone = t("common.phoneError");
     return e;
   }
 
@@ -50,7 +59,7 @@ export default function BookingRequestForm({ experience }) {
       });
       setSubmitted(true);
     } catch (err) {
-      setErrors({ _form: err.message || "Something went wrong. Please try again." });
+      setErrors({ _form: err.message || t("bookingRequest.error") });
     } finally {
       setSubmitting(false);
     }
@@ -61,16 +70,22 @@ export default function BookingRequestForm({ experience }) {
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
   }
 
+  function handlePhoneBlur() {
+    if (form.contactPhone.trim() && !isValidPhone(form.contactPhone)) {
+      setErrors((prev) => ({ ...prev, contactPhone: t("common.phoneError") }));
+    }
+  }
+
   // ── Success state ──────────────────────────────────────────────────────────
   if (submitted) {
     return (
       <div className="rounded-2xl border border-sage/30 bg-sage/5 p-6 text-center space-y-3">
         <CheckCircle className="h-10 w-10 text-sage mx-auto" />
         <h3 className="font-display text-lg font-bold text-charcoal">
-          Request Sent
+          {t("bookingRequest.successTitle")}
         </h3>
         <p className="text-sm text-charcoal-muted leading-relaxed">
-          Thank you for your interest! We&apos;ll review your request and get back to you soon.
+          {t("bookingRequest.successMessage")}
         </p>
       </div>
     );
@@ -80,10 +95,10 @@ export default function BookingRequestForm({ experience }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <h3 className="font-display text-lg font-bold text-charcoal">
-        Request Information
+        {t("bookingRequest.formTitle")}
       </h3>
       <p className="text-sm text-charcoal-muted">
-        Fill out the form below and we&apos;ll get back to you with details and pricing.
+        {t("bookingRequest.formSubtitle")}
       </p>
 
       {errors._form && (
@@ -94,12 +109,13 @@ export default function BookingRequestForm({ experience }) {
 
       <div>
         <label className="block text-sm font-medium text-charcoal mb-1">
-          Name <span className="text-red-500">*</span>
+          {t("bookingRequest.nameLabel")}{" "}
+          <span className="text-red-500">*</span>
         </label>
         <Input
           value={form.contactName}
           onChange={(e) => handleChange("contactName", e.target.value)}
-          placeholder="Your full name"
+          placeholder={t("bookingRequest.namePlaceholder")}
           className={errors.contactName ? "border-red-400" : ""}
         />
         {errors.contactName && (
@@ -109,13 +125,14 @@ export default function BookingRequestForm({ experience }) {
 
       <div>
         <label className="block text-sm font-medium text-charcoal mb-1">
-          Email <span className="text-red-500">*</span>
+          {t("bookingRequest.emailLabel")}{" "}
+          <span className="text-red-500">*</span>
         </label>
         <Input
           type="email"
           value={form.contactEmail}
           onChange={(e) => handleChange("contactEmail", e.target.value)}
-          placeholder="you@example.com"
+          placeholder={t("bookingRequest.emailPlaceholder")}
           className={errors.contactEmail ? "border-red-400" : ""}
         />
         {errors.contactEmail && (
@@ -124,25 +141,34 @@ export default function BookingRequestForm({ experience }) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-charcoal mb-1">Phone</label>
+        <label className="block text-sm font-medium text-charcoal mb-1">
+          {t("bookingRequest.phoneLabel")}
+        </label>
         <Input
           type="tel"
           value={form.contactPhone}
           onChange={(e) => handleChange("contactPhone", e.target.value)}
+          onBlur={handlePhoneBlur}
           placeholder="+52 55 1234 5678"
         />
+        {errors.contactPhone && (
+          <p className="text-xs text-red-500 mt-1">{errors.contactPhone}</p>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="block text-sm font-medium text-charcoal mb-1">
-            Participants <span className="text-red-500">*</span>
+            {t("bookingRequest.participantsLabel")}{" "}
+            <span className="text-red-500">*</span>
           </label>
           <Input
             type="number"
             min={1}
             value={form.participants}
-            onChange={(e) => handleChange("participants", parseInt(e.target.value, 10) || 1)}
+            onChange={(e) =>
+              handleChange("participants", parseInt(e.target.value, 10) || 1)
+            }
             className={errors.participants ? "border-red-400" : ""}
           />
           {errors.participants && (
@@ -150,7 +176,9 @@ export default function BookingRequestForm({ experience }) {
           )}
         </div>
         <div>
-          <label className="block text-sm font-medium text-charcoal mb-1">Preferred Date</label>
+          <label className="block text-sm font-medium text-charcoal mb-1">
+            {t("bookingRequest.preferredDateLabel")}
+          </label>
           <Input
             type="date"
             value={form.requestedDate}
@@ -160,23 +188,25 @@ export default function BookingRequestForm({ experience }) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-charcoal mb-1">Message</label>
+        <label className="block text-sm font-medium text-charcoal mb-1">
+          {t("bookingRequest.messageLabel")}
+        </label>
         <textarea
           value={form.message}
           onChange={(e) => handleChange("message", e.target.value)}
           rows={3}
-          placeholder="Tell us about your requirements, preferred time, group size, special requests..."
+          placeholder={t("bookingRequest.messagePlaceholder")}
           className="w-full rounded-xl border border-sand-dark bg-white px-4 py-2.5 text-sm text-charcoal placeholder-charcoal-subtle focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-none"
         />
       </div>
 
       <Button type="submit" size="md" className="w-full" disabled={submitting}>
         {submitting ? (
-          "Sending..."
+          t("bookingRequest.sending")
         ) : (
           <>
             <Send className="h-4 w-4 mr-2" />
-            Send Request
+            {t("bookingRequest.sendRequest")}
           </>
         )}
       </Button>

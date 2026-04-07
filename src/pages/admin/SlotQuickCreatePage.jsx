@@ -11,21 +11,28 @@ import { useLocations } from "@/hooks/useLocations";
 import { useRooms } from "@/hooks/useRooms";
 import { createSlot } from "@/hooks/useSlots";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const DAYS_OF_WEEK = [
-  { value: 1, label: "Lun" },
-  { value: 2, label: "Mar" },
-  { value: 3, label: "Mié" },
-  { value: 4, label: "Jue" },
-  { value: 5, label: "Vie" },
-  { value: 6, label: "Sáb" },
-  { value: 0, label: "Dom" },
+  { value: 1, i18nKey: "admin.slotQuickCreate.mon" },
+  { value: 2, i18nKey: "admin.slotQuickCreate.tue" },
+  { value: 3, i18nKey: "admin.slotQuickCreate.wed" },
+  { value: 4, i18nKey: "admin.slotQuickCreate.thu" },
+  { value: 5, i18nKey: "admin.slotQuickCreate.fri" },
+  { value: 6, i18nKey: "admin.slotQuickCreate.sat" },
+  { value: 0, i18nKey: "admin.slotQuickCreate.sun" },
 ];
 
 const TIMEZONE_OPTIONS = [
-  { value: "America/Mexico_City", label: "Ciudad de México (CST)" },
-  { value: "America/Cancun", label: "Cancún (EST)" },
-  { value: "America/Tijuana", label: "Tijuana (PST)" },
+  {
+    value: "America/Mexico_City",
+    i18nKey: "admin.slotQuickCreate.timezoneMexico",
+  },
+  { value: "America/Cancun", i18nKey: "admin.slotQuickCreate.timezoneCancun" },
+  {
+    value: "America/Tijuana",
+    i18nKey: "admin.slotQuickCreate.timezoneTijuana",
+  },
   { value: "UTC", label: "UTC" },
 ];
 
@@ -46,6 +53,7 @@ function Field({ label, required, error, hint, children }) {
 }
 
 export default function SlotQuickCreatePage() {
+  const { t } = useLanguage();
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: experience } = useExperience(id);
@@ -109,18 +117,20 @@ export default function SlotQuickCreatePage() {
 
   function validate() {
     const errs = {};
-    if (selectedDays.length === 0) errs.days = "Selecciona al menos un día";
-    if (!startTime) errs.startTime = "Requerido";
-    if (!endTime) errs.endTime = "Requerido";
-    if (startTime >= endTime) errs.endTime = "Debe ser posterior al inicio";
-    if (!dateFrom) errs.dateFrom = "Requerido";
-    if (!dateTo) errs.dateTo = "Requerido";
+    if (selectedDays.length === 0)
+      errs.days = t("admin.slotQuickCreate.selectAtLeastOneDay");
+    if (!startTime) errs.startTime = t("admin.slotQuickCreate.required");
+    if (!endTime) errs.endTime = t("admin.slotQuickCreate.required");
+    if (startTime >= endTime)
+      errs.endTime = t("admin.slotQuickCreate.mustBeAfterStart");
+    if (!dateFrom) errs.dateFrom = t("admin.slotQuickCreate.required");
+    if (!dateTo) errs.dateTo = t("admin.slotQuickCreate.required");
     if (dateFrom && dateTo && dateFrom > dateTo)
-      errs.dateTo = "Debe ser posterior al inicio";
+      errs.dateTo = t("admin.slotQuickCreate.mustBeAfterStart");
     if (!capacity || parseInt(capacity, 10) <= 0)
-      errs.capacity = "Debe ser mayor a 0";
+      errs.capacity = t("admin.slotQuickCreate.mustBeGreaterThanZero");
     if (generatedSlots.length === 0 && Object.keys(errs).length === 0)
-      errs.days = "Sin slots a generar";
+      errs.days = t("admin.slotQuickCreate.noSlotsToGenerate");
     return errs;
   }
 
@@ -171,7 +181,7 @@ export default function SlotQuickCreatePage() {
     <div className="space-y-5 max-w-4xl">
       <div>
         <h1 className="text-xl font-semibold text-charcoal">
-          Crear slots recurrentes
+          {t("admin.slotQuickCreate.title")}
         </h1>
         {experience && (
           <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
@@ -191,7 +201,7 @@ export default function SlotQuickCreatePage() {
       {/* Day selection */}
       <Card className="p-5 space-y-4">
         <h2 className="text-base font-semibold text-charcoal">
-          Días de la semana
+          {t("admin.slotQuickCreate.daysOfWeek")}
         </h2>
         <div className="flex flex-wrap gap-2">
           {DAYS_OF_WEEK.map((day) => (
@@ -206,7 +216,7 @@ export default function SlotQuickCreatePage() {
                   : "bg-white text-charcoal-muted border-sand-dark hover:border-sage/50",
               )}
             >
-              {day.label}
+              {day.i18nKey ? t(day.i18nKey) : day.label}
             </button>
           ))}
         </div>
@@ -249,20 +259,27 @@ export default function SlotQuickCreatePage() {
           </Field>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Zona horaria" required>
+          <Field label={t("admin.slotForm.timezone")} required>
             <AdminSelect
               value={timezone}
               onChange={setTimezone}
-              options={TIMEZONE_OPTIONS}
+              options={TIMEZONE_OPTIONS.map((o) => ({
+                ...o,
+                label: o.i18nKey ? t(o.i18nKey) : o.label,
+              }))}
             />
           </Field>
-          <Field label="Capacidad" required error={errors.capacity}>
+          <Field
+            label={t("admin.slotForm.capacity")}
+            required
+            error={errors.capacity}
+          >
             <Input
               type="number"
               min="1"
               value={capacity}
               onChange={(e) => setCapacity(e.target.value)}
-              placeholder="Ej: 20"
+              placeholder={t("admin.slotForm.capacityPlaceholder")}
             />
           </Field>
         </div>
@@ -270,27 +287,29 @@ export default function SlotQuickCreatePage() {
 
       {/* Location */}
       <Card className="p-5 space-y-4">
-        <h2 className="text-base font-semibold text-charcoal">Ubicación</h2>
+        <h2 className="text-base font-semibold text-charcoal">
+          {t("admin.slotForm.sectionLocation")}
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field
-            label="Locación"
-            hint={locations.length === 0 ? "No hay locaciones registradas" : ""}
+            label={t("admin.slotForm.locationLabel")}
+            hint={locations.length === 0 ? t("admin.slotForm.noLocations") : ""}
           >
             <AdminSelect
               value={locationId}
               onChange={setLocationId}
               options={locationOptions}
-              placeholder="Seleccionar locación"
+              placeholder={t("admin.slotForm.selectLocation")}
               disabled={locations.length === 0}
             />
           </Field>
           <Field
-            label="Sala / espacio"
+            label={t("admin.slotForm.room")}
             hint={
               !locationId
-                ? "Selecciona una locación primero"
+                ? t("admin.slotForm.selectLocationFirst")
                 : rooms.length === 0
-                  ? "Sin salas"
+                  ? t("admin.slotForm.noLocations")
                   : ""
             }
           >
@@ -298,7 +317,7 @@ export default function SlotQuickCreatePage() {
               value={roomId}
               onChange={setRoomId}
               options={roomOptions}
-              placeholder="Seleccionar sala"
+              placeholder={t("admin.slotForm.selectRoom")}
               disabled={!locationId || rooms.length === 0}
             />
           </Field>
@@ -357,7 +376,7 @@ export default function SlotQuickCreatePage() {
           onClick={() => navigate(`/admin/experiences/${id}/slots`)}
           disabled={creating}
         >
-          Cancelar
+          {t("admin.common.cancel")}
         </Button>
         <Button
           onClick={handleCreate}

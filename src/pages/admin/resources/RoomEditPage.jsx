@@ -4,6 +4,7 @@ import RoomForm from "@/components/admin/resources/RoomForm";
 import { useRoom, updateRoom } from "@/hooks/useRooms";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/common/Card";
+import { useLanguage } from "@/hooks/useLanguage";
 
 function LoadingSkeleton() {
   return (
@@ -24,6 +25,7 @@ function LoadingSkeleton() {
 export default function RoomEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { data: room, loading, error: loadError } = useRoom(id);
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
@@ -47,7 +49,9 @@ export default function RoomEditPage() {
     return (
       <div className="max-w-4xl">
         <Card className="p-6 border-red-200 bg-red-50">
-          <p className="text-sm text-red-700">{loadError ?? "No se encontró el cuarto."}</p>
+          <p className="text-sm text-red-700">
+            {loadError ?? t("admin.resources.roomNotFound")}
+          </p>
         </Card>
       </div>
     );
@@ -56,8 +60,12 @@ export default function RoomEditPage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Editar cuarto</h1>
-        <p className="text-sm text-charcoal-subtle mt-0.5 truncate">{room.name}</p>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.resources.roomEditTitle")}
+        </h1>
+        <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
+          {room.name}
+        </p>
       </div>
 
       {serverError && (
@@ -66,7 +74,12 @@ export default function RoomEditPage() {
         </div>
       )}
 
-      <RoomForm initialData={room} onSubmit={handleSubmit} submitting={submitting} submitLabel="Guardar cambios" />
+      <RoomForm
+        initialData={room}
+        onSubmit={handleSubmit}
+        submitting={submitting}
+        submitLabel={t("admin.resources.roomSaveChanges")}
+      />
     </div>
   );
 }

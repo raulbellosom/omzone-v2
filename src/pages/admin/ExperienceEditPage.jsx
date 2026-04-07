@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import ExperienceForm from "@/components/admin/experiences/ExperienceForm";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
 import { useExperience, updateExperience } from "@/hooks/useExperiences";
+import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/common/Card";
 
@@ -26,6 +27,7 @@ export default function ExperienceEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: experience, loading, error: loadError } = useExperience(id);
+  const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
 
@@ -49,7 +51,7 @@ export default function ExperienceEditPage() {
       <div className="max-w-4xl">
         <Card className="p-6 border-red-200 bg-red-50">
           <p className="text-sm text-red-700">
-            {loadError ?? "No se encontró la experiencia."}
+            {loadError ?? t("admin.experiences.notFound")}
           </p>
         </Card>
       </div>
@@ -60,7 +62,7 @@ export default function ExperienceEditPage() {
     <div className="space-y-5 max-w-4xl">
       <div>
         <h1 className="text-xl font-semibold text-charcoal">
-          Editar experiencia
+          {t("admin.experiences.editTitle")}
         </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
           {experience.publicName}
@@ -79,7 +81,7 @@ export default function ExperienceEditPage() {
         initialData={experience}
         onSubmit={handleSubmit}
         submitting={submitting}
-        submitLabel="Guardar cambios"
+        submitLabel={t("admin.experiences.saveChanges")}
       />
     </div>
   );

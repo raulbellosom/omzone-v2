@@ -2,25 +2,27 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, Pencil, Package, Search } from "lucide-react";
 import { usePackages } from "@/hooks/usePackages";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/common/Button";
 import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
 import { Input } from "@/components/common/Input";
 import AdminSelect from "@/components/common/AdminSelect";
+import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/constants/routes";
 
 const STATUS_FILTER_OPTIONS = [
-  { value: "", label: "Todos" },
-  { value: "draft", label: "Borrador" },
-  { value: "published", label: "Publicados" },
-  { value: "archived", label: "Archivados" },
+  { value: "", i18nKey: "admin.statuses.all" },
+  { value: "draft", i18nKey: "admin.statuses.draft" },
+  { value: "published", i18nKey: "admin.statuses.published" },
+  { value: "archived", i18nKey: "admin.statuses.archived" },
 ];
 
 const STATUS_BADGE = {
-  draft: { variant: "warm", label: "Borrador" },
-  published: { variant: "success", label: "Publicado" },
-  archived: { variant: "default", label: "Archivado" },
+  draft: { variant: "warm", i18nKey: "admin.statuses.draft" },
+  published: { variant: "success", i18nKey: "admin.statuses.published" },
+  archived: { variant: "default", i18nKey: "admin.statuses.archived" },
 };
 
 function formatPrice(amount, currency) {
@@ -84,21 +86,24 @@ function CardSkeleton() {
   );
 }
 
-function EmptyState() {
+function EmptyState({ t, isAdmin }) {
   return (
     <Card className="p-10 text-center">
       <Package className="h-10 w-10 text-charcoal-muted mx-auto mb-3" />
-      <h2 className="text-lg font-semibold text-charcoal mb-1">Sin paquetes</h2>
+      <h2 className="text-lg font-semibold text-charcoal mb-1">
+        {t("admin.packages.emptyTitle")}
+      </h2>
       <p className="text-sm text-charcoal-muted mb-4">
-        Crea el primer paquete de experiencias para ofrecer retiros, estancias o
-        combinaciones de sesiones.
+        {t("admin.packages.emptyMessage")}
       </p>
-      <Link to={ROUTES.ADMIN_PACKAGE_NEW}>
-        <Button size="sm">
-          <Plus className="h-4 w-4" />
-          Crear primer paquete
-        </Button>
-      </Link>
+      {isAdmin && (
+        <Link to={ROUTES.ADMIN_PACKAGE_NEW}>
+          <Button size="sm">
+            <Plus className="h-4 w-4" />
+            {t("admin.packages.emptyButton")}
+          </Button>
+        </Link>
+      )}
     </Card>
   );
 }
@@ -107,6 +112,8 @@ export default function PackageListPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const navigate = useNavigate();
+  const { t } = useLanguage();
+  const { isAdmin } = useAuth();
 
   const {
     data: packages,
@@ -122,17 +129,23 @@ export default function PackageListPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">Paquetes</h1>
+          <h1 className="text-xl font-semibold text-charcoal">
+            {t("admin.packages.title")}
+          </h1>
           <p className="text-sm text-charcoal-subtle mt-0.5">
-            Paquetes de experiencias, retiros y estancias
+            {t("admin.packages.subtitle")}
           </p>
         </div>
-        <Link to={ROUTES.ADMIN_PACKAGE_NEW}>
-          <Button size="sm">
-            <Plus className="h-4 w-4" />
-            <span className="hidden sm:inline">Nuevo paquete</span>
-          </Button>
-        </Link>
+        {isAdmin && (
+          <Link to={ROUTES.ADMIN_PACKAGE_NEW}>
+            <Button size="sm">
+              <Plus className="h-4 w-4" />
+              <span className="hidden sm:inline">
+                {t("admin.packages.newPackage")}
+              </span>
+            </Button>
+          </Link>
+        )}
       </div>
 
       {/* Filters */}
@@ -142,14 +155,17 @@ export default function PackageListPage() {
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar por nombre..."
+            placeholder={t("admin.packages.searchPlaceholder")}
             className="pl-9"
           />
         </div>
         <AdminSelect
           value={statusFilter}
           onChange={setStatusFilter}
-          options={STATUS_FILTER_OPTIONS}
+          options={STATUS_FILTER_OPTIONS.map((o) => ({
+            ...o,
+            label: t(o.i18nKey),
+          }))}
           fullWidth={false}
         />
       </div>
@@ -160,7 +176,9 @@ export default function PackageListPage() {
         </div>
       )}
 
-      {!loading && !error && packages.length === 0 && <EmptyState />}
+      {!loading && !error && packages.length === 0 && (
+        <EmptyState t={t} isAdmin={isAdmin} />
+      )}
 
       {loading && (
         <>
@@ -175,12 +193,24 @@ export default function PackageListPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
-                <th className="px-4 py-3 font-medium">Nombre</th>
-                <th className="px-4 py-3 font-medium">Precio</th>
-                <th className="px-4 py-3 font-medium">Duración</th>
-                <th className="px-4 py-3 font-medium">Capacidad</th>
-                <th className="px-4 py-3 font-medium">Estado</th>
-                <th className="px-4 py-3 font-medium text-right">Acciones</th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.packages.name")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.packages.price")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.packages.duration")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.packages.capacity")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.packages.status")}
+                </th>
+                <th className="px-4 py-3 font-medium text-right">
+                  {t("admin.packages.actions")}
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-sand-dark">
@@ -205,13 +235,17 @@ export default function PackageListPage() {
                       {formatPrice(pkg.totalPrice, pkg.currency)}
                     </td>
                     <td className="px-4 py-3 text-charcoal-muted">
-                      {pkg.durationDays ? `${pkg.durationDays} días` : "—"}
+                      {pkg.durationDays
+                        ? `${pkg.durationDays} ${t("admin.packages.durationDays")}`
+                        : "—"}
                     </td>
                     <td className="px-4 py-3 text-charcoal-muted">
-                      {pkg.capacity ? `${pkg.capacity} pers.` : "—"}
+                      {pkg.capacity
+                        ? `${pkg.capacity} ${t("admin.packages.capacityAbbr")}`
+                        : "—"}
                     </td>
                     <td className="px-4 py-3">
-                      <Badge variant={badge.variant}>{badge.label}</Badge>
+                      <Badge variant={badge.variant}>{t(badge.i18nKey)}</Badge>
                     </td>
                     <td className="px-4 py-3 text-right">
                       <button
@@ -219,7 +253,7 @@ export default function PackageListPage() {
                           navigate(`/admin/packages/${pkg.$id}/edit`)
                         }
                         className="p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
-                        aria-label="Editar paquete"
+                        aria-label={t("admin.packages.editAriaLabel")}
                       >
                         <Pencil className="h-4 w-4" />
                       </button>
@@ -247,12 +281,20 @@ export default function PackageListPage() {
                   <span className="font-medium text-charcoal truncate">
                     {pkg.name}
                   </span>
-                  <Badge variant={badge.variant}>{badge.label}</Badge>
+                  <Badge variant={badge.variant}>{t(badge.i18nKey)}</Badge>
                 </div>
                 <div className="flex items-center gap-4 text-xs text-charcoal-muted">
                   <span>{formatPrice(pkg.totalPrice, pkg.currency)}</span>
-                  {pkg.durationDays && <span>{pkg.durationDays} días</span>}
-                  {pkg.capacity && <span>{pkg.capacity} pers.</span>}
+                  {pkg.durationDays && (
+                    <span>
+                      {pkg.durationDays} {t("admin.packages.durationDays")}
+                    </span>
+                  )}
+                  {pkg.capacity && (
+                    <span>
+                      {pkg.capacity} {t("admin.packages.capacityAbbr")}
+                    </span>
+                  )}
                 </div>
               </Card>
             );

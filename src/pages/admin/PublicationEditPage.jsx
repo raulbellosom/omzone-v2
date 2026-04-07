@@ -4,6 +4,7 @@ import PublicationForm from "@/components/admin/publications/PublicationForm";
 import { usePublication, updatePublication } from "@/hooks/usePublications";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/common/Card";
+import { useLanguage } from "@/hooks/useLanguage";
 
 function LoadingSkeleton() {
   return (
@@ -24,6 +25,7 @@ function LoadingSkeleton() {
 export default function PublicationEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { data: publication, loading, error: loadError } = usePublication(id);
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
@@ -48,7 +50,7 @@ export default function PublicationEditPage() {
       <div className="max-w-4xl">
         <Card className="p-6 border-red-200 bg-red-50">
           <p className="text-sm text-red-700">
-            {loadError ?? "No se encontró la publicación."}
+            {loadError ?? t("admin.publications.notFound")}
           </p>
         </Card>
       </div>
@@ -59,7 +61,7 @@ export default function PublicationEditPage() {
     <div className="space-y-5 max-w-4xl">
       <div>
         <h1 className="text-xl font-semibold text-charcoal">
-          Editar publicación
+          {t("admin.publications.editTitle")}
         </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
           {publication.title}
@@ -76,7 +78,7 @@ export default function PublicationEditPage() {
         initialData={publication}
         onSubmit={handleSubmit}
         submitting={submitting}
-        submitLabel="Guardar cambios"
+        submitLabel={t("admin.publications.saveChanges")}
       />
     </div>
   );

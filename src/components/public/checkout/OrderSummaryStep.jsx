@@ -1,6 +1,7 @@
 import { formatPrice } from "@/components/public/checkout/utils";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/common/Button";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function OrderSummaryStep({
   experience,
@@ -14,6 +15,8 @@ export default function OrderSummaryStep({
   submitError,
   onSubmit,
 }) {
+  const { t } = useLanguage();
+
   return (
     <div className="space-y-6">
       {/* Line items */}
@@ -73,7 +76,7 @@ export default function OrderSummaryStep({
         {/* Total */}
         <div className="px-4 py-3 flex justify-between items-center">
           <span className="text-sm font-bold text-charcoal">
-            Estimated Total
+            {t("reviewStep.estimatedTotal")}
           </span>
           <span className="text-lg font-bold text-charcoal">
             {formatPrice(indicativeTotal, currency)}
@@ -83,7 +86,7 @@ export default function OrderSummaryStep({
 
       {/* Disclaimer */}
       <p className="text-xs text-charcoal-subtle text-center">
-        The final amount will be verified before payment is processed.
+        {t("reviewStep.disclaimer")}
       </p>
 
       {/* Error */}
@@ -104,10 +107,10 @@ export default function OrderSummaryStep({
         {submitting ? (
           <span className="flex items-center justify-center gap-2">
             <Loader2 className="w-4 h-4 animate-spin" />
-            Processing…
+            {t("reviewStep.processing")}
           </span>
         ) : (
-          "Confirm & Pay"
+          t("reviewStep.confirmPay")
         )}
       </Button>
     </div>

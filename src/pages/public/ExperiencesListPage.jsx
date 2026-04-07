@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { usePublicExperiences } from "@/hooks/usePublicExperiences";
+import { useLanguage } from "@/hooks/useLanguage";
 import SEOHead from "@/components/common/SEOHead";
 import env from "@/config/env";
 import ExperienceCard from "@/components/public/experiences/ExperienceCard";
@@ -20,6 +21,8 @@ export default function ExperiencesListPage() {
     error,
     refetch,
   } = usePublicExperiences();
+
+  const { t } = useLanguage();
 
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedType, setSelectedType] = useState("");
@@ -54,19 +57,20 @@ export default function ExperiencesListPage() {
   return (
     <section className="container-shell pb-16 pt-2">
       <SEOHead
-        title="Wellness Experiences in Puerto Vallarta"
-        description="Explore sound healing, meditation, breathwork and holistic retreats in Bahía de Banderas. Book your next transformative experience."
+        title={
+          t("experienceList.title") + " — OMZONE | Wellness Puerto Vallarta"
+        }
+        description={t("experienceList.subtitle")}
         canonical={`${env.siteUrl}/experiences`}
       />
 
       {/* Header */}
       <div className="mb-8 md:mb-10">
         <h1 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-charcoal">
-          Experiences
+          {t("experienceList.title")}
         </h1>
         <p className="mt-2 text-charcoal-muted text-base md:text-lg max-w-2xl">
-          Discover transformative wellness experiences crafted for your mind,
-          body and soul.
+          {t("experienceList.subtitle")}
         </p>
       </div>
 
@@ -96,10 +100,10 @@ export default function ExperiencesListPage() {
       {!loading && error && (
         <div className="text-center py-16">
           <p className="text-charcoal-muted mb-4">
-            We couldn't load the experiences right now.
+            {t("experienceList.errorLoading")}
           </p>
           <Button variant="outline" onClick={refetch}>
-            Try again
+            {t("experienceList.tryAgain")}
           </Button>
         </div>
       )}
@@ -109,10 +113,10 @@ export default function ExperiencesListPage() {
         <div className="text-center py-16">
           <Compass className="mx-auto h-10 w-10 text-charcoal-subtle mb-4" />
           <p className="text-charcoal-muted text-lg">
-            No experiences available at the moment.
+            {t("experienceList.emptyTitle")}
           </p>
           <p className="text-charcoal-subtle text-sm mt-1">
-            Check back soon — new experiences are always on the way.
+            {t("experienceList.emptySubtitle")}
           </p>
         </div>
       )}
@@ -124,10 +128,10 @@ export default function ExperiencesListPage() {
         filtered.length === 0 && (
           <div className="text-center py-16">
             <p className="text-charcoal-muted text-lg mb-4">
-              No experiences match your current filters.
+              {t("experienceList.noFilterResults")}
             </p>
             <Button variant="outline" onClick={handleClearFilters}>
-              Clear filters
+              {t("experienceList.clearFilters")}
             </Button>
           </div>
         )}

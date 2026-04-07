@@ -7,6 +7,7 @@ import { useSlot, updateSlot } from "@/hooks/useSlots";
 import { useExperience } from "@/hooks/useExperiences";
 import { Card } from "@/components/common/Card";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
 
 function LoadingSkeleton() {
   return (
@@ -27,6 +28,7 @@ function LoadingSkeleton() {
 export default function SlotEditPage() {
   const { id, slotId } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { data: experience } = useExperience(id);
   const { data: slot, loading, error: loadError } = useSlot(slotId);
   const { isAdmin, isRoot } = useAuth();
@@ -57,7 +59,7 @@ export default function SlotEditPage() {
       <div className="max-w-4xl">
         <Card className="p-6 border-red-200 bg-red-50">
           <p className="text-sm text-red-700">
-            {loadError ?? "No se encontró el slot."}
+            {loadError ?? t("admin.slots.notFound")}
           </p>
         </Card>
       </div>
@@ -67,7 +69,9 @@ export default function SlotEditPage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Editar slot</h1>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.slots.editTitle")}
+        </h1>
         {experience && (
           <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
             {experience.publicName}
@@ -75,7 +79,10 @@ export default function SlotEditPage() {
         )}
         {slot.bookedCount > 0 && (
           <p className="text-xs text-amber-600 mt-1">
-            Este slot tiene {slot.bookedCount} reserva(s) activa(s)
+            {t("admin.slots.activeBookingsWarning").replace(
+              "{count}",
+              slot.bookedCount,
+            )}
           </p>
         )}
       </div>
@@ -93,13 +100,11 @@ export default function SlotEditPage() {
         initialData={slot}
         onSubmit={handleSubmit}
         submitting={submitting}
-        submitLabel="Guardar cambios"
+        submitLabel={t("admin.slots.saveChanges")}
       />
 
       {/* Resource assignments — admin/root only */}
-      {canManageResources && (
-        <SlotResourceSection slotId={slotId} />
-      )}
+      {canManageResources && <SlotResourceSection slotId={slotId} />}
     </div>
   );
 }

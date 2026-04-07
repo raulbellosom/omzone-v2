@@ -12,13 +12,14 @@ import { Button } from "@/components/common/Button";
 import StatusBadge from "@/components/admin/experiences/StatusBadge";
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
-const CATEGORY_LABELS = {
-  landing: "Landing",
-  blog: "Blog",
-  highlight: "Highlight",
-  institutional: "Institucional",
-  faq: "FAQ",
+const CATEGORY_I18N_KEYS = {
+  landing: "admin.publicationCategories.landing",
+  blog: "admin.publicationCategories.blog",
+  highlight: "admin.publicationCategories.highlight",
+  institutional: "admin.publicationCategories.institutional",
+  faq: "admin.publicationCategories.faq",
 };
 
 function ConfirmDialog({
@@ -29,6 +30,7 @@ function ConfirmDialog({
   onConfirm,
   onCancel,
 }) {
+  const { t } = useLanguage();
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -38,7 +40,7 @@ function ConfirmDialog({
         <p className="text-sm text-charcoal-subtle">{description}</p>
         <div className="flex justify-end gap-3">
           <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
-            Cancelar
+            {t("admin.common.cancel")}
           </Button>
           <Button type="button" size="sm" onClick={onConfirm}>
             {confirmLabel}
@@ -53,6 +55,7 @@ function ActionsMenu({ publication, onStatusChange, canAdmin }) {
   const [open, setOpen] = useState(false);
   const [confirm, setConfirm] = useState(null);
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const editUrl = ROUTES.ADMIN_PUBLICATION_EDIT.replace(":id", publication.$id);
   const sectionsUrl = ROUTES.ADMIN_PUBLICATION_SECTIONS.replace(
@@ -77,17 +80,17 @@ function ActionsMenu({ publication, onStatusChange, canAdmin }) {
     <>
       <ConfirmDialog
         open={confirm?.type === "archive"}
-        title="Archivar publicación"
-        description="La publicación dejará de estar visible públicamente."
-        confirmLabel="Archivar"
+        title={t("admin.publications.archive")}
+        description={t("admin.publications.archiveDesc")}
+        confirmLabel={t("admin.publications.archiveButton")}
         onConfirm={handleConfirm}
         onCancel={() => setConfirm(null)}
       />
       <ConfirmDialog
         open={confirm?.type === "publish"}
-        title="Publicar"
-        description="La publicación será visible públicamente."
-        confirmLabel="Publicar"
+        title={t("admin.publications.publish")}
+        description={t("admin.publications.publishDesc")}
+        confirmLabel={t("admin.publications.publishConfirmLabel")}
         onConfirm={handleConfirm}
         onCancel={() => setConfirm(null)}
       />
@@ -98,7 +101,7 @@ function ActionsMenu({ publication, onStatusChange, canAdmin }) {
           variant="ghost"
           size="icon"
           onClick={() => navigate(editUrl)}
-          title="Editar"
+          title={t("admin.publications.editButton")}
         >
           <Pencil className="h-4 w-4" />
         </Button>
@@ -107,7 +110,7 @@ function ActionsMenu({ publication, onStatusChange, canAdmin }) {
           variant="ghost"
           size="icon"
           onClick={() => navigate(sectionsUrl)}
-          title="Secciones"
+          title={t("admin.publications.sectionsButton")}
         >
           <Layers className="h-4 w-4" />
         </Button>
@@ -118,7 +121,7 @@ function ActionsMenu({ publication, onStatusChange, canAdmin }) {
             variant="ghost"
             size="icon"
             onClick={() => setOpen((p) => !p)}
-            title="Más acciones"
+            title={t("admin.publications.moreActions")}
           >
             <MoreHorizontal className="h-4 w-4" />
           </Button>
@@ -137,7 +140,7 @@ function ActionsMenu({ publication, onStatusChange, canAdmin }) {
                     className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
                   >
                     <Globe className="h-4 w-4 text-emerald-600" />
-                    Publicar
+                    {t("admin.publications.publish")}
                   </button>
                 )}
                 {publication.status !== "draft" && (
@@ -147,7 +150,7 @@ function ActionsMenu({ publication, onStatusChange, canAdmin }) {
                     className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
                   >
                     <RotateCcw className="h-4 w-4 text-amber-600" />
-                    Volver a borrador
+                    {t("admin.publications.backToDraft")}
                   </button>
                 )}
                 {canAdmin && publication.status !== "archived" && (
@@ -157,7 +160,7 @@ function ActionsMenu({ publication, onStatusChange, canAdmin }) {
                     className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
                   >
                     <Archive className="h-4 w-4 text-charcoal-subtle" />
-                    Archivar
+                    {t("admin.publications.archiveButton")}
                   </button>
                 )}
               </div>
@@ -190,25 +193,26 @@ export default function PublicationTable({
   onStatusChange,
   canAdmin,
 }) {
+  const { t } = useLanguage();
   return (
     <div className="overflow-x-auto rounded-xl border border-sand-dark">
       <table className="min-w-full text-sm">
         <thead>
           <tr className="border-b border-sand-dark bg-warm-gray/50">
             <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
-              Título
+              {t("admin.publications.titleHeader")}
             </th>
             <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
-              Categoría
+              {t("admin.publications.categoryHeader")}
             </th>
             <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
-              Estado
+              {t("admin.publications.statusHeader")}
             </th>
             <th className="px-4 py-3 text-left font-medium text-charcoal-subtle hidden lg:table-cell">
-              Publicado
+              {t("admin.publications.publishedHeader")}
             </th>
             <th className="px-4 py-3 text-right font-medium text-charcoal-subtle">
-              Acciones
+              {t("admin.common.actions")}
             </th>
           </tr>
         </thead>
@@ -222,7 +226,7 @@ export default function PublicationTable({
                 colSpan={5}
                 className="px-4 py-12 text-center text-sm text-charcoal-subtle"
               >
-                No hay publicaciones.
+                {t("admin.publications.noPublications")}
               </td>
             </tr>
           )}
@@ -244,7 +248,9 @@ export default function PublicationTable({
                   </div>
                 </td>
                 <td className="px-4 py-3 text-charcoal-subtle">
-                  {CATEGORY_LABELS[pub.category] ?? pub.category}
+                  {CATEGORY_I18N_KEYS[pub.category]
+                    ? t(CATEGORY_I18N_KEYS[pub.category])
+                    : pub.category}
                 </td>
                 <td className="px-4 py-3">
                   <StatusBadge status={pub.status} />

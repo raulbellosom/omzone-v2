@@ -1,0 +1,192 @@
+{
+  "nav": {
+    "home": "Home",
+    "experiences": "Experiences",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "adminPanel": "Admin Panel",
+    "myPortal": "My Portal"
+  },
+  "footer": {
+    "tagline": "Premium wellness experiences designed to nurture your body, mind and spirit.",
+    "experiences": "Experiences",
+    "allExperiences": "All Experiences",
+    "sessions": "Sessions",
+    "immersions": "Immersions",
+    "retreats": "Retreats",
+    "company": "Company",
+    "about": "About",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "connect": "Connect",
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "emailUs": "Email Us",
+    "copyright": "OMZONE. All rights reserved.",
+    "crafted": "Crafted with intention"
+  },
+  "home": {
+    "headline": "Discover transformative wellness experiences crafted for your mind, body and soul.",
+    "placeholder": "Home page placeholder — coming soon"
+  },
+  "experienceList": {
+    "title": "Experiences",
+    "subtitle": "Discover transformative wellness experiences crafted for your mind, body and soul.",
+    "errorLoading": "We couldn't load the experiences right now.",
+    "tryAgain": "Try again",
+    "emptyTitle": "No experiences available at the moment.",
+    "emptySubtitle": "Check back soon — new experiences are always on the way.",
+    "noFilterResults": "No experiences match your current filters.",
+    "clearFilters": "Clear filters"
+  },
+  "experienceDetail": {
+    "allExperiences": "All Experiences",
+    "bookNow": "Book Now",
+    "requestInformation": "Request Information",
+    "checkAvailability": "Check Availability",
+    "viewPasses": "View Passes",
+    "requestBooking": "Request Booking",
+    "pricing": "Pricing",
+    "agenda": "Agenda",
+    "addons": "Addons",
+    "from": "From",
+    "perPerson": "per person",
+    "selectDate": "Select a date",
+    "spotsLeft": "spots left",
+    "soldOut": "Sold out",
+    "includes": "Includes",
+    "duration": "Duration",
+    "groupSize": "Group size",
+    "people": "people",
+    "somethingWrong": "Something went wrong. Please try again.",
+    "inquireForPricing": "Inquire for pricing"
+  },
+  "experienceTypes": {
+    "session": "Session",
+    "immersion": "Immersion",
+    "retreat": "Retreat",
+    "stay": "Stay",
+    "private": "Private",
+    "package": "Package"
+  },
+  "filters": {
+    "allTypes": "All Types",
+    "tags": "Tags",
+    "clear": "Clear"
+  },
+  "price": {
+    "from": "From",
+    "inquire": "Inquire for pricing",
+    "free": "Free"
+  },
+  "about": {
+    "seoTitle": "About OMZONE — Wellness in Puerto Vallarta",
+    "seoDescription": "Premium wellness experiences in Puerto Vallarta and Bahía de Banderas. Our story, philosophy and commitment to transformation.",
+    "title": "About OMZONE",
+    "intro": "We curate transformative wellness experiences — sessions, immersions, retreats and stays — designed to nurture your body, mind and spirit.",
+    "placeholder": "Full content coming soon.",
+    "exploreLink": "Explore our experiences →"
+  },
+  "contact": {
+    "seoTitle": "Contact — OMZONE",
+    "seoDescription": "Get in touch with OMZONE in Puerto Vallarta. We'd love to hear from you about our wellness experiences.",
+    "title": "Contact",
+    "intro": "We'd love to hear from you. Reach out and we'll get back to you as soon as possible.",
+    "email": "hello@omzone.com",
+    "locationPlaceholder": "Location coming soon",
+    "formPlaceholder": "Full contact form coming soon."
+  },
+  "privacy": {
+    "seoTitle": "Privacy Policy — OMZONE",
+    "seoDescription": "Learn how OMZONE collects, uses and protects your personal information.",
+    "title": "Privacy Policy",
+    "intro": "Your privacy matters to us.",
+    "body": "This privacy policy will be updated with full details about how OMZONE collects, uses and protects your personal information.",
+    "placeholder": "Full policy coming soon."
+  },
+  "terms": {
+    "seoTitle": "Terms of Service — OMZONE",
+    "seoDescription": "Review the terms and conditions for using the OMZONE platform.",
+    "title": "Terms of Service",
+    "intro": "Please review our terms before using the platform.",
+    "body": "These terms of service will be updated with full details about the conditions of use for the OMZONE platform.",
+    "placeholder": "Full terms coming soon."
+  },
+  "notFound": {
+    "seoTitle": "Page Not Found — OMZONE",
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved. Let's get you back on track.",
+    "backHome": "Back to Home"
+  },
+  "forbidden": {
+    "seoTitle": "Access Denied — OMZONE",
+    "title": "Access denied",
+    "description": "You don't have permission to access this section. If you believe this is an error, please contact support.",
+    "backHome": "Back to Home"
+  },
+  "bookingRequest": {
+    "successTitle": "Request Sent",
+    "successMessage": "Thank you for your interest! We'll review your request and get back to you soon.",
+    "formTitle": "Request Information",
+    "formSubtitle": "Fill out the form below and we'll get back to you with details and pricing.",
+    "nameLabel": "Name",
+    "namePlaceholder": "Your full name",
+    "nameRequired": "Name is required",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Invalid email address",
+    "phoneLabel": "Phone",
+    "participantsLabel": "Participants",
+    "participantsMin": "Minimum 1 participant",
+    "preferredDateLabel": "Preferred Date",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Tell us about your requirements...",
+    "sending": "Sending...",
+    "sendRequest": "Send Request",
+    "error": "Something went wrong. Please try again."
+  },
+  "addonsSection": {
+    "title": "Add-ons",
+    "subtitle": "Enhance your experience with these optional extras.",
+    "typeService": "Service",
+    "typeProduct": "Product",
+    "typeTransport": "Transport",
+    "typeFood": "Food & Beverage",
+    "typeUpgrade": "Upgrade"
+  },
+  "agendaSection": {
+    "title": "Available Dates",
+    "subtitle": "Select your preferred date to continue with your booking.",
+    "full": "Full",
+    "spot": "spot",
+    "spots": "spots"
+  },
+  "pricingSection": {
+    "title": "Pricing",
+    "subtitle": "Choose the option that works best for you.",
+    "personsRange": "{min}–{max} persons",
+    "personsMin": "Min. {min} persons",
+    "personsMax": "Max. {max} persons"
+  },
+  "experienceCTA": {
+    "readyTo": "Ready to experience {name}?",
+    "bookNow": "Book Now",
+    "bookNowSub": "Secure your spot today",
+    "requestInfo": "Request Information",
+    "requestInfoSub": "We'll get back to you shortly",
+    "checkAvailability": "Check Availability",
+    "checkAvailabilitySub": "Speak with our team",
+    "viewPasses": "View Available Passes",
+    "viewPassesSub": "Use your existing pass"
+  },
+  "publication": {
+    "home": "Home",
+    "relatedExperience": "Related Experience",
+    "exploreExperience": "Explore Experience"
+  }
+}

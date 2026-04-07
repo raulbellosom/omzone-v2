@@ -1,0 +1,77 @@
+{
+  "checkout": {
+    "title": "Checkout",
+    "orderSummary": "Resumen del Pedido",
+    "noExperience": "No se seleccionó experiencia",
+    "noExperienceDesc": "Por favor elige una experiencia primero.",
+    "unavailable": "Experiencia no disponible",
+    "unavailableDesc": "Esta experiencia no está disponible para compra directa.",
+    "somethingWrong": "Algo salió mal",
+    "tryAgainDesc": "Por favor inténtalo de nuevo.",
+    "exploreExperiences": "Explorar Experiencias",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "pay": "Pagar",
+    "processing": "Procesando…",
+    "step1": "Selección",
+    "step2": "Complementos",
+    "step3": "Datos",
+    "step4": "Resumen"
+  },
+  "checkoutSuccess": {
+    "thankYou": "¡Gracias!",
+    "confirmed": "Tu reserva ha sido confirmada. Aquí tienes el resumen de tu pedido.",
+    "processingTitle": "Procesando tu reserva",
+    "processingDesc": "Tu pago está siendo confirmado. Esto suele tomar unos segundos. Recibirás un correo de confirmación en breve.",
+    "viewOrders": "Ver Mis Pedidos",
+    "exploreMore": "Explorar Más",
+    "orderSummary": "Resumen del Pedido",
+    "orderLabel": "Pedido",
+    "dateLabel": "Fecha",
+    "tickets": "Tus Tickets",
+    "total": "Total",
+    "status": "Estado"
+  },
+  "checkoutCancel": {
+    "title": "Pago cancelado",
+    "subtitle": "Tu pago no fue procesado. No se realizó ningún cargo a tu cuenta. Puedes intentarlo de nuevo cuando quieras.",
+    "tryAgain": "Reintentar",
+    "exploreExperiences": "Explorar Experiencias"
+  },
+  "selection": {
+    "selectOption": "Selecciona tu opción",
+    "chooseDateTime": "Elige fecha y hora",
+    "selectTimeSlot": "Selecciona un horario",
+    "spot": "lugar",
+    "spots": "lugares",
+    "attendees": "Número de asistentes"
+  },
+  "addonsStep": {
+    "noAddons": "No hay complementos disponibles para esta experiencia.",
+    "canContinue": "Puedes continuar al siguiente paso.",
+    "enhance": "Mejora tu experiencia con complementos opcionales.",
+    "required": "Requerido"
+  },
+  "customerInfo": {
+    "intro": "Usaremos estos datos para enviar tu confirmación de pedido y tickets.",
+    "nameLabel": "Nombre completo",
+    "namePlaceholder": "Tu nombre completo",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "tu@email.com",
+    "emailError": "Por favor ingresa un correo electrónico válido.",
+    "phoneLabel": "Teléfono",
+    "phoneOptional": "(opcional)",
+    "phonePlaceholder": "+52 55 1234 5678"
+  },
+  "orderSummary": {
+    "title": "Resumen del Pedido",
+    "total": "Total",
+    "disclaimer": "Este total es indicativo. El monto final será confirmado al pagar."
+  },
+  "reviewStep": {
+    "estimatedTotal": "Total Estimado",
+    "disclaimer": "El monto final será verificado antes de procesar el pago.",
+    "processing": "Procesando…",
+    "confirmPay": "Confirmar y Pagar"
+  }
+}

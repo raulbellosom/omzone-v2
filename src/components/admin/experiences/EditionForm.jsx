@@ -4,14 +4,15 @@ import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 import ImageUpload from "./ImageUpload";
 import AdminSelect from "@/components/common/AdminSelect";
+import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 
 const STATUS_OPTIONS = [
-  { value: "draft", label: "Borrador" },
-  { value: "open", label: "Abierta" },
-  { value: "closed", label: "Cerrada" },
-  { value: "completed", label: "Completada" },
-  { value: "cancelled", label: "Cancelada" },
+  { value: "draft", i18nKey: "admin.statuses.draft" },
+  { value: "open", i18nKey: "admin.statuses.open" },
+  { value: "closed", i18nKey: "admin.statuses.closed" },
+  { value: "completed", i18nKey: "admin.statuses.completed" },
+  { value: "cancelled", i18nKey: "admin.statuses.cancelled" },
 ];
 
 const EMPTY = {
@@ -76,6 +77,7 @@ export default function EditionForm({
   submitting,
   submitLabel = "Guardar",
 }) {
+  const { t } = useLanguage();
   const init = initialData
     ? {
         ...EMPTY,
@@ -151,10 +153,14 @@ export default function EditionForm({
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Identidad
+          {t("admin.editionForm.sectionIdentity")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Nombre" required error={errors.name}>
+          <Field
+            label={t("admin.editionForm.name")}
+            required
+            error={errors.name}
+          >
             <Input
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
@@ -163,7 +169,7 @@ export default function EditionForm({
               className={errors.name ? "border-red-400" : ""}
             />
           </Field>
-          <Field label="Nombre (ES)">
+          <Field label={t("admin.editionForm.nameEs")}>
             <Input
               value={form.nameEs}
               onChange={(e) => set("nameEs", e.target.value)}
@@ -177,10 +183,10 @@ export default function EditionForm({
       {/* Descripción */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Descripción
+          {t("admin.editionForm.sectionDescription")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Descripción (EN)">
+          <Field label={t("admin.editionForm.descriptionEn")}>
             <Textarea
               value={form.description}
               onChange={(v) => set("description", v)}
@@ -189,7 +195,7 @@ export default function EditionForm({
               rows={4}
             />
           </Field>
-          <Field label="Descripción (ES)">
+          <Field label={t("admin.editionForm.descriptionEs")}>
             <Textarea
               value={form.descriptionEs}
               onChange={(v) => set("descriptionEs", v)}
@@ -204,10 +210,13 @@ export default function EditionForm({
       {/* Fechas */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Fechas
+          {t("admin.editionForm.sectionDates")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Fecha de inicio" error={errors.startDate}>
+          <Field
+            label={t("admin.editionForm.startDate")}
+            error={errors.startDate}
+          >
             <Input
               type="datetime-local"
               value={form.startDate}
@@ -215,7 +224,7 @@ export default function EditionForm({
               disabled={isDisabled}
             />
           </Field>
-          <Field label="Fecha de fin" error={errors.endDate}>
+          <Field label={t("admin.editionForm.endDate")} error={errors.endDate}>
             <Input
               type="datetime-local"
               value={form.endDate}
@@ -223,7 +232,10 @@ export default function EditionForm({
               disabled={isDisabled}
             />
           </Field>
-          <Field label="Apertura de registro" error={errors.registrationOpens}>
+          <Field
+            label={t("admin.editionForm.registrationOpen")}
+            error={errors.registrationOpens}
+          >
             <Input
               type="datetime-local"
               value={form.registrationOpens}
@@ -231,7 +243,10 @@ export default function EditionForm({
               disabled={isDisabled}
             />
           </Field>
-          <Field label="Cierre de registro" error={errors.registrationCloses}>
+          <Field
+            label={t("admin.editionForm.registrationClose")}
+            error={errors.registrationCloses}
+          >
             <Input
               type="datetime-local"
               value={form.registrationCloses}
@@ -245,10 +260,13 @@ export default function EditionForm({
       {/* Capacidad y estado */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Capacidad y estado
+          {t("admin.editionForm.sectionCapacityStatus")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Capacidad máxima" hint="Dejar vacío si no hay límite">
+          <Field
+            label={t("admin.editionForm.maxCapacity")}
+            hint={t("admin.editionForm.capacityHint")}
+          >
             <Input
               type="number"
               min={1}
@@ -258,11 +276,18 @@ export default function EditionForm({
               disabled={isDisabled}
             />
           </Field>
-          <Field label="Estado" required error={errors.status}>
+          <Field
+            label={t("admin.experienceForm.status")}
+            required
+            error={errors.status}
+          >
             <AdminSelect
               value={form.status}
               onChange={(v) => set("status", v)}
-              options={STATUS_OPTIONS}
+              options={STATUS_OPTIONS.map((o) => ({
+                ...o,
+                label: t(o.i18nKey),
+              }))}
               disabled={isDisabled}
               error={errors.status}
             />
@@ -273,7 +298,7 @@ export default function EditionForm({
       {/* Imagen de portada */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Imagen de portada
+          {t("admin.editionForm.sectionCoverImage")}
         </h2>
         <div className="max-w-lg">
           <ImageUpload

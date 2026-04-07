@@ -13,10 +13,16 @@ import {
   deleteSection,
   reorderSections,
 } from "@/hooks/usePublicationSections";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function SectionManager({ publicationId }) {
-  const { data: sections, loading, error, refetch } =
-    usePublicationSections(publicationId);
+  const {
+    data: sections,
+    loading,
+    error,
+    refetch,
+  } = usePublicationSections(publicationId);
+  const { t } = useLanguage();
 
   const [mode, setMode] = useState(null); // null | 'create' | 'edit'
   const [editingSection, setEditingSection] = useState(null);
@@ -82,7 +88,14 @@ export default function SectionManager({ publicationId }) {
 
   const handleDelete = useCallback(
     async (section) => {
-      if (!window.confirm(`¿Eliminar la sección "${section.title || section.sectionType}"?`))
+      if (
+        !window.confirm(
+          t("admin.sections.deleteConfirm").replace(
+            "{name}",
+            section.title || section.sectionType,
+          ),
+        )
+      )
         return;
       setActionError(null);
       try {
@@ -149,11 +162,11 @@ export default function SectionManager({ publicationId }) {
         <Card className="p-8 text-center">
           <Layers className="h-8 w-8 text-charcoal-muted mx-auto mb-2" />
           <p className="text-sm text-charcoal-muted mb-3">
-            Esta publicación aún no tiene secciones.
+            {t("admin.sections.noSections")}
           </p>
           <Button type="button" size="sm" onClick={openCreate}>
             <Plus className="h-4 w-4" />
-            Agregar primera sección
+            {t("admin.sections.addFirstSection")}
           </Button>
         </Card>
       )}
@@ -193,7 +206,7 @@ export default function SectionManager({ publicationId }) {
       {!loading && sections.length > 0 && !mode && (
         <Button type="button" variant="outline" size="sm" onClick={openCreate}>
           <Plus className="h-4 w-4" />
-          Agregar sección
+          {t("admin.sections.addSection")}
         </Button>
       )}
 

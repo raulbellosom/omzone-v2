@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 function formatPrice(amount, currency = "MXN") {
   return new Intl.NumberFormat("en-US", {
@@ -7,7 +8,7 @@ function formatPrice(amount, currency = "MXN") {
   }).format(amount);
 }
 
-function PricingTierCard({ tier }) {
+function PricingTierCard({ tier, t }) {
   return (
     <div className={cn(
       "relative flex flex-col rounded-2xl border p-6 transition-all",
@@ -39,10 +40,10 @@ function PricingTierCard({ tier }) {
         {(tier.minPersons || tier.maxPersons) && (
           <p className="text-xs text-charcoal-subtle mt-1">
             {tier.minPersons && tier.maxPersons
-              ? `${tier.minPersons}–${tier.maxPersons} persons`
+              ? t("pricingSection.personsRange").replace("{min}", tier.minPersons).replace("{max}", tier.maxPersons)
               : tier.minPersons
-                ? `Min. ${tier.minPersons} persons`
-                : `Max. ${tier.maxPersons} persons`}
+                ? t("pricingSection.personsMin").replace("{min}", tier.minPersons)
+                : t("pricingSection.personsMax").replace("{max}", tier.maxPersons)}
           </p>
         )}
       </div>
@@ -51,13 +52,14 @@ function PricingTierCard({ tier }) {
 }
 
 export default function PricingSection({ tiers }) {
+  const { t } = useLanguage();
   if (!tiers || tiers.length === 0) return null;
 
   return (
     <section className="py-12 md:py-16">
       <div className="container-shell">
-        <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-2">Pricing</h2>
-        <p className="text-charcoal-muted mb-8">Choose the option that works best for you.</p>
+        <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-2">{t("pricingSection.title")}</h2>
+        <p className="text-charcoal-muted mb-8">{t("pricingSection.subtitle")}</p>
 
         <div className={cn(
           "grid gap-6",
@@ -66,7 +68,7 @@ export default function PricingSection({ tiers }) {
           "sm:grid-cols-2 lg:grid-cols-3"
         )}>
           {tiers.map((tier) => (
-            <PricingTierCard key={tier.$id} tier={tier} />
+            <PricingTierCard key={tier.$id} tier={tier} t={t} />
           ))}
         </div>
       </div>

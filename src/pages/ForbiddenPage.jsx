@@ -3,12 +3,15 @@ import { Helmet } from "react-helmet-async";
 import Container from "@/components/common/Container";
 import { Button } from "@/components/common/Button";
 import { ShieldOff } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function ForbiddenPage() {
+  const { t } = useLanguage();
+
   return (
     <>
       <Helmet>
-        <title>Access Denied — OMZONE</title>
+        <title>{t("forbidden.seoTitle")}</title>
       </Helmet>
       <section className="py-24 md:py-32">
         <Container className="text-center max-w-lg mx-auto">
@@ -18,14 +21,13 @@ export default function ForbiddenPage() {
             </div>
           </div>
           <h1 className="font-display text-2xl md:text-3xl font-semibold text-charcoal mb-3">
-            Access denied
+            {t("forbidden.title")}
           </h1>
           <p className="text-charcoal-muted mb-8 leading-relaxed">
-            You don&apos;t have permission to access this section. If you
-            believe this is an error, please contact support.
+            {t("forbidden.description")}
           </p>
           <Button asChild size="lg">
-            <Link to="/">Back to Home</Link>
+            <Link to="/">{t("forbidden.backHome")}</Link>
           </Button>
         </Container>
       </section>

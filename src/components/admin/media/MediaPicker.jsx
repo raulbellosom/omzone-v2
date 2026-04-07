@@ -7,10 +7,12 @@ import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
 import env from "@/config/env";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 // ─── Tab bar ─────────────────────────────────────────────────────────────────
 
 function TabBar({ tab, setTab, isAdmin }) {
+  const { t } = useLanguage();
   return (
     <div className="flex border-b border-sand-dark/40">
       <button
@@ -20,10 +22,10 @@ function TabBar({ tab, setTab, isAdmin }) {
           "px-4 py-2.5 text-sm font-medium border-b-2 transition-colors",
           tab === "browse"
             ? "border-sage text-sage"
-            : "border-transparent text-charcoal-muted hover:text-charcoal"
+            : "border-transparent text-charcoal-muted hover:text-charcoal",
         )}
       >
-        Explorar
+        {t("admin.media.browse")}
       </button>
       {isAdmin && (
         <button
@@ -33,10 +35,10 @@ function TabBar({ tab, setTab, isAdmin }) {
             "px-4 py-2.5 text-sm font-medium border-b-2 transition-colors",
             tab === "upload"
               ? "border-sage text-sage"
-              : "border-transparent text-charcoal-muted hover:text-charcoal"
+              : "border-transparent text-charcoal-muted hover:text-charcoal",
           )}
         >
-          Subir nuevo
+          {t("admin.media.uploadNew")}
         </button>
       )}
     </div>
@@ -45,7 +47,20 @@ function TabBar({ tab, setTab, isAdmin }) {
 
 // ─── Browse tab ───────────────────────────────────────────────────────────────
 
-function BrowseTab({ bucketId, multiple, selected, onToggle, onLoadMore, files, loading, error, hasMore, search, setSearch }) {
+function BrowseTab({
+  bucketId,
+  multiple,
+  selected,
+  onToggle,
+  onLoadMore,
+  files,
+  loading,
+  error,
+  hasMore,
+  search,
+  setSearch,
+}) {
+  const { t } = useLanguage();
   return (
     <div className="flex flex-col gap-3 flex-1 min-h-0">
       {/* Search */}
@@ -55,10 +70,10 @@ function BrowseTab({ bucketId, multiple, selected, onToggle, onLoadMore, files, 
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Buscar por nombre..."
+          placeholder={t("admin.media.searchPlaceholder")}
           className={cn(
             "h-9 w-full rounded-lg border border-sand-dark bg-white pl-9 pr-3 text-sm text-charcoal",
-            "placeholder:text-charcoal-subtle focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20"
+            "placeholder:text-charcoal-subtle focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20",
           )}
         />
       </div>
@@ -71,7 +86,9 @@ function BrowseTab({ bucketId, multiple, selected, onToggle, onLoadMore, files, 
 
         {!error && files.length === 0 && !loading && (
           <p className="text-sm text-charcoal-muted py-8 text-center">
-            {search ? "Sin resultados para esta búsqueda" : "No hay archivos en este bucket"}
+            {search
+              ? t("admin.media.noResults")
+              : t("admin.media.noBucketFiles")}
           </p>
         )}
 
@@ -87,7 +104,7 @@ function BrowseTab({ bucketId, multiple, selected, onToggle, onLoadMore, files, 
                   "relative aspect-square rounded-lg overflow-hidden border-2 transition-all focus:outline-none",
                   isSelected
                     ? "border-sage ring-2 ring-sage/30"
-                    : "border-transparent hover:border-sage/40"
+                    : "border-transparent hover:border-sage/40",
                 )}
               >
                 <ImagePreview
@@ -112,16 +129,25 @@ function BrowseTab({ bucketId, multiple, selected, onToggle, onLoadMore, files, 
             );
           })}
 
-          {loading && [...Array(6)].map((_, i) => (
-            <div key={i} className="aspect-square rounded-lg bg-warm-gray animate-pulse" />
-          ))}
+          {loading &&
+            [...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="aspect-square rounded-lg bg-warm-gray animate-pulse"
+              />
+            ))}
         </div>
 
         {/* Load more */}
         {hasMore && !loading && (
           <div className="pt-3 text-center">
-            <Button type="button" variant="outline" size="sm" onClick={onLoadMore}>
-              Cargar más
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onLoadMore}
+            >
+              {t("admin.media.loadMore")}
             </Button>
           </div>
         )}
@@ -133,8 +159,15 @@ function BrowseTab({ bucketId, multiple, selected, onToggle, onLoadMore, files, 
 // ─── Upload tab ───────────────────────────────────────────────────────────────
 
 function UploadTab({ bucketId, onUploaded }) {
-  const { upload, validate, uploading, progress, error, clearError, bucketLabel } =
-    useFileUpload(bucketId);
+  const {
+    upload,
+    validate,
+    uploading,
+    progress,
+    error,
+    clearError,
+    bucketLabel,
+  } = useFileUpload(bucketId);
   const inputRef = useRef(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [localError, setLocalError] = useState(null);
@@ -144,7 +177,10 @@ function UploadTab({ bucketId, onUploaded }) {
     setLocalError(null);
     clearError();
     const err = validate(file);
-    if (err) { setLocalError(err); return; }
+    if (err) {
+      setLocalError(err);
+      return;
+    }
     try {
       const { fileId } = await upload(file);
       onUploaded(fileId);
@@ -157,7 +193,7 @@ function UploadTab({ bucketId, onUploaded }) {
     e.preventDefault();
     setIsDragOver(false);
     handleFile(e.dataTransfer.files?.[0]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const displayError = error || localError;
@@ -169,14 +205,20 @@ function UploadTab({ bucketId, onUploaded }) {
         type="file"
         accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
         className="hidden"
-        onChange={(e) => { handleFile(e.target.files?.[0]); e.target.value = ""; }}
+        onChange={(e) => {
+          handleFile(e.target.files?.[0]);
+          e.target.value = "";
+        }}
         disabled={uploading}
       />
 
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragOver(true);
+        }}
         onDragLeave={() => setIsDragOver(false)}
         onDrop={handleDrop}
         disabled={uploading}
@@ -185,28 +227,35 @@ function UploadTab({ bucketId, onUploaded }) {
           isDragOver
             ? "border-sage bg-sage/10"
             : "border-sand-dark/60 bg-warm-gray/40 hover:border-sage hover:bg-sage/5",
-          uploading && "opacity-60 cursor-not-allowed"
+          uploading && "opacity-60 cursor-not-allowed",
         )}
       >
         {uploading ? (
           <div className="flex flex-col items-center gap-3 px-8 w-full">
             <Loader2 className="h-8 w-8 text-sage animate-spin" />
             <div className="w-full h-1.5 bg-warm-gray rounded-full overflow-hidden">
-              <div className="h-full bg-sage transition-all" style={{ width: `${progress}%` }} />
+              <div
+                className="h-full bg-sage transition-all"
+                style={{ width: `${progress}%` }}
+              />
             </div>
             <span className="text-sm text-charcoal-muted">{progress}%</span>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2 text-charcoal-muted pointer-events-none">
             <Upload className="h-8 w-8" />
-            <span className="text-sm font-medium">Subir imagen</span>
+            <span className="text-sm font-medium">
+              {t("admin.media.upload")}
+            </span>
             <span className="text-xs text-center px-4">{bucketLabel}</span>
           </div>
         )}
       </button>
 
       {displayError && (
-        <p className="text-xs text-red-600 text-center max-w-xs">{displayError}</p>
+        <p className="text-xs text-red-600 text-center max-w-xs">
+          {displayError}
+        </p>
       )}
     </div>
   );
@@ -238,7 +287,10 @@ export default function MediaPicker({
   const [tab, setTab] = useState("browse");
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(externalSelected);
-  const { files, loading, error, hasMore, loadMore, refresh } = useBucketFiles(bucketId, { search });
+  const { files, loading, error, hasMore, loadMore, refresh } = useBucketFiles(
+    bucketId,
+    { search },
+  );
 
   // Sync external selection when picker opens
   useEffect(() => {
@@ -247,13 +299,15 @@ export default function MediaPicker({
       setTab("browse");
       setSearch("");
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   function handleToggle(fileId) {
     if (multiple) {
       setSelected((prev) =>
-        prev.includes(fileId) ? prev.filter((id) => id !== fileId) : [...prev, fileId]
+        prev.includes(fileId)
+          ? prev.filter((id) => id !== fileId)
+          : [...prev, fileId],
       );
     } else {
       setSelected((prev) => (prev[0] === fileId ? [] : [fileId]));
@@ -283,14 +337,19 @@ export default function MediaPicker({
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
       onClick={(e) => e.target === e.currentTarget && onClose?.()}
     >
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        onClick={onClose}
+      />
 
       {/* Panel — fullscreen mobile, centered modal desktop */}
-      <div className={cn(
-        "relative z-10 flex flex-col bg-white shadow-2xl",
-        "w-full h-[92dvh] rounded-t-2xl",
-        "sm:w-[640px] sm:h-[580px] sm:rounded-2xl"
-      )}>
+      <div
+        className={cn(
+          "relative z-10 flex flex-col bg-white shadow-2xl",
+          "w-full h-[92dvh] rounded-t-2xl",
+          "sm:w-[640px] sm:h-[580px] sm:rounded-2xl",
+        )}
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-4 pb-0 shrink-0">
           <h2 className="text-base font-semibold text-charcoal">
@@ -300,7 +359,7 @@ export default function MediaPicker({
             type="button"
             onClick={onClose}
             className="p-1.5 rounded-lg text-charcoal-subtle hover:text-charcoal hover:bg-warm-gray transition-colors"
-            aria-label="Cerrar"
+            aria-label={t("admin.media.close")}
           >
             <X className="h-5 w-5" />
           </button>

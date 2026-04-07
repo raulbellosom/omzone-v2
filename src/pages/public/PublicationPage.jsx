@@ -10,6 +10,7 @@ import PublicationSectionRenderer from "@/components/public/publications/Publica
 import NotFoundPage from "@/pages/NotFoundPage";
 import { Button } from "@/components/common/Button";
 import { ROUTES } from "@/constants/routes";
+import { useLanguage } from "@/hooks/useLanguage";
 
 // ─── Loading skeleton ─────────────────────────────────────────────────────────
 
@@ -91,13 +92,14 @@ function PublicationHeader({ publication }) {
 // ─── Experience CTA banner ───────────────────────────────────────────────────
 
 function ExperienceBanner({ experience }) {
+  const { t } = useLanguage();
   if (!experience) return null;
 
   return (
     <section className="py-12 md:py-16 bg-sage/10">
       <div className="container-shell text-center max-w-2xl">
         <p className="text-xs font-semibold tracking-wider uppercase text-sage mb-2">
-          Related Experience
+          {t("publication.relatedExperience")}
         </p>
         <h3 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-3">
           {experience.title}
@@ -109,7 +111,7 @@ function ExperienceBanner({ experience }) {
         )}
         <Button asChild size="lg">
           <Link to={`/experiences/${experience.slug}`}>
-            Explore Experience
+            {t("publication.exploreExperience")}
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </Button>
@@ -122,6 +124,7 @@ function ExperienceBanner({ experience }) {
 
 export default function PublicationPage() {
   const { slug } = useParams();
+  const { t } = useLanguage();
   const { publication, sections, experience, loading, error } =
     usePublicationBySlug(slug);
 
@@ -151,7 +154,7 @@ export default function PublicationPage() {
           className="inline-flex items-center gap-1.5 text-sm text-charcoal-subtle hover:text-charcoal transition-colors group"
         >
           <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-          Home
+          {t("publication.home")}
         </Link>
       </div>
 

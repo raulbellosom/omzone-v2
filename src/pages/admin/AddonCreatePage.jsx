@@ -2,10 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AddonForm from "@/components/admin/addons/AddonForm";
 import { createAddon } from "@/hooks/useAddons";
+import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 
 export default function AddonCreatePage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
 
@@ -25,9 +27,11 @@ export default function AddonCreatePage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Nuevo addon</h1>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.addons.createTitle")}
+        </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5">
-          Crea un complemento para asignar a experiencias
+          {t("admin.addons.createSubtitle")}
         </p>
       </div>
 
@@ -40,7 +44,7 @@ export default function AddonCreatePage() {
       <AddonForm
         onSubmit={handleSubmit}
         submitting={submitting}
-        submitLabel="Crear addon"
+        submitLabel={t("admin.addons.createButton")}
       />
     </div>
   );

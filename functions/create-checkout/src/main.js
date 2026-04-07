@@ -49,7 +49,7 @@
  *   assisted + Stripe:     { ok: true, data: { paymentLink, orderId } }
  */
 
-import { Client, Databases, Users, Query, ID, Permission, Role } from "node-appwrite";
+import { Client, Databases, Users, Functions, Query, ID, Permission, Role } from "node-appwrite";
 import Stripe from "stripe";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -103,6 +103,21 @@ function buildDocPermissions(userId) {
     Permission.update(Role.label("admin")),
     Permission.update(Role.label("root")),
   ];
+}
+
+/**
+ * Trigger generate-ticket asynchronously (fire-and-forget).
+ * Used for skipStripe paths where the stripe-webhook never fires.
+ */
+async function triggerGenerateTicket(client, orderId, log, error) {
+  try {
+    const fnId = process.env.APPWRITE_FUNCTION_GENERATE_TICKET || "generate-ticket";
+    const functions = new Functions(client);
+    await functions.createExecution(fnId, JSON.stringify({ orderId }), true);
+    log(`Triggered generate-ticket for order ${orderId}`);
+  } catch (err) {
+    error(`generate-ticket trigger failed (non-blocking): ${err.message}`);
+  }
 }
 
 // ─── Main Handler ────────────────────────────────────────────────────────────
@@ -350,6 +365,8 @@ export default async ({ req, res, log, error }) => {
       });
 
       if (skipStripe) {
+        // No webhook fires for manual payment — trigger ticket generation directly
+        await triggerGenerateTicket(client, rcOrder.$id, log, error);
         return res.json({
           ok: true,
           data: {
@@ -672,6 +689,8 @@ export default async ({ req, res, log, error }) => {
 
     // ── 15. Return for assisted + skipStripe (manual payment) ─────────────
     if (isAssistedSale && skipStripe) {
+      // No webhook fires for manual payment — trigger ticket generation directly
+      await triggerGenerateTicket(client, order.$id, log, error);
       return res.json({
         ok: true,
         data: {

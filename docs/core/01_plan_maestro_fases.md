@@ -240,6 +240,73 @@ Este documento descompone el documento maestro de OMZONE en fases de implementac
 
 ---
 
+### Fase A — Páginas públicas (post-fase 15)
+
+**Objetivo:** Reemplazar los placeholders de las páginas públicas con diseño editorial premium y contenido real.
+
+| Task | Título | Dominio |
+|---|---|---|
+| TASK-051 | Landing page completa: hero, discover, why OMZONE, CTA | Frontend público, Editorial |
+| TASK-052 | About page: misión, ubicación PV, filosofía wellness | Frontend público, Editorial |
+| TASK-053 | Contact page: formulario funcional + collection contact_messages | Frontend público, Configuración |
+
+**Entregable de fase:** Las 3 páginas públicas principales son funcionales, premium y mobile-first.
+
+---
+
+### Fase B — Catálogo editorial
+
+**Objetivo:** Rediseñar el listado de experiencias de formato marketplace a formato editorial vertical.
+
+| Task | Título | Dominio |
+|---|---|---|
+| TASK-054 | Catálogo experiencias: vertical editorial, sin precios, ExperienceArticle | Frontend público, Editorial |
+
+**Entregable de fase:** El catálogo público muestra experiencias como artículos editoriales sin precios visibles.
+
+---
+
+### Fase C — Admin: secciones faltantes
+
+**Objetivo:** Implementar las 4 secciones admin que quedaron como placeholder.
+
+| Task | Título | Dominio |
+|---|---|---|
+| TASK-055 | Admin — Tickets: listado + detalle | Frontend admin, Operativo |
+| TASK-056 | Admin — Clientes: listado + detalle (user_profiles + Auth) | Frontend admin, Usuario |
+| TASK-057 | Admin — Media manager: explorador por bucket | Frontend admin, Media |
+| TASK-058 | Admin — Settings: notification templates + system info | Frontend admin, Configuración |
+
+**Entregable de fase:** El panel admin no tiene placeholders. Todas las secciones del sidebar son funcionales.
+
+---
+
+### Fase D — Datos de demostración y QA
+
+**Objetivo:** Crear contenido de demostración y ejecutar QA integral sobre la plataforma completa.
+
+| Task | Título | Dominio |
+|---|---|---|
+| TASK-059 | Seed: 3-5 experiencias, ediciones, publicaciones, media | Editorial, Comercial, Agenda |
+| TASK-060 | QA integral: flujos, permisos, responsive, edge cases | QA, todos los dominios |
+| TASK-061 | Responsive audit: 375/768/1024/1280 en todas las vistas | QA, Frontend |
+
+**Entregable de fase:** La plataforma tiene datos reales y ha sido verificada integralmente.
+
+---
+
+### Fase E — Limpieza y cierre
+
+**Objetivo:** Eliminar código muerto, placeholders residuales y actualizar documentación de cierre.
+
+| Task | Título | Dominio |
+|---|---|---|
+| TASK-062 | Limpieza: AdminPlaceholder, rutas redundantes, docs | Infraestructura, Documentación |
+
+**Entregable de fase:** Código limpio, sin placeholders, documentación alineada con implementación.
+
+---
+
 ## 3. Mapa de dependencias entre fases
 
 ```
@@ -260,6 +327,12 @@ Fase 12 (Venta asistida) ← depende de Fases 3 + 6
 Fase 13 (Notificaciones) ← depende de Fase 7
 Fase 14 (SEO/i18n) ← depende de Fase 4
 Fase 15 (QA/Deploy) ← depende de todas las anteriores
+
+Fase A (Páginas públicas) ← depende de Fase 4 + 14
+Fase B (Catálogo editorial) ← depende de Fase 4
+Fase C (Admin secciones) ← depende de Fases 3 + 7 + 11
+Fase D (Seed + QA) ← depende de Fases A + B + C
+Fase E (Limpieza) ← depende de Fase D
 ```
 
 ---
@@ -284,7 +357,12 @@ Fase 15 (QA/Deploy) ← depende de todas las anteriores
 | 13 — Notificaciones | 2 | TASK-042 a TASK-043 |
 | 14 — SEO/i18n | 3 | TASK-044 a TASK-046 |
 | 15 — QA/Deploy | 4 | TASK-047 a TASK-050 |
-| **Total** | **50** | |
+| A — Páginas públicas | 3 | TASK-051 a TASK-053 |
+| B — Catálogo editorial | 1 | TASK-054 |
+| C — Admin secciones | 4 | TASK-055 a TASK-058 |
+| D — Seed + QA | 3 | TASK-059 a TASK-061 |
+| E — Limpieza | 1 | TASK-062 |
+| **Total** | **62** | |
 
 ---
 

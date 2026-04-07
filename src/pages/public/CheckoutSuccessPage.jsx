@@ -6,6 +6,7 @@ import { Button } from "@/components/common/Button";
 import { Badge } from "@/components/common/Badge";
 import TicketQR from "@/components/common/TicketQR";
 import { useOrderBySession } from "@/hooks/useOrderBySession";
+import { useLanguage } from "@/hooks/useLanguage";
 
 function formatCurrency(amount, currency = "MXN") {
   return new Intl.NumberFormat("en-US", {
@@ -16,9 +17,9 @@ function formatCurrency(amount, currency = "MXN") {
   }).format(amount);
 }
 
-function formatDate(iso) {
+function formatDate(iso, lang = "en") {
   if (!iso) return "";
-  return new Date(iso).toLocaleDateString("en-US", {
+  return new Date(iso).toLocaleDateString(lang === "es" ? "es-MX" : "en-US", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -49,6 +50,7 @@ function LoadingSkeleton() {
 
 /** Shown when webhook hasn't processed yet — gentle, not an error */
 function ProcessingState() {
+  const { t } = useLanguage();
   return (
     <div className="min-h-[60vh] bg-cream flex items-center justify-center px-4">
       <div className="text-center space-y-6 max-w-md">
@@ -59,20 +61,19 @@ function ProcessingState() {
         </div>
         <div className="space-y-2">
           <h1 className="text-2xl md:text-3xl font-bold text-charcoal font-display">
-            Processing your booking
+            {t("checkoutSuccess.processingTitle")}
           </h1>
           <p className="text-charcoal-subtle text-sm md:text-base">
-            Your payment is being confirmed. This usually takes just a few
-            seconds. You'll receive a confirmation email shortly.
+            {t("checkoutSuccess.processingDesc")}
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
           <Link to={ROUTES.PORTAL_ORDERS}>
-            <Button size="md">View My Orders</Button>
+            <Button size="md">{t("checkoutSuccess.viewOrders")}</Button>
           </Link>
           <Link to={ROUTES.EXPERIENCES}>
             <Button variant="outline" size="md">
-              Explore More
+              {t("checkoutSuccess.exploreMore")}
             </Button>
           </Link>
         </div>
@@ -84,6 +85,7 @@ function ProcessingState() {
 export default function CheckoutSuccessPage() {
   const [params] = useSearchParams();
   const sessionId = params.get("session_id");
+  const { language, t } = useLanguage();
 
   const { order, items, tickets, loading } = useOrderBySession(sessionId);
 
@@ -109,10 +111,10 @@ export default function CheckoutSuccessPage() {
             </div>
           </div>
           <h1 className="text-2xl md:text-3xl font-bold text-charcoal font-display">
-            Thank you!
+            {t("checkoutSuccess.thankYou")}
           </h1>
           <p className="text-charcoal-subtle text-sm md:text-base">
-            Your booking has been confirmed. Here's a summary of your order.
+            {t("checkoutSuccess.confirmed")}
           </p>
         </div>
 
@@ -120,22 +122,26 @@ export default function CheckoutSuccessPage() {
         <div className="bg-white rounded-2xl shadow-sm border border-sand-dark/30 p-6 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-display font-semibold text-charcoal">
-              Order Summary
+              {t("checkoutSuccess.orderSummary")}
             </h2>
             <Badge variant="success">{order.status}</Badge>
           </div>
 
           <div className="space-y-2 text-sm">
             <div className="flex justify-between py-1.5 border-b border-sand-dark/20">
-              <span className="text-charcoal-muted">Order</span>
+              <span className="text-charcoal-muted">
+                {t("checkoutSuccess.orderLabel")}
+              </span>
               <span className="font-mono font-medium text-charcoal">
                 {order.orderNumber}
               </span>
             </div>
             <div className="flex justify-between py-1.5 border-b border-sand-dark/20">
-              <span className="text-charcoal-muted">Date</span>
+              <span className="text-charcoal-muted">
+                {t("checkoutSuccess.dateLabel")}
+              </span>
               <span className="text-charcoal">
-                {formatDate(order.$createdAt)}
+                {formatDate(order.$createdAt, language)}
               </span>
             </div>
 
@@ -170,7 +176,9 @@ export default function CheckoutSuccessPage() {
             )}
 
             <div className="flex justify-between py-2 font-semibold text-base">
-              <span className="text-charcoal">Total</span>
+              <span className="text-charcoal">
+                {t("checkoutSuccess.total")}
+              </span>
               <span className="text-charcoal">
                 {formatCurrency(order.totalAmount, order.currency)}
               </span>
@@ -184,7 +192,7 @@ export default function CheckoutSuccessPage() {
             <div className="flex items-center gap-2">
               <Ticket className="h-5 w-5 text-sage" />
               <h2 className="font-display font-semibold text-charcoal">
-                Your Tickets
+                {t("checkoutSuccess.tickets")}
               </h2>
             </div>
 

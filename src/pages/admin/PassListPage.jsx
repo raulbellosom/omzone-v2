@@ -2,18 +2,20 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, Pencil, Ticket, Search, Users } from "lucide-react";
 import { usePasses, updatePass } from "@/hooks/usePasses";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/common/Button";
 import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
 import { Input } from "@/components/common/Input";
 import AdminSelect from "@/components/common/AdminSelect";
+import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/constants/routes";
 
 const STATUS_FILTER_OPTIONS = [
-  { value: "", label: "Todos" },
-  { value: "active", label: "Activos" },
-  { value: "inactive", label: "Inactivos" },
+  { value: "", i18nKey: "admin.statuses.allActive" },
+  { value: "active", i18nKey: "admin.statuses.activeOnly" },
+  { value: "inactive", i18nKey: "admin.statuses.inactiveOnly" },
 ];
 
 function formatPrice(amount, currency) {
@@ -77,20 +79,24 @@ function CardSkeleton() {
   );
 }
 
-function EmptyState() {
+function EmptyState({ t, isAdmin }) {
   return (
     <Card className="p-10 text-center">
       <Ticket className="h-10 w-10 text-charcoal-muted mx-auto mb-3" />
-      <h2 className="text-lg font-semibold text-charcoal mb-1">Sin pases</h2>
+      <h2 className="text-lg font-semibold text-charcoal mb-1">
+        {t("admin.passes.emptyTitle")}
+      </h2>
       <p className="text-sm text-charcoal-muted mb-4">
-        Crea el primer pase consumible para ofrecer créditos de experiencias.
+        {t("admin.passes.emptyMessage")}
       </p>
-      <Link to={ROUTES.ADMIN_PASS_NEW}>
-        <Button size="sm">
-          <Plus className="h-4 w-4" />
-          Crear primer pase
-        </Button>
-      </Link>
+      {isAdmin && (
+        <Link to={ROUTES.ADMIN_PASS_NEW}>
+          <Button size="sm">
+            <Plus className="h-4 w-4" />
+            {t("admin.passes.emptyButton")}
+          </Button>
+        </Link>
+      )}
     </Card>
   );
 }
@@ -100,6 +106,8 @@ export default function PassListPage() {
   const [statusFilter, setStatusFilter] = useState("");
   const [toggling, setToggling] = useState(null);
   const navigate = useNavigate();
+  const { t } = useLanguage();
+  const { isAdmin } = useAuth();
 
   const {
     data: passes,
@@ -130,24 +138,32 @@ export default function PassListPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">Pases</h1>
+          <h1 className="text-xl font-semibold text-charcoal">
+            {t("admin.passes.title")}
+          </h1>
           <p className="text-sm text-charcoal-subtle mt-0.5">
-            Pases consumibles de créditos de experiencias
+            {t("admin.passes.subtitle")}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Link to={ROUTES.ADMIN_USER_PASSES}>
             <Button size="sm" variant="ghost">
               <Users className="h-4 w-4" />
-              <span className="hidden sm:inline">Pases asignados</span>
+              <span className="hidden sm:inline">
+                {t("admin.passes.assignedPasses")}
+              </span>
             </Button>
           </Link>
-          <Link to={ROUTES.ADMIN_PASS_NEW}>
-            <Button size="sm">
-              <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline">Nuevo pase</span>
-            </Button>
-          </Link>
+          {isAdmin && (
+            <Link to={ROUTES.ADMIN_PASS_NEW}>
+              <Button size="sm">
+                <Plus className="h-4 w-4" />
+                <span className="hidden sm:inline">
+                  {t("admin.passes.newPass")}
+                </span>
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
 
@@ -158,14 +174,17 @@ export default function PassListPage() {
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar por nombre..."
+            placeholder={t("admin.passes.searchPlaceholder")}
             className="pl-9"
           />
         </div>
         <AdminSelect
           value={statusFilter}
           onChange={setStatusFilter}
-          options={STATUS_FILTER_OPTIONS}
+          options={STATUS_FILTER_OPTIONS.map((o) => ({
+            ...o,
+            label: t(o.i18nKey),
+          }))}
           fullWidth={false}
         />
       </div>
@@ -176,7 +195,9 @@ export default function PassListPage() {
         </div>
       )}
 
-      {!loading && !error && passes.length === 0 && <EmptyState />}
+      {!loading && !error && passes.length === 0 && (
+        <EmptyState t={t} isAdmin={isAdmin} />
+      )}
 
       {loading && (
         <>
@@ -191,12 +212,24 @@ export default function PassListPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
-                <th className="px-4 py-3 font-medium">Nombre</th>
-                <th className="px-4 py-3 font-medium">Créditos</th>
-                <th className="px-4 py-3 font-medium">Precio</th>
-                <th className="px-4 py-3 font-medium">Vigencia</th>
-                <th className="px-4 py-3 font-medium">Estado</th>
-                <th className="px-4 py-3 font-medium text-right">Acciones</th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.passes.name")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.passes.credits")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.passes.price")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.passes.validity")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.passes.status")}
+                </th>
+                <th className="px-4 py-3 font-medium text-right">
+                  {t("admin.passes.actions")}
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-sand-dark">
@@ -209,15 +242,15 @@ export default function PassListPage() {
                     {pass.name}
                   </td>
                   <td className="px-4 py-3 text-charcoal-muted">
-                    {pass.totalCredits} créditos
+                    {pass.totalCredits} {t("admin.passes.creditsSuffix")}
                   </td>
                   <td className="px-4 py-3 text-charcoal-muted whitespace-nowrap">
                     {formatPrice(pass.basePrice, pass.currency)}
                   </td>
                   <td className="px-4 py-3 text-charcoal-muted">
                     {pass.validityDays
-                      ? `${pass.validityDays} días`
-                      : "Sin vencimiento"}
+                      ? `${pass.validityDays} ${t("admin.packages.durationDays")}`
+                      : t("admin.passes.noExpiry")}
                   </td>
                   <td className="px-4 py-3">
                     <button
@@ -232,8 +265,8 @@ export default function PassListPage() {
                         {toggling === pass.$id
                           ? "..."
                           : pass.status === "active"
-                            ? "Activo"
-                            : "Inactivo"}
+                            ? t("admin.statuses.active")
+                            : t("admin.statuses.inactive")}
                       </Badge>
                     </button>
                   </td>
@@ -241,7 +274,7 @@ export default function PassListPage() {
                     <button
                       onClick={() => navigate(`/admin/passes/${pass.$id}/edit`)}
                       className="p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
-                      aria-label="Editar pase"
+                      aria-label={t("admin.passes.editAriaLabel")}
                     >
                       <Pencil className="h-4 w-4" />
                     </button>
@@ -267,16 +300,20 @@ export default function PassListPage() {
                   {pass.name}
                 </span>
                 <Badge variant={pass.status === "active" ? "success" : "warm"}>
-                  {pass.status === "active" ? "Activo" : "Inactivo"}
+                  {pass.status === "active"
+                    ? t("admin.statuses.active")
+                    : t("admin.statuses.inactive")}
                 </Badge>
               </div>
               <div className="flex items-center gap-4 text-xs text-charcoal-muted">
-                <span>{pass.totalCredits} créditos</span>
+                <span>
+                  {pass.totalCredits} {t("admin.passes.creditsSuffix")}
+                </span>
                 <span>{formatPrice(pass.basePrice, pass.currency)}</span>
                 <span>
                   {pass.validityDays
-                    ? `${pass.validityDays} días`
-                    : "Sin vencimiento"}
+                    ? `${pass.validityDays} ${t("admin.packages.durationDays")}`
+                    : t("admin.passes.noExpiry")}
                 </span>
               </div>
             </Card>

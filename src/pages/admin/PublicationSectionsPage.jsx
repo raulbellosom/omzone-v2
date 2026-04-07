@@ -9,6 +9,7 @@ import { usePublication } from "@/hooks/usePublications";
 import { usePublicationSections } from "@/hooks/usePublicationSections";
 import { ROUTES } from "@/constants/routes";
 import { useState } from "react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 function LoadingSkeleton() {
   return (
@@ -30,6 +31,7 @@ export default function PublicationSectionsPage() {
   const { data: publication, loading, error } = usePublication(id);
   const { data: sections } = usePublicationSections(id);
   const [showPreview, setShowPreview] = useState(false);
+  const { t } = useLanguage();
 
   if (loading) return <LoadingSkeleton />;
 
@@ -37,7 +39,7 @@ export default function PublicationSectionsPage() {
     return (
       <Card className="p-6 border-red-200 bg-red-50">
         <p className="text-sm text-red-700">
-          {error ?? "No se encontró la publicación."}
+          {error ?? t("admin.publications.notFound")}
         </p>
       </Card>
     );
@@ -56,7 +58,7 @@ export default function PublicationSectionsPage() {
             className="flex items-center gap-1 text-sm text-charcoal-subtle hover:text-charcoal mb-1"
           >
             <ArrowLeft className="h-4 w-4" />
-            Publicaciones
+            {t("admin.publications.backToPublications")}
           </button>
           <div className="flex items-center gap-3">
             <h1 className="text-xl font-semibold text-charcoal">
@@ -66,7 +68,9 @@ export default function PublicationSectionsPage() {
           </div>
           <p className="text-sm text-charcoal-subtle">
             /{publication.slug} · {sections.length}{" "}
-            {sections.length === 1 ? "sección" : "secciones"}
+            {sections.length === 1
+              ? t("admin.publications.sectionSuffix")
+              : t("admin.publications.sectionsSuffix")}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -77,7 +81,9 @@ export default function PublicationSectionsPage() {
             onClick={() => setShowPreview(!showPreview)}
           >
             <Eye className="h-4 w-4" />
-            {showPreview ? "Ocultar preview" : "Preview"}
+            {showPreview
+              ? t("admin.publications.hidePreview")
+              : t("admin.publications.showPreview")}
           </Button>
           <Button
             type="button"
@@ -86,7 +92,7 @@ export default function PublicationSectionsPage() {
             onClick={() => navigate(editUrl)}
           >
             <Pencil className="h-4 w-4" />
-            Editar datos
+            {t("admin.publications.editData")}
           </Button>
         </div>
       </div>

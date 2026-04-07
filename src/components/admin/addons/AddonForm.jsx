@@ -5,28 +5,29 @@ import { Card } from "@/components/common/Card";
 import ImageUpload from "@/components/admin/experiences/ImageUpload";
 import { slugify, checkAddonSlugAvailable } from "@/hooks/useAddons";
 import AdminSelect from "@/components/common/AdminSelect";
+import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 
 const ADDON_TYPE_OPTIONS = [
-  { value: "service", label: "Servicio" },
-  { value: "transport", label: "Transporte" },
-  { value: "food", label: "Alimentos" },
-  { value: "accommodation", label: "Hospedaje" },
-  { value: "equipment", label: "Equipo" },
-  { value: "other", label: "Otro" },
+  { value: "service", i18nKey: "admin.addonTypes.service" },
+  { value: "transport", i18nKey: "admin.addonTypes.transport" },
+  { value: "food", i18nKey: "admin.addonTypes.food" },
+  { value: "accommodation", i18nKey: "admin.addonTypes.lodging" },
+  { value: "equipment", i18nKey: "admin.addonTypes.equipment" },
+  { value: "other", i18nKey: "admin.addonTypes.other" },
 ];
 
 const PRICE_TYPE_OPTIONS = [
-  { value: "fixed", label: "Fijo" },
-  { value: "per-person", label: "Por persona" },
-  { value: "per-day", label: "Por día" },
-  { value: "per-unit", label: "Por unidad" },
-  { value: "quote", label: "Cotización" },
+  { value: "fixed", i18nKey: "admin.priceTypes.fixed" },
+  { value: "per-person", i18nKey: "admin.priceTypes.perPerson" },
+  { value: "per-day", i18nKey: "admin.priceTypes.perDay" },
+  { value: "per-unit", i18nKey: "admin.priceTypes.perUnit" },
+  { value: "quote", i18nKey: "admin.priceTypes.quote" },
 ];
 
 const STATUS_OPTIONS = [
-  { value: "active", label: "Activo" },
-  { value: "inactive", label: "Inactivo" },
+  { value: "active", i18nKey: "admin.statuses.active" },
+  { value: "inactive", i18nKey: "admin.statuses.inactive" },
 ];
 
 const CURRENCY_OPTIONS = [
@@ -119,6 +120,7 @@ export default function AddonForm({
   submitting,
   submitLabel = "Guardar",
 }) {
+  const { t } = useLanguage();
   const init = initialData
     ? {
         ...EMPTY,
@@ -210,32 +212,32 @@ export default function AddonForm({
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Identidad
+          {t("admin.addonForm.sectionIdentity")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Nombre" required error={errors.name}>
+          <Field label={t("admin.addonForm.name")} required error={errors.name}>
             <Input
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
-              placeholder="Transporte aeropuerto"
+              placeholder={t("admin.addonForm.placeholderName")}
               disabled={isDisabled}
               className={errors.name ? "border-red-400" : ""}
             />
           </Field>
-          <Field label="Nombre (ES)">
+          <Field label={t("admin.addonForm.nameEs")}>
             <Input
               value={form.nameEs}
               onChange={(e) => set("nameEs", e.target.value)}
-              placeholder="Transporte aeropuerto"
+              placeholder={t("admin.addonForm.placeholderName")}
               disabled={isDisabled}
             />
           </Field>
         </div>
         <Field
-          label="Slug"
+          label={t("admin.addonForm.slug")}
           required
           error={errors.slug}
-          hint="Se genera automáticamente, editable manualmente"
+          hint={t("admin.addonForm.slugHint")}
         >
           <Input
             value={form.slug}
@@ -253,23 +255,23 @@ export default function AddonForm({
       {/* Descripción */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Descripción
+          {t("admin.addonForm.sectionDescription")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Descripción (EN)">
+          <Field label={t("admin.addonForm.descriptionEn")}>
             <Textarea
               value={form.description}
               onChange={(v) => set("description", v)}
-              placeholder="Airport transfer service..."
+              placeholder={t("admin.addonForm.placeholderDescEn")}
               disabled={isDisabled}
               rows={4}
             />
           </Field>
-          <Field label="Descripción (ES)">
+          <Field label={t("admin.addonForm.descriptionEs")}>
             <Textarea
               value={form.descriptionEs}
               onChange={(v) => set("descriptionEs", v)}
-              placeholder="Servicio de transporte al aeropuerto..."
+              placeholder={t("admin.addonForm.placeholderDescEs")}
               disabled={isDisabled}
               rows={4}
             />
@@ -280,28 +282,46 @@ export default function AddonForm({
       {/* Tipo y precio */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Tipo y precio
+          {t("admin.addonForm.sectionTypePrice")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Tipo de addon" required error={errors.addonType}>
+          <Field
+            label={t("admin.addonForm.addonType")}
+            required
+            error={errors.addonType}
+          >
             <AdminSelect
               value={form.addonType}
               onChange={(v) => set("addonType", v)}
-              options={ADDON_TYPE_OPTIONS}
+              options={ADDON_TYPE_OPTIONS.map((o) => ({
+                ...o,
+                label: t(o.i18nKey),
+              }))}
               disabled={isDisabled}
               error={errors.addonType}
             />
           </Field>
-          <Field label="Tipo de precio" required error={errors.priceType}>
+          <Field
+            label={t("admin.addonForm.priceType")}
+            required
+            error={errors.priceType}
+          >
             <AdminSelect
               value={form.priceType}
               onChange={(v) => set("priceType", v)}
-              options={PRICE_TYPE_OPTIONS}
+              options={PRICE_TYPE_OPTIONS.map((o) => ({
+                ...o,
+                label: t(o.i18nKey),
+              }))}
               disabled={isDisabled}
               error={errors.priceType}
             />
           </Field>
-          <Field label="Precio base" required error={errors.basePrice}>
+          <Field
+            label={t("admin.addonForm.basePrice")}
+            required
+            error={errors.basePrice}
+          >
             <Input
               type="number"
               min={0}
@@ -313,7 +333,11 @@ export default function AddonForm({
               className={errors.basePrice ? "border-red-400" : ""}
             />
           </Field>
-          <Field label="Moneda" required error={errors.currency}>
+          <Field
+            label={t("admin.addonForm.currency")}
+            required
+            error={errors.currency}
+          >
             <AdminSelect
               value={form.currency}
               onChange={(v) => set("currency", v)}
@@ -328,30 +352,33 @@ export default function AddonForm({
       {/* Opciones */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Opciones
+          {t("admin.addonForm.sectionOptions")}
         </h2>
         <div className="space-y-3">
           <Toggle
             checked={form.isStandalone}
             onChange={(v) => set("isStandalone", v)}
             disabled={isDisabled}
-            label="Se puede vender de forma independiente"
+            label={t("admin.addonForm.isStandalone")}
           />
           <Toggle
             checked={form.isPublic}
             onChange={(v) => set("isPublic", v)}
             disabled={isDisabled}
-            label="Visible al público"
+            label={t("admin.addonForm.isPublic")}
           />
           <Toggle
             checked={form.followsMainDuration}
             onChange={(v) => set("followsMainDuration", v)}
             disabled={isDisabled}
-            label="Sigue la duración de la experiencia principal"
+            label={t("admin.addonForm.followsMainDuration")}
           />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-          <Field label="Cantidad máxima" hint="Dejar vacío si no hay límite">
+          <Field
+            label={t("admin.addonForm.maxQuantity")}
+            hint={t("admin.addonForm.maxQuantityHint")}
+          >
             <Input
               type="number"
               min={1}
@@ -361,7 +388,10 @@ export default function AddonForm({
               disabled={isDisabled}
             />
           </Field>
-          <Field label="Orden" hint="Orden de aparición (menor = primero)">
+          <Field
+            label={t("admin.addonForm.sortOrder")}
+            hint={t("admin.addonForm.sortOrderHint")}
+          >
             <Input
               type="number"
               min={0}
@@ -377,14 +407,21 @@ export default function AddonForm({
       {/* Estado */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Estado
+          {t("admin.addonForm.sectionStatus")}
         </h2>
         <div className="max-w-xs">
-          <Field label="Estado" required error={errors.status}>
+          <Field
+            label={t("admin.addonForm.status")}
+            required
+            error={errors.status}
+          >
             <AdminSelect
               value={form.status}
               onChange={(v) => set("status", v)}
-              options={STATUS_OPTIONS}
+              options={STATUS_OPTIONS.map((o) => ({
+                ...o,
+                label: t(o.i18nKey),
+              }))}
               disabled={isDisabled}
               error={errors.status}
             />
@@ -395,7 +432,7 @@ export default function AddonForm({
       {/* Imagen */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Imagen de portada
+          {t("admin.addonForm.sectionCoverImage")}
         </h2>
         <div className="max-w-lg">
           <ImageUpload
@@ -413,7 +450,7 @@ export default function AddonForm({
           {submitting ? (
             <span className="flex items-center gap-2">
               <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-              Guardando...
+              {t("admin.common.saving")}
             </span>
           ) : (
             submitLabel

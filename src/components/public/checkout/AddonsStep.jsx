@@ -1,5 +1,6 @@
 import { formatPrice } from "@/components/public/checkout/utils";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function AddonsStep({
   enrichedAddons,
@@ -7,14 +8,15 @@ export default function AddonsStep({
   toggleAddon,
   quantity,
 }) {
+  const { t } = useLanguage();
   if (enrichedAddons.length === 0) {
     return (
       <div className="text-center py-8">
         <p className="text-charcoal-subtle">
-          No add-ons available for this experience.
+          {t("addonsStep.noAddons")}
         </p>
         <p className="text-xs text-charcoal-subtle/60 mt-1">
-          You can continue to the next step.
+          {t("addonsStep.canContinue")}
         </p>
       </div>
     );
@@ -23,7 +25,7 @@ export default function AddonsStep({
   return (
     <div className="space-y-3">
       <p className="text-sm text-charcoal-subtle">
-        Enhance your experience with optional add-ons.
+        {t("addonsStep.enhance")}
       </p>
 
       <div className="grid gap-2">
@@ -71,7 +73,7 @@ export default function AddonsStep({
                   </span>
                   {addon.isRequired && (
                     <span className="text-[10px] uppercase tracking-wider text-sage-dark bg-sage/10 px-1.5 py-0.5 rounded-full font-medium">
-                      Required
+                      {t("addonsStep.required")}
                     </span>
                   )}
                 </div>

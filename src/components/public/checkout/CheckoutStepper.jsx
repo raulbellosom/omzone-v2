@@ -1,19 +1,23 @@
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
-const STEP_LABELS = ["Selection", "Add-ons", "Your Info", "Review"];
+const STEP_KEYS = ["checkout.step1", "checkout.step2", "checkout.step3", "checkout.step4"];
 
 export default function CheckoutStepper({ currentStep, stepValidation, goToStep }) {
+  const { t } = useLanguage();
+
   return (
     <nav aria-label="Checkout steps" className="flex items-center gap-1 sm:gap-2 w-full">
-      {STEP_LABELS.map((label, i) => {
+      {STEP_KEYS.map((key, i) => {
+        const label = t(key);
         const isDone = i < currentStep;
         const isCurrent = i === currentStep;
         const canNavigate = i < currentStep || (i <= currentStep && stepValidation[currentStep]);
 
         return (
           <button
-            key={label}
+            key={key}
             type="button"
             disabled={!canNavigate}
             onClick={() => canNavigate && goToStep(i)}
@@ -47,7 +51,7 @@ export default function CheckoutStepper({ currentStep, stepValidation, goToStep 
             </span>
 
             {/* Connector line */}
-            {i < STEP_LABELS.length - 1 && (
+            {i < STEP_KEYS.length - 1 && (
               <span
                 className={cn(
                   "flex-1 h-px mx-1",

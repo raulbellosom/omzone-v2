@@ -1,0 +1,192 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "experiences": "Experiencias",
+    "about": "Nosotros",
+    "contact": "Contacto",
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar sesión",
+    "adminPanel": "Panel Admin",
+    "myPortal": "Mi Portal"
+  },
+  "footer": {
+    "tagline": "Experiencias de bienestar premium diseñadas para nutrir tu cuerpo, mente y espíritu.",
+    "experiences": "Experiencias",
+    "allExperiences": "Todas las Experiencias",
+    "sessions": "Sesiones",
+    "immersions": "Inmersiones",
+    "retreats": "Retiros",
+    "company": "Empresa",
+    "about": "Nosotros",
+    "contact": "Contacto",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "connect": "Conecta",
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "emailUs": "Escríbenos",
+    "copyright": "OMZONE. Todos los derechos reservados.",
+    "crafted": "Creado con intención"
+  },
+  "home": {
+    "headline": "Descubre experiencias de bienestar transformadoras diseñadas para tu mente, cuerpo y alma.",
+    "placeholder": "Página de inicio — próximamente"
+  },
+  "experienceList": {
+    "title": "Experiencias",
+    "subtitle": "Descubre experiencias de bienestar transformadoras diseñadas para tu mente, cuerpo y alma.",
+    "errorLoading": "No pudimos cargar las experiencias en este momento.",
+    "tryAgain": "Reintentar",
+    "emptyTitle": "No hay experiencias disponibles por el momento.",
+    "emptySubtitle": "Vuelve pronto — siempre hay nuevas experiencias en camino.",
+    "noFilterResults": "Ninguna experiencia coincide con los filtros seleccionados.",
+    "clearFilters": "Limpiar filtros"
+  },
+  "experienceDetail": {
+    "allExperiences": "Todas las Experiencias",
+    "bookNow": "Reservar Ahora",
+    "requestInformation": "Solicitar Información",
+    "checkAvailability": "Consultar Disponibilidad",
+    "viewPasses": "Ver Pases",
+    "requestBooking": "Solicitar Reserva",
+    "pricing": "Precios",
+    "agenda": "Agenda",
+    "addons": "Complementos",
+    "from": "Desde",
+    "perPerson": "por persona",
+    "selectDate": "Selecciona una fecha",
+    "spotsLeft": "lugares disponibles",
+    "soldOut": "Agotado",
+    "includes": "Incluye",
+    "duration": "Duración",
+    "groupSize": "Tamaño de grupo",
+    "people": "personas",
+    "somethingWrong": "Algo salió mal. Por favor inténtalo de nuevo.",
+    "inquireForPricing": "Consultar precio"
+  },
+  "experienceTypes": {
+    "session": "Sesión",
+    "immersion": "Inmersión",
+    "retreat": "Retiro",
+    "stay": "Estancia",
+    "private": "Privada",
+    "package": "Paquete"
+  },
+  "filters": {
+    "allTypes": "Todos los Tipos",
+    "tags": "Etiquetas",
+    "clear": "Limpiar"
+  },
+  "price": {
+    "from": "Desde",
+    "inquire": "Consultar precio",
+    "free": "Gratis"
+  },
+  "about": {
+    "seoTitle": "Sobre OMZONE — Bienestar en Puerto Vallarta",
+    "seoDescription": "Experiencias de bienestar premium en Puerto Vallarta y Bahía de Banderas. Nuestra historia, filosofía y compromiso con la transformación.",
+    "title": "Sobre OMZONE",
+    "intro": "Curamos experiencias de bienestar transformadoras — sesiones, inmersiones, retiros y estancias — diseñadas para nutrir tu cuerpo, mente y espíritu.",
+    "placeholder": "Contenido completo próximamente.",
+    "exploreLink": "Explora nuestras experiencias →"
+  },
+  "contact": {
+    "seoTitle": "Contacto — OMZONE",
+    "seoDescription": "Ponte en contacto con OMZONE en Puerto Vallarta. Nos encantaría saber de ti sobre nuestras experiencias de bienestar.",
+    "title": "Contacto",
+    "intro": "Nos encantaría saber de ti. Escríbenos y nos pondremos en contacto lo antes posible.",
+    "email": "hello@omzone.com",
+    "locationPlaceholder": "Ubicación próximamente",
+    "formPlaceholder": "Formulario de contacto completo próximamente."
+  },
+  "privacy": {
+    "seoTitle": "Política de Privacidad — OMZONE",
+    "seoDescription": "Conoce cómo OMZONE recopila, usa y protege tu información personal.",
+    "title": "Política de Privacidad",
+    "intro": "Tu privacidad nos importa.",
+    "body": "Esta política de privacidad será actualizada con todos los detalles sobre cómo OMZONE recopila, usa y protege tu información personal.",
+    "placeholder": "Política completa próximamente."
+  },
+  "terms": {
+    "seoTitle": "Términos de Servicio — OMZONE",
+    "seoDescription": "Revisa los términos y condiciones para usar la plataforma OMZONE.",
+    "title": "Términos de Servicio",
+    "intro": "Por favor revisa nuestros términos antes de usar la plataforma.",
+    "body": "Estos términos de servicio serán actualizados con todos los detalles sobre las condiciones de uso de la plataforma OMZONE.",
+    "placeholder": "Términos completos próximamente."
+  },
+  "notFound": {
+    "seoTitle": "Página no encontrada — OMZONE",
+    "title": "Página no encontrada",
+    "description": "La página que buscas no existe o ha sido movida. Vamos a llevarte de vuelta.",
+    "backHome": "Volver al Inicio"
+  },
+  "forbidden": {
+    "seoTitle": "Acceso denegado — OMZONE",
+    "title": "Acceso denegado",
+    "description": "No tienes permiso para acceder a esta sección. Si crees que es un error, por favor contacta a soporte.",
+    "backHome": "Volver al Inicio"
+  },
+  "bookingRequest": {
+    "successTitle": "Solicitud Enviada",
+    "successMessage": "¡Gracias por tu interés! Revisaremos tu solicitud y te contactaremos pronto.",
+    "formTitle": "Solicitar Información",
+    "formSubtitle": "Llena el formulario y te contactaremos con detalles y precios.",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "Tu nombre completo",
+    "nameRequired": "El nombre es obligatorio",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "tu@email.com",
+    "emailRequired": "El correo electrónico es obligatorio",
+    "emailInvalid": "Dirección de correo inválida",
+    "phoneLabel": "Teléfono",
+    "participantsLabel": "Participantes",
+    "participantsMin": "Mínimo 1 participante",
+    "preferredDateLabel": "Fecha preferida",
+    "messageLabel": "Mensaje",
+    "messagePlaceholder": "Cuéntanos sobre tus requerimientos...",
+    "sending": "Enviando...",
+    "sendRequest": "Enviar Solicitud",
+    "error": "Algo salió mal. Por favor inténtalo de nuevo."
+  },
+  "addonsSection": {
+    "title": "Complementos",
+    "subtitle": "Mejora tu experiencia con estos extras opcionales.",
+    "typeService": "Servicio",
+    "typeProduct": "Producto",
+    "typeTransport": "Transporte",
+    "typeFood": "Alimentos y Bebidas",
+    "typeUpgrade": "Upgrade"
+  },
+  "agendaSection": {
+    "title": "Fechas Disponibles",
+    "subtitle": "Selecciona tu fecha preferida para continuar con tu reserva.",
+    "full": "Lleno",
+    "spot": "lugar",
+    "spots": "lugares"
+  },
+  "pricingSection": {
+    "title": "Precios",
+    "subtitle": "Elige la opción que mejor se adapte a ti.",
+    "personsRange": "{min}–{max} personas",
+    "personsMin": "Mín. {min} personas",
+    "personsMax": "Máx. {max} personas"
+  },
+  "experienceCTA": {
+    "readyTo": "¿Listo para vivir {name}?",
+    "bookNow": "Reservar Ahora",
+    "bookNowSub": "Asegura tu lugar hoy",
+    "requestInfo": "Solicitar Información",
+    "requestInfoSub": "Te responderemos pronto",
+    "checkAvailability": "Consultar Disponibilidad",
+    "checkAvailabilitySub": "Habla con nuestro equipo",
+    "viewPasses": "Ver Pases Disponibles",
+    "viewPassesSub": "Usa tu pase existente"
+  },
+  "publication": {
+    "home": "Inicio",
+    "relatedExperience": "Experiencia Relacionada",
+    "exploreExperience": "Explorar Experiencia"
+  }
+}

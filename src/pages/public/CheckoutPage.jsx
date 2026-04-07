@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useCheckout } from "@/hooks/useCheckout";
+import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 import { Button } from "@/components/common/Button";
 
@@ -34,20 +35,21 @@ function CheckoutSkeleton() {
 // ─── Error / missing params ───────────────────────────────────────────────────
 
 function CheckoutError({ type }) {
+  const { t } = useLanguage();
   const messages = {
     missing_params: {
-      title: "No experience selected",
-      desc: "Please choose an experience first.",
+      title: t("checkout.noExperience"),
+      desc: t("checkout.noExperienceDesc"),
     },
     not_available: {
-      title: "Experience unavailable",
-      desc: "This experience is not available for direct purchase.",
+      title: t("checkout.unavailable"),
+      desc: t("checkout.unavailableDesc"),
     },
   };
 
   const msg = messages[type] || {
-    title: "Something went wrong",
-    desc: "Please try again.",
+    title: t("checkout.somethingWrong"),
+    desc: t("checkout.tryAgainDesc"),
   };
 
   return (
@@ -57,7 +59,7 @@ function CheckoutError({ type }) {
         <p className="text-charcoal-subtle text-sm">{msg.desc}</p>
         <Link to={ROUTES.EXPERIENCES}>
           <Button variant="outline" size="md">
-            Explore Experiences
+            {t("checkout.exploreExperiences")}
           </Button>
         </Link>
       </div>
@@ -68,6 +70,7 @@ function CheckoutError({ type }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function CheckoutPage() {
+  const { t } = useLanguage();
   const checkout = useCheckout();
 
   const {
@@ -166,10 +169,10 @@ export default function CheckoutPage() {
             className="inline-flex items-center gap-1.5 text-sm text-charcoal-subtle hover:text-charcoal transition-colors group mb-4"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-            Back
+            {t("checkout.back")}
           </Link>
           <h1 className="text-2xl md:text-3xl font-bold text-charcoal font-display">
-            Checkout
+            {t("checkout.title")}
           </h1>
         </div>
 
@@ -202,7 +205,7 @@ export default function CheckoutPage() {
                   className="gap-1.5"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  Back
+                  {t("checkout.back")}
                 </Button>
                 <Button
                   size="md"
@@ -210,7 +213,7 @@ export default function CheckoutPage() {
                   disabled={!stepValidation[currentStep]}
                   className="gap-1.5"
                 >
-                  Continue
+                  {t("checkout.next")}
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </div>
@@ -236,7 +239,7 @@ export default function CheckoutPage() {
           <div className="flex items-center justify-between max-w-lg mx-auto">
             <div>
               <p className="text-xs text-charcoal-subtle uppercase tracking-wider">
-                Total
+                {t("orderSummary.total")}
               </p>
               <p className="text-lg font-bold text-charcoal">
                 {new Intl.NumberFormat("en-US", {
@@ -257,12 +260,12 @@ export default function CheckoutPage() {
                 disabled={!stepValidation[currentStep]}
                 className="gap-1.5"
               >
-                Continue
+                {t("checkout.next")}
                 <ArrowRight className="w-4 h-4" />
               </Button>
             ) : (
               <Button size="md" disabled={submitting} onClick={submitCheckout}>
-                {submitting ? "Processing…" : "Pay Now"}
+                {submitting ? t("checkout.processing") : t("checkout.pay")}
               </Button>
             )}
           </div>

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/common/Card";
+import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 
 const STATUS_COLOR = {
@@ -45,26 +46,26 @@ function SkeletonRows() {
 
 // ─── Desktop table ───────────────────────────────────────────────────────────
 
-function OrderTable({ orders, loading, navigate }) {
+function OrderTable({ orders, loading, navigate, t }) {
   return (
     <div className="hidden md:block overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-sand-dark/40 text-left">
             <th className="px-4 py-2.5 font-medium text-charcoal-subtle">
-              Order
+              {t("admin.recentOrders.order")}
             </th>
             <th className="px-4 py-2.5 font-medium text-charcoal-subtle">
-              Customer
+              {t("admin.recentOrders.customer")}
             </th>
             <th className="px-4 py-2.5 font-medium text-charcoal-subtle text-right">
-              Total
+              {t("admin.recentOrders.total")}
             </th>
             <th className="px-4 py-2.5 font-medium text-charcoal-subtle">
-              Status
+              {t("admin.recentOrders.status")}
             </th>
             <th className="px-4 py-2.5 font-medium text-charcoal-subtle">
-              Date
+              {t("admin.recentOrders.date")}
             </th>
           </tr>
         </thead>
@@ -77,7 +78,7 @@ function OrderTable({ orders, loading, navigate }) {
                 colSpan={5}
                 className="px-4 py-8 text-center text-charcoal-muted"
               >
-                No orders yet
+                {t("admin.recentOrders.noOrders")}
               </td>
             </tr>
           ) : (
@@ -122,7 +123,7 @@ function OrderTable({ orders, loading, navigate }) {
 
 // ─── Mobile cards ────────────────────────────────────────────────────────────
 
-function OrderCards({ orders, loading, navigate }) {
+function OrderCards({ orders, loading, navigate, t }) {
   if (loading) {
     return (
       <div className="md:hidden space-y-3">
@@ -140,7 +141,7 @@ function OrderCards({ orders, loading, navigate }) {
     return (
       <div className="md:hidden">
         <Card className="p-6 text-center text-sm text-charcoal-muted">
-          No orders yet
+          {t("admin.recentOrders.noOrders")}
         </Card>
       </div>
     );
@@ -188,10 +189,11 @@ function OrderCards({ orders, loading, navigate }) {
 
 export default function RecentOrdersTable({ orders, loading }) {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   return (
     <>
-      <OrderTable orders={orders} loading={loading} navigate={navigate} />
-      <OrderCards orders={orders} loading={loading} navigate={navigate} />
+      <OrderTable orders={orders} loading={loading} navigate={navigate} t={t} />
+      <OrderCards orders={orders} loading={loading} navigate={navigate} t={t} />
     </>
   );
 }

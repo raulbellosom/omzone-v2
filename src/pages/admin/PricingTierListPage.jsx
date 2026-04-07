@@ -10,6 +10,7 @@ import {
 import { useEditions } from "@/hooks/useEditions";
 import { useExperience } from "@/hooks/useExperiences";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
+import { useLanguage } from "@/hooks/useLanguage";
 import PricingTierTable from "@/components/admin/pricing/PricingTierTable";
 import PricingTierForm from "@/components/admin/pricing/PricingTierForm";
 import { Button } from "@/components/common/Button";
@@ -35,7 +36,10 @@ function TableSkeleton() {
             <tr key={i}>
               {[1, 2, 3, 4, 5, 6, 7].map((j) => (
                 <td key={j} className="px-4 py-3">
-                  <div className="h-4 rounded bg-warm-gray animate-pulse" style={{ width: `${40 + j * 7}%` }} />
+                  <div
+                    className="h-4 rounded bg-warm-gray animate-pulse"
+                    style={{ width: `${40 + j * 7}%` }}
+                  />
                 </td>
               ))}
             </tr>
@@ -65,19 +69,19 @@ function CardSkeleton() {
   );
 }
 
-function EmptyState({ onAdd }) {
+function EmptyState({ onAdd, t }) {
   return (
     <Card className="p-10 text-center">
       <DollarSign className="h-10 w-10 text-charcoal-muted mx-auto mb-3" />
       <h2 className="text-lg font-semibold text-charcoal mb-1">
-        Sin pricing tiers
+        {t("admin.pricingTiers.emptyTitle")}
       </h2>
       <p className="text-sm text-charcoal-muted mb-4">
-        Crea el primer tier de precio para esta experiencia.
+        {t("admin.pricingTiers.emptyMessage")}
       </p>
       <Button size="sm" onClick={onAdd}>
         <Plus className="h-4 w-4" />
-        Crear primer tier
+        {t("admin.pricingTiers.emptyButton")}
       </Button>
     </Card>
   );
@@ -88,6 +92,7 @@ export default function PricingTierListPage() {
   const { data: experience, loading: expLoading } = useExperience(id);
   const { data: tiers, loading, error, refetch } = usePricingTiers(id);
   const { data: editions } = useEditions(id);
+  const { t } = useLanguage();
 
   const [showForm, setShowForm] = useState(false);
   const [editingTier, setEditingTier] = useState(null);
@@ -162,7 +167,9 @@ export default function PricingTierListPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">Pricing Tiers</h1>
+          <h1 className="text-xl font-semibold text-charcoal">
+            {t("admin.pricingTiers.title")}
+          </h1>
           {experience && (
             <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
               {experience.publicName}
@@ -172,7 +179,9 @@ export default function PricingTierListPage() {
         {!showForm && tiers.length > 0 && (
           <Button size="sm" onClick={openCreate}>
             <Plus className="h-4 w-4" />
-            <span className="hidden sm:inline">Nuevo tier</span>
+            <span className="hidden sm:inline">
+              {t("admin.pricingTiers.newTier")}
+            </span>
           </Button>
         )}
       </div>
@@ -189,14 +198,20 @@ export default function PricingTierListPage() {
       {showForm && (
         <Card className="p-5 border-sage/30">
           <h2 className="text-base font-semibold text-charcoal mb-4">
-            {editingTier ? "Editar tier" : "Nuevo tier"}
+            {editingTier
+              ? t("admin.pricingTiers.editTitle")
+              : t("admin.pricingTiers.createTitle")}
           </h2>
           <PricingTierForm
             initialData={editingTier}
             editions={editions}
             onSubmit={handleSubmit}
             submitting={submitting}
-            submitLabel={editingTier ? "Guardar cambios" : "Crear tier"}
+            submitLabel={
+              editingTier
+                ? t("admin.pricingTiers.saveChanges")
+                : t("admin.pricingTiers.createButton")
+            }
             onCancel={closeForm}
           />
         </Card>
@@ -204,7 +219,7 @@ export default function PricingTierListPage() {
 
       {/* Empty */}
       {!showForm && !isLoading && !error && tiers.length === 0 && (
-        <EmptyState onAdd={openCreate} />
+        <EmptyState onAdd={openCreate} t={t} />
       )}
 
       {/* Loading skeleton */}

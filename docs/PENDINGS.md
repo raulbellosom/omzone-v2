@@ -1,82 +1,75 @@
 # OMZONE — Pendientes del Proyecto
 
-> Última actualización: 2025-07-24
-> Estado: Fases 0–10 completadas · TASK-035 completada (Fase 10 parcial)
+> Última actualización: 2025-07-25
+> Estado: Fases 0–15 completadas (excepto TASK-029 y TASK-050) · Fases A–E en planificación
 
 ---
 
-## 1. Tasks pendientes
+## 1. Tasks completadas (fases 0–15)
 
-### Fase 7 — Tickets y reservas (completada)
+Las fases 0–15 se consideran completadas salvo dos excepciones:
 
-Todas las tasks de esta fase han sido completadas (TASK-023 a TASK-025).
+| Task                | Título                                | Estado       | Nota                                   |
+| ------------------- | ------------------------------------- | ------------ | -------------------------------------- |
+| TASK-001 a TASK-028 | Fases 0–8 completas                   | ✅           | —                                      |
+| TASK-029            | Checkout adaptado para pases/paquetes | ⏭️ Saltada   | Requiere Stripe test keys configuradas |
+| TASK-030 a TASK-050 | Fases 9–15 completas                  | ✅           | —                                      |
+| TASK-050            | Deploy a producción                   | ⏳ Pendiente | Requiere finalizar fases A–E           |
 
-### Fase 8 — Pases y paquetes
+---
 
-| Task | Título | Estado |
-|---|---|---|
-| TASK-026 | CRUD pases consumibles (admin) | ✅ Completada |
-| TASK-027 | Function consume-pass | ✅ Completada |
-| TASK-028 | CRUD paquetes de experiencia (admin) | ✅ Completada |
-| TASK-029 | Checkout adaptado para pases/paquetes | ⏭️ Saltada — requiere Stripe keys configuradas. Se retomará cuando se configuren las API keys y webhook en Stripe Dashboard. Ver sección "Configuración Stripe". |
+## 2. Tasks nuevas — Fases A–E (post-fase 15)
 
-### Fase 9 — Portal de cliente
+Estas tareas abordan pendientes descubiertos tras la auditoría de completitud: páginas públicas placeholder, secciones admin sin implementar, ausencia de datos de demostración, y falta de QA integral.
 
-| Task | Título | Prioridad |
-|---|---|---|
-| TASK-030 | Portal layout + dashboard | ✅ Completada |
-| TASK-031 | Mis órdenes y detalle | ✅ Completada |
-| TASK-032 | Mis tickets + descarga | ✅ Completada |
-| TASK-033 | Mis pases y consumos | ✅ Completada |
-| TASK-034 | Perfil del cliente | ✅ Completada |
+### Fase A — Páginas públicas (landing, about, contact)
 
-### Fase 10 — CMS / publicaciones
+| Task     | Título                                             | Estado       |
+| -------- | -------------------------------------------------- | ------------ |
+| TASK-051 | Landing page completa (hero, secciones, CTA)       | 🔴 Pendiente |
+| TASK-052 | About page completa (misión, ubicación, filosofía) | 🔴 Pendiente |
+| TASK-053 | Contact page completa (formulario + collection)    | 🔴 Pendiente |
 
-| Task | Título | Prioridad |
-|---|---|---|
-| TASK-035 | CRUD publicaciones y secciones (admin) | ✅ Completada |
-| TASK-036 | Renderizado público de publicaciones | 🟢 Después de TASK-035 |
+### Fase B — Experiencias editorial redesign
 
-### Fase 11 — Media y storage
+| Task     | Título                                                                       | Estado       |
+| -------- | ---------------------------------------------------------------------------- | ------------ |
+| TASK-054 | Catálogo de experiencias: rediseño editorial vertical (sin precios visibles) | 🔴 Pendiente |
 
-| Task | Título | Prioridad |
-|---|---|---|
-| TASK-037 | Buckets, permisos, upload (admin) | 🟢 Independiente |
-| TASK-038 | Media picker / galería reutilizable | 🟢 Después de TASK-037 |
+### Fase C — Admin: secciones faltantes
 
-### Fase 12 — Venta asistida y operaciones
+| Task     | Título                                                     | Estado       |
+| -------- | ---------------------------------------------------------- | ------------ |
+| TASK-055 | Admin — Tickets: listado + detalle                         | 🔴 Pendiente |
+| TASK-056 | Admin — Clientes: listado + detalle (user_profiles + Auth) | 🔴 Pendiente |
+| TASK-057 | Admin — Media manager: explorador por bucket               | 🔴 Pendiente |
+| TASK-058 | Admin — Settings: templates + system info                  | 🔴 Pendiente |
 
-| Task | Título | Prioridad |
-|---|---|---|
-| TASK-039 | Venta asistida (orden manual desde admin) | 🟢 Independiente |
-| TASK-040 | Booking requests: solicitud → cotización → orden | 🟡 Enhancement |
-| TASK-041 | Dashboard admin: métricas de ventas/ocupación | 🟢 Independiente |
+### Fase D — Datos de demostración y QA
 
-### Sin fase asignada (previstas)
+| Task     | Título                                                              | Estado       |
+| -------- | ------------------------------------------------------------------- | ------------ |
+| TASK-059 | Seed: experiencias, ediciones, publicaciones, media de demostración | 🔴 Pendiente |
+| TASK-060 | QA integral: flujos completos, permisos, responsive, edge cases     | 🔴 Pendiente |
+| TASK-061 | Responsive audit: verificación y correcciones 375/768/1024/1280     | 🔴 Pendiente |
 
-| Task | Título | Prioridad |
-|---|---|---|
-| TASK-042 | Function send-confirmation (email post-compra) | 🟡 Enhancement |
-| TASK-043 | Function send-reminder (recordatorio evento) | 🟡 Enhancement |
-| TASK-044 | SEO: meta tags, OG, sitemap, structured data | 🟢 Pre-deploy |
-| TASK-045 | Performance: lazy loading, image optimization | 🟢 Pre-deploy |
-| TASK-046 | i18n: soporte bilingüe ES/EN | 🟢 Pre-deploy |
-| TASK-047 | Responsive audit completo | 🔴 Pre-deploy |
-| TASK-048 | QA: permisos y label × acciones | 🔴 Pre-deploy |
-| TASK-049 | QA: flujos transaccionales end-to-end | 🔴 Pre-deploy |
-| TASK-050 | Deploy a producción | 🔴 Task final |
+### Fase E — Limpieza y cierre
+
+| Task     | Título                                                              | Estado       |
+| -------- | ------------------------------------------------------------------- | ------------ |
+| TASK-062 | Limpieza: eliminar placeholders, rutas redundantes, actualizar docs | 🔴 Pendiente |
 
 ---
 
 ## 2. Configuración Stripe
 
-| Elemento | Estado |
-|---|---|
-| Test API keys (`sk_test_`, `pk_test_`) | ❌ No configurados |
-| Live API keys (`sk_live_`, `pk_live_`) | ❌ No configurados |
-| Webhook URL registrada en Stripe Dashboard | ❌ Pendiente — URL esperada: `https://aprod.racoondevs.com/v1/functions/stripe-webhook/executions` |
-| Webhook signing secret (`whsec_`) | ❌ Se genera al registrar el endpoint |
-| Event subscriptions | ❌ Configurar: `checkout.session.completed`, `checkout.session.expired`, `payment_intent.succeeded`, `payment_intent.payment_failed` |
+| Elemento                                   | Estado                                                                                                                               |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Test API keys (`sk_test_`, `pk_test_`)     | ❌ No configurados                                                                                                                   |
+| Live API keys (`sk_live_`, `pk_live_`)     | ❌ No configurados                                                                                                                   |
+| Webhook URL registrada en Stripe Dashboard | ❌ Pendiente — URL esperada: `https://aprod.racoondevs.com/v1/functions/stripe-webhook/executions`                                   |
+| Webhook signing secret (`whsec_`)          | ❌ Se genera al registrar el endpoint                                                                                                |
+| Event subscriptions                        | ❌ Configurar: `checkout.session.completed`, `checkout.session.expired`, `payment_intent.succeeded`, `payment_intent.payment_failed` |
 
 ---
 
@@ -86,39 +79,39 @@ Todas las tasks de esta fase han sido completadas (TASK-023 a TASK-025).
 
 Estas variables deben configurarse en el panel Appwrite → Settings → Global Variables para que las 3 functions las hereden:
 
-| Variable | Valor esperado |
-|---|---|
-| `APPWRITE_DATABASE_ID` | `omzone_db` |
-| `APPWRITE_COLLECTION_ORDERS` | `orders` |
-| `APPWRITE_COLLECTION_ORDER_ITEMS` | `order_items` |
-| `APPWRITE_COLLECTION_PAYMENTS` | `payments` |
-| `APPWRITE_COLLECTION_TICKETS` | `tickets` |
-| `APPWRITE_COLLECTION_EXPERIENCES` | `experiences` |
-| `APPWRITE_COLLECTION_PRICING_TIERS` | `pricing_tiers` |
-| `APPWRITE_COLLECTION_ADDONS` | `addons` |
-| `APPWRITE_COLLECTION_ADDON_ASSIGNMENTS` | `addon_assignments` |
-| `APPWRITE_COLLECTION_SLOTS` | `slots` |
-| `APPWRITE_COLLECTION_USER_PROFILES` | `user_profiles` |
-| `STRIPE_SECRET_KEY` | `sk_test_...` o `sk_live_...` |
-| `STRIPE_WEBHOOK_SECRET` | `whsec_...` (tras registrar endpoint) |
-| `FRONTEND_URL` | URL del frontend desplegado |
+| Variable                                | Valor esperado                        |
+| --------------------------------------- | ------------------------------------- |
+| `APPWRITE_DATABASE_ID`                  | `omzone_db`                           |
+| `APPWRITE_COLLECTION_ORDERS`            | `orders`                              |
+| `APPWRITE_COLLECTION_ORDER_ITEMS`       | `order_items`                         |
+| `APPWRITE_COLLECTION_PAYMENTS`          | `payments`                            |
+| `APPWRITE_COLLECTION_TICKETS`           | `tickets`                             |
+| `APPWRITE_COLLECTION_EXPERIENCES`       | `experiences`                         |
+| `APPWRITE_COLLECTION_PRICING_TIERS`     | `pricing_tiers`                       |
+| `APPWRITE_COLLECTION_ADDONS`            | `addons`                              |
+| `APPWRITE_COLLECTION_ADDON_ASSIGNMENTS` | `addon_assignments`                   |
+| `APPWRITE_COLLECTION_SLOTS`             | `slots`                               |
+| `APPWRITE_COLLECTION_USER_PROFILES`     | `user_profiles`                       |
+| `STRIPE_SECRET_KEY`                     | `sk_test_...` o `sk_live_...`         |
+| `STRIPE_WEBHOOK_SECRET`                 | `whsec_...` (tras registrar endpoint) |
+| `FRONTEND_URL`                          | URL del frontend desplegado           |
 
 ### Frontend (.env)
 
 Las variables `VITE_APPWRITE_*` ya están configuradas localmente. Pendiente para deploy:
 
-| Variable | Estado |
-|---|---|
+| Variable                      | Estado            |
+| ----------------------------- | ----------------- |
 | `VITE_STRIPE_PUBLISHABLE_KEY` | ❌ No configurada |
 
 ---
 
 ## 4. Schema — gaps conocidos
 
-| Issue | Ubicación | Impacto |
-|---|---|---|
-| `receiptUrl` falta en `payments` | appwrite.json | 🟡 Bajo — data model lo menciona, schema no lo tiene. Agregar cuando se implemente la vista de recibo. |
-| Buckets `publication_media`, `user_avatars`, `documents` | appwrite.json | 🟡 Medio — referenciados en data model pero ausentes. Crear en TASK-037. |
+| Issue                                                    | Ubicación     | Impacto                                                                                                |
+| -------------------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------ |
+| `receiptUrl` falta en `payments`                         | appwrite.json | 🟡 Bajo — data model lo menciona, schema no lo tiene. Agregar cuando se implemente la vista de recibo. |
+| Buckets `publication_media`, `user_avatars`, `documents` | appwrite.json | 🟡 Medio — referenciados en data model pero ausentes. Crear en TASK-037.                               |
 
 ---
 
@@ -126,28 +119,27 @@ Las variables `VITE_APPWRITE_*` ya están configuradas localmente. Pendiente par
 
 ### Admin (rutas con `AdminPlaceholder`)
 
-| Ruta | Placeholder | Task que lo reemplaza |
-|---|---|---|
-| `/admin/editions` | "Ediciones" | TASK-012 (parcial, revisar) |
-| `/admin/pricing` | "Precios" | TASK-012 |
-| `/admin/packages` | ~~"Paquetes"~~ | ✅ TASK-028 (PackageListPage, Create, Edit) |
-| `/admin/passes` | ~~"Pases"~~ | ✅ TASK-026 (PassListPage, Create, Edit) |
-| `/admin/orders` | ~~"Órdenes"~~ | ✅ TASK-022 (OrderListPage, Detail) |
-| `/admin/tickets` | "Tickets" | TASK-025+ (check-in wired, list still placeholder) |
-| `/admin/check-in` | — | ✅ TASK-025 (CheckInPage implemented) |
-| `/admin/clients` | "Clientes" | Sin task asignada |
-| `/admin/publications` | "Publicaciones" | TASK-035 |
-| `/admin/media` | "Media" | TASK-037/038 |
-| `/admin/settings` | "Configuración" | Sin task asignada |
+| Ruta              | Placeholder     | Task que lo reemplaza                         |
+| ----------------- | --------------- | --------------------------------------------- |
+| `/admin/editions` | "Ediciones"     | Ruta redundante — evaluar eliminar (TASK-062) |
+| `/admin/pricing`  | "Precios"       | Ruta redundante — evaluar eliminar (TASK-062) |
+| `/admin/tickets`  | "Tickets"       | **TASK-055**                                  |
+| `/admin/clients`  | "Clientes"      | **TASK-056**                                  |
+| `/admin/media`    | "Media"         | **TASK-057**                                  |
+| `/admin/settings` | "Configuración" | **TASK-058**                                  |
 
-### Público (contenido placeholder)
+> Las rutas de paquetes, pases, órdenes, check-in y publicaciones ya fueron implementadas.
 
-| Página | Texto pendiente |
-|---|---|
-| About | "Full content coming soon." |
-| Contact | "Location coming soon" / "Full contact form coming soon." |
-| Privacy | "Full policy coming soon." |
-| Terms | "Full terms coming soon." |
+### Público (páginas placeholder)
+
+| Página                         | Task que lo reemplaza               |
+| ------------------------------ | ----------------------------------- |
+| Landing (HomePage)             | **TASK-051**                        |
+| About                          | **TASK-052**                        |
+| Contact                        | **TASK-053**                        |
+| Experiences listing (rediseño) | **TASK-054**                        |
+| Privacy                        | Pendiente (fuera de alcance actual) |
+| Terms                          | Pendiente (fuera de alcance actual) |
 
 ---
 

@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import PublicationForm from "@/components/admin/publications/PublicationForm";
 import { createPublication } from "@/hooks/usePublications";
 import { ROUTES } from "@/constants/routes";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function PublicationCreatePage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
 
@@ -15,9 +17,7 @@ export default function PublicationCreatePage() {
     try {
       const doc = await createPublication(payload);
       // Redirect to sections page so user can start adding content
-      navigate(
-        ROUTES.ADMIN_PUBLICATION_SECTIONS.replace(":id", doc.$id),
-      );
+      navigate(ROUTES.ADMIN_PUBLICATION_SECTIONS.replace(":id", doc.$id));
     } catch (err) {
       setServerError(err.message);
     } finally {
@@ -29,10 +29,10 @@ export default function PublicationCreatePage() {
     <div className="space-y-5 max-w-4xl">
       <div>
         <h1 className="text-xl font-semibold text-charcoal">
-          Nueva publicación
+          {t("admin.publications.createTitle")}
         </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5">
-          Completa los datos para crear una nueva publicación editorial.
+          {t("admin.publications.createSubtitle")}
         </p>
       </div>
 
@@ -45,7 +45,7 @@ export default function PublicationCreatePage() {
       <PublicationForm
         onSubmit={handleSubmit}
         submitting={submitting}
-        submitLabel="Crear publicación"
+        submitLabel={t("admin.publications.createButton")}
       />
     </div>
   );

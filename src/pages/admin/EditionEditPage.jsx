@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import EditionForm from "@/components/admin/experiences/EditionForm";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
 import { useExperience } from "@/hooks/useExperiences";
+import { useLanguage } from "@/hooks/useLanguage";
 import { useEdition, updateEdition } from "@/hooks/useEditions";
 import { Card } from "@/components/common/Card";
 
@@ -27,6 +28,7 @@ export default function EditionEditPage() {
   const navigate = useNavigate();
   const { data: experience } = useExperience(id);
   const { data: edition, loading, error: loadError } = useEdition(editionId);
+  const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
 
@@ -50,7 +52,7 @@ export default function EditionEditPage() {
       <div className="max-w-4xl">
         <Card className="p-6 border-red-200 bg-red-50">
           <p className="text-sm text-red-700">
-            {loadError ?? "No se encontró la edición."}
+            {loadError ?? t("admin.editions.notFound")}
           </p>
         </Card>
       </div>
@@ -60,7 +62,9 @@ export default function EditionEditPage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Editar edición</h1>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.editions.editTitle")}
+        </h1>
         {experience && (
           <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
             {experience.publicName}
@@ -80,7 +84,7 @@ export default function EditionEditPage() {
         initialData={edition}
         onSubmit={handleSubmit}
         submitting={submitting}
-        submitLabel="Guardar cambios"
+        submitLabel={t("admin.editions.saveChanges")}
       />
     </div>
   );

@@ -6,19 +6,20 @@ import GalleryManager from "@/components/admin/media/GalleryManager";
 import env from "@/config/env";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const SECTION_TYPES = [
-  { value: "hero", label: "Hero" },
-  { value: "text", label: "Texto" },
-  { value: "gallery", label: "Galería" },
-  { value: "highlights", label: "Highlights" },
-  { value: "faq", label: "FAQ" },
-  { value: "itinerary", label: "Itinerario" },
-  { value: "testimonials", label: "Testimonios" },
-  { value: "inclusions", label: "Inclusiones" },
-  { value: "restrictions", label: "Restricciones" },
-  { value: "cta", label: "Call to Action" },
-  { value: "video", label: "Video" },
+  { value: "hero", i18nKey: "admin.sectionTypes.hero" },
+  { value: "text", i18nKey: "admin.sectionTypes.text" },
+  { value: "gallery", i18nKey: "admin.sectionTypes.gallery" },
+  { value: "highlights", i18nKey: "admin.sectionTypes.highlights" },
+  { value: "faq", i18nKey: "admin.sectionTypes.faq" },
+  { value: "itinerary", i18nKey: "admin.sectionTypes.itinerary" },
+  { value: "testimonials", i18nKey: "admin.sectionTypes.testimonials" },
+  { value: "inclusions", i18nKey: "admin.sectionTypes.inclusions" },
+  { value: "restrictions", i18nKey: "admin.sectionTypes.restrictions" },
+  { value: "cta", i18nKey: "admin.sectionTypes.cta" },
+  { value: "video", i18nKey: "admin.sectionTypes.video" },
 ];
 
 const EMPTY = {
@@ -80,6 +81,7 @@ export default function SectionForm({
   submitting,
 }) {
   const isEditing = !!initialData?.$id;
+  const { t } = useLanguage();
 
   // mediaIds is stored as a JSON string in Appwrite; we keep two representations:
   //   form.mediaIds     — string[] used by GalleryManager
@@ -133,21 +135,22 @@ export default function SectionForm({
 
   function validate() {
     const e = {};
-    if (!form.sectionType) e.sectionType = "El tipo es requerido";
+    if (!form.sectionType) e.sectionType = t("admin.sectionForm.typeRequired");
     // Validate raw JSON textarea only for non-gallery sections
     if (!isGallery && form.mediaIdsRaw.trim()) {
       try {
         const parsed = JSON.parse(form.mediaIdsRaw);
-        if (!Array.isArray(parsed)) e.mediaIds = "Debe ser un array JSON";
+        if (!Array.isArray(parsed))
+          e.mediaIds = t("admin.sectionForm.mustBeArray");
       } catch {
-        e.mediaIds = "JSON inválido";
+        e.mediaIds = t("admin.sectionForm.invalidJSON");
       }
     }
     if (form.metadata.trim()) {
       try {
         JSON.parse(form.metadata);
       } catch {
-        e.metadata = "JSON inválido";
+        e.metadata = t("admin.sectionForm.invalidJSON");
       }
     }
     return e;
@@ -190,15 +193,24 @@ export default function SectionForm({
     <form onSubmit={handleSubmit} className="space-y-4">
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          {isEditing ? "Editar sección" : "Nueva sección"}
+          {isEditing
+            ? t("admin.sectionForm.editTitle")
+            : t("admin.sectionForm.newTitle")}
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Tipo de sección" required error={errors.sectionType}>
+          <Field
+            label={t("admin.sectionForm.sectionType")}
+            required
+            error={errors.sectionType}
+          >
             <AdminSelect
               value={form.sectionType}
               onChange={(v) => set("sectionType", v)}
-              options={SECTION_TYPES}
+              options={SECTION_TYPES.map((o) => ({
+                ...o,
+                label: t(o.i18nKey),
+              }))}
               disabled={isDisabled || isEditing}
               error={!!errors.sectionType}
             />
@@ -207,27 +219,27 @@ export default function SectionForm({
             <Toggle
               checked={form.isVisible}
               onChange={(v) => set("isVisible", v)}
-              label="Visible"
+              label={t("admin.sectionForm.visible")}
               disabled={isDisabled}
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Título (EN)">
+          <Field label={t("admin.sectionForm.titleEn")}>
             <Input
               value={form.title}
               onChange={(e) => set("title", e.target.value)}
-              placeholder="Section title"
+              placeholder={t("admin.sectionForm.placeholderTitleEn")}
               disabled={isDisabled}
               maxLength={255}
             />
           </Field>
-          <Field label="Título (ES)">
+          <Field label={t("admin.sectionForm.titleEs")}>
             <Input
               value={form.titleEs}
               onChange={(e) => set("titleEs", e.target.value)}
-              placeholder="Título de la sección"
+              placeholder={t("admin.sectionForm.placeholderTitleEs")}
               disabled={isDisabled}
               maxLength={255}
             />
@@ -235,11 +247,11 @@ export default function SectionForm({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Contenido (EN)">
+          <Field label={t("admin.sectionForm.contentEn")}>
             <textarea
               value={form.content}
               onChange={(e) => set("content", e.target.value)}
-              placeholder="Section content..."
+              placeholder={t("admin.sectionForm.placeholderContentEn")}
               disabled={isDisabled}
               rows={6}
               className={cn(
@@ -249,11 +261,11 @@ export default function SectionForm({
               )}
             />
           </Field>
-          <Field label="Contenido (ES)">
+          <Field label={t("admin.sectionForm.contentEs")}>
             <textarea
               value={form.contentEs}
               onChange={(e) => set("contentEs", e.target.value)}
-              placeholder="Contenido de la sección..."
+              placeholder={t("admin.sectionForm.placeholderContentEs")}
               disabled={isDisabled}
               rows={6}
               className={cn(
@@ -267,11 +279,11 @@ export default function SectionForm({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field
-            label="Media"
+            label={t("admin.sectionForm.media")}
             hint={
               isGallery
-                ? "Gestiona las imágenes de la galería"
-                : 'Array JSON, ej: ["file1","file2"]'
+                ? t("admin.sectionForm.galleryHint")
+                : t("admin.sectionForm.mediaArrayHint")
             }
             error={errors.mediaIds}
           >
@@ -300,8 +312,8 @@ export default function SectionForm({
             )}
           </Field>
           <Field
-            label="Metadata"
-            hint="Objeto JSON con datos adicionales"
+            label={t("admin.sectionForm.metadata")}
+            hint={t("admin.sectionForm.metadataHint")}
             error={errors.metadata}
           >
             <textarea
@@ -326,12 +338,12 @@ export default function SectionForm({
           {submitting ? (
             <span className="flex items-center gap-2">
               <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-              Guardando...
+              {t("admin.common.saving")}
             </span>
           ) : isEditing ? (
-            "Guardar cambios"
+            t("admin.sectionForm.saveChanges")
           ) : (
-            "Agregar sección"
+            t("admin.sectionForm.addSection")
           )}
         </Button>
         <Button
@@ -341,7 +353,7 @@ export default function SectionForm({
           onClick={onCancel}
           disabled={isDisabled}
         >
-          Cancelar
+          {t("admin.common.cancel")}
         </Button>
       </div>
     </form>

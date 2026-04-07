@@ -3,17 +3,18 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { Plus, Pencil, Calendar, Users } from "lucide-react";
 import { useEditions } from "@/hooks/useEditions";
 import { useExperience } from "@/hooks/useExperiences";
+import { useLanguage } from "@/hooks/useLanguage";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
 import { Button } from "@/components/common/Button";
 import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
 
 const STATUS_MAP = {
-  draft: { label: "Borrador", variant: "warm" },
-  open: { label: "Abierta", variant: "success" },
-  closed: { label: "Cerrada", variant: "warning" },
-  completed: { label: "Completada", variant: "sage" },
-  cancelled: { label: "Cancelada", variant: "danger" },
+  draft: { i18nKey: "admin.statuses.draft", variant: "warm" },
+  open: { i18nKey: "admin.statuses.open", variant: "success" },
+  closed: { i18nKey: "admin.statuses.closed", variant: "warning" },
+  completed: { i18nKey: "admin.statuses.completed", variant: "sage" },
+  cancelled: { i18nKey: "admin.statuses.cancelled", variant: "danger" },
 };
 
 function formatDate(iso) {
@@ -31,11 +32,11 @@ function TableSkeleton() {
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
-            <th className="px-4 py-3 font-medium">Nombre</th>
-            <th className="px-4 py-3 font-medium">Fechas</th>
-            <th className="px-4 py-3 font-medium text-center">Capacidad</th>
-            <th className="px-4 py-3 font-medium">Estado</th>
-            <th className="px-4 py-3 font-medium text-right">Acciones</th>
+            <th className="px-4 py-3 font-medium">Name</th>
+            <th className="px-4 py-3 font-medium">Dates</th>
+            <th className="px-4 py-3 font-medium text-center">Capacity</th>
+            <th className="px-4 py-3 font-medium">Status</th>
+            <th className="px-4 py-3 font-medium text-right">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-sand-dark">
@@ -43,7 +44,10 @@ function TableSkeleton() {
             <tr key={i}>
               {[1, 2, 3, 4, 5].map((j) => (
                 <td key={j} className="px-4 py-3">
-                  <div className="h-4 rounded bg-warm-gray animate-pulse" style={{ width: `${50 + j * 9}%` }} />
+                  <div
+                    className="h-4 rounded bg-warm-gray animate-pulse"
+                    style={{ width: `${50 + j * 9}%` }}
+                  />
                 </td>
               ))}
             </tr>
@@ -73,20 +77,20 @@ function CardSkeleton() {
   );
 }
 
-function EmptyState({ experienceId }) {
+function EmptyState({ experienceId, t }) {
   return (
     <Card className="p-10 text-center">
       <Calendar className="h-10 w-10 text-charcoal-muted mx-auto mb-3" />
       <h2 className="text-lg font-semibold text-charcoal mb-1">
-        Sin ediciones
+        {t("admin.editions.emptyTitle")}
       </h2>
       <p className="text-sm text-charcoal-muted mb-4">
-        Crea la primera edición para esta experiencia.
+        {t("admin.editions.emptyMessage")}
       </p>
       <Link to={`/admin/experiences/${experienceId}/editions/new`}>
         <Button size="sm">
           <Plus className="h-4 w-4" />
-          Crear primera edición
+          {t("admin.editions.emptyButton")}
         </Button>
       </Link>
     </Card>
@@ -98,6 +102,7 @@ export default function EditionListPage() {
   const navigate = useNavigate();
   const { data: experience, loading: expLoading } = useExperience(id);
   const { data: editions, loading, error } = useEditions(id);
+  const { t } = useLanguage();
 
   const isLoading = loading || expLoading;
 
@@ -106,7 +111,9 @@ export default function EditionListPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">Ediciones</h1>
+          <h1 className="text-xl font-semibold text-charcoal">
+            {t("admin.editions.title")}
+          </h1>
           {experience && (
             <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
               {experience.publicName}
@@ -116,7 +123,9 @@ export default function EditionListPage() {
         <Link to={`/admin/experiences/${id}/editions/new`}>
           <Button size="sm">
             <Plus className="h-4 w-4" />
-            <span className="hidden sm:inline">Nueva edición</span>
+            <span className="hidden sm:inline">
+              {t("admin.editions.newEdition")}
+            </span>
           </Button>
         </Link>
       </div>
@@ -130,7 +139,9 @@ export default function EditionListPage() {
       )}
 
       {/* Empty */}
-      {!isLoading && !error && editions.length === 0 && <EmptyState experienceId={id} />}
+      {!isLoading && !error && editions.length === 0 && (
+        <EmptyState experienceId={id} t={t} />
+      )}
 
       {/* Loading skeleton */}
       {isLoading && (
@@ -171,7 +182,7 @@ export default function EditionListPage() {
                       {ed.capacity ?? "∞"}
                     </td>
                     <td className="px-4 py-3">
-                      <Badge variant={st.variant}>{st.label}</Badge>
+                      <Badge variant={st.variant}>{t(st.i18nKey)}</Badge>
                     </td>
                     <td className="px-4 py-3 text-right">
                       <button
@@ -181,7 +192,7 @@ export default function EditionListPage() {
                           )
                         }
                         className="p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
-                        aria-label="Editar edición"
+                        aria-label={t("admin.editions.editAriaLabel")}
                       >
                         <Pencil className="h-4 w-4" />
                       </button>
@@ -211,7 +222,7 @@ export default function EditionListPage() {
                   <span className="font-medium text-charcoal truncate">
                     {ed.name}
                   </span>
-                  <Badge variant={st.variant}>{st.label}</Badge>
+                  <Badge variant={st.variant}>{t(st.i18nKey)}</Badge>
                 </div>
                 <div className="flex items-center gap-4 text-xs text-charcoal-muted">
                   <span className="flex items-center gap-1">

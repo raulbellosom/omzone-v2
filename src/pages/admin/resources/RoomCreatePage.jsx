@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import RoomForm from "@/components/admin/resources/RoomForm";
 import { createRoom } from "@/hooks/useRooms";
 import { ROUTES } from "@/constants/routes";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function RoomCreatePage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
 
@@ -25,8 +27,12 @@ export default function RoomCreatePage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Nuevo cuarto</h1>
-        <p className="text-sm text-charcoal-subtle mt-0.5">Añade un espacio o cuarto dentro de una locación.</p>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.resources.roomCreateTitle")}
+        </h1>
+        <p className="text-sm text-charcoal-subtle mt-0.5">
+          {t("admin.resources.roomCreateSubtitle")}
+        </p>
       </div>
 
       {serverError && (
@@ -35,7 +41,11 @@ export default function RoomCreatePage() {
         </div>
       )}
 
-      <RoomForm onSubmit={handleSubmit} submitting={submitting} submitLabel="Crear cuarto" />
+      <RoomForm
+        onSubmit={handleSubmit}
+        submitting={submitting}
+        submitLabel={t("admin.resources.roomCreateButton")}
+      />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Card } from "@/components/common/Card";
 import { ROUTES } from "@/constants/routes";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Calendar, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -46,10 +47,14 @@ function SkeletonSlots() {
 }
 
 export default function UpcomingSlotsCard({ slots, loading }) {
+  const { t } = useLanguage();
+
   if (loading) {
     return (
       <Card className="p-5">
-        <h3 className="text-sm font-semibold text-charcoal mb-3">Upcoming Slots</h3>
+        <h3 className="text-sm font-semibold text-charcoal mb-3">
+          {t("admin.upcomingSlots.title")}
+        </h3>
         <SkeletonSlots />
       </Card>
     );
@@ -58,18 +63,20 @@ export default function UpcomingSlotsCard({ slots, loading }) {
   return (
     <Card className="p-5">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold text-charcoal">Upcoming Slots</h3>
+        <h3 className="text-sm font-semibold text-charcoal">
+          {t("admin.upcomingSlots.title")}
+        </h3>
         <Link
           to={ROUTES.ADMIN_SLOTS}
           className="text-xs text-sage hover:underline"
         >
-          View all
+          {t("admin.upcomingSlots.viewAll")}
         </Link>
       </div>
 
       {slots.length === 0 ? (
         <p className="text-sm text-charcoal-muted py-4 text-center">
-          No upcoming slots this week
+          {t("admin.upcomingSlots.noSlots")}
         </p>
       ) : (
         <ul className="divide-y divide-sand-dark/30">
@@ -91,7 +98,10 @@ export default function UpcomingSlotsCard({ slots, loading }) {
                 )}
               </div>
               <div className="mt-2">
-                <OccupancyBar booked={slot.bookedCount || 0} capacity={slot.capacity || 0} />
+                <OccupancyBar
+                  booked={slot.bookedCount || 0}
+                  capacity={slot.capacity || 0}
+                />
               </div>
             </li>
           ))}

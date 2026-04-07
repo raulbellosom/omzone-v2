@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
 import {
   useDashboardMetrics,
   useRecentOrders,
@@ -30,6 +31,7 @@ function formatCurrency(amount) {
 
 export default function AdminDashboardPage() {
   const { user, isAdmin, isRoot } = useAuth();
+  const { t } = useLanguage();
   const canSeeRevenue = isAdmin || isRoot;
   const { metrics, loading: metricsLoading } = useDashboardMetrics();
   const { orders, loading: ordersLoading } = useRecentOrders(10);
@@ -42,10 +44,10 @@ export default function AdminDashboardPage() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-semibold text-charcoal">
-          Welcome, {firstName}
+          {t("admin.dashboard.welcome").replace("{name}", firstName)}
         </h1>
         <p className="text-charcoal-muted mt-0.5">
-          Here's what's happening this month
+          {t("admin.dashboard.subtitle")}
         </p>
       </div>
 
@@ -55,31 +57,29 @@ export default function AdminDashboardPage() {
       {/* Metric cards */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         <MetricCard
-          title="Orders"
+          title={t("admin.dashboard.ordersTitle")}
           value={metricsLoading ? "…" : metrics.ordersMonth}
-          description="Paid this month"
+          description={t("admin.dashboard.ordersDesc")}
           icon={ShoppingCart}
         />
         {canSeeRevenue && (
           <MetricCard
-            title="Revenue"
-            value={
-              metricsLoading ? "…" : formatCurrency(metrics.revenueMonth)
-            }
-            description="This month"
+            title={t("admin.dashboard.revenueTitle")}
+            value={metricsLoading ? "…" : formatCurrency(metrics.revenueMonth)}
+            description={t("admin.dashboard.revenueDesc")}
             icon={DollarSign}
           />
         )}
         <MetricCard
-          title="Active Tickets"
+          title={t("admin.dashboard.activeTicketsTitle")}
           value={metricsLoading ? "…" : metrics.activeTickets}
-          description="Currently valid"
+          description={t("admin.dashboard.activeTicketsDesc")}
           icon={TicketCheck}
         />
         <MetricCard
-          title="Upcoming Slots"
+          title={t("admin.dashboard.upcomingSlotsTitle")}
           value={metricsLoading ? "…" : metrics.upcomingSlots}
-          description="Next 7 days"
+          description={t("admin.dashboard.upcomingSlotsDesc")}
           icon={CalendarDays}
         />
       </div>
@@ -92,11 +92,15 @@ export default function AdminDashboardPage() {
               <MessageSquare className="h-5 w-5 text-amber-600 shrink-0" />
               <div>
                 <p className="text-sm font-medium text-amber-900">
-                  {metrics.pendingRequests} pending booking{" "}
-                  {metrics.pendingRequests === 1 ? "request" : "requests"}
+                  {metrics.pendingRequests === 1
+                    ? t("admin.dashboard.pendingBookingOne")
+                    : t("admin.dashboard.pendingBookingOther").replace(
+                        "{count}",
+                        metrics.pendingRequests,
+                      )}
                 </p>
                 <p className="text-xs text-amber-700">
-                  Click to review and respond
+                  {t("admin.dashboard.clickToReview")}
                 </p>
               </div>
             </div>
@@ -111,13 +115,13 @@ export default function AdminDashboardPage() {
           <Card className="p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold text-charcoal">
-                Recent Orders
+                {t("admin.dashboard.recentOrders")}
               </h3>
               <Link
                 to={ROUTES.ADMIN_ORDERS}
                 className="text-xs text-sage hover:underline"
               >
-                View all
+                {t("admin.dashboard.viewAll")}
               </Link>
             </div>
             <RecentOrdersTable orders={orders} loading={ordersLoading} />

@@ -4,6 +4,7 @@ import LocationForm from "@/components/admin/resources/LocationForm";
 import { useLocation, updateLocation } from "@/hooks/useLocations";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/common/Card";
+import { useLanguage } from "@/hooks/useLanguage";
 
 function LoadingSkeleton() {
   return (
@@ -24,6 +25,7 @@ function LoadingSkeleton() {
 export default function LocationEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { data: location, loading, error: loadError } = useLocation(id);
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
@@ -47,7 +49,9 @@ export default function LocationEditPage() {
     return (
       <div className="max-w-4xl">
         <Card className="p-6 border-red-200 bg-red-50">
-          <p className="text-sm text-red-700">{loadError ?? "No se encontró la locación."}</p>
+          <p className="text-sm text-red-700">
+            {loadError ?? t("admin.resources.locationNotFound")}
+          </p>
         </Card>
       </div>
     );
@@ -56,8 +60,12 @@ export default function LocationEditPage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Editar locación</h1>
-        <p className="text-sm text-charcoal-subtle mt-0.5 truncate">{location.name}</p>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.resources.locationEditTitle")}
+        </h1>
+        <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
+          {location.name}
+        </p>
       </div>
 
       {serverError && (
@@ -66,7 +74,12 @@ export default function LocationEditPage() {
         </div>
       )}
 
-      <LocationForm initialData={location} onSubmit={handleSubmit} submitting={submitting} submitLabel="Guardar cambios" />
+      <LocationForm
+        initialData={location}
+        onSubmit={handleSubmit}
+        submitting={submitting}
+        submitLabel={t("admin.resources.locationSaveChanges")}
+      />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { MailCheck } from "lucide-react";
 import { account } from "@/lib/appwrite";
+import { useLanguage } from "@/hooks/useLanguage";
 import Button from "@/components/common/Button";
 import { ROUTES } from "@/constants/routes";
 
@@ -11,6 +12,7 @@ const VERIFY_URL = `${window.location.origin}/verify-email`;
 
 export default function VerifyEmailPendingPage() {
   const location = useLocation();
+  const { t } = useLanguage();
   const email = location.state?.email || "";
 
   const [cooldown, setCooldown] = useState(0);
@@ -29,25 +31,20 @@ export default function VerifyEmailPendingPage() {
     setResending(true);
     setFeedback("");
     try {
-      // Need a temporary session to resend — user provides email but we can't
-      // create a session without password. Instead we inform them to check spam.
-      // If we already have a session (came from login flow), try directly.
       await account.createVerification(VERIFY_URL);
-      setFeedback("Verification email sent! Check your inbox.");
+      setFeedback(t("auth.verifyPending.resendSuccess"));
       setCooldown(COOLDOWN_SECONDS);
     } catch {
-      setFeedback(
-        "Could not resend. Please try signing in again to trigger a new verification email.",
-      );
+      setFeedback(t("auth.verifyPending.resendError"));
     } finally {
       setResending(false);
     }
-  }, [cooldown, resending]);
+  }, [cooldown, resending, t]);
 
   return (
     <>
       <Helmet>
-        <title>Verify Your Email — OMZONE</title>
+        <title>{t("auth.verifyPending.pageTitle")}</title>
       </Helmet>
 
       <div className="mx-auto max-w-md animate-fade-in-up">
@@ -59,7 +56,7 @@ export default function VerifyEmailPendingPage() {
             </span>
           </Link>
           <p className="mt-2 text-sm text-white/60 tracking-wide">
-            Wellness Experiences
+            {t("auth.brandTagline")}
           </p>
         </div>
 
@@ -71,29 +68,29 @@ export default function VerifyEmailPendingPage() {
           </div>
 
           <h1 className="font-display text-2xl font-semibold text-charcoal mb-2">
-            Check your email
+            {t("auth.verifyPending.heading")}
           </h1>
 
           <p className="text-sm text-charcoal-muted leading-relaxed">
-            We&apos;ve sent a verification link
             {email ? (
               <>
-                {" "}
-                to <span className="font-medium text-charcoal">{email}</span>
+                {t("auth.verifyPending.messageTo")}{" "}
+                <span className="font-medium text-charcoal">{email}</span>
               </>
             ) : (
-              " to your email address"
+              t("auth.verifyPending.messageGeneric")
             )}
-            . Click the link to activate your account.
+            {t("auth.verifyPending.messageAction")}
           </p>
 
           {/* Spam notice */}
           <div className="mt-5 rounded-xl bg-cream-dark/60 px-4 py-3">
             <p className="text-xs text-charcoal-muted leading-relaxed">
-              Don&apos;t see it? Check your{" "}
-              <span className="font-medium text-charcoal">spam</span> or{" "}
-              <span className="font-medium text-charcoal">promotions</span>{" "}
-              folder.
+              {t("auth.verifyPending.spamNotice")}{" "}
+              <span className="font-medium text-charcoal">{t("auth.verifyPending.spam")}</span>{" "}
+              {t("auth.verifyPending.orPromotions")}{" "}
+              <span className="font-medium text-charcoal">{t("auth.verifyPending.promotions")}</span>{" "}
+              {t("auth.verifyPending.folder")}
             </p>
           </div>
 
@@ -107,10 +104,10 @@ export default function VerifyEmailPendingPage() {
               className="min-w-[160px]"
             >
               {resending
-                ? "Sending…"
+                ? t("auth.verifyPending.resending")
                 : cooldown > 0
-                  ? `Resend in ${cooldown}s`
-                  : "Resend verification email"}
+                  ? t("auth.verifyPending.resendCooldown").replace("{{seconds}}", cooldown)
+                  : t("auth.verifyPending.resendButton")}
             </Button>
           </div>
 
@@ -124,7 +121,7 @@ export default function VerifyEmailPendingPage() {
               to={ROUTES.LOGIN}
               className="text-sm text-sage-dark font-medium hover:text-sage transition-colors"
             >
-              Back to Sign In
+              {t("auth.verifyPending.backToSignIn")}
             </Link>
           </div>
         </div>

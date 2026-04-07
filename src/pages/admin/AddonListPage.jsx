@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, Pencil, Package, Search } from "lucide-react";
 import { useAddons, updateAddon } from "@/hooks/useAddons";
+import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "@/components/common/Button";
 import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
@@ -11,36 +13,36 @@ import { cn } from "@/lib/utils";
 import { ROUTES } from "@/constants/routes";
 
 const ADDON_TYPE_LABELS = {
-  service: "Servicio",
-  transport: "Transporte",
-  food: "Alimentos",
-  accommodation: "Hospedaje",
-  equipment: "Equipo",
-  other: "Otro",
+  service: "admin.addonTypes.service",
+  transport: "admin.addonTypes.transport",
+  food: "admin.addonTypes.food",
+  accommodation: "admin.addonTypes.lodging",
+  equipment: "admin.addonTypes.equipment",
+  other: "admin.addonTypes.other",
 };
 
 const PRICE_TYPE_LABELS = {
-  fixed: "Fijo",
-  "per-person": "Por persona",
-  "per-day": "Por día",
-  "per-unit": "Por unidad",
-  quote: "Cotización",
+  fixed: "admin.priceTypes.fixed",
+  "per-person": "admin.priceTypes.perPerson",
+  "per-day": "admin.priceTypes.perDay",
+  "per-unit": "admin.priceTypes.perUnit",
+  quote: "admin.priceTypes.quote",
 };
 
 const TYPE_FILTER_OPTIONS = [
-  { value: "", label: "Todos los tipos" },
-  { value: "service", label: "Servicio" },
-  { value: "transport", label: "Transporte" },
-  { value: "food", label: "Alimentos" },
-  { value: "accommodation", label: "Hospedaje" },
-  { value: "equipment", label: "Equipo" },
-  { value: "other", label: "Otro" },
+  { value: "", i18nKey: "admin.addonTypes.all" },
+  { value: "service", i18nKey: "admin.addonTypes.service" },
+  { value: "transport", i18nKey: "admin.addonTypes.transport" },
+  { value: "food", i18nKey: "admin.addonTypes.food" },
+  { value: "accommodation", i18nKey: "admin.addonTypes.lodging" },
+  { value: "equipment", i18nKey: "admin.addonTypes.equipment" },
+  { value: "other", i18nKey: "admin.addonTypes.other" },
 ];
 
 const STATUS_FILTER_OPTIONS = [
-  { value: "", label: "Todos" },
-  { value: "active", label: "Activos" },
-  { value: "inactive", label: "Inactivos" },
+  { value: "", i18nKey: "admin.statuses.allActive" },
+  { value: "active", i18nKey: "admin.statuses.activeOnly" },
+  { value: "inactive", i18nKey: "admin.statuses.inactiveOnly" },
 ];
 
 function formatPrice(amount, currency) {
@@ -105,20 +107,24 @@ function CardSkeleton() {
   );
 }
 
-function EmptyState() {
+function EmptyState({ t, isAdmin }) {
   return (
     <Card className="p-10 text-center">
       <Package className="h-10 w-10 text-charcoal-muted mx-auto mb-3" />
-      <h2 className="text-lg font-semibold text-charcoal mb-1">Sin addons</h2>
+      <h2 className="text-lg font-semibold text-charcoal mb-1">
+        {t("admin.addons.emptyTitle")}
+      </h2>
       <p className="text-sm text-charcoal-muted mb-4">
-        Crea el primer addon para empezar a ofrecerlos en tus experiencias.
+        {t("admin.addons.emptyMessage")}
       </p>
-      <Link to={ROUTES.ADMIN_ADDON_NEW}>
-        <Button size="sm">
-          <Plus className="h-4 w-4" />
-          Crear primer addon
-        </Button>
-      </Link>
+      {isAdmin && (
+        <Link to={ROUTES.ADMIN_ADDON_NEW}>
+          <Button size="sm">
+            <Plus className="h-4 w-4" />
+            {t("admin.addons.emptyButton")}
+          </Button>
+        </Link>
+      )}
     </Card>
   );
 }
@@ -129,6 +135,8 @@ export default function AddonListPage() {
   const [statusFilter, setStatusFilter] = useState("");
   const [toggling, setToggling] = useState(null);
   const navigate = useNavigate();
+  const { t } = useLanguage();
+  const { isAdmin } = useAuth();
 
   const {
     data: addons,
@@ -160,17 +168,23 @@ export default function AddonListPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">Addons</h1>
+          <h1 className="text-xl font-semibold text-charcoal">
+            {t("admin.addons.title")}
+          </h1>
           <p className="text-sm text-charcoal-subtle mt-0.5">
-            Complementos disponibles para experiencias
+            {t("admin.addons.subtitle")}
           </p>
         </div>
-        <Link to={ROUTES.ADMIN_ADDON_NEW}>
-          <Button size="sm">
-            <Plus className="h-4 w-4" />
-            <span className="hidden sm:inline">Nuevo addon</span>
-          </Button>
-        </Link>
+        {isAdmin && (
+          <Link to={ROUTES.ADMIN_ADDON_NEW}>
+            <Button size="sm">
+              <Plus className="h-4 w-4" />
+              <span className="hidden sm:inline">
+                {t("admin.addons.newAddon")}
+              </span>
+            </Button>
+          </Link>
+        )}
       </div>
 
       {/* Filters */}
@@ -180,20 +194,26 @@ export default function AddonListPage() {
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar por nombre..."
+            placeholder={t("admin.addons.searchPlaceholder")}
             className="pl-9"
           />
         </div>
         <AdminSelect
           value={addonType}
           onChange={setAddonType}
-          options={TYPE_FILTER_OPTIONS}
+          options={TYPE_FILTER_OPTIONS.map((o) => ({
+            ...o,
+            label: t(o.i18nKey),
+          }))}
           fullWidth={false}
         />
         <AdminSelect
           value={statusFilter}
           onChange={setStatusFilter}
-          options={STATUS_FILTER_OPTIONS}
+          options={STATUS_FILTER_OPTIONS.map((o) => ({
+            ...o,
+            label: t(o.i18nKey),
+          }))}
           fullWidth={false}
         />
       </div>
@@ -205,7 +225,9 @@ export default function AddonListPage() {
       )}
 
       {/* Empty */}
-      {!loading && !error && addons.length === 0 && <EmptyState />}
+      {!loading && !error && addons.length === 0 && (
+        <EmptyState t={t} isAdmin={isAdmin} />
+      )}
 
       {/* Loading skeleton */}
       {loading && (
@@ -221,12 +243,24 @@ export default function AddonListPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
-                <th className="px-4 py-3 font-medium">Nombre</th>
-                <th className="px-4 py-3 font-medium">Tipo</th>
-                <th className="px-4 py-3 font-medium">Precio</th>
-                <th className="px-4 py-3 font-medium">Modelo</th>
-                <th className="px-4 py-3 font-medium">Estado</th>
-                <th className="px-4 py-3 font-medium text-right">Acciones</th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.addons.name")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.addons.type")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.addons.price")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.addons.model")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.addons.status")}
+                </th>
+                <th className="px-4 py-3 font-medium text-right">
+                  {t("admin.addons.actions")}
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-sand-dark">
@@ -239,13 +273,13 @@ export default function AddonListPage() {
                     {addon.name}
                   </td>
                   <td className="px-4 py-3 text-charcoal-muted">
-                    {ADDON_TYPE_LABELS[addon.addonType] || addon.addonType}
+                    {t(ADDON_TYPE_LABELS[addon.addonType]) || addon.addonType}
                   </td>
                   <td className="px-4 py-3 text-charcoal-muted whitespace-nowrap">
                     {formatPrice(addon.basePrice, addon.currency)}
                   </td>
                   <td className="px-4 py-3 text-charcoal-muted">
-                    {PRICE_TYPE_LABELS[addon.priceType] || addon.priceType}
+                    {t(PRICE_TYPE_LABELS[addon.priceType]) || addon.priceType}
                   </td>
                   <td className="px-4 py-3">
                     <button
@@ -260,8 +294,8 @@ export default function AddonListPage() {
                         {toggling === addon.$id
                           ? "..."
                           : addon.status === "active"
-                            ? "Activo"
-                            : "Inactivo"}
+                            ? t("admin.statuses.active")
+                            : t("admin.statuses.inactive")}
                       </Badge>
                     </button>
                   </td>
@@ -271,7 +305,7 @@ export default function AddonListPage() {
                         navigate(`/admin/addons/${addon.$id}/edit`)
                       }
                       className="p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
-                      aria-label="Editar addon"
+                      aria-label={t("admin.addons.editAriaLabel")}
                     >
                       <Pencil className="h-4 w-4" />
                     </button>
@@ -297,13 +331,15 @@ export default function AddonListPage() {
                   {addon.name}
                 </span>
                 <Badge variant={addon.status === "active" ? "success" : "warm"}>
-                  {addon.status === "active" ? "Activo" : "Inactivo"}
+                  {addon.status === "active"
+                    ? t("admin.statuses.active")
+                    : t("admin.statuses.inactive")}
                 </Badge>
               </div>
               <div className="flex items-center gap-4 text-xs text-charcoal-muted">
-                <span>{ADDON_TYPE_LABELS[addon.addonType]}</span>
+                <span>{t(ADDON_TYPE_LABELS[addon.addonType])}</span>
                 <span>{formatPrice(addon.basePrice, addon.currency)}</span>
-                <span>{PRICE_TYPE_LABELS[addon.priceType]}</span>
+                <span>{t(PRICE_TYPE_LABELS[addon.priceType])}</span>
               </div>
             </Card>
           ))}

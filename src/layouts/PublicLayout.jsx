@@ -1,6 +1,7 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import StructuredData from "@/components/common/StructuredData";
+import { useLanguage } from "@/hooks/useLanguage";
 import env from "@/config/env";
 import { ROUTES } from "@/constants/routes";
 
@@ -31,6 +32,7 @@ const ORGANIZATION_SCHEMA = {
 
 export default function PublicLayout() {
   const location = useLocation();
+  const { t } = useLanguage();
   const isHome = location.pathname === "/";
 
   return (
@@ -54,15 +56,14 @@ export default function PublicLayout() {
                 OMZONE
               </Link>
               <p className="mt-3 text-sm text-charcoal-muted leading-relaxed max-w-xs">
-                Premium wellness experiences designed to nurture your body, mind
-                and spirit.
+                {t("footer.tagline")}
               </p>
             </div>
 
             {/* Experiences */}
             <div>
               <h4 className="text-xs font-semibold text-charcoal uppercase tracking-wider mb-4">
-                Experiences
+                {t("footer.experiences")}
               </h4>
               <ul className="space-y-2.5">
                 <li>
@@ -70,7 +71,7 @@ export default function PublicLayout() {
                     to={ROUTES.EXPERIENCES}
                     className="text-sm text-charcoal-muted hover:text-sage transition-colors"
                   >
-                    All Experiences
+                    {t("footer.allExperiences")}
                   </Link>
                 </li>
                 <li>
@@ -78,7 +79,7 @@ export default function PublicLayout() {
                     to={ROUTES.EXPERIENCES}
                     className="text-sm text-charcoal-muted hover:text-sage transition-colors"
                   >
-                    Sessions
+                    {t("footer.sessions")}
                   </Link>
                 </li>
                 <li>
@@ -86,7 +87,7 @@ export default function PublicLayout() {
                     to={ROUTES.EXPERIENCES}
                     className="text-sm text-charcoal-muted hover:text-sage transition-colors"
                   >
-                    Immersions
+                    {t("footer.immersions")}
                   </Link>
                 </li>
                 <li>
@@ -94,7 +95,7 @@ export default function PublicLayout() {
                     to={ROUTES.EXPERIENCES}
                     className="text-sm text-charcoal-muted hover:text-sage transition-colors"
                   >
-                    Retreats
+                    {t("footer.retreats")}
                   </Link>
                 </li>
               </ul>
@@ -103,7 +104,7 @@ export default function PublicLayout() {
             {/* Company */}
             <div>
               <h4 className="text-xs font-semibold text-charcoal uppercase tracking-wider mb-4">
-                Company
+                {t("footer.company")}
               </h4>
               <ul className="space-y-2.5">
                 <li>
@@ -111,7 +112,7 @@ export default function PublicLayout() {
                     to={ROUTES.ABOUT}
                     className="text-sm text-charcoal-muted hover:text-sage transition-colors"
                   >
-                    About
+                    {t("footer.about")}
                   </Link>
                 </li>
                 <li>
@@ -119,7 +120,7 @@ export default function PublicLayout() {
                     to={ROUTES.CONTACT}
                     className="text-sm text-charcoal-muted hover:text-sage transition-colors"
                   >
-                    Contact
+                    {t("footer.contact")}
                   </Link>
                 </li>
                 <li>
@@ -127,7 +128,7 @@ export default function PublicLayout() {
                     to={ROUTES.PRIVACY}
                     className="text-sm text-charcoal-muted hover:text-sage transition-colors"
                   >
-                    Privacy Policy
+                    {t("footer.privacy")}
                   </Link>
                 </li>
                 <li>
@@ -135,7 +136,7 @@ export default function PublicLayout() {
                     to={ROUTES.TERMS}
                     className="text-sm text-charcoal-muted hover:text-sage transition-colors"
                   >
-                    Terms of Service
+                    {t("footer.terms")}
                   </Link>
                 </li>
               </ul>
@@ -144,17 +145,23 @@ export default function PublicLayout() {
             {/* Connect */}
             <div>
               <h4 className="text-xs font-semibold text-charcoal uppercase tracking-wider mb-4">
-                Connect
+                {t("footer.connect")}
               </h4>
               <ul className="space-y-2.5">
                 <li>
-                  <span className="text-sm text-charcoal-muted">Instagram</span>
+                  <span className="text-sm text-charcoal-muted">
+                    {t("footer.instagram")}
+                  </span>
                 </li>
                 <li>
-                  <span className="text-sm text-charcoal-muted">Facebook</span>
+                  <span className="text-sm text-charcoal-muted">
+                    {t("footer.facebook")}
+                  </span>
                 </li>
                 <li>
-                  <span className="text-sm text-charcoal-muted">Email Us</span>
+                  <span className="text-sm text-charcoal-muted">
+                    {t("footer.emailUs")}
+                  </span>
                 </li>
               </ul>
             </div>
@@ -163,10 +170,10 @@ export default function PublicLayout() {
           {/* Bottom bar */}
           <div className="mt-12 pt-6 border-t border-warm-gray-dark/30 flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-xs text-charcoal-subtle">
-              &copy; {new Date().getFullYear()} OMZONE. All rights reserved.
+              &copy; {new Date().getFullYear()} {t("footer.copyright")}
             </p>
             <p className="text-xs text-charcoal-subtle italic">
-              Crafted with intention
+              {t("footer.crafted")}
             </p>
           </div>
         </div>

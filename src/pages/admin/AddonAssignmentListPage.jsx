@@ -14,6 +14,7 @@ import AddonAssignmentTable from "@/components/admin/addons/AddonAssignmentTable
 import AddonAssignmentForm from "@/components/admin/addons/AddonAssignmentForm";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
+import { useLanguage } from "@/hooks/useLanguage";
 
 function TableSkeleton() {
   return (
@@ -21,12 +22,24 @@ function TableSkeleton() {
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
-            <th className="px-4 py-3 font-medium">Addon</th>
-            <th className="px-4 py-3 font-medium text-center">Requerido</th>
-            <th className="px-4 py-3 font-medium text-center">Por defecto</th>
-            <th className="px-4 py-3 font-medium">Precio override</th>
-            <th className="px-4 py-3 font-medium text-center">Orden</th>
-            <th className="px-4 py-3 font-medium text-right">Acciones</th>
+            <th className="px-4 py-3 font-medium">
+              {t("admin.addonAssignments.addon")}
+            </th>
+            <th className="px-4 py-3 font-medium text-center">
+              {t("admin.addonAssignments.required")}
+            </th>
+            <th className="px-4 py-3 font-medium text-center">
+              {t("admin.addonAssignments.default")}
+            </th>
+            <th className="px-4 py-3 font-medium">
+              {t("admin.addonAssignments.priceOverride")}
+            </th>
+            <th className="px-4 py-3 font-medium text-center">
+              {t("admin.addonAssignments.order")}
+            </th>
+            <th className="px-4 py-3 font-medium text-right">
+              {t("admin.addonAssignments.actions")}
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-sand-dark">
@@ -34,7 +47,10 @@ function TableSkeleton() {
             <tr key={i}>
               {[1, 2, 3, 4, 5, 6].map((j) => (
                 <td key={j} className="px-4 py-3">
-                  <div className="h-4 rounded bg-warm-gray animate-pulse" style={{ width: `${45 + j * 8}%` }} />
+                  <div
+                    className="h-4 rounded bg-warm-gray animate-pulse"
+                    style={{ width: `${45 + j * 8}%` }}
+                  />
                 </td>
               ))}
             </tr>
@@ -149,6 +165,7 @@ export default function AddonAssignmentListPage() {
   }
 
   const isLoading = loading || expLoading || addonsLoading;
+  const { t } = useLanguage();
 
   return (
     <div className="space-y-5">
@@ -156,7 +173,7 @@ export default function AddonAssignmentListPage() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-xl font-semibold text-charcoal">
-            Addons asignados
+            {t("admin.addonAssignments.title")}
           </h1>
           {experience && (
             <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
@@ -167,7 +184,9 @@ export default function AddonAssignmentListPage() {
         {!showForm && !editing && (
           <Button size="sm" onClick={() => setShowForm(true)}>
             <Plus className="h-4 w-4" />
-            <span className="hidden sm:inline">Asignar addon</span>
+            <span className="hidden sm:inline">
+              {t("admin.addonAssignments.assignAddon")}
+            </span>
           </Button>
         )}
       </div>
@@ -222,14 +241,14 @@ export default function AddonAssignmentListPage() {
         <Card className="p-10 text-center">
           <Package className="h-10 w-10 text-charcoal-muted mx-auto mb-3" />
           <h2 className="text-lg font-semibold text-charcoal mb-1">
-            Sin addons asignados
+            {t("admin.addonAssignments.emptyTitle")}
           </h2>
           <p className="text-sm text-charcoal-muted mb-4">
-            Asigna addons del catálogo global a esta experiencia.
+            {t("admin.addonAssignments.emptyMessage")}
           </p>
           <Button size="sm" onClick={() => setShowForm(true)}>
             <Plus className="h-4 w-4" />
-            Asignar primer addon
+            {t("admin.addonAssignments.emptyButton")}
           </Button>
         </Card>
       )}

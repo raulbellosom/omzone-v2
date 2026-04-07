@@ -1,5 +1,6 @@
 import { Calendar, Clock, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -13,7 +14,7 @@ function formatTime(iso) {
   });
 }
 
-function SlotCard({ slot }) {
+function SlotCard({ slot, t }) {
   const available = slot.capacity - slot.bookedCount;
   const isFull = available <= 0;
   const isAlmostFull = !isFull && available <= 3;
@@ -42,13 +43,13 @@ function SlotCard({ slot }) {
         <div className="flex items-center gap-1.5">
           <Users className="h-4 w-4 text-charcoal-subtle" />
           {isFull ? (
-            <span className="text-xs font-medium text-red-500">Full</span>
+            <span className="text-xs font-medium text-red-500">{t("agendaSection.full")}</span>
           ) : (
             <span className={cn(
               "text-xs font-medium",
               isAlmostFull ? "text-amber-600" : "text-emerald-600"
             )}>
-              {available} {available === 1 ? "spot" : "spots"} left
+              {available} {available === 1 ? t("agendaSection.spot") : t("agendaSection.spots")} left
             </span>
           )}
         </div>
@@ -58,17 +59,18 @@ function SlotCard({ slot }) {
 }
 
 export default function AgendaSection({ slots }) {
+  const { t } = useLanguage();
   if (!slots || slots.length === 0) return null;
 
   return (
     <section className="py-12 md:py-16 bg-cream/50">
       <div className="container-shell">
-        <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-2">Available Dates</h2>
-        <p className="text-charcoal-muted mb-8">Select your preferred date to continue with your booking.</p>
+        <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-2">{t("agendaSection.title")}</h2>
+        <p className="text-charcoal-muted mb-8">{t("agendaSection.subtitle")}</p>
 
         <div className="space-y-3 max-w-3xl">
           {slots.map((slot) => (
-            <SlotCard key={slot.$id} slot={slot} />
+            <SlotCard key={slot.$id} slot={slot} t={t} />
           ))}
         </div>
       </div>

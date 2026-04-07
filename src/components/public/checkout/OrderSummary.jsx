@@ -1,5 +1,6 @@
 import { formatPrice } from "@/components/public/checkout/utils";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 /**
  * Sticky sidebar on desktop / collapsible bottom bar on mobile
@@ -13,10 +14,12 @@ export default function OrderSummary({
   currency,
   className,
 }) {
+  const { t } = useLanguage();
+
   return (
     <aside className={cn("rounded-2xl border border-warm-gray-dark/20 bg-white p-5 space-y-4", className)}>
       <h3 className="text-sm font-bold text-charcoal uppercase tracking-wider">
-        Order Summary
+        {t("orderSummary.title")}
       </h3>
 
       <div className="divide-y divide-warm-gray-dark/10 text-sm">
@@ -50,14 +53,14 @@ export default function OrderSummary({
       </div>
 
       <div className="flex justify-between items-center pt-3 border-t border-warm-gray-dark/20">
-        <span className="text-sm font-bold text-charcoal">Total</span>
+        <span className="text-sm font-bold text-charcoal">{t("orderSummary.total")}</span>
         <span className="text-xl font-bold text-charcoal">
           {formatPrice(indicativeTotal, currency)}
         </span>
       </div>
 
       <p className="text-[11px] text-charcoal-subtle leading-relaxed">
-        This total is indicative. The final amount will be confirmed at checkout.
+        {t("orderSummary.disclaimer")}
       </p>
     </aside>
   );

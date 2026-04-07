@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import LocationForm from "@/components/admin/resources/LocationForm";
 import { createLocation } from "@/hooks/useLocations";
 import { ROUTES } from "@/constants/routes";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function LocationCreatePage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
 
@@ -25,8 +27,12 @@ export default function LocationCreatePage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Nueva locación</h1>
-        <p className="text-sm text-charcoal-subtle mt-0.5">Añade una nueva locación física para experiencias.</p>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.resources.locationCreateTitle")}
+        </h1>
+        <p className="text-sm text-charcoal-subtle mt-0.5">
+          {t("admin.resources.locationCreateSubtitle")}
+        </p>
       </div>
 
       {serverError && (
@@ -35,7 +41,11 @@ export default function LocationCreatePage() {
         </div>
       )}
 
-      <LocationForm onSubmit={handleSubmit} submitting={submitting} submitLabel="Crear locación" />
+      <LocationForm
+        onSubmit={handleSubmit}
+        submitting={submitting}
+        submitLabel={t("admin.resources.locationCreateButton")}
+      />
     </div>
   );
 }

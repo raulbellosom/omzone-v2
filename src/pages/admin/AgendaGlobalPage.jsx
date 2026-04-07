@@ -6,16 +6,18 @@ import { Card } from "@/components/common/Card";
 import { CalendarDays } from "lucide-react";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const STATUS_FILTER_OPTIONS = [
-  { value: "", label: "Todos los status" },
-  { value: "draft", label: "Borrador" },
-  { value: "published", label: "Publicados" },
-  { value: "full", label: "Llenos" },
-  { value: "cancelled", label: "Cancelados" },
+  { value: "", i18nKey: "admin.agenda.allStatuses" },
+  { value: "draft", i18nKey: "admin.statuses.draft" },
+  { value: "published", i18nKey: "admin.statuses.published" },
+  { value: "full", i18nKey: "admin.statuses.full" },
+  { value: "cancelled", i18nKey: "admin.statuses.cancelled" },
 ];
 
 export default function AgendaGlobalPage() {
+  const { t } = useLanguage();
   const [statusFilter, setStatusFilter] = useState("");
   const [experienceFilter, setExperienceFilter] = useState("");
   const [dateFrom, setDateFrom] = useState("");
@@ -39,16 +41,18 @@ export default function AgendaGlobalPage() {
   );
 
   const experienceOptions = [
-    { value: "", label: "Todas las experiencias" },
+    { value: "", label: t("admin.agenda.allExperiences") },
     ...experiences.map((e) => ({ value: e.$id, label: e.publicName })),
   ];
 
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">Agenda global</h1>
+        <h1 className="text-xl font-semibold text-charcoal">
+          {t("admin.agenda.title")}
+        </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5">
-          Todos los slots de todas las experiencias
+          {t("admin.agenda.subtitle")}
         </p>
       </div>
 
@@ -63,7 +67,10 @@ export default function AgendaGlobalPage() {
         <AdminSelect
           value={statusFilter}
           onChange={setStatusFilter}
-          options={STATUS_FILTER_OPTIONS}
+          options={STATUS_FILTER_OPTIONS.map((o) => ({
+            ...o,
+            label: t(o.i18nKey),
+          }))}
           fullWidth={false}
         />
         <input
@@ -129,11 +136,10 @@ export default function AgendaGlobalPage() {
         <Card className="p-10 text-center">
           <CalendarDays className="h-10 w-10 text-charcoal-muted mx-auto mb-3" />
           <h2 className="text-lg font-semibold text-charcoal mb-1">
-            Sin slots
+            {t("admin.agenda.emptyTitle")}
           </h2>
           <p className="text-sm text-charcoal-muted">
-            No hay slots agendados. Crea slots desde el detalle de cada
-            experiencia.
+            {t("admin.agenda.emptyMessage")}
           </p>
         </Card>
       )}

@@ -66,17 +66,17 @@ Lo que SÍ incluye esta tarea:
 
 ## Entidades / tablas implicadas
 
-| Tabla | Operación | Notas |
-|---|---|---|
-| `experiences` | leer | `publicName` / `publicNameEs`, `shortDescription` / `shortDescriptionEs`, etc. |
-| `publications` | leer | `title` / `titleEs`, `subtitle` / `subtitleEs`, etc. |
-| `publication_sections` | leer | `title` / `titleEs`, `content` / `contentEs` |
-| `addons` | leer | `name` / `nameEs`, `description` / `descriptionEs` |
-| `packages` | leer | `name` / `nameEs`, `description` / `descriptionEs` |
-| `passes` | leer | `name` / `nameEs`, `description` / `descriptionEs` |
-| `pricing_tiers` | leer | `name` / `nameEs`, `description` / `descriptionEs` |
-| `tags` | leer | `name` / `nameEs` |
-| `user_profiles` | leer / actualizar | `language` field |
+| Tabla                  | Operación         | Notas                                                                          |
+| ---------------------- | ----------------- | ------------------------------------------------------------------------------ |
+| `experiences`          | leer              | `publicName` / `publicNameEs`, `shortDescription` / `shortDescriptionEs`, etc. |
+| `publications`         | leer              | `title` / `titleEs`, `subtitle` / `subtitleEs`, etc.                           |
+| `publication_sections` | leer              | `title` / `titleEs`, `content` / `contentEs`                                   |
+| `addons`               | leer              | `name` / `nameEs`, `description` / `descriptionEs`                             |
+| `packages`             | leer              | `name` / `nameEs`, `description` / `descriptionEs`                             |
+| `passes`               | leer              | `name` / `nameEs`, `description` / `descriptionEs`                             |
+| `pricing_tiers`        | leer              | `name` / `nameEs`, `description` / `descriptionEs`                             |
+| `tags`                 | leer              | `name` / `nameEs`                                                              |
+| `user_profiles`        | leer / actualizar | `language` field                                                               |
 
 ## Atributos nuevos o modificados
 
@@ -92,22 +92,22 @@ Ninguno.
 
 ## Componentes frontend implicados
 
-| Componente | Superficie | Operación | Notas |
-|---|---|---|---|
-| `LanguageProvider` | público | crear | Context provider para idioma |
-| `LanguageSwitcher` | público | crear | Toggle/dropdown EN/ES en header |
-| `PublicHeader` | público | modificar | Integrar LanguageSwitcher |
-| `ExperienceDetailPage` | público | modificar | Usar localizedField para campos |
-| `ExperienceCard` | público | modificar | Usar localizedField |
-| `PublicationPage` | público | modificar | Usar localizedField |
-| `SectionRenderer` | público | modificar | Usar localizedField para secciones |
+| Componente             | Superficie | Operación | Notas                              |
+| ---------------------- | ---------- | --------- | ---------------------------------- |
+| `LanguageProvider`     | público    | crear     | Context provider para idioma       |
+| `LanguageSwitcher`     | público    | crear     | Toggle/dropdown EN/ES en header    |
+| `PublicHeader`         | público    | modificar | Integrar LanguageSwitcher          |
+| `ExperienceDetailPage` | público    | modificar | Usar localizedField para campos    |
+| `ExperienceCard`       | público    | modificar | Usar localizedField                |
+| `PublicationPage`      | público    | modificar | Usar localizedField                |
+| `SectionRenderer`      | público    | modificar | Usar localizedField para secciones |
 
 ## Hooks implicados
 
-| Hook | Operación | Notas |
-|---|---|---|
-| `useLanguage` | crear | Hook central de idioma: language, setLanguage, t() |
-| `useLocalizedField` | crear | Helper hook para `localizedField(item, field)` |
+| Hook                | Operación | Notas                                              |
+| ------------------- | --------- | -------------------------------------------------- |
+| `useLanguage`       | crear     | Hook central de idioma: language, setLanguage, t() |
+| `useLocalizedField` | crear     | Helper hook para `localizedField(item, field)`     |
 
 ## Rutas implicadas
 
@@ -115,10 +115,10 @@ N/A — no se crean rutas nuevas. El idioma se maneja por contexto, no por URL.
 
 ## Permisos y labels involucrados
 
-| Acción | root | admin | operator | client | anónimo |
-|---|---|---|---|---|---|
-| Cambiar idioma | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Persistir idioma en perfil | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Acción                     | root | admin | operator | client | anónimo |
+| -------------------------- | ---- | ----- | -------- | ------ | ------- |
+| Cambiar idioma             | ✅   | ✅    | ✅       | ✅     | ✅      |
+| Persistir idioma en perfil | ✅   | ✅    | ✅       | ✅     | ❌      |
 
 ## Flujo principal
 
@@ -134,26 +134,26 @@ N/A — no se crean rutas nuevas. El idioma se maneja por contexto, no por URL.
 
 ## Criterios de aceptación
 
-- [ ] Existe un `LanguageProvider` que provee el contexto de idioma a toda la app pública.
-- [ ] El hook `useLanguage` expone `language`, `setLanguage` y `t(key)`.
-- [ ] Hay un `LanguageSwitcher` visible en el header público de todas las páginas.
-- [ ] Al cambiar idioma con el switcher, el contenido se actualiza inmediatamente sin reload.
-- [ ] El nombre de experiencias se muestra en ES si el idioma es ES y `publicNameEs` tiene valor.
-- [ ] Si `publicNameEs` está vacío, se muestra `publicName` (EN) como fallback.
+- [x] Existe un `LanguageProvider` que provee el contexto de idioma a toda la app pública.
+- [x] El hook `useLanguage` expone `language`, `setLanguage` y `t(key)`.
+- [x] Hay un `LanguageSwitcher` visible en el header público de todas las páginas.
+- [x] Al cambiar idioma con el switcher, el contenido se actualiza inmediatamente sin reload.
+- [x] El nombre de experiencias se muestra en ES si el idioma es ES y `publicNameEs` tiene valor.
+- [x] Si `publicNameEs` está vacío, se muestra `publicName` (EN) como fallback.
 - [ ] Las publicaciones, secciones, addons, paquetes, pases, pricing tiers y tags respetan el idioma seleccionado.
-- [ ] Los strings estáticos de UI (botones, labels, nav) cambian de idioma al alternar.
-- [ ] Existen archivos `en.json` y `es.json` con al menos: navegación, botones comunes, labels de formularios, mensajes de error/éxito, estados vacíos.
-- [ ] La preferencia de idioma se persiste en `localStorage` para visitantes anónimos.
+- [x] Los strings estáticos de UI (botones, labels, nav) cambian de idioma al alternar.
+- [x] Existen archivos `en.json` y `es.json` con al menos: navegación, botones comunes, labels de formularios, mensajes de error/éxito, estados vacíos.
+- [x] La preferencia de idioma se persiste en `localStorage` para visitantes anónimos.
 - [ ] Si el usuario está autenticado, la preferencia se persiste en `user_profiles.language`.
 - [ ] Al iniciar sesión, si el perfil tiene `language: "es"`, el sitio carga en español.
-- [ ] El language switcher funciona en mobile y es accesible (touch target ≥ 44px).
-- [ ] Los meta tags SEO (`<title>`, `<meta description>`) usan los campos del idioma seleccionado.
+- [x] El language switcher funciona en mobile y es accesible (touch target ≥ 44px).
+- [x] Los meta tags SEO (`<title>`, `<meta description>`) usan los campos del idioma seleccionado.
 
 ## Validaciones de seguridad
 
-- [ ] El valor de `language` se valida como uno de los valores permitidos (`es`, `en`) antes de usar.
-- [ ] La función `t(key)` retorna un string vacío o el key mismo si no encuentra traducción, nunca un error.
-- [ ] No se inyectan strings de traducción sin sanitizar en el DOM.
+- [x] El valor de `language` se valida como uno de los valores permitidos (`es`, `en`) antes de usar.
+- [x] La función `t(key)` retorna un string vacío o el key mismo si no encuentra traducción, nunca un error.
+- [x] No se inyectan strings de traducción sin sanitizar en el DOM.
 - [ ] La actualización de `user_profiles.language` respeta permisos (solo el propio usuario o admin).
 
 ## Dependencias

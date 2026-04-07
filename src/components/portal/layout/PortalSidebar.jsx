@@ -99,7 +99,7 @@ export default function PortalSidebar({ open, onClose }) {
                     }`
                   }
                 >
-                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  <item.icon className="w-5 h-5 shrink-0" />
                   {item.name}
                 </NavLink>
               </li>
@@ -113,7 +113,7 @@ export default function PortalSidebar({ open, onClose }) {
             onClick={handleLogout}
             className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-charcoal-muted hover:bg-red-50 hover:text-red-600 transition-colors"
           >
-            <LogOut className="w-5 h-5 flex-shrink-0" />
+            <LogOut className="w-5 h-5 shrink-0" />
             Cerrar sesión
           </button>
         </div>

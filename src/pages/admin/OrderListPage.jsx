@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useOrders } from "@/hooks/useOrders";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
 import { ROLES } from "@/constants/roles";
 import { Card } from "@/components/common/Card";
 import Button from "@/components/common/Button";
@@ -13,26 +14,27 @@ import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 25;
 
-const STATUS_OPTIONS = [
-  { value: "", label: "All statuses" },
-  { value: "pending", label: "Pending" },
-  { value: "paid", label: "Paid" },
-  { value: "confirmed", label: "Confirmed" },
-  { value: "cancelled", label: "Cancelled" },
-  { value: "refunded", label: "Refunded" },
+const STATUS_KEYS = [
+  { value: "", i18nKey: "admin.orders.allStatuses" },
+  { value: "pending", i18nKey: "admin.orders.pending" },
+  { value: "paid", i18nKey: "admin.orders.paid" },
+  { value: "confirmed", i18nKey: "admin.orders.confirmed" },
+  { value: "cancelled", i18nKey: "admin.orders.cancelled" },
+  { value: "refunded", i18nKey: "admin.orders.refunded" },
 ];
 
-const PAYMENT_STATUS_OPTIONS = [
-  { value: "", label: "All payments" },
-  { value: "pending", label: "Pending" },
-  { value: "processing", label: "Processing" },
-  { value: "succeeded", label: "Succeeded" },
-  { value: "failed", label: "Failed" },
-  { value: "refunded", label: "Refunded" },
+const PAYMENT_STATUS_KEYS = [
+  { value: "", i18nKey: "admin.orders.allPayments" },
+  { value: "pending", i18nKey: "admin.orders.pending" },
+  { value: "processing", i18nKey: "admin.orders.processing" },
+  { value: "succeeded", i18nKey: "admin.orders.succeeded" },
+  { value: "failed", i18nKey: "admin.orders.failed" },
+  { value: "refunded", i18nKey: "admin.orders.refunded" },
 ];
 
 export default function OrderListPage() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const isAdmin =
     user?.labels?.includes(ROLES.ADMIN) || user?.labels?.includes(ROLES.ROOT);
 
@@ -53,6 +55,15 @@ export default function OrderListPage() {
 
   const hasFilters = search || status || paymentStatus;
 
+  const STATUS_OPTIONS = STATUS_KEYS.map((s) => ({
+    value: s.value,
+    label: t(s.i18nKey),
+  }));
+  const PAYMENT_STATUS_OPTIONS = PAYMENT_STATUS_KEYS.map((s) => ({
+    value: s.value,
+    label: t(s.i18nKey),
+  }));
+
   const clearFilters = () => {
     setSearch("");
     setStatus("");
@@ -70,10 +81,14 @@ export default function OrderListPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-charcoal">Orders</h1>
+          <h1 className="text-2xl font-semibold text-charcoal">
+            {t("admin.orders.title")}
+          </h1>
           {!loading && (
             <p className="text-sm text-charcoal-muted mt-1">
-              {total} order{total !== 1 ? "s" : ""}
+              {total === 1
+                ? t("admin.orders.countOne")
+                : t("admin.orders.countOther").replace("{count}", total)}
             </p>
           )}
         </div>
@@ -86,7 +101,7 @@ export default function OrderListPage() {
           <Input
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder="Search by order number..."
+            placeholder={t("admin.orders.searchPlaceholder")}
             className="pl-9 h-10"
           />
         </div>
@@ -114,7 +129,7 @@ export default function OrderListPage() {
             className="flex items-center gap-1 text-xs text-charcoal-muted hover:text-charcoal transition-colors"
           >
             <X className="h-3.5 w-3.5" />
-            Clear
+            {t("admin.orders.clear")}
           </button>
         )}
       </div>
@@ -131,12 +146,12 @@ export default function OrderListPage() {
         <Card className="p-10 text-center">
           <ShoppingCart className="h-10 w-10 text-charcoal-muted mx-auto mb-3" />
           <h2 className="text-lg font-semibold text-charcoal mb-1">
-            No orders yet
+            {t("admin.orders.emptyTitle")}
           </h2>
           <p className="text-sm text-charcoal-muted">
             {hasFilters
-              ? "No orders match your filters. Try clearing them."
-              : "Orders will appear here once customers complete purchases."}
+              ? t("admin.orders.emptyFiltered")
+              : t("admin.orders.emptyDefault")}
           </p>
         </Card>
       )}
@@ -173,7 +188,9 @@ export default function OrderListPage() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between pt-2">
           <p className="text-sm text-charcoal-subtle">
-            Page {page + 1} of {totalPages}
+            {t("admin.common.pageOf")
+              .replace("{page}", page + 1)
+              .replace("{total}", totalPages)}
           </p>
           <div className="flex items-center gap-2">
             <Button
@@ -182,7 +199,7 @@ export default function OrderListPage() {
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={page === 0}
             >
-              Previous
+              {t("admin.common.previous")}
             </Button>
             <Button
               variant="outline"
@@ -190,7 +207,7 @@ export default function OrderListPage() {
               onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
               disabled={page >= totalPages - 1}
             >
-              Next
+              {t("admin.common.next")}
             </Button>
           </div>
         </div>
