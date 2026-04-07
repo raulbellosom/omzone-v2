@@ -77,6 +77,8 @@
       "resendCooldown": "Resend in {{seconds}}s",
       "resendSuccess": "Verification email sent! Check your inbox.",
       "resendError": "Could not resend. Please try signing in again to trigger a new verification email.",
+      "resendLoginHint": "To resend the verification email, try signing in again.",
+      "verificationFailedWarning": "We couldn't send the verification email. Please tap \"Resend\" below or try signing in later to receive a new one.",
       "backToSignIn": "Back to Sign In"
     },
     "verify": {

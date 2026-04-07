@@ -1,19 +1,21 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { MailCheck } from "lucide-react";
-import { account } from "@/lib/appwrite";
+import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import Button from "@/components/common/Button";
 import { ROUTES } from "@/constants/routes";
 
 const COOLDOWN_SECONDS = 60;
-const VERIFY_URL = `${window.location.origin}/verify-email`;
 
 export default function VerifyEmailPendingPage() {
   const location = useLocation();
+  const { resendVerificationWithCredentials } = useAuth();
   const { t } = useLanguage();
   const email = location.state?.email || "";
+  const vpRef = useRef(location.state?._vp || "");
+  const verificationFailed = location.state?.verificationFailed || false;
 
   const [cooldown, setCooldown] = useState(0);
   const [resending, setResending] = useState(false);
@@ -26,12 +28,14 @@ export default function VerifyEmailPendingPage() {
     return () => clearTimeout(timer);
   }, [cooldown]);
 
+  const canResend = !!email && !!vpRef.current;
+
   const handleResend = useCallback(async () => {
-    if (cooldown > 0 || resending) return;
+    if (cooldown > 0 || resending || !canResend) return;
     setResending(true);
     setFeedback("");
     try {
-      await account.createVerification(VERIFY_URL);
+      await resendVerificationWithCredentials(email, vpRef.current);
       setFeedback(t("auth.verifyPending.resendSuccess"));
       setCooldown(COOLDOWN_SECONDS);
     } catch {
@@ -39,7 +43,7 @@ export default function VerifyEmailPendingPage() {
     } finally {
       setResending(false);
     }
-  }, [cooldown, resending, t]);
+  }, [cooldown, resending, canResend, email, resendVerificationWithCredentials, t]);
 
   return (
     <>
@@ -83,32 +87,49 @@ export default function VerifyEmailPendingPage() {
             {t("auth.verifyPending.messageAction")}
           </p>
 
+          {/* Warning if verification email failed to send */}
+          {verificationFailed && (
+            <div className="mt-5 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3">
+              <p className="text-xs text-amber-800 leading-relaxed font-medium">
+                {t("auth.verifyPending.verificationFailedWarning")}
+              </p>
+            </div>
+          )}
+
           {/* Spam notice */}
-          <div className="mt-5 rounded-xl bg-cream-dark/60 px-4 py-3">
-            <p className="text-xs text-charcoal-muted leading-relaxed">
-              {t("auth.verifyPending.spamNotice")}{" "}
-              <span className="font-medium text-charcoal">{t("auth.verifyPending.spam")}</span>{" "}
-              {t("auth.verifyPending.orPromotions")}{" "}
-              <span className="font-medium text-charcoal">{t("auth.verifyPending.promotions")}</span>{" "}
-              {t("auth.verifyPending.folder")}
-            </p>
-          </div>
+          {!verificationFailed && (
+            <div className="mt-5 rounded-xl bg-cream-dark/60 px-4 py-3">
+              <p className="text-xs text-charcoal-muted leading-relaxed">
+                {t("auth.verifyPending.spamNotice")}{" "}
+                <span className="font-medium text-charcoal">{t("auth.verifyPending.spam")}</span>{" "}
+                {t("auth.verifyPending.orPromotions")}{" "}
+                <span className="font-medium text-charcoal">{t("auth.verifyPending.promotions")}</span>{" "}
+                {t("auth.verifyPending.folder")}
+              </p>
+            </div>
+          )}
 
           {/* Resend */}
           <div className="mt-6">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleResend}
-              disabled={cooldown > 0 || resending}
-              className="min-w-[160px]"
-            >
-              {resending
-                ? t("auth.verifyPending.resending")
-                : cooldown > 0
-                  ? t("auth.verifyPending.resendCooldown").replace("{{seconds}}", cooldown)
-                  : t("auth.verifyPending.resendButton")}
-            </Button>
+            {canResend ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleResend}
+                disabled={cooldown > 0 || resending}
+                className="min-w-[160px]"
+              >
+                {resending
+                  ? t("auth.verifyPending.resending")
+                  : cooldown > 0
+                    ? t("auth.verifyPending.resendCooldown").replace("{{seconds}}", cooldown)
+                    : t("auth.verifyPending.resendButton")}
+              </Button>
+            ) : (
+              <p className="text-xs text-charcoal-muted leading-relaxed">
+                {t("auth.verifyPending.resendLoginHint")}
+              </p>
+            )}
           </div>
 
           {feedback && (

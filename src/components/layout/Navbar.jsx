@@ -204,14 +204,37 @@ export default function Navbar() {
                     </Link>
                   )}
                   {isClient && (
-                    <Link
-                      to={ROUTES.PORTAL}
-                      onClick={() => setMobileOpen(false)}
-                      className="py-3 px-3 text-sm font-medium text-charcoal hover:bg-warm-gray rounded-xl transition-colors flex items-center justify-between"
-                    >
-                      {t("nav.myPortal")}
-                      <ArrowRight className="h-4 w-4 text-charcoal-subtle" />
-                    </Link>
+                    <>
+                      <Link
+                        to={ROUTES.PORTAL}
+                        onClick={() => setMobileOpen(false)}
+                        className="py-3 px-3 text-sm font-medium text-charcoal hover:bg-warm-gray rounded-xl transition-colors flex items-center justify-between"
+                      >
+                        {t("nav.myPortal")}
+                        <ArrowRight className="h-4 w-4 text-charcoal-subtle" />
+                      </Link>
+                      <Link
+                        to={ROUTES.PORTAL_PROFILE}
+                        onClick={() => setMobileOpen(false)}
+                        className="py-2.5 px-3 pl-6 text-sm text-charcoal-muted hover:bg-warm-gray rounded-xl transition-colors"
+                      >
+                        {t("nav.myProfile")}
+                      </Link>
+                      <Link
+                        to={ROUTES.PORTAL_ORDERS}
+                        onClick={() => setMobileOpen(false)}
+                        className="py-2.5 px-3 pl-6 text-sm text-charcoal-muted hover:bg-warm-gray rounded-xl transition-colors"
+                      >
+                        {t("nav.myOrders")}
+                      </Link>
+                      <Link
+                        to={ROUTES.PORTAL_TICKETS}
+                        onClick={() => setMobileOpen(false)}
+                        className="py-2.5 px-3 pl-6 text-sm text-charcoal-muted hover:bg-warm-gray rounded-xl transition-colors"
+                      >
+                        {t("nav.myTickets")}
+                      </Link>
+                    </>
                   )}
 
                   <div className="my-2 border-t border-warm-gray-dark/40" />

@@ -55,13 +55,21 @@ export default function RegisterPage() {
     setError("");
     setSubmitting(true);
     try {
-      await register(
+      const result = await register(
         fullName,
         form.email.trim(),
         form.password,
         sanitizePhone(form.phone) || undefined,
       );
-      navigate(ROUTES.VERIFY_EMAIL_PENDING, { replace: true });
+      navigate(ROUTES.VERIFY_EMAIL_PENDING, {
+        replace: true,
+        state: {
+          email: form.email.trim(),
+          _vp: form.password,
+          verificationFailed: !result?.verificationSent,
+        },
+      });
+      return;
     } catch (err) {
       const msg = err?.message ?? "";
       if (

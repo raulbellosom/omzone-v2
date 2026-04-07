@@ -8,7 +8,10 @@
     "register": "Register",
     "logout": "Logout",
     "adminPanel": "Admin Panel",
-    "myPortal": "My Portal"
+    "myPortal": "My Portal",
+    "myProfile": "My Profile",
+    "myOrders": "My Orders",
+    "myTickets": "My Tickets"
   },
   "footer": {
     "tagline": "Premium wellness experiences designed to nurture your body, mind and spirit.",

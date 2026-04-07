@@ -38,7 +38,7 @@ export default function LoginPage() {
       if (err?.type === "email_not_verified") {
         navigate(ROUTES.VERIFY_EMAIL_PENDING, {
           replace: true,
-          state: { email: form.email.trim() },
+          state: { email: form.email.trim(), _vp: form.password },
         });
         return;
       }

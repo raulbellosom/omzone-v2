@@ -80,17 +80,34 @@ export function AuthProvider({ children }) {
     }
 
     // 4. Send verification email
-    await account.createVerification(VERIFY_URL);
+    let verificationSent = true;
+    try {
+      await account.createVerification(VERIFY_URL);
+    } catch {
+      verificationSent = false;
+    }
 
     // 5. Destroy session — user must verify before accessing the platform
     await account.deleteSession("current");
     setUser(null);
     setLabels([]);
+
+    return { verificationSent };
   }
 
   async function resendVerification() {
     // Caller must ensure there's an active session or handle the error
     await account.createVerification(VERIFY_URL);
+  }
+
+  async function resendVerificationWithCredentials(email, password) {
+    // Create a temporary session, send verification, destroy session
+    await account.createEmailPasswordSession(email, password);
+    try {
+      await account.createVerification(VERIFY_URL);
+    } finally {
+      await account.deleteSession("current").catch(() => {});
+    }
   }
 
   async function logout() {
@@ -134,6 +151,7 @@ export function AuthProvider({ children }) {
         register,
         logout,
         resendVerification,
+        resendVerificationWithCredentials,
         changePassword,
         requestPasswordRecovery,
         confirmPasswordRecovery,

@@ -77,6 +77,8 @@
       "resendCooldown": "Reenviar en {{seconds}}s",
       "resendSuccess": "¡Correo de verificación enviado! Revisa tu bandeja de entrada.",
       "resendError": "No se pudo reenviar. Intenta iniciar sesión de nuevo para recibir un nuevo correo de verificación.",
+      "resendLoginHint": "Para reenviar el correo de verificación, intenta iniciar sesión de nuevo.",
+      "verificationFailedWarning": "No pudimos enviar el correo de verificación. Pulsa \"Reenviar\" o intenta iniciar sesión más tarde para recibir uno nuevo.",
       "backToSignIn": "Volver a Iniciar Sesión"
     },
     "verify": {

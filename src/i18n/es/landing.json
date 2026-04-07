@@ -8,7 +8,10 @@
     "register": "Registrarse",
     "logout": "Cerrar sesión",
     "adminPanel": "Panel Admin",
-    "myPortal": "Mi Portal"
+    "myPortal": "Mi Portal",
+    "myProfile": "Mi Perfil",
+    "myOrders": "Mis Compras",
+    "myTickets": "Mis Reservaciones"
   },
   "footer": {
     "tagline": "Experiencias de bienestar premium diseñadas para nutrir tu cuerpo, mente y espíritu.",
