@@ -4,14 +4,10 @@ import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 import ImageUpload from "@/components/admin/experiences/ImageUpload";
 import AdminSelect from "@/components/common/AdminSelect";
+import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 
-const RESOURCE_TYPE_OPTIONS = [
-  { value: "instructor", label: "Instructor" },
-  { value: "facilitator", label: "Facilitador" },
-  { value: "therapist", label: "Terapeuta" },
-  { value: "equipment", label: "Equipamiento" },
-];
+// Resource type options moved inside component for i18n
 
 const EMPTY = {
   name: "",
@@ -95,8 +91,29 @@ export default function ResourceForm({
   initialData,
   onSubmit,
   submitting,
-  submitLabel = "Guardar",
+  submitLabel,
 }) {
+  const { t } = useLanguage();
+
+  const RESOURCE_TYPE_OPTIONS = [
+    {
+      value: "instructor",
+      label: t("admin.resourceForms.resourceTypes.instructor"),
+    },
+    {
+      value: "facilitator",
+      label: t("admin.resourceForms.resourceTypes.facilitator"),
+    },
+    {
+      value: "therapist",
+      label: t("admin.resourceForms.resourceTypes.therapist"),
+    },
+    {
+      value: "equipment",
+      label: t("admin.resourceForms.resourceTypes.equipment"),
+    },
+  ];
+
   const [form, setForm] = useState({ ...EMPTY, ...initialData });
   const [errors, setErrors] = useState({});
 
@@ -112,13 +129,13 @@ export default function ResourceForm({
 
   function validate() {
     const e = {};
-    if (!form.name.trim()) e.name = "El nombre es requerido";
-    if (!form.type) e.type = "El tipo es requerido";
+    if (!form.name.trim()) e.name = t("admin.resourceForms.nameRequired");
+    if (!form.type) e.type = t("admin.resourceForms.typeRequired");
     if (form.metadata.trim()) {
       try {
         JSON.parse(form.metadata);
       } catch {
-        e.metadata = "JSON inválido";
+        e.metadata = t("admin.resourceForms.invalidJson");
       }
     }
     return e;
@@ -150,10 +167,14 @@ export default function ResourceForm({
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Identidad
+          {t("admin.resourceForms.resourceSection")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Nombre" required error={errors.name}>
+          <Field
+            label={t("admin.resourceForms.name")}
+            required
+            error={errors.name}
+          >
             <Input
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
@@ -162,7 +183,11 @@ export default function ResourceForm({
               className={errors.name ? "border-red-400" : ""}
             />
           </Field>
-          <Field label="Tipo" required error={errors.type}>
+          <Field
+            label={t("admin.resourceForms.type")}
+            required
+            error={errors.type}
+          >
             <AdminSelect
               value={form.type}
               onChange={(v) => set("type", v)}
@@ -172,8 +197,8 @@ export default function ResourceForm({
             />
           </Field>
           <Field
-            label="Contacto"
-            hint="Email, teléfono u otra referencia de contacto"
+            label={t("admin.resourceForms.contact")}
+            hint={t("admin.resourceForms.contactHint")}
           >
             <Input
               value={form.contactInfo}
@@ -187,7 +212,7 @@ export default function ResourceForm({
             <Toggle
               checked={form.isActive}
               onChange={(v) => set("isActive", v)}
-              label="Recurso activo"
+              label={t("admin.resourceForms.resourceActive")}
               disabled={submitting}
             />
           </div>
@@ -197,9 +222,9 @@ export default function ResourceForm({
       {/* Descripción */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Descripción
+          {t("admin.resourceForms.descriptionSection")}
         </h2>
-        <Field label="Descripción">
+        <Field label={t("admin.resourceForms.description")}>
           <Textarea
             value={form.description}
             onChange={(v) => set("description", v)}
@@ -213,7 +238,7 @@ export default function ResourceForm({
       {/* Foto */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Foto del recurso
+          {t("admin.resourceForms.resourcePhoto")}
         </h2>
         <div className="max-w-sm">
           <ImageUpload
@@ -231,8 +256,8 @@ export default function ResourceForm({
           Metadata
         </h2>
         <Field
-          label="Metadata (JSON)"
-          hint="Datos adicionales en formato JSON. Opcional."
+          label={t("admin.resourceForms.metadata")}
+          hint={t("admin.resourceForms.metadataHint")}
           error={errors.metadata}
         >
           <Textarea
@@ -251,10 +276,10 @@ export default function ResourceForm({
           {submitting ? (
             <span className="flex items-center gap-2">
               <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-              Guardando...
+              {t("admin.resourceForms.saving")}
             </span>
           ) : (
-            submitLabel
+            submitLabel || t("admin.resourceForms.save")
           )}
         </Button>
       </div>

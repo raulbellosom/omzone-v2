@@ -25,7 +25,7 @@ function LoadingSkeleton() {
   return (
     <div className="animate-pulse">
       {/* Hero skeleton */}
-      <div className="w-full aspect-[16/9] md:aspect-[21/9] bg-warm-gray" />
+      <div className="w-full aspect-3/4 sm:aspect-video md:aspect-21/9 bg-warm-gray" />
 
       {/* Content skeleton */}
       <div className="container-shell py-12 space-y-6 max-w-3xl">

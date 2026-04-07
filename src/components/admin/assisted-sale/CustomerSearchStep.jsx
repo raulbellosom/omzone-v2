@@ -24,7 +24,7 @@ function CustomerCard({ profile, selected, onSelect }) {
           <p className="text-sm font-medium text-charcoal">
             {profile.displayName ||
               `${profile.firstName ?? ""} ${profile.lastName ?? ""}`.trim() ||
-              "Sin nombre"}
+              t("admin.assistedSale.customer.noName")}
           </p>
           <p className="text-xs text-charcoal-muted">{profile.email}</p>
           {profile.phone && (
@@ -80,8 +80,8 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
 
   return (
     <WizardStepWrapper
-      title="Cliente"
-      description="Busca un cliente existente por email o crea uno nuevo."
+      title={t("admin.assistedSale.customer.title")}
+      description={t("admin.assistedSale.customer.description")}
     >
       {/* Search input */}
       <div className="relative mb-4">
@@ -97,7 +97,7 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
               setWizardField("isNewCustomer", false);
             }
           }}
-          placeholder="Buscar por email..."
+          placeholder={t("admin.assistedSale.customer.searchPlaceholder")}
           className={cn(
             "h-11 w-full rounded-xl border border-sand-dark bg-white pl-9 pr-3 text-sm text-charcoal",
             "placeholder:text-charcoal-subtle focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20",
@@ -112,7 +112,7 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
       {results.length > 0 && !showNewForm && (
         <div className="space-y-2 mb-4">
           <p className="text-xs text-charcoal-subtle uppercase tracking-wide font-medium">
-            Clientes encontrados
+            {t("admin.assistedSale.customer.foundResults")}
           </p>
           {results.map((profile) => (
             <CustomerCard
@@ -131,7 +131,7 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
         !loading &&
         !showNewForm && (
           <p className="text-sm text-charcoal-muted mb-4">
-            No se encontró ningún cliente con ese email.
+            {t("admin.assistedSale.customer.notFound")}
           </p>
         )}
 
@@ -144,18 +144,21 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
           onClick={handleNewCustomer}
         >
           <UserPlus className="h-4 w-4" />
-          Crear cliente nuevo
+          {t("admin.assistedSale.customer.createNew")}
         </Button>
       )}
 
       {/* New customer form */}
       {showNewForm && (
         <div className="space-y-3 rounded-xl border border-sand-dark/40 bg-warm-gray/20 p-4">
-          <p className="text-sm font-medium text-charcoal">Nuevo cliente</p>
+          <p className="text-sm font-medium text-charcoal">
+            {t("admin.assistedSale.customer.newCustomer")}
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-charcoal">
-                Nombre completo <span className="text-red-500">*</span>
+                {t("admin.assistedSale.customer.fullName")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <Input
                 value={wizard.customerName}
@@ -165,7 +168,8 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
             </div>
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-charcoal">
-                Email <span className="text-red-500">*</span>
+                {t("admin.assistedSale.customer.email")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <Input
                 type="email"
@@ -178,7 +182,7 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
             </div>
             <div className="space-y-1.5 sm:col-span-2">
               <label className="text-xs font-medium text-charcoal">
-                Teléfono
+                {t("admin.assistedSale.customer.phone")}
               </label>
               <Input
                 type="tel"
@@ -208,7 +212,7 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
             }}
             className="text-xs text-charcoal-subtle hover:text-charcoal underline"
           >
-            Cancelar — buscar existente
+            {t("admin.assistedSale.customer.cancelSearch")}
           </button>
         </div>
       )}

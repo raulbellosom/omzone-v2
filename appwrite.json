@@ -7,6 +7,14 @@
       "name": "assign-user-label",
       "runtime": "node-22",
       "execute": ["any"],
+      "scopes": [
+        "users.read",
+        "users.write",
+        "documents.read",
+        "documents.write",
+        "databases.read",
+        "collections.read"
+      ],
       "events": ["users.*.create"],
       "timeout": 15,
       "enabled": true,

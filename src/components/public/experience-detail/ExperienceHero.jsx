@@ -28,7 +28,7 @@ export default function ExperienceHero({ experience }) {
   return (
     <div className="relative w-full -mt-20">
       {/* Image */}
-      <div className="relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden bg-warm-gray">
+      <div className="relative w-full aspect-3/4 sm:aspect-video md:aspect-21/9 overflow-hidden bg-warm-gray">
         <OptimizedImage
           fileId={experience.heroImageId}
           widths={[800, 1200, 1600]}
@@ -38,7 +38,7 @@ export default function ExperienceHero({ experience }) {
           eager
         />
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent" />
 
         {/* Back link — overlaid top-left, below navbar */}
         <div className="absolute top-20 left-0 right-0 z-10">

@@ -1,22 +1,31 @@
 import { Minus, Plus } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 import WizardStepWrapper from "./WizardStepWrapper";
 
 function formatPrice(amount, currency = "MXN") {
   return new Intl.NumberFormat("es-MX", {
-    style: "currency", currency, minimumFractionDigits: 0, maximumFractionDigits: 0,
+    style: "currency",
+    currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(amount);
 }
 
 function SummaryRow({ label, value, highlight }) {
   return (
-    <div className={`flex justify-between items-center py-1.5 ${highlight ? "font-semibold text-charcoal" : "text-sm text-charcoal-muted"}`}>
+    <div
+      className={`flex justify-between items-center py-1.5 ${highlight ? "font-semibold text-charcoal" : "text-sm text-charcoal-muted"}`}
+    >
       <span>{label}</span>
-      <span className={highlight ? "text-base text-charcoal" : ""}>{value}</span>
+      <span className={highlight ? "text-base text-charcoal" : ""}>
+        {value}
+      </span>
     </div>
   );
 }
 
 export default function QuantityStep({ wizard, setWizardField }) {
+  const { t } = useLanguage();
   const { experience, pricingTier, quantity } = wizard;
   const min = experience?.minQuantity || 1;
   const max = experience?.maxQuantity || 99;
@@ -34,8 +43,8 @@ export default function QuantityStep({ wizard, setWizardField }) {
 
   return (
     <WizardStepWrapper
-      title="Cantidad"
-      description="Define el número de participantes para esta venta."
+      title={t("admin.assistedSale.quantity.title")}
+      description={t("admin.assistedSale.quantity.description")}
     >
       {/* Quantity picker */}
       <div className="flex items-center gap-4 mb-6">
@@ -48,9 +57,11 @@ export default function QuantityStep({ wizard, setWizardField }) {
           <Minus className="h-4 w-4 text-charcoal" />
         </button>
         <div className="text-center">
-          <span className="text-3xl font-bold text-charcoal tabular-nums">{quantity}</span>
+          <span className="text-3xl font-bold text-charcoal tabular-nums">
+            {quantity}
+          </span>
           <p className="text-xs text-charcoal-muted mt-0.5">
-            participante{quantity !== 1 ? "s" : ""}
+            {t("admin.assistedSale.quantity.participants")}
           </p>
         </div>
         <button
@@ -61,7 +72,11 @@ export default function QuantityStep({ wizard, setWizardField }) {
         >
           <Plus className="h-4 w-4 text-charcoal" />
         </button>
-        {min > 1 && <p className="text-xs text-charcoal-subtle">Mínimo: {min}</p>}
+        {min > 1 && (
+          <p className="text-xs text-charcoal-subtle">
+            {t("admin.assistedSale.quantity.minimum").replace("{min}", min)}
+          </p>
+        )}
       </div>
 
       {/* Price summary (indicative) */}
@@ -73,17 +88,20 @@ export default function QuantityStep({ wizard, setWizardField }) {
           />
           {wizard.selectedAddonIds.length > 0 && (
             <SummaryRow
-              label={`Complementos (${wizard.selectedAddonIds.length})`}
-              value="Ver en revisión"
+              label={t("admin.assistedSale.quantity.addonsCount").replace(
+                "{count}",
+                wizard.selectedAddonIds.length,
+              )}
+              value={t("admin.assistedSale.quantity.seeInReview")}
             />
           )}
           <SummaryRow
-            label="Total estimado"
+            label={t("admin.assistedSale.quantity.estimatedTotal")}
             value={formatPrice(baseTotal, currency)}
             highlight
           />
           <p className="pt-2 text-xs text-charcoal-subtle">
-            * El total exacto lo confirma el servidor al procesar la orden.
+            {t("admin.assistedSale.quantity.serverNote")}
           </p>
         </div>
       )}

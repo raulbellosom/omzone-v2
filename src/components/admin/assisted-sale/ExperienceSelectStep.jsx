@@ -1,19 +1,11 @@
 import { useState } from "react";
 import { Search, CheckCircle2 } from "lucide-react";
 import { useExperiences } from "@/hooks/useExperiences";
+import { useLanguage } from "@/hooks/useLanguage";
 import WizardStepWrapper from "./WizardStepWrapper";
 import { cn } from "@/lib/utils";
 
-const TYPE_LABELS = {
-  session: "Sesión",
-  immersion: "Inmersión",
-  retreat: "Retiro",
-  stay: "Estancia",
-  private: "Privada",
-  package: "Paquete",
-};
-
-function ExperienceCard({ experience, selected, onSelect }) {
+function ExperienceCard({ experience, selected, onSelect, t }) {
   return (
     <button
       type="button"
@@ -22,22 +14,28 @@ function ExperienceCard({ experience, selected, onSelect }) {
         "w-full text-left rounded-xl border-2 px-4 py-3 transition-all",
         selected
           ? "border-sage bg-sage/5"
-          : "border-sand-dark/40 hover:border-sage/50"
+          : "border-sand-dark/40 hover:border-sage/50",
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-sm font-medium text-charcoal truncate">{experience.publicName}</p>
+          <p className="text-sm font-medium text-charcoal truncate">
+            {experience.publicName}
+          </p>
           <p className="text-xs text-charcoal-subtle mt-0.5">
-            {TYPE_LABELS[experience.type] ?? experience.type}
+            {t(`admin.experienceTypes.${experience.type}`) || experience.type}
             {" · "}
             <span className="capitalize">{experience.saleMode}</span>
           </p>
           {experience.shortDescription && (
-            <p className="text-xs text-charcoal-muted mt-1 line-clamp-2">{experience.shortDescription}</p>
+            <p className="text-xs text-charcoal-muted mt-1 line-clamp-2">
+              {experience.shortDescription}
+            </p>
           )}
         </div>
-        {selected && <CheckCircle2 className="h-5 w-5 text-sage shrink-0 mt-0.5" />}
+        {selected && (
+          <CheckCircle2 className="h-5 w-5 text-sage shrink-0 mt-0.5" />
+        )}
       </div>
     </button>
   );
@@ -45,7 +43,12 @@ function ExperienceCard({ experience, selected, onSelect }) {
 
 export default function ExperienceSelectStep({ wizard, setWizardField }) {
   const [search, setSearch] = useState("");
-  const { data: experiences, loading } = useExperiences({ search, status: "published", limit: 50 });
+  const { t } = useLanguage();
+  const { data: experiences, loading } = useExperiences({
+    search,
+    status: "published",
+    limit: 50,
+  });
 
   function handleSelect(exp) {
     if (wizard.experience?.$id === exp.$id) return;
@@ -58,8 +61,8 @@ export default function ExperienceSelectStep({ wizard, setWizardField }) {
 
   return (
     <WizardStepWrapper
-      title="Experiencia"
-      description="Selecciona la experiencia que va a comprar el cliente."
+      title={t("admin.assistedSale.experience.title")}
+      description={t("admin.assistedSale.experience.description")}
     >
       {/* Search */}
       <div className="relative mb-4">
@@ -68,10 +71,10 @@ export default function ExperienceSelectStep({ wizard, setWizardField }) {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Buscar experiencia..."
+          placeholder={t("admin.assistedSale.experience.searchPlaceholder")}
           className={cn(
             "h-10 w-full rounded-xl border border-sand-dark bg-white pl-9 pr-3 text-sm text-charcoal",
-            "placeholder:text-charcoal-subtle focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20"
+            "placeholder:text-charcoal-subtle focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20",
           )}
         />
       </div>
@@ -84,7 +87,9 @@ export default function ExperienceSelectStep({ wizard, setWizardField }) {
 
       {!loading && experiences.length === 0 && (
         <p className="text-sm text-charcoal-muted text-center py-6">
-          {search ? "Sin resultados" : "No hay experiencias publicadas"}
+          {search
+            ? t("admin.assistedSale.experience.noResults")
+            : t("admin.assistedSale.experience.noPublished")}
         </p>
       )}
 
@@ -95,6 +100,7 @@ export default function ExperienceSelectStep({ wizard, setWizardField }) {
             experience={exp}
             selected={wizard.experience?.$id === exp.$id}
             onSelect={() => handleSelect(exp)}
+            t={t}
           />
         ))}
       </div>

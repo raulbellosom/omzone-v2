@@ -4,23 +4,18 @@ import { Pencil, Archive, Globe, RotateCcw } from "lucide-react";
 import { Card } from "@/components/common/Card";
 import { Button } from "@/components/common/Button";
 import StatusBadge from "./StatusBadge";
+import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 
-const TYPE_LABELS = {
-  session: "Sesión",
-  immersion: "Inmersión",
-  retreat: "Retiro",
-  stay: "Estancia",
-  private: "Privada",
-  package: "Paquete",
-};
-
-const SALE_MODE_LABELS = {
-  direct: "Directa",
-  request: "Por solicitud",
-  assisted: "Asistida",
-  pass: "Por pase",
-};
+const TYPE_LABEL_KEYS = [
+  "session",
+  "immersion",
+  "retreat",
+  "stay",
+  "private",
+  "package",
+];
+const SALE_MODE_KEYS = ["direct", "request", "assisted", "pass"];
 
 function ConfirmOverlay({
   open,
@@ -29,6 +24,7 @@ function ConfirmOverlay({
   confirmLabel,
   onConfirm,
   onCancel,
+  cancelLabel,
 }) {
   if (!open) return null;
   return (
@@ -39,7 +35,7 @@ function ConfirmOverlay({
         <p className="text-sm text-charcoal-subtle">{description}</p>
         <div className="flex justify-end gap-3">
           <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
-            Cancelar
+            {cancelLabel}
           </Button>
           <Button type="button" size="sm" onClick={onConfirm}>
             {confirmLabel}
@@ -56,6 +52,7 @@ export default function ExperienceCard({
   canAdmin,
 }) {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [confirmAction, setConfirmAction] = useState(null);
   const editUrl = ROUTES.ADMIN_EXPERIENCE_EDIT.replace(":id", experience.$id);
 
@@ -68,9 +65,10 @@ export default function ExperienceCard({
     <>
       <ConfirmOverlay
         open={confirmAction === "archived"}
-        title="Archivar experiencia"
-        description="La experiencia dejará de estar visible públicamente. Puedes reactivarla en cualquier momento."
-        confirmLabel="Archivar"
+        title={t("admin.experienceActions.archiveTitle")}
+        description={t("admin.experienceActions.archiveDescription")}
+        confirmLabel={t("admin.experienceActions.archive")}
+        cancelLabel={t("admin.pricingTierForm.cancel")}
         onConfirm={handleConfirm}
         onCancel={() => setConfirmAction(null)}
       />
@@ -88,10 +86,13 @@ export default function ExperienceCard({
         </div>
 
         <div className="flex items-center gap-3 text-xs text-charcoal-subtle">
-          <span>{TYPE_LABELS[experience.type] ?? experience.type}</span>
+          <span>
+            {t(`admin.experienceTypes.${experience.type}`) || experience.type}
+          </span>
           <span className="text-sand-dark">·</span>
           <span>
-            {SALE_MODE_LABELS[experience.saleMode] ?? experience.saleMode}
+            {t(`admin.experienceSaleModes.${experience.saleMode}`) ||
+              experience.saleMode}
           </span>
         </div>
 
@@ -104,7 +105,7 @@ export default function ExperienceCard({
             className="flex-1 min-w-0 justify-center"
           >
             <Pencil className="h-3.5 w-3.5" />
-            Editar
+            {t("admin.experienceActions.edit")}
           </Button>
 
           {canAdmin && experience.status !== "published" && (
@@ -116,7 +117,7 @@ export default function ExperienceCard({
               className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
             >
               <Globe className="h-3.5 w-3.5" />
-              Publicar
+              {t("admin.experienceActions.publish")}
             </Button>
           )}
 
@@ -129,7 +130,7 @@ export default function ExperienceCard({
               className="text-charcoal-subtle"
             >
               <Archive className="h-3.5 w-3.5" />
-              Archivar
+              {t("admin.experienceActions.archive")}
             </Button>
           )}
 
@@ -142,7 +143,7 @@ export default function ExperienceCard({
               className="text-amber-600 hover:bg-amber-50"
             >
               <RotateCcw className="h-3.5 w-3.5" />
-              Borrador
+              {t("admin.experienceActions.draft")}
             </Button>
           )}
         </div>

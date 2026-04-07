@@ -7,16 +7,17 @@ import { Badge } from "@/components/common/Badge";
 import { useRooms, updateRoom } from "@/hooks/useRooms";
 import { useLocations } from "@/hooks/useLocations";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
 
-const ROOM_TYPE_LABELS = {
-  studio: "Estudio",
-  therapy_room: "Sala de terapia",
-  outdoor: "Exterior",
-  pool_area: "Área de alberca",
-  other: "Otro",
-};
+const ROOM_TYPE_LABEL_KEYS = [
+  "studio",
+  "therapy_room",
+  "outdoor",
+  "pool_area",
+  "other",
+];
 
 const ROOM_NEW_ROUTE = "/admin/rooms/new";
 const ROOM_EDIT_ROUTE = "/admin/rooms/:id/edit";
@@ -110,8 +111,14 @@ function RoomCard({ room, locationName, onToggle, canAdmin, navigate }) {
 export default function RoomListTab() {
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
+  const { t } = useLanguage();
   const [locationFilter, setLocationFilter] = useState("");
   const [actionError, setActionError] = useState(null);
+
+  const getRoomTypeLabel = (typeVal) =>
+    typeVal
+      ? t(`admin.resourceLists.roomTypes.${typeVal}`) || typeVal
+      : "\u2014";
 
   // All locations for filter select
   const { data: locations } = useLocations({ activeOnly: false });
@@ -149,7 +156,7 @@ export default function RoomListTab() {
           value={locationFilter}
           onChange={(v) => setLocationFilter(v)}
           options={[
-            { value: "", label: "Todas las locaciones" },
+            { value: "", label: t("admin.resourceLists.allLocations") },
             ...locations.map((l) => ({ value: l.$id, label: l.name })),
           ]}
           minWidth="min-w-[180px]"
@@ -163,7 +170,7 @@ export default function RoomListTab() {
               size="sm"
               onClick={() => navigate(ROOM_NEW_ROUTE)}
             >
-              <Plus className="h-4 w-4" /> Crear cuarto
+              <Plus className="h-4 w-4" /> {t("admin.resourceLists.createRoom")}
             </Button>
           )}
         </div>
@@ -181,22 +188,22 @@ export default function RoomListTab() {
           <thead>
             <tr className="border-b border-sand-dark bg-warm-gray/50">
               <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
-                Nombre
+                {t("admin.resourceLists.name")}
               </th>
               <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
-                Locación
+                {t("admin.resourceLists.location")}
               </th>
               <th className="px-4 py-3 text-left font-medium text-charcoal-subtle hidden lg:table-cell">
-                Tipo
+                {t("admin.resourceLists.type")}
               </th>
               <th className="px-4 py-3 text-left font-medium text-charcoal-subtle hidden sm:table-cell">
-                Capacidad
+                {t("admin.resourceLists.capacity")}
               </th>
               <th className="px-4 py-3 text-center font-medium text-charcoal-subtle">
-                Activo
+                {t("admin.resourceLists.active")}
               </th>
               <th className="px-4 py-3 text-right font-medium text-charcoal-subtle">
-                Acciones
+                {t("admin.resourceLists.actions")}
               </th>
             </tr>
           </thead>
@@ -210,8 +217,9 @@ export default function RoomListTab() {
                   colSpan={6}
                   className="px-4 py-12 text-center text-sm text-charcoal-subtle"
                 >
-                  No hay cuartos
-                  {locationFilter ? " en esta locación" : " creados todavía"}.
+                  {locationFilter
+                    ? t("admin.resourceLists.noRoomsLocation")
+                    : t("admin.resourceLists.noRoomsYet")}
                 </td>
               </tr>
             )}
@@ -231,10 +239,12 @@ export default function RoomListTab() {
                     {locationMap[room.locationId] ?? room.locationId}
                   </td>
                   <td className="px-4 py-3 text-charcoal-subtle hidden lg:table-cell">
-                    {ROOM_TYPE_LABELS[room.type] ?? room.type ?? "—"}
+                    {getRoomTypeLabel(room.type)}
                   </td>
                   <td className="px-4 py-3 text-charcoal-subtle hidden sm:table-cell">
-                    {room.capacity ? `${room.capacity} pers.` : "—"}
+                    {room.capacity
+                      ? `${room.capacity} ${t("admin.resourceLists.persAbbr")}`
+                      : "\u2014"}
                   </td>
                   <td className="px-4 py-3 text-center">
                     {isAdmin ? (
@@ -244,7 +254,9 @@ export default function RoomListTab() {
                       />
                     ) : (
                       <Badge variant={room.isActive ? "success" : "warm"}>
-                        {room.isActive ? "Activo" : "Inactivo"}
+                        {room.isActive
+                          ? t("admin.resourceLists.active")
+                          : t("admin.resourceLists.inactive")}
                       </Badge>
                     )}
                   </td>
@@ -256,7 +268,7 @@ export default function RoomListTab() {
                       onClick={() =>
                         navigate(ROOM_EDIT_ROUTE.replace(":id", room.$id))
                       }
-                      title="Editar"
+                      title={t("admin.resourceLists.edit")}
                     >
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -284,7 +296,7 @@ export default function RoomListTab() {
         {!loading && rooms.length === 0 && (
           <Card className="p-8 text-center space-y-4">
             <p className="text-sm text-charcoal-subtle">
-              No hay cuartos todavía.
+              {t("admin.resourceLists.noRoomsMobile")}
             </p>
             {isAdmin && (
               <Button
@@ -292,7 +304,8 @@ export default function RoomListTab() {
                 size="sm"
                 onClick={() => navigate(ROOM_NEW_ROUTE)}
               >
-                <Plus className="h-4 w-4" /> Crear primer cuarto
+                <Plus className="h-4 w-4" />{" "}
+                {t("admin.resourceLists.createFirstRoom")}
               </Button>
             )}
           </Card>
@@ -306,13 +319,16 @@ export default function RoomListTab() {
               onToggle={handleToggle}
               canAdmin={isAdmin}
               navigate={navigate}
+              t={t}
+              roomTypeLabel={getRoomTypeLabel(room.type)}
             />
           ))}
       </div>
 
       {!loading && total > 0 && (
         <p className="text-xs text-charcoal-subtle text-right">
-          {total} {total === 1 ? "cuarto" : "cuartos"}
+          {total}{" "}
+          {t("admin.resourceLists.roomCount").replace("{count}", "").trim()}
         </p>
       )}
     </div>

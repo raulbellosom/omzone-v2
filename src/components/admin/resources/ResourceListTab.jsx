@@ -7,23 +7,19 @@ import { Card } from "@/components/common/Card";
 import { Badge } from "@/components/common/Badge";
 import { useResources, updateResource } from "@/hooks/useResources";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
 
-const TYPE_OPTIONS = [
-  { value: "", label: "Todos los tipos" },
-  { value: "instructor", label: "Instructor" },
-  { value: "facilitator", label: "Facilitador" },
-  { value: "therapist", label: "Terapeuta" },
-  { value: "equipment", label: "Equipamiento" },
+const TYPE_OPTION_KEYS = [
+  { value: "", key: "allTypes" },
+  { value: "instructor", key: "instructor" },
+  { value: "facilitator", key: "facilitator" },
+  { value: "therapist", key: "therapist" },
+  { value: "equipment", key: "equipment" },
 ];
 
-const TYPE_LABELS = {
-  instructor: "Instructor",
-  facilitator: "Facilitador",
-  therapist: "Terapeuta",
-  equipment: "Equipamiento",
-};
+const TYPE_LABEL_KEYS = ["instructor", "facilitator", "therapist", "equipment"];
 
 const RESOURCE_NEW_ROUTE = "/admin/resources/new";
 const RESOURCE_EDIT_ROUTE = "/admin/resources/:id/edit";
@@ -68,18 +64,25 @@ function SkeletonRow() {
 }
 
 // Mobile card
-function ResourceCard({ resource, onToggle, canAdmin, navigate }) {
+function ResourceCard({
+  resource,
+  onToggle,
+  canAdmin,
+  navigate,
+  t,
+  typeLabel,
+}) {
   return (
     <Card className="p-4 space-y-3">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="font-medium text-charcoal truncate">{resource.name}</p>
-          <p className="text-xs text-charcoal-subtle mt-0.5">
-            {TYPE_LABELS[resource.type] ?? resource.type}
-          </p>
+          <p className="text-xs text-charcoal-subtle mt-0.5">{typeLabel}</p>
         </div>
         <Badge variant={resource.isActive ? "success" : "warm"}>
-          {resource.isActive ? "Activo" : "Inactivo"}
+          {resource.isActive
+            ? t("admin.resourceLists.active")
+            : t("admin.resourceLists.inactive")}
         </Badge>
       </div>
       {resource.contactInfo && (
@@ -97,12 +100,14 @@ function ResourceCard({ resource, onToggle, canAdmin, navigate }) {
           }
           className="flex-1 justify-center"
         >
-          <Pencil className="h-3.5 w-3.5" /> Editar
+          <Pencil className="h-3.5 w-3.5" /> {t("admin.resourceLists.edit")}
         </Button>
         {canAdmin && (
           <div className="flex items-center gap-2 ml-auto">
             <span className="text-xs text-charcoal-subtle">
-              {resource.isActive ? "Activo" : "Inactivo"}
+              {resource.isActive
+                ? t("admin.resourceLists.active")
+                : t("admin.resourceLists.inactive")}
             </span>
             <ActiveToggle
               isActive={resource.isActive}
@@ -118,9 +123,21 @@ function ResourceCard({ resource, onToggle, canAdmin, navigate }) {
 export default function ResourceListTab() {
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
+  const { t } = useLanguage();
   const [search, setSearch] = useState("");
   const [type, setType] = useState("");
   const [actionError, setActionError] = useState(null);
+
+  const TYPE_OPTIONS = TYPE_OPTION_KEYS.map((o) => ({
+    value: o.value,
+    label:
+      o.key === "allTypes"
+        ? t("admin.resourceLists.allTypes")
+        : t(`admin.resourceLists.resourceTypes.${o.key}`),
+  }));
+
+  const getTypeLabel = (typeVal) =>
+    t(`admin.resourceLists.resourceTypes.${typeVal}`) || typeVal;
 
   const { data, total, loading, error, refetch } = useResources({
     search,
@@ -151,7 +168,7 @@ export default function ResourceListTab() {
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar recurso..."
+            placeholder={t("admin.resourceLists.searchResource")}
             className="pl-9 h-10"
           />
         </div>
@@ -170,7 +187,7 @@ export default function ResourceListTab() {
             }}
             className="flex items-center gap-1 text-sm text-charcoal-subtle hover:text-charcoal"
           >
-            <X className="h-4 w-4" /> Limpiar
+            <X className="h-4 w-4" /> {t("admin.resourceLists.clear")}
           </button>
         )}
         <div className="ml-auto">
@@ -180,7 +197,8 @@ export default function ResourceListTab() {
               size="sm"
               onClick={() => navigate(RESOURCE_NEW_ROUTE)}
             >
-              <Plus className="h-4 w-4" /> Crear recurso
+              <Plus className="h-4 w-4" />{" "}
+              {t("admin.resourceLists.createResource")}
             </Button>
           )}
         </div>
@@ -198,19 +216,19 @@ export default function ResourceListTab() {
           <thead>
             <tr className="border-b border-sand-dark bg-warm-gray/50">
               <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
-                Nombre
+                {t("admin.resourceLists.name")}
               </th>
               <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
-                Tipo
+                {t("admin.resourceLists.type")}
               </th>
               <th className="px-4 py-3 text-left font-medium text-charcoal-subtle hidden sm:table-cell">
-                Contacto
+                {t("admin.resourceLists.contact")}
               </th>
               <th className="px-4 py-3 text-center font-medium text-charcoal-subtle">
-                Activo
+                {t("admin.resourceLists.active")}
               </th>
               <th className="px-4 py-3 text-right font-medium text-charcoal-subtle">
-                Acciones
+                {t("admin.resourceLists.actions")}
               </th>
             </tr>
           </thead>
@@ -225,8 +243,8 @@ export default function ResourceListTab() {
                   className="px-4 py-12 text-center text-sm text-charcoal-subtle"
                 >
                   {hasFilters
-                    ? "No hay recursos que coincidan con la búsqueda."
-                    : "No hay recursos creados todavía."}
+                    ? t("admin.resourceLists.noResourcesFiltered")
+                    : t("admin.resourceLists.noResourcesYet")}
                 </td>
               </tr>
             )}
@@ -243,7 +261,7 @@ export default function ResourceListTab() {
                     </p>
                   </td>
                   <td className="px-4 py-3 text-charcoal-subtle">
-                    {TYPE_LABELS[r.type] ?? r.type}
+                    {getTypeLabel(r.type)}
                   </td>
                   <td className="px-4 py-3 text-charcoal-subtle hidden sm:table-cell truncate max-w-48">
                     {r.contactInfo ?? "—"}
@@ -256,7 +274,9 @@ export default function ResourceListTab() {
                       />
                     ) : (
                       <Badge variant={r.isActive ? "success" : "warm"}>
-                        {r.isActive ? "Activo" : "Inactivo"}
+                        {r.isActive
+                          ? t("admin.resourceLists.active")
+                          : t("admin.resourceLists.inactive")}
                       </Badge>
                     )}
                   </td>
@@ -268,7 +288,7 @@ export default function ResourceListTab() {
                       onClick={() =>
                         navigate(RESOURCE_EDIT_ROUTE.replace(":id", r.$id))
                       }
-                      title="Editar"
+                      title={t("admin.resourceLists.edit")}
                     >
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -296,7 +316,7 @@ export default function ResourceListTab() {
         {!loading && data.length === 0 && (
           <Card className="p-8 text-center space-y-4">
             <p className="text-sm text-charcoal-subtle">
-              No hay recursos todavía.
+              {t("admin.resourceLists.noResourcesMobile")}
             </p>
             {isAdmin && (
               <Button
@@ -304,7 +324,8 @@ export default function ResourceListTab() {
                 size="sm"
                 onClick={() => navigate(RESOURCE_NEW_ROUTE)}
               >
-                <Plus className="h-4 w-4" /> Crear primer recurso
+                <Plus className="h-4 w-4" />{" "}
+                {t("admin.resourceLists.createFirstResource")}
               </Button>
             )}
           </Card>
@@ -317,13 +338,16 @@ export default function ResourceListTab() {
               onToggle={handleToggle}
               canAdmin={isAdmin}
               navigate={navigate}
+              t={t}
+              typeLabel={getTypeLabel(r.type)}
             />
           ))}
       </div>
 
       {!loading && total > 0 && (
         <p className="text-xs text-charcoal-subtle text-right">
-          {total} {total === 1 ? "recurso" : "recursos"}
+          {total}{" "}
+          {t("admin.resourceLists.resourceCount").replace("{count}", "").trim()}
         </p>
       )}
     </div>

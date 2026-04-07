@@ -1,28 +1,30 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Pencil, Archive, Globe, RotateCcw, MoreHorizontal } from "lucide-react";
+import {
+  Pencil,
+  Archive,
+  Globe,
+  RotateCcw,
+  MoreHorizontal,
+} from "lucide-react";
 import { Button } from "@/components/common/Button";
 import StatusBadge from "./StatusBadge";
+import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
 
-const TYPE_LABELS = {
-  session:   "Sesión",
-  immersion: "Inmersión",
-  retreat:   "Retiro",
-  stay:      "Estancia",
-  private:   "Privada",
-  package:   "Paquete",
-};
+// Type and sale mode labels now use i18n t() calls inside components
 
-const SALE_MODE_LABELS = {
-  direct:   "Directa",
-  request:  "Por solicitud",
-  assisted: "Asistida",
-  pass:     "Por pase",
-};
-
-function ConfirmDialog({ open, title, description, confirmLabel, onConfirm, onCancel, danger }) {
+function ConfirmDialog({
+  open,
+  title,
+  description,
+  confirmLabel,
+  onConfirm,
+  onCancel,
+  danger,
+  cancelLabel,
+}) {
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -31,7 +33,9 @@ function ConfirmDialog({ open, title, description, confirmLabel, onConfirm, onCa
         <h3 className="text-base font-semibold text-charcoal">{title}</h3>
         <p className="text-sm text-charcoal-subtle">{description}</p>
         <div className="flex justify-end gap-3">
-          <Button type="button" variant="ghost" size="sm" onClick={onCancel}>Cancelar</Button>
+          <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
+            {cancelLabel}
+          </Button>
           <Button
             type="button"
             variant={danger ? "destructive" : "default"}
@@ -50,6 +54,7 @@ function ActionsMenu({ experience, onStatusChange, canAdmin }) {
   const [open, setOpen] = useState(false);
   const [confirm, setConfirm] = useState(null); // { type: "archive"|"publish"|"draft" }
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const editUrl = ROUTES.ADMIN_EXPERIENCE_EDIT.replace(":id", experience.$id);
 
@@ -70,17 +75,19 @@ function ActionsMenu({ experience, onStatusChange, canAdmin }) {
     <>
       <ConfirmDialog
         open={confirm?.type === "archive"}
-        title="Archivar experiencia"
-        description="La experiencia dejará de estar visible públicamente. Puedes reactivarla en cualquier momento."
-        confirmLabel="Archivar"
+        title={t("admin.experienceActions.archiveTitle")}
+        description={t("admin.experienceActions.archiveDescription")}
+        confirmLabel={t("admin.experienceActions.archive")}
+        cancelLabel={t("admin.pricingTierForm.cancel")}
         onConfirm={handleConfirm}
         onCancel={() => setConfirm(null)}
       />
       <ConfirmDialog
         open={confirm?.type === "publish"}
-        title="Publicar experiencia"
-        description="La experiencia será visible públicamente en el catálogo."
-        confirmLabel="Publicar"
+        title={t("admin.experienceActions.publishTitle")}
+        description={t("admin.experienceActions.publishDescription")}
+        confirmLabel={t("admin.experienceActions.publish")}
+        cancelLabel={t("admin.pricingTierForm.cancel")}
         onConfirm={handleConfirm}
         onCancel={() => setConfirm(null)}
       />
@@ -91,7 +98,7 @@ function ActionsMenu({ experience, onStatusChange, canAdmin }) {
           variant="ghost"
           size="icon"
           onClick={() => navigate(editUrl)}
-          title="Editar"
+          title={t("admin.experienceActions.edit")}
         >
           <Pencil className="h-4 w-4" />
         </Button>
@@ -102,14 +109,17 @@ function ActionsMenu({ experience, onStatusChange, canAdmin }) {
             variant="ghost"
             size="icon"
             onClick={() => setOpen((p) => !p)}
-            title="Más acciones"
+            title={t("admin.experienceActions.moreActions")}
           >
             <MoreHorizontal className="h-4 w-4" />
           </Button>
 
           {open && (
             <>
-              <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+              <div
+                className="fixed inset-0 z-10"
+                onClick={() => setOpen(false)}
+              />
               <div className="absolute right-0 top-full mt-1 z-20 w-44 rounded-xl border border-sand-dark bg-white shadow-lg py-1">
                 {canAdmin && experience.status !== "published" && (
                   <button
@@ -118,7 +128,7 @@ function ActionsMenu({ experience, onStatusChange, canAdmin }) {
                     className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
                   >
                     <Globe className="h-4 w-4 text-emerald-600" />
-                    Publicar
+                    {t("admin.experienceActions.publish")}
                   </button>
                 )}
                 {experience.status !== "draft" && (
@@ -128,7 +138,7 @@ function ActionsMenu({ experience, onStatusChange, canAdmin }) {
                     className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
                   >
                     <RotateCcw className="h-4 w-4 text-amber-600" />
-                    Volver a borrador
+                    {t("admin.experienceActions.backToDraft")}
                   </button>
                 )}
                 {experience.status !== "archived" && (
@@ -138,7 +148,7 @@ function ActionsMenu({ experience, onStatusChange, canAdmin }) {
                     className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
                   >
                     <Archive className="h-4 w-4 text-charcoal-subtle" />
-                    Archivar
+                    {t("admin.experienceActions.archive")}
                   </button>
                 )}
               </div>
@@ -155,63 +165,96 @@ function SkeletonRow() {
     <tr className="border-b border-sand">
       {[1, 2, 3, 4, 5].map((i) => (
         <td key={i} className="px-4 py-3">
-          <div className="h-4 rounded bg-warm-gray animate-pulse" style={{ width: `${60 + i * 8}%` }} />
+          <div
+            className="h-4 rounded bg-warm-gray animate-pulse"
+            style={{ width: `${60 + i * 8}%` }}
+          />
         </td>
       ))}
     </tr>
   );
 }
 
-export default function ExperienceTable({ experiences, loading, onStatusChange, canAdmin }) {
+export default function ExperienceTable({
+  experiences,
+  loading,
+  onStatusChange,
+  canAdmin,
+}) {
+  const { t } = useLanguage();
+
   return (
     <div className="overflow-x-auto rounded-xl border border-sand-dark">
       <table className="min-w-full text-sm">
         <thead>
           <tr className="border-b border-sand-dark bg-warm-gray/50">
-            <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">Nombre</th>
-            <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">Tipo</th>
-            <th className="px-4 py-3 text-left font-medium text-charcoal-subtle hidden sm:table-cell">Venta</th>
-            <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">Estado</th>
-            <th className="px-4 py-3 text-right font-medium text-charcoal-subtle">Acciones</th>
+            <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
+              {t("admin.experienceActions.tableHeaders.name")}
+            </th>
+            <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
+              {t("admin.experienceActions.tableHeaders.type")}
+            </th>
+            <th className="px-4 py-3 text-left font-medium text-charcoal-subtle hidden sm:table-cell">
+              {t("admin.experienceActions.tableHeaders.saleMode")}
+            </th>
+            <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
+              {t("admin.experienceActions.tableHeaders.status")}
+            </th>
+            <th className="px-4 py-3 text-right font-medium text-charcoal-subtle">
+              {t("admin.experienceActions.tableHeaders.actions")}
+            </th>
           </tr>
         </thead>
         <tbody>
-          {loading && Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)}
+          {loading &&
+            Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)}
 
           {!loading && experiences.length === 0 && (
             <tr>
-              <td colSpan={5} className="px-4 py-12 text-center text-sm text-charcoal-subtle">
-                No hay experiencias. Crea la primera usando el botón "Nueva experiencia".
+              <td
+                colSpan={5}
+                className="px-4 py-12 text-center text-sm text-charcoal-subtle"
+              >
+                {t("admin.experienceActions.noExperiences")}
               </td>
             </tr>
           )}
 
-          {!loading && experiences.map((exp) => (
-            <tr key={exp.$id} className="border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors">
-              <td className="px-4 py-3">
-                <div>
-                  <p className="font-medium text-charcoal truncate max-w-xs">{exp.publicName}</p>
-                  <p className="text-xs text-charcoal-subtle truncate max-w-xs">{exp.name}</p>
-                </div>
-              </td>
-              <td className="px-4 py-3 text-charcoal-subtle">
-                {TYPE_LABELS[exp.type] ?? exp.type}
-              </td>
-              <td className="px-4 py-3 text-charcoal-subtle hidden sm:table-cell">
-                {SALE_MODE_LABELS[exp.saleMode] ?? exp.saleMode}
-              </td>
-              <td className="px-4 py-3">
-                <StatusBadge status={exp.status} />
-              </td>
-              <td className="px-4 py-3">
-                <ActionsMenu
-                  experience={exp}
-                  onStatusChange={onStatusChange}
-                  canAdmin={canAdmin}
-                />
-              </td>
-            </tr>
-          ))}
+          {!loading &&
+            experiences.map((exp) => (
+              <tr
+                key={exp.$id}
+                className="border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors"
+              >
+                <td className="px-4 py-3">
+                  <div>
+                    <p className="font-medium text-charcoal truncate max-w-xs">
+                      {exp.publicName}
+                    </p>
+                    <p className="text-xs text-charcoal-subtle truncate max-w-xs">
+                      {exp.name}
+                    </p>
+                  </div>
+                </td>
+                <td className="px-4 py-3 text-charcoal-subtle">
+                  {t(`admin.experienceTypes.${exp.type}`) || exp.type}
+                </td>
+                <td className="px-4 py-3 text-charcoal-subtle hidden sm:table-cell">
+                  {t(`admin.experienceSaleModes.${exp.saleMode}`) ||
+                    exp.saleMode}
+                </td>
+                <td className="px-4 py-3">
+                  <StatusBadge status={exp.status} />
+                </td>
+                <td className="px-4 py-3">
+                  <ActionsMenu
+                    experience={exp}
+                    onStatusChange={onStatusChange}
+                    canAdmin={canAdmin}
+                  />
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

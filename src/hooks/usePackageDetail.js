@@ -5,7 +5,10 @@ import env from "@/config/env";
 const DB = env.appwriteDatabaseId;
 const BUCKET = env.bucketPackageImages;
 
-export function getPackagePreviewUrl(fileId, { width = 1200, height = 800 } = {}) {
+export function getPackagePreviewUrl(
+  fileId,
+  { width = 1200, height = 800 } = {},
+) {
   if (!fileId) return null;
   return storage.getFilePreview(BUCKET, fileId, width, height);
 }
@@ -34,25 +37,34 @@ export function usePackageDetail(slug) {
 
       try {
         // 1. Fetch package by slug (published only)
-        const pkgRes = await databases.listDocuments(DB, env.collectionPackages, [
-          Query.equal("slug", slug),
-          Query.equal("status", "published"),
-          Query.limit(1),
-        ]);
+        const pkgRes = await databases.listDocuments(
+          DB,
+          env.collectionPackages,
+          [
+            Query.equal("slug", slug),
+            Query.equal("status", "published"),
+            Query.limit(1),
+          ],
+        );
 
         if (pkgRes.total === 0) {
-          if (!cancelled) setState((s) => ({ ...s, loading: false, error: "not_found" }));
+          if (!cancelled)
+            setState((s) => ({ ...s, loading: false, error: "not_found" }));
           return;
         }
 
         const pkg = pkgRes.documents[0];
 
         // 2. Fetch package items
-        const itemsRes = await databases.listDocuments(DB, env.collectionPackageItems, [
-          Query.equal("packageId", pkg.$id),
-          Query.orderAsc("sortOrder"),
-          Query.limit(50),
-        ]);
+        const itemsRes = await databases.listDocuments(
+          DB,
+          env.collectionPackageItems,
+          [
+            Query.equal("packageId", pkg.$id),
+            Query.orderAsc("sortOrder"),
+            Query.limit(50),
+          ],
+        );
         const items = itemsRes.documents;
 
         // 3. Resolve experience names for items that reference experiences
@@ -63,10 +75,11 @@ export function usePackageDetail(slug) {
         let experiences = [];
         if (experienceIds.length > 0) {
           try {
-            const expRes = await databases.listDocuments(DB, env.collectionExperiences, [
-              Query.equal("$id", experienceIds),
-              Query.limit(50),
-            ]);
+            const expRes = await databases.listDocuments(
+              DB,
+              env.collectionExperiences,
+              [Query.equal("$id", experienceIds), Query.limit(50)],
+            );
             experiences = expRes.documents;
           } catch {
             // non-fatal
@@ -85,15 +98,25 @@ export function usePackageDetail(slug) {
         }
 
         if (!cancelled) {
-          setState({ pkg, items, experiences, galleryImageIds, loading: false, error: null });
+          setState({
+            pkg,
+            items,
+            experiences,
+            galleryImageIds,
+            loading: false,
+            error: null,
+          });
         }
       } catch (err) {
-        if (!cancelled) setState((s) => ({ ...s, loading: false, error: err.message }));
+        if (!cancelled)
+          setState((s) => ({ ...s, loading: false, error: err.message }));
       }
     }
 
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [slug]);
 
   return state;

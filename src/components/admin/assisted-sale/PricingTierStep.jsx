@@ -1,5 +1,6 @@
 import { CheckCircle2 } from "lucide-react";
 import { usePricingTiers } from "@/hooks/usePricingTiers";
+import { useLanguage } from "@/hooks/useLanguage";
 import WizardStepWrapper from "./WizardStepWrapper";
 import { cn } from "@/lib/utils";
 
@@ -12,7 +13,7 @@ function formatPrice(amount, currency = "MXN") {
   }).format(amount);
 }
 
-function TierCard({ tier, selected, onSelect }) {
+function TierCard({ tier, selected, onSelect, t }) {
   return (
     <button
       type="button"
@@ -22,8 +23,8 @@ function TierCard({ tier, selected, onSelect }) {
         selected
           ? "border-sage bg-sage/5"
           : tier.isHighlighted
-          ? "border-sage/30 bg-sage/3 hover:border-sage/60"
-          : "border-sand-dark/40 hover:border-sage/50"
+            ? "border-sage/30 bg-sage/3 hover:border-sage/60"
+            : "border-sand-dark/40 hover:border-sage/50",
       )}
     >
       <div className="flex items-center justify-between gap-3">
@@ -37,12 +38,14 @@ function TierCard({ tier, selected, onSelect }) {
             )}
             {tier.isHighlighted && !tier.badge && (
               <span className="text-[10px] font-semibold bg-sage/20 text-sage rounded-full px-2 py-0.5 uppercase tracking-wide">
-                Recomendado
+                {t("admin.assistedSale.tier.recommended")}
               </span>
             )}
           </div>
           {tier.description && (
-            <p className="text-xs text-charcoal-muted mt-0.5">{tier.description}</p>
+            <p className="text-xs text-charcoal-muted mt-0.5">
+              {tier.description}
+            </p>
           )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
@@ -57,6 +60,7 @@ function TierCard({ tier, selected, onSelect }) {
 }
 
 export default function PricingTierStep({ wizard, setWizardField }) {
+  const { t } = useLanguage();
   const { data: tiers, loading } = usePricingTiers(wizard.experience?.$id);
   const activeTiers = tiers.filter((t) => t.isActive);
 
@@ -68,16 +72,24 @@ export default function PricingTierStep({ wizard, setWizardField }) {
 
   if (!wizard.experience) {
     return (
-      <WizardStepWrapper title="Precio" description="Selecciona primero una experiencia.">
-        <p className="text-sm text-charcoal-muted">Vuelve al paso anterior y elige una experiencia.</p>
+      <WizardStepWrapper
+        title={t("admin.assistedSale.tier.title")}
+        description={t("admin.assistedSale.tier.noExperience")}
+      >
+        <p className="text-sm text-charcoal-muted">
+          {t("admin.assistedSale.tier.goBack")}
+        </p>
       </WizardStepWrapper>
     );
   }
 
   return (
     <WizardStepWrapper
-      title="Precio"
-      description={`Selecciona el tier de precio para "${wizard.experience.publicName}".`}
+      title={t("admin.assistedSale.tier.title")}
+      description={t("admin.assistedSale.tier.description").replace(
+        "{name}",
+        wizard.experience.publicName,
+      )}
     >
       {loading && (
         <div className="flex justify-center py-6">
@@ -87,7 +99,7 @@ export default function PricingTierStep({ wizard, setWizardField }) {
 
       {!loading && activeTiers.length === 0 && (
         <p className="text-sm text-charcoal-muted py-4">
-          Esta experiencia no tiene tiers de precio activos.
+          {t("admin.assistedSale.tier.noTiers")}
         </p>
       )}
 
@@ -98,6 +110,7 @@ export default function PricingTierStep({ wizard, setWizardField }) {
             tier={tier}
             selected={wizard.pricingTier?.$id === tier.$id}
             onSelect={() => handleSelect(tier)}
+            t={t}
           />
         ))}
       </div>

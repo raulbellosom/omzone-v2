@@ -5,14 +5,15 @@ import { Card } from "@/components/common/Card";
 import { useLocations } from "@/hooks/useLocations";
 import AdminSelect from "@/components/common/AdminSelect";
 import SearchCombobox from "@/components/common/SearchCombobox";
+import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 
-const ROOM_TYPE_OPTIONS = [
-  { value: "studio", label: "Estudio" },
-  { value: "therapy_room", label: "Sala de terapia" },
-  { value: "outdoor", label: "Exterior" },
-  { value: "pool_area", label: "Área de alberca" },
-  { value: "other", label: "Otro" },
+const ROOM_TYPE_OPTIONS_STATIC = [
+  { value: "studio", key: "studio" },
+  { value: "therapy_room", key: "therapy_room" },
+  { value: "outdoor", key: "outdoor" },
+  { value: "pool_area", key: "pool_area" },
+  { value: "other", key: "other" },
 ];
 
 const EMPTY = {
@@ -86,8 +87,15 @@ export default function RoomForm({
   initialData,
   onSubmit,
   submitting,
-  submitLabel = "Guardar",
+  submitLabel,
 }) {
+  const { t } = useLanguage();
+
+  const ROOM_TYPE_OPTIONS = ROOM_TYPE_OPTIONS_STATIC.map((o) => ({
+    value: o.value,
+    label: t(`admin.resourceForms.roomTypes.${o.key}`),
+  }));
+
   const [form, setForm] = useState({ ...EMPTY, ...initialData });
   const [errors, setErrors] = useState({});
 
@@ -108,12 +116,13 @@ export default function RoomForm({
 
   function validate() {
     const e = {};
-    if (!form.name.trim()) e.name = "El nombre es requerido";
-    if (!form.locationId) e.locationId = "La locación es requerida";
+    if (!form.name.trim()) e.name = t("admin.resourceForms.nameRequired");
+    if (!form.locationId)
+      e.locationId = t("admin.resourceForms.locationRequired");
     if (form.capacity !== "" && form.capacity !== null) {
       const n = parseInt(form.capacity);
       if (isNaN(n) || n < 1)
-        e.capacity = "La capacidad debe ser un número positivo";
+        e.capacity = t("admin.resourceForms.capacityPositive");
     }
     return e;
   }
@@ -148,10 +157,14 @@ export default function RoomForm({
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Cuarto / Espacio
+          {t("admin.resourceForms.roomSection")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Locación" required error={errors.locationId}>
+          <Field
+            label={t("admin.resourceForms.location")}
+            required
+            error={errors.locationId}
+          >
             <SearchCombobox
               value={form.locationId}
               onValueChange={(v) => set("locationId", v)}
@@ -159,13 +172,19 @@ export default function RoomForm({
               disabled={submitting || loadingLocations}
               error={!!errors.locationId}
               placeholder={
-                loadingLocations ? "Cargando..." : "Seleccionar locación"
+                loadingLocations
+                  ? t("admin.resourceForms.loading")
+                  : t("admin.resourceForms.selectLocation")
               }
-              searchPlaceholder="Buscar locación"
-              emptyMessage="No hay locaciones."
+              searchPlaceholder={t("admin.resourceForms.searchLocation")}
+              emptyMessage={t("admin.resourceForms.noLocations")}
             />
           </Field>
-          <Field label="Nombre" required error={errors.name}>
+          <Field
+            label={t("admin.resourceForms.name")}
+            required
+            error={errors.name}
+          >
             <Input
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
@@ -174,7 +193,7 @@ export default function RoomForm({
               className={errors.name ? "border-red-400" : ""}
             />
           </Field>
-          <Field label="Tipo">
+          <Field label={t("admin.resourceForms.roomType")}>
             <AdminSelect
               value={form.type}
               onChange={(v) => set("type", v)}
@@ -183,8 +202,8 @@ export default function RoomForm({
             />
           </Field>
           <Field
-            label="Capacidad"
-            hint="Número máximo de personas"
+            label={t("admin.resourceForms.capacity")}
+            hint={t("admin.resourceForms.capacityHint")}
             error={errors.capacity}
           >
             <Input
@@ -201,7 +220,7 @@ export default function RoomForm({
             <Toggle
               checked={form.isActive}
               onChange={(v) => set("isActive", v)}
-              label="Cuarto activo"
+              label={t("admin.resourceForms.roomActive")}
               disabled={submitting}
             />
           </div>
@@ -211,9 +230,9 @@ export default function RoomForm({
       {/* Descripción */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Descripción
+          {t("admin.resourceForms.descriptionSection")}
         </h2>
-        <Field label="Descripción">
+        <Field label={t("admin.resourceForms.description")}>
           <Textarea
             value={form.description}
             onChange={(v) => set("description", v)}
@@ -228,10 +247,10 @@ export default function RoomForm({
           {submitting ? (
             <span className="flex items-center gap-2">
               <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-              Guardando...
+              {t("admin.resourceForms.saving")}
             </span>
           ) : (
-            submitLabel
+            submitLabel || t("admin.resourceForms.save")
           )}
         </Button>
       </div>

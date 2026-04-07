@@ -92,7 +92,14 @@ export default function PackageForm({
         sortOrder: initialData.sortOrder ?? "",
         heroImageId: initialData.heroImageId ?? "",
         galleryImageIds: initialData.galleryImageIds
-          ? (() => { try { const p = JSON.parse(initialData.galleryImageIds); return Array.isArray(p) ? p : []; } catch { return []; } })()
+          ? (() => {
+              try {
+                const p = JSON.parse(initialData.galleryImageIds);
+                return Array.isArray(p) ? p : [];
+              } catch {
+                return [];
+              }
+            })()
           : [],
       }
     : { ...EMPTY };
@@ -161,7 +168,10 @@ export default function PackageForm({
       durationDays: form.durationDays ? parseInt(form.durationDays) : null,
       capacity: form.capacity ? parseInt(form.capacity) : null,
       heroImageId: form.heroImageId || null,
-      galleryImageIds: form.galleryImageIds.length > 0 ? JSON.stringify(form.galleryImageIds) : null,
+      galleryImageIds:
+        form.galleryImageIds.length > 0
+          ? JSON.stringify(form.galleryImageIds)
+          : null,
       status: form.status,
       sortOrder: form.sortOrder ? parseInt(form.sortOrder) : 0,
     };

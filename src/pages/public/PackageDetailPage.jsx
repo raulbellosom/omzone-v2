@@ -1,6 +1,9 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Calendar, Users, Package, Check } from "lucide-react";
-import { usePackageDetail, getPackagePreviewUrl } from "@/hooks/usePackageDetail";
+import {
+  usePackageDetail,
+  getPackagePreviewUrl,
+} from "@/hooks/usePackageDetail";
 import { useLanguage } from "@/hooks/useLanguage";
 import SEOHead from "@/components/common/SEOHead";
 import OptimizedImage from "@/components/common/OptimizedImage";
@@ -17,7 +20,7 @@ import { cn } from "@/lib/utils";
 function LoadingSkeleton() {
   return (
     <div className="animate-pulse">
-      <div className="w-full aspect-video md:aspect-21/9 bg-warm-gray" />
+      <div className="w-full aspect-3/4 sm:aspect-video md:aspect-21/9 bg-warm-gray" />
       <div className="container-shell py-12 space-y-6 max-w-3xl">
         <div className="h-6 w-24 rounded-full bg-warm-gray" />
         <div className="h-10 w-2/3 rounded-xl bg-warm-gray" />
@@ -46,7 +49,7 @@ function PackageHero({ pkg }) {
 
   return (
     <div className="relative w-full -mt-20">
-      <div className="relative w-full aspect-video md:aspect-21/9 overflow-hidden bg-warm-gray">
+      <div className="relative w-full aspect-3/4 sm:aspect-video md:aspect-21/9 overflow-hidden bg-warm-gray">
         <OptimizedImage
           fileId={pkg.heroImageId}
           bucketId={env.bucketPackageImages}
@@ -109,9 +112,14 @@ function PackageItemsList({ items, experiences }) {
       </h2>
       <div className="space-y-3">
         {items.map((item) => {
-          const exp = item.referenceType === "experience" ? expMap.get(item.referenceId) : null;
-          const name = item.name || (exp && (exp.publicName || exp.name)) || "Item";
-          const description = item.description || (exp && exp.shortDescription) || null;
+          const exp =
+            item.referenceType === "experience"
+              ? expMap.get(item.referenceId)
+              : null;
+          const name =
+            item.name || (exp && (exp.publicName || exp.name)) || "Item";
+          const description =
+            item.description || (exp && exp.shortDescription) || null;
 
           return (
             <div
@@ -218,8 +226,12 @@ export default function PackageDetailPage() {
   }
 
   const seoTitle = `${pkg.name} — OMZONE`;
-  const seoDescription = pkg.description || pkg.descriptionEs || `${pkg.name} wellness package`;
-  const seoImage = getPackagePreviewUrl(pkg.heroImageId, { width: 1200, height: 630 });
+  const seoDescription =
+    pkg.description || pkg.descriptionEs || `${pkg.name} wellness package`;
+  const seoImage = getPackagePreviewUrl(pkg.heroImageId, {
+    width: 1200,
+    height: 630,
+  });
 
   return (
     <div className="min-h-screen bg-cream">
@@ -243,7 +255,9 @@ export default function PackageDetailPage() {
             {(pkg.description || pkg.descriptionEs) && (
               <div className="py-6 md:py-8">
                 <p className="text-charcoal-muted leading-relaxed whitespace-pre-wrap text-base">
-                  {(lang === "es" && pkg.descriptionEs) || pkg.description || pkg.descriptionEs}
+                  {(lang === "es" && pkg.descriptionEs) ||
+                    pkg.description ||
+                    pkg.descriptionEs}
                 </p>
               </div>
             )}

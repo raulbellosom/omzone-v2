@@ -173,7 +173,13 @@ async function handleEnsureProfile({ req, res, log, error }) {
     const userId = req.headers["x-appwrite-user-id"];
     if (!userId) {
       return res.json(
-        { ok: false, error: { code: "ERR_AUTH_REQUIRED", message: "Authentication required" } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_AUTH_REQUIRED",
+            message: "Authentication required",
+          },
+        },
         401,
       );
     }
@@ -182,7 +188,10 @@ async function handleEnsureProfile({ req, res, log, error }) {
     try {
       const existing = await db.getDocument(DB, COLLECTION_PROFILES, userId);
       log(`ensure-profile: profile already exists for ${userId}`);
-      return res.json({ ok: true, data: { userId, existed: true, displayName: existing.displayName } });
+      return res.json({
+        ok: true,
+        data: { userId, existed: true, displayName: existing.displayName },
+      });
     } catch {
       // Not found — proceed to create
     }
@@ -219,7 +228,10 @@ async function handleEnsureProfile({ req, res, log, error }) {
       log(`ensure-profile: assigned 'client' label to ${userId}`);
     }
 
-    return res.json({ ok: true, data: { userId, existed: false, displayName } });
+    return res.json({
+      ok: true,
+      data: { userId, existed: false, displayName },
+    });
   } catch (err) {
     error(`ensure-profile failed: ${err.message}`);
     return res.json(
@@ -374,7 +386,9 @@ async function handleManualAssignment({ req, res, log, error }) {
         role: label,
       });
     } catch {
-      log(`Could not sync role to profile for ${targetUserId} — profile may not exist`);
+      log(
+        `Could not sync role to profile for ${targetUserId} — profile may not exist`,
+      );
     }
 
     log(`Label '${label}' assigned to user ${targetUserId} by ${callerId}`);
@@ -421,7 +435,11 @@ export default async (context) => {
 
   // Route by action field or default to manual label assignment
   let body = {};
-  try { body = JSON.parse(req.body || "{}"); } catch { /* invalid JSON handled by sub-handler */ }
+  try {
+    body = JSON.parse(req.body || "{}");
+  } catch {
+    /* invalid JSON handled by sub-handler */
+  }
 
   if (body.action === "ensure-profile") {
     log("Trigger: HTTP POST (ensure-profile)");

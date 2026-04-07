@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { useAssistedSale } from "@/hooks/useAssistedSale";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "@/components/common/Button";
 import CustomerSearchStep from "./CustomerSearchStep";
 import ExperienceSelectStep from "./ExperienceSelectStep";
@@ -13,21 +14,21 @@ import { cn } from "@/lib/utils";
 
 // ─── Step definitions ─────────────────────────────────────────────────────────
 
-function buildSteps(wizard) {
+function buildSteps(wizard, t) {
   const steps = [
-    { id: "customer",    label: "Cliente" },
-    { id: "experience",  label: "Experiencia" },
-    { id: "tier",        label: "Precio" },
+    { id: "customer", label: t("admin.assistedSale.steps.customer") },
+    { id: "experience", label: t("admin.assistedSale.steps.experience") },
+    { id: "tier", label: t("admin.assistedSale.steps.tier") },
   ];
 
   if (wizard.experience?.requiresSchedule) {
-    steps.push({ id: "slot", label: "Slot" });
+    steps.push({ id: "slot", label: t("admin.assistedSale.steps.slot") });
   }
 
   steps.push(
-    { id: "addons",   label: "Addons" },
-    { id: "quantity", label: "Cantidad" },
-    { id: "review",   label: "Revisión" },
+    { id: "addons", label: t("admin.assistedSale.steps.addons") },
+    { id: "quantity", label: t("admin.assistedSale.steps.quantity") },
+    { id: "review", label: t("admin.assistedSale.steps.review") },
   );
 
   return steps;
@@ -43,20 +44,26 @@ function StepBar({ steps, currentStep }) {
         const isDone = i < currentStep;
         return (
           <div key={step.id} className="flex items-center shrink-0">
-            <div className={cn(
-              "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors",
-              isActive ? "bg-sage text-white" :
-              isDone ? "bg-sage/20 text-sage-dark" :
-              "bg-warm-gray text-charcoal-subtle"
-            )}>
+            <div
+              className={cn(
+                "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                isActive
+                  ? "bg-sage text-white"
+                  : isDone
+                    ? "bg-sage/20 text-sage-dark"
+                    : "bg-warm-gray text-charcoal-subtle",
+              )}
+            >
               {isDone ? <Check className="h-3 w-3" /> : <span>{i + 1}</span>}
               <span className="hidden sm:inline">{step.label}</span>
             </div>
             {i < steps.length - 1 && (
-              <div className={cn(
-                "h-px w-4 mx-0.5 transition-colors",
-                isDone ? "bg-sage/40" : "bg-sand-dark/40"
-              )} />
+              <div
+                className={cn(
+                  "h-px w-4 mx-0.5 transition-colors",
+                  isDone ? "bg-sage/40" : "bg-sand-dark/40",
+                )}
+              />
             )}
           </div>
         );
@@ -70,8 +77,12 @@ function StepBar({ steps, currentStep }) {
 function canProceed(stepId, wizard) {
   switch (stepId) {
     case "customer":
-      if (wizard.isNewCustomer) return !!(wizard.customerName.trim() && wizard.customerEmail.trim());
-      return !!(wizard.customer || (wizard.customerName.trim() && wizard.customerEmail.trim()));
+      if (wizard.isNewCustomer)
+        return !!(wizard.customerName.trim() && wizard.customerEmail.trim());
+      return !!(
+        wizard.customer ||
+        (wizard.customerName.trim() && wizard.customerEmail.trim())
+      );
     case "experience":
       return !!wizard.experience;
     case "tier":
@@ -92,10 +103,19 @@ function canProceed(stepId, wizard) {
 // ─── Main wizard ──────────────────────────────────────────────────────────────
 
 export default function AssistedSaleWizard() {
-  const { wizard, setWizardField, submitSale, submitting, result, submitError, resetWizard } = useAssistedSale();
+  const {
+    wizard,
+    setWizardField,
+    submitSale,
+    submitting,
+    result,
+    submitError,
+    resetWizard,
+  } = useAssistedSale();
+  const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState(0);
 
-  const steps = buildSteps(wizard);
+  const steps = buildSteps(wizard, t);
   const stepId = steps[currentStep]?.id;
   const isLastStep = currentStep === steps.length - 1;
   const isDone = !!result;
@@ -121,13 +141,17 @@ export default function AssistedSaleWizard() {
   const canGoNext = canProceed(stepId, wizard);
 
   const StepComponent = {
-    customer:    <CustomerSearchStep    wizard={wizard} setWizardField={setWizardField} />,
-    experience:  <ExperienceSelectStep wizard={wizard} setWizardField={setWizardField} />,
-    tier:        <PricingTierStep      wizard={wizard} setWizardField={setWizardField} />,
-    slot:        <SlotSelectStep       wizard={wizard} setWizardField={setWizardField} />,
-    addons:      <AddonSelectStep      wizard={wizard} setWizardField={setWizardField} />,
-    quantity:    <QuantityStep         wizard={wizard} setWizardField={setWizardField} />,
-    review:      (
+    customer: (
+      <CustomerSearchStep wizard={wizard} setWizardField={setWizardField} />
+    ),
+    experience: (
+      <ExperienceSelectStep wizard={wizard} setWizardField={setWizardField} />
+    ),
+    tier: <PricingTierStep wizard={wizard} setWizardField={setWizardField} />,
+    slot: <SlotSelectStep wizard={wizard} setWizardField={setWizardField} />,
+    addons: <AddonSelectStep wizard={wizard} setWizardField={setWizardField} />,
+    quantity: <QuantityStep wizard={wizard} setWizardField={setWizardField} />,
+    review: (
       <ReviewConfirmStep
         wizard={wizard}
         setWizardField={setWizardField}
@@ -159,7 +183,7 @@ export default function AssistedSaleWizard() {
             disabled={currentStep === 0 || submitting}
           >
             <ChevronLeft className="h-4 w-4" />
-            Atrás
+            {t("admin.assistedSale.back")}
           </Button>
 
           <Button
@@ -171,16 +195,16 @@ export default function AssistedSaleWizard() {
             {submitting ? (
               <span className="flex items-center gap-2">
                 <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                Procesando...
+                {t("admin.assistedSale.processing")}
               </span>
             ) : isLastStep ? (
               <>
                 <Check className="h-4 w-4" />
-                Confirmar venta
+                {t("admin.assistedSale.confirmSale")}
               </>
             ) : (
               <>
-                Siguiente
+                {t("admin.assistedSale.next")}
                 <ChevronRight className="h-4 w-4" />
               </>
             )}
@@ -191,8 +215,13 @@ export default function AssistedSaleWizard() {
       {/* Post-success actions */}
       {isDone && (
         <div className="flex gap-3 justify-center">
-          <Button type="button" variant="outline" size="md" onClick={handleReset}>
-            Nueva venta
+          <Button
+            type="button"
+            variant="outline"
+            size="md"
+            onClick={handleReset}
+          >
+            {t("admin.assistedSale.newSale")}
           </Button>
         </div>
       )}

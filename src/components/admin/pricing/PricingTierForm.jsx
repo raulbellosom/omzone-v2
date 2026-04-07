@@ -3,14 +3,15 @@ import { Input } from "@/components/common/Input";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 import AdminSelect from "@/components/common/AdminSelect";
+import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 
-const PRICE_TYPE_OPTIONS = [
-  { value: "fixed", label: "Precio fijo" },
-  { value: "per-person", label: "Por persona" },
-  { value: "per-group", label: "Por grupo" },
-  { value: "from", label: "Desde" },
-  { value: "quote", label: "Cotización" },
+const PRICE_TYPE_KEYS = [
+  { value: "fixed", key: "fixed" },
+  { value: "per-person", key: "perPerson" },
+  { value: "per-group", key: "perGroup" },
+  { value: "from", key: "from" },
+  { value: "quote", key: "quote" },
 ];
 
 const CURRENCY_OPTIONS = [
@@ -98,9 +99,16 @@ export default function PricingTierForm({
   editions = [],
   onSubmit,
   submitting,
-  submitLabel = "Guardar",
+  submitLabel,
   onCancel,
 }) {
+  const { t } = useLanguage();
+
+  const PRICE_TYPE_OPTIONS = PRICE_TYPE_KEYS.map((o) => ({
+    value: o.value,
+    label: t(`admin.pricingTierForm.priceTypeOptions.${o.key}`),
+  }));
+
   const init = initialData
     ? {
         ...EMPTY,
@@ -128,12 +136,14 @@ export default function PricingTierForm({
 
   function validate() {
     const e = {};
-    if (!form.name.trim()) e.name = "El nombre es requerido";
-    if (!form.priceType) e.priceType = "El tipo de precio es requerido";
-    if (!form.currency) e.currency = "La moneda es requerida";
+    if (!form.name.trim()) e.name = t("admin.pricingTierForm.nameRequired");
+    if (!form.priceType)
+      e.priceType = t("admin.pricingTierForm.priceTypeRequired");
+    if (!form.currency)
+      e.currency = t("admin.pricingTierForm.currencyRequired");
     const price = parseFloat(form.basePrice);
     if (isNaN(price) || price <= 0) {
-      e.basePrice = "El precio base debe ser mayor a 0";
+      e.basePrice = t("admin.pricingTierForm.basePricePositive");
     }
     return e;
   }
@@ -173,10 +183,14 @@ export default function PricingTierForm({
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Identidad
+          {t("admin.pricingTierForm.sectionIdentity")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Nombre" required error={errors.name}>
+          <Field
+            label={t("admin.pricingTierForm.name")}
+            required
+            error={errors.name}
+          >
             <Input
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
@@ -185,7 +199,7 @@ export default function PricingTierForm({
               className={errors.name ? "border-red-400" : ""}
             />
           </Field>
-          <Field label="Nombre (ES)">
+          <Field label={t("admin.pricingTierForm.nameEs")}>
             <Input
               value={form.nameEs}
               onChange={(e) => set("nameEs", e.target.value)}
@@ -195,7 +209,7 @@ export default function PricingTierForm({
           </Field>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Descripción (EN)">
+          <Field label={t("admin.pricingTierForm.descriptionEn")}>
             <Textarea
               value={form.description}
               onChange={(v) => set("description", v)}
@@ -203,7 +217,7 @@ export default function PricingTierForm({
               disabled={isDisabled}
             />
           </Field>
-          <Field label="Descripción (ES)">
+          <Field label={t("admin.pricingTierForm.descriptionEs")}>
             <Textarea
               value={form.descriptionEs}
               onChange={(v) => set("descriptionEs", v)}
@@ -217,10 +231,14 @@ export default function PricingTierForm({
       {/* Precio */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Precio
+          {t("admin.pricingTierForm.sectionPrice")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Field label="Tipo de precio" required error={errors.priceType}>
+          <Field
+            label={t("admin.pricingTierForm.priceType")}
+            required
+            error={errors.priceType}
+          >
             <AdminSelect
               value={form.priceType}
               onChange={(v) => set("priceType", v)}
@@ -229,7 +247,11 @@ export default function PricingTierForm({
               error={errors.priceType}
             />
           </Field>
-          <Field label="Precio base" required error={errors.basePrice}>
+          <Field
+            label={t("admin.pricingTierForm.basePrice")}
+            required
+            error={errors.basePrice}
+          >
             <Input
               type="number"
               step="0.01"
@@ -241,7 +263,11 @@ export default function PricingTierForm({
               className={errors.basePrice ? "border-red-400" : ""}
             />
           </Field>
-          <Field label="Moneda" required error={errors.currency}>
+          <Field
+            label={t("admin.pricingTierForm.currency")}
+            required
+            error={errors.currency}
+          >
             <AdminSelect
               value={form.currency}
               onChange={(v) => set("currency", v)}
@@ -256,10 +282,13 @@ export default function PricingTierForm({
       {/* Personas */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Personas
+          {t("admin.pricingTierForm.sectionPersons")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Mín. personas" hint="Solo para per-person o per-group">
+          <Field
+            label={t("admin.pricingTierForm.minPersons")}
+            hint={t("admin.pricingTierForm.minPersonsHint")}
+          >
             <Input
               type="number"
               min={1}
@@ -269,7 +298,7 @@ export default function PricingTierForm({
               disabled={isDisabled}
             />
           </Field>
-          <Field label="Máx. personas">
+          <Field label={t("admin.pricingTierForm.maxPersons")}>
             <Input
               type="number"
               min={1}
@@ -285,10 +314,13 @@ export default function PricingTierForm({
       {/* Visuales y edición */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Visuales y asignación
+          {t("admin.pricingTierForm.sectionVisuals")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Badge" hint="Ej. Popular, Bestseller">
+          <Field
+            label={t("admin.pricingTierForm.badge")}
+            hint={t("admin.pricingTierForm.badgeHint")}
+          >
             <Input
               value={form.badge}
               onChange={(e) => set("badge", e.target.value)}
@@ -297,7 +329,10 @@ export default function PricingTierForm({
               maxLength={50}
             />
           </Field>
-          <Field label="Orden" hint="Número menor = aparece primero">
+          <Field
+            label={t("admin.pricingTierForm.order")}
+            hint={t("admin.pricingTierForm.orderHint")}
+          >
             <Input
               type="number"
               min={0}
@@ -309,14 +344,14 @@ export default function PricingTierForm({
         </div>
         {editions.length > 0 && (
           <Field
-            label="Edición (opcional)"
-            hint="Vincular a una edición específica"
+            label={t("admin.pricingTierForm.edition")}
+            hint={t("admin.pricingTierForm.editionHint")}
           >
             <AdminSelect
               value={form.editionId}
               onChange={(v) => set("editionId", v)}
               options={[
-                { value: "", label: "— Sin edición —" },
+                { value: "", label: t("admin.pricingTierForm.noEdition") },
                 ...editions.map((ed) => ({
                   value: ed.$id,
                   label: ed.name,
@@ -331,13 +366,13 @@ export default function PricingTierForm({
             checked={form.isActive}
             onChange={(v) => set("isActive", v)}
             disabled={isDisabled}
-            label="Activo"
+            label={t("admin.pricingTierForm.active")}
           />
           <Toggle
             checked={form.isHighlighted}
             onChange={(v) => set("isHighlighted", v)}
             disabled={isDisabled}
-            label="Destacado"
+            label={t("admin.pricingTierForm.highlighted")}
           />
         </div>
       </Card>
@@ -348,10 +383,10 @@ export default function PricingTierForm({
           {submitting ? (
             <span className="flex items-center gap-2">
               <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-              Guardando...
+              {t("admin.pricingTierForm.saving")}
             </span>
           ) : (
-            submitLabel
+            submitLabel || t("admin.pricingTierForm.name")
           )}
         </Button>
         {onCancel && (
@@ -362,7 +397,7 @@ export default function PricingTierForm({
             onClick={onCancel}
             disabled={isDisabled}
           >
-            Cancelar
+            {t("admin.pricingTierForm.cancel")}
           </Button>
         )}
       </div>
