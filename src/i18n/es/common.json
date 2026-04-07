@@ -15,7 +15,10 @@
     "readMore": "Leer más",
     "viewAll": "Ver todo",
     "noResults": "No se encontraron resultados",
-    "phoneError": "El teléfono debe incluir código de país (ej. +52 55 1234 5678)"
+    "phoneError": "El teléfono debe incluir código de país (ej. +52 55 1234 5678)",
+    "updateAvailable": "Hay una nueva versión de OMZONE disponible. Recarga la página para obtener la última experiencia.",
+    "reload": "Recargar",
+    "dismiss": "Después"
   },
   "auth": {
     "brandTagline": "Experiencias de Bienestar",

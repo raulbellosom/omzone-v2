@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { databases } from "@/lib/appwrite";
+import { databases, functions } from "@/lib/appwrite";
 import { Permission, Role } from "appwrite";
 import env from "@/config/env";
 import { useAuth } from "@/hooks/useAuth";
@@ -30,34 +30,47 @@ export function useUserProfile() {
       setProfile(doc);
     } catch (err) {
       if (err.code === 404) {
-        // Profile doesn't exist yet — auto-create with defaults
+        // Profile doesn't exist yet — ask the server to create it
         try {
-          const nameParts = (user.name || "").trim().split(/\s+/);
-          const firstName = nameParts[0] || "";
-          const lastName =
-            nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
-          const displayName =
-            user.name || (user.email ? user.email.split("@")[0] : "");
-
-          const doc = await databases.createDocument(
-            DB,
-            COL,
-            user.$id,
-            { displayName, firstName, lastName, language: "es" },
-            [
-              Permission.read(Role.user(user.$id)),
-              Permission.update(Role.user(user.$id)),
-              Permission.read(Role.label("admin")),
-              Permission.update(Role.label("admin")),
-            ],
+          await functions.createExecution(
+            "assign-user-label",
+            JSON.stringify({ action: "ensure-profile" }),
+            false,
+            "/",
+            "POST",
           );
+          // Retry fetch after server-side creation
+          const doc = await databases.getDocument(DB, COL, user.$id);
           setProfile(doc);
-        } catch (createErr) {
-          // Client users without collection-level create — profile just not available yet
-          if (createErr.code === 401 || createErr.code === 403) {
-            setProfile(null);
-          } else {
-            setError(createErr.message);
+        } catch (ensureErr) {
+          // Fallback: try client-side create (works for admin/root labels)
+          try {
+            const nameParts = (user.name || "").trim().split(/\s+/);
+            const firstName = nameParts[0] || "";
+            const lastName =
+              nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+            const displayName =
+              user.name || (user.email ? user.email.split("@")[0] : "");
+
+            const doc = await databases.createDocument(
+              DB,
+              COL,
+              user.$id,
+              { displayName, firstName, lastName, language: "es" },
+              [
+                Permission.read(Role.user(user.$id)),
+                Permission.update(Role.user(user.$id)),
+                Permission.read(Role.label("admin")),
+                Permission.update(Role.label("admin")),
+              ],
+            );
+            setProfile(doc);
+          } catch (createErr) {
+            if (createErr.code === 401 || createErr.code === 403) {
+              setProfile(null);
+            } else {
+              setError(createErr.message);
+            }
           }
         }
       } else {

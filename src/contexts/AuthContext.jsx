@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useCallback } from "react";
-import { account, ID } from "@/lib/appwrite";
+import { account, ID, functions } from "@/lib/appwrite";
 import { ROLES } from "@/constants/roles";
 
 const VERIFY_URL = `${window.location.origin}/verify-email`;
@@ -60,6 +60,20 @@ export function AuthProvider({ children }) {
 
     setUser(authUser);
     setLabels(authUser.labels ?? []);
+
+    // Ensure user_profiles document exists (best-effort, non-blocking)
+    functions
+      .createExecution(
+        "assign-user-label",
+        JSON.stringify({ action: "ensure-profile" }),
+        false,
+        "/",
+        "POST",
+      )
+      .catch(() => {
+        /* profile may already exist or function temporarily unavailable */
+      });
+
     return authUser;
   }
 

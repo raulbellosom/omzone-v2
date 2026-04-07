@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation } from "react-router-dom";
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, useEffect } from "react";
+import lazyWithRetry from "@/lib/lazyWithRetry";
 
 import PublicLayout from "@/layouts/PublicLayout";
 import AuthLayout from "@/layouts/AuthLayout";
@@ -17,157 +18,157 @@ import { ExperienceDetailSkeleton } from "@/components/common/Skeleton";
 // ─── Public pages (home loaded eagerly, rest lazy) ───
 import HomePage from "@/pages/public/HomePage";
 
-const AboutPage = lazy(() => import("@/pages/public/AboutPage"));
-const ContactPage = lazy(() => import("@/pages/public/ContactPage"));
-const PrivacyPage = lazy(() => import("@/pages/public/PrivacyPage"));
-const TermsPage = lazy(() => import("@/pages/public/TermsPage"));
-const ExperiencesListPage = lazy(
+const AboutPage = lazyWithRetry(() => import("@/pages/public/AboutPage"));
+const ContactPage = lazyWithRetry(() => import("@/pages/public/ContactPage"));
+const PrivacyPage = lazyWithRetry(() => import("@/pages/public/PrivacyPage"));
+const TermsPage = lazyWithRetry(() => import("@/pages/public/TermsPage"));
+const ExperiencesListPage = lazyWithRetry(
   () => import("@/pages/public/ExperiencesListPage"),
 );
-const ExperienceDetailPage = lazy(
+const ExperienceDetailPage = lazyWithRetry(
   () => import("@/pages/public/ExperienceDetailPage"),
 );
-const PackageDetailPage = lazy(
+const PackageDetailPage = lazyWithRetry(
   () => import("@/pages/public/PackageDetailPage"),
 );
-const PublicationPage = lazy(() => import("@/pages/public/PublicationPage"));
-const CheckoutPage = lazy(() => import("@/pages/public/CheckoutPage"));
-const CheckoutSuccessPage = lazy(
+const PublicationPage = lazyWithRetry(() => import("@/pages/public/PublicationPage"));
+const CheckoutPage = lazyWithRetry(() => import("@/pages/public/CheckoutPage"));
+const CheckoutSuccessPage = lazyWithRetry(
   () => import("@/pages/public/CheckoutSuccessPage"),
 );
-const CheckoutCancelPage = lazy(
+const CheckoutCancelPage = lazyWithRetry(
   () => import("@/pages/public/CheckoutCancelPage"),
 );
 
 // ─── Auth pages ───
-const LoginPage = lazy(() => import("@/pages/auth/LoginPage"));
-const RegisterPage = lazy(() => import("@/pages/auth/RegisterPage"));
-const VerifyEmailPendingPage = lazy(
+const LoginPage = lazyWithRetry(() => import("@/pages/auth/LoginPage"));
+const RegisterPage = lazyWithRetry(() => import("@/pages/auth/RegisterPage"));
+const VerifyEmailPendingPage = lazyWithRetry(
   () => import("@/pages/auth/VerifyEmailPendingPage"),
 );
-const VerifyEmailPage = lazy(() => import("@/pages/auth/VerifyEmailPage"));
-const ForgotPasswordPage = lazy(
+const VerifyEmailPage = lazyWithRetry(() => import("@/pages/auth/VerifyEmailPage"));
+const ForgotPasswordPage = lazyWithRetry(
   () => import("@/pages/auth/ForgotPasswordPage"),
 );
-const ResetPasswordPage = lazy(() => import("@/pages/auth/ResetPasswordPage"));
+const ResetPasswordPage = lazyWithRetry(() => import("@/pages/auth/ResetPasswordPage"));
 
 // ─── Admin pages (chunked together) ───
-const AdminLayout = lazy(() => import("@/layouts/AdminLayout"));
-const AdminDashboardPage = lazy(
+const AdminLayout = lazyWithRetry(() => import("@/layouts/AdminLayout"));
+const AdminDashboardPage = lazyWithRetry(
   () => import("@/pages/admin/AdminDashboardPage"),
 );
-const ExperienceListPage = lazy(
+const ExperienceListPage = lazyWithRetry(
   () => import("@/pages/admin/ExperienceListPage"),
 );
-const ExperienceCreatePage = lazy(
+const ExperienceCreatePage = lazyWithRetry(
   () => import("@/pages/admin/ExperienceCreatePage"),
 );
-const ExperienceEditPage = lazy(
+const ExperienceEditPage = lazyWithRetry(
   () => import("@/pages/admin/ExperienceEditPage"),
 );
-const EditionListPage = lazy(() => import("@/pages/admin/EditionListPage"));
-const EditionCreatePage = lazy(() => import("@/pages/admin/EditionCreatePage"));
-const EditionEditPage = lazy(() => import("@/pages/admin/EditionEditPage"));
-const PricingTierListPage = lazy(
+const EditionListPage = lazyWithRetry(() => import("@/pages/admin/EditionListPage"));
+const EditionCreatePage = lazyWithRetry(() => import("@/pages/admin/EditionCreatePage"));
+const EditionEditPage = lazyWithRetry(() => import("@/pages/admin/EditionEditPage"));
+const PricingTierListPage = lazyWithRetry(
   () => import("@/pages/admin/PricingTierListPage"),
 );
-const AddonListPage = lazy(() => import("@/pages/admin/AddonListPage"));
-const AddonCreatePage = lazy(() => import("@/pages/admin/AddonCreatePage"));
-const AddonEditPage = lazy(() => import("@/pages/admin/AddonEditPage"));
-const AddonAssignmentListPage = lazy(
+const AddonListPage = lazyWithRetry(() => import("@/pages/admin/AddonListPage"));
+const AddonCreatePage = lazyWithRetry(() => import("@/pages/admin/AddonCreatePage"));
+const AddonEditPage = lazyWithRetry(() => import("@/pages/admin/AddonEditPage"));
+const AddonAssignmentListPage = lazyWithRetry(
   () => import("@/pages/admin/AddonAssignmentListPage"),
 );
-const SlotListPage = lazy(() => import("@/pages/admin/SlotListPage"));
-const SlotCreatePage = lazy(() => import("@/pages/admin/SlotCreatePage"));
-const SlotEditPage = lazy(() => import("@/pages/admin/SlotEditPage"));
-const SlotQuickCreatePage = lazy(
+const SlotListPage = lazyWithRetry(() => import("@/pages/admin/SlotListPage"));
+const SlotCreatePage = lazyWithRetry(() => import("@/pages/admin/SlotCreatePage"));
+const SlotEditPage = lazyWithRetry(() => import("@/pages/admin/SlotEditPage"));
+const SlotQuickCreatePage = lazyWithRetry(
   () => import("@/pages/admin/SlotQuickCreatePage"),
 );
-const AgendaGlobalPage = lazy(() => import("@/pages/admin/AgendaGlobalPage"));
-const ResourcesPage = lazy(
+const AgendaGlobalPage = lazyWithRetry(() => import("@/pages/admin/AgendaGlobalPage"));
+const ResourcesPage = lazyWithRetry(
   () => import("@/pages/admin/resources/ResourcesPage"),
 );
-const ResourceCreatePage = lazy(
+const ResourceCreatePage = lazyWithRetry(
   () => import("@/pages/admin/resources/ResourceCreatePage"),
 );
-const ResourceEditPage = lazy(
+const ResourceEditPage = lazyWithRetry(
   () => import("@/pages/admin/resources/ResourceEditPage"),
 );
-const LocationCreatePage = lazy(
+const LocationCreatePage = lazyWithRetry(
   () => import("@/pages/admin/resources/LocationCreatePage"),
 );
-const LocationEditPage = lazy(
+const LocationEditPage = lazyWithRetry(
   () => import("@/pages/admin/resources/LocationEditPage"),
 );
-const RoomCreatePage = lazy(
+const RoomCreatePage = lazyWithRetry(
   () => import("@/pages/admin/resources/RoomCreatePage"),
 );
-const RoomEditPage = lazy(() => import("@/pages/admin/resources/RoomEditPage"));
-const OrderListPage = lazy(() => import("@/pages/admin/OrderListPage"));
-const OrderDetailPage = lazy(() => import("@/pages/admin/OrderDetailPage"));
-const AdminTicketListPage = lazy(() => import("@/pages/admin/TicketListPage"));
-const AdminTicketDetailPage = lazy(
+const RoomEditPage = lazyWithRetry(() => import("@/pages/admin/resources/RoomEditPage"));
+const OrderListPage = lazyWithRetry(() => import("@/pages/admin/OrderListPage"));
+const OrderDetailPage = lazyWithRetry(() => import("@/pages/admin/OrderDetailPage"));
+const AdminTicketListPage = lazyWithRetry(() => import("@/pages/admin/TicketListPage"));
+const AdminTicketDetailPage = lazyWithRetry(
   () => import("@/pages/admin/TicketDetailPage"),
 );
-const MediaManagerPage = lazy(() => import("@/pages/admin/MediaManagerPage"));
-const ClientListPage = lazy(() => import("@/pages/admin/ClientListPage"));
-const ClientDetailPage = lazy(() => import("@/pages/admin/ClientDetailPage"));
-const SettingsPage = lazy(() => import("@/pages/admin/SettingsPage"));
-const AdminAccountPage = lazy(() => import("@/pages/admin/AdminAccountPage"));
-const CheckInPage = lazy(() => import("@/pages/admin/CheckInPage"));
-const PassListPage = lazy(() => import("@/pages/admin/PassListPage"));
-const PassCreatePage = lazy(() => import("@/pages/admin/PassCreatePage"));
-const PassEditPage = lazy(() => import("@/pages/admin/PassEditPage"));
-const UserPassListPage = lazy(() => import("@/pages/admin/UserPassListPage"));
-const UserPassDetailPage = lazy(
+const MediaManagerPage = lazyWithRetry(() => import("@/pages/admin/MediaManagerPage"));
+const ClientListPage = lazyWithRetry(() => import("@/pages/admin/ClientListPage"));
+const ClientDetailPage = lazyWithRetry(() => import("@/pages/admin/ClientDetailPage"));
+const SettingsPage = lazyWithRetry(() => import("@/pages/admin/SettingsPage"));
+const AdminAccountPage = lazyWithRetry(() => import("@/pages/admin/AdminAccountPage"));
+const CheckInPage = lazyWithRetry(() => import("@/pages/admin/CheckInPage"));
+const PassListPage = lazyWithRetry(() => import("@/pages/admin/PassListPage"));
+const PassCreatePage = lazyWithRetry(() => import("@/pages/admin/PassCreatePage"));
+const PassEditPage = lazyWithRetry(() => import("@/pages/admin/PassEditPage"));
+const UserPassListPage = lazyWithRetry(() => import("@/pages/admin/UserPassListPage"));
+const UserPassDetailPage = lazyWithRetry(
   () => import("@/pages/admin/UserPassDetailPage"),
 );
-const PackageListPage = lazy(() => import("@/pages/admin/PackageListPage"));
-const PackageCreatePage = lazy(() => import("@/pages/admin/PackageCreatePage"));
-const PackageEditPage = lazy(() => import("@/pages/admin/PackageEditPage"));
-const PublicationListPage = lazy(
+const PackageListPage = lazyWithRetry(() => import("@/pages/admin/PackageListPage"));
+const PackageCreatePage = lazyWithRetry(() => import("@/pages/admin/PackageCreatePage"));
+const PackageEditPage = lazyWithRetry(() => import("@/pages/admin/PackageEditPage"));
+const PublicationListPage = lazyWithRetry(
   () => import("@/pages/admin/PublicationListPage"),
 );
-const PublicationCreatePage = lazy(
+const PublicationCreatePage = lazyWithRetry(
   () => import("@/pages/admin/PublicationCreatePage"),
 );
-const PublicationEditPage = lazy(
+const PublicationEditPage = lazyWithRetry(
   () => import("@/pages/admin/PublicationEditPage"),
 );
-const PublicationSectionsPage = lazy(
+const PublicationSectionsPage = lazyWithRetry(
   () => import("@/pages/admin/PublicationSectionsPage"),
 );
-const AssistedSalePage = lazy(
+const AssistedSalePage = lazyWithRetry(
   () => import("@/pages/admin/sales/AssistedSalePage"),
 );
-const BookingRequestListPage = lazy(
+const BookingRequestListPage = lazyWithRetry(
   () => import("@/pages/admin/BookingRequestListPage"),
 );
-const BookingRequestDetailPage = lazy(
+const BookingRequestDetailPage = lazyWithRetry(
   () => import("@/pages/admin/BookingRequestDetailPage"),
 );
 
 // ─── Portal pages (chunked together) ───
-const PortalLayout = lazy(() => import("@/layouts/PortalLayout"));
-const PortalDashboardPage = lazy(
+const PortalLayout = lazyWithRetry(() => import("@/layouts/PortalLayout"));
+const PortalDashboardPage = lazyWithRetry(
   () => import("@/pages/portal/PortalDashboardPage"),
 );
-const TicketListPage = lazy(() => import("@/pages/portal/TicketListPage"));
-const TicketDetailPage = lazy(() => import("@/pages/portal/TicketDetailPage"));
-const PortalOrdersPage = lazy(() => import("@/pages/portal/PortalOrdersPage"));
-const PortalOrderDetailPage = lazy(
+const TicketListPage = lazyWithRetry(() => import("@/pages/portal/TicketListPage"));
+const TicketDetailPage = lazyWithRetry(() => import("@/pages/portal/TicketDetailPage"));
+const PortalOrdersPage = lazyWithRetry(() => import("@/pages/portal/PortalOrdersPage"));
+const PortalOrderDetailPage = lazyWithRetry(
   () => import("@/pages/portal/PortalOrderDetailPage"),
 );
-const PortalPassesPage = lazy(() => import("@/pages/portal/PortalPassesPage"));
-const PassDetailPage = lazy(() => import("@/pages/portal/PassDetailPage"));
-const UsePassPage = lazy(() => import("@/pages/portal/UsePassPage"));
-const PortalProfilePage = lazy(
+const PortalPassesPage = lazyWithRetry(() => import("@/pages/portal/PortalPassesPage"));
+const PassDetailPage = lazyWithRetry(() => import("@/pages/portal/PassDetailPage"));
+const UsePassPage = lazyWithRetry(() => import("@/pages/portal/UsePassPage"));
+const PortalProfilePage = lazyWithRetry(
   () => import("@/pages/portal/PortalProfilePage"),
 );
 
 // ─── Error pages ───
-const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
-const ForbiddenPage = lazy(() => import("@/pages/ForbiddenPage"));
+const NotFoundPage = lazyWithRetry(() => import("@/pages/NotFoundPage"));
+const ForbiddenPage = lazyWithRetry(() => import("@/pages/ForbiddenPage"));
 
 function PageLoader() {
   return (

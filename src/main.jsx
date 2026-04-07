@@ -5,6 +5,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import AppUpdateBanner from "@/components/common/AppUpdateBanner";
 
 import App from "@/App";
 import "@/styles/globals.css";
@@ -27,6 +28,7 @@ createRoot(document.getElementById("root")).render(
           <LanguageProvider>
             <AuthProvider>
               <App />
+              <AppUpdateBanner />
             </AuthProvider>
           </LanguageProvider>
         </BrowserRouter>
