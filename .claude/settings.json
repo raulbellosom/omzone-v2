@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(appwrite --version)",
+      "Bash(appwrite databases:*)",
+      "Bash(appwrite storage:*)",
+      "Bash(npx vite:*)",
+      "Read(//c/Users/raulb/**)",
+      "Bash(node -e ':*)",
+      "Bash(node -e \"const fs = require\\('fs'\\); const data = JSON.parse\\(fs.readFileSync\\('D:/RacoonDevs/omzone-v2/appwrite.json', 'utf8'\\)\\); console.log\\('collections count:', \\(data.collections||[]\\).length\\); console.log\\('names:', \\(data.collections||[]\\).map\\(c=>c.name\\).join\\(', '\\)\\);\")",
+      "Bash(node -e \"const fs = require\\('fs'\\); const data = JSON.parse\\(fs.readFileSync\\('D:/RacoonDevs/omzone-v2/appwrite.json', 'utf8'\\)\\); console.log\\('top-level keys:', Object.keys\\(data\\).join\\(', '\\)\\);\")",
+      "Bash(appwrite deploy:*)",
+      "Bash(appwrite push:*)",
+      "Bash(grep '\"\\\\$id\"')",
+      "Bash(ls src/hooks/use*auth*)",
+      "Bash(ls src/hooks/useUser*)",
+      "Bash(grep -n \"useAddonAssignments\\\\|addon_assignments\\\\|collectionAddonAssign\" src/hooks/*.js)"
+    ]
+  }
+}

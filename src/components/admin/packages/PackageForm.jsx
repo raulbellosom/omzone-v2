@@ -1,0 +1,371 @@
+import { useState, useEffect } from "react";
+import { Input } from "@/components/common/Input";
+import { Button } from "@/components/common/Button";
+import { Card } from "@/components/common/Card";
+import ImageUpload from "@/components/admin/experiences/ImageUpload";
+import PackageItemsEditor from "@/components/admin/packages/PackageItemsEditor";
+import { slugify, checkPackageSlugAvailable } from "@/hooks/usePackages";
+import AdminSelect from "@/components/common/AdminSelect";
+import { cn } from "@/lib/utils";
+
+const STATUS_OPTIONS = [
+  { value: "draft", label: "Borrador" },
+  { value: "published", label: "Publicado" },
+  { value: "archived", label: "Archivado" },
+];
+
+const STATUS_TRANSITIONS = {
+  draft: ["draft", "published"],
+  published: ["published", "archived"],
+  archived: ["archived", "draft"],
+};
+
+const CURRENCY_OPTIONS = [
+  { value: "MXN", label: "MXN" },
+  { value: "USD", label: "USD" },
+];
+
+const EMPTY = {
+  name: "",
+  nameEs: "",
+  slug: "",
+  description: "",
+  descriptionEs: "",
+  totalPrice: "",
+  currency: "MXN",
+  durationDays: "",
+  capacity: "",
+  heroImageId: "",
+  status: "draft",
+  sortOrder: "",
+};
+
+function Field({ label, required, error, hint, children }) {
+  return (
+    <div className="space-y-1.5">
+      <label className="text-sm font-medium text-charcoal">
+        {label}
+        {required && <span className="text-red-500 ml-0.5">*</span>}
+      </label>
+      {children}
+      {error && <p className="text-xs text-red-600">{error}</p>}
+      {hint && !error && <p className="text-xs text-charcoal-subtle">{hint}</p>}
+    </div>
+  );
+}
+
+function Textarea({ value, onChange, placeholder, disabled, rows = 3, error }) {
+  return (
+    <textarea
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      disabled={disabled}
+      rows={rows}
+      className={cn(
+        "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal placeholder:text-charcoal-subtle",
+        "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-none",
+        "disabled:opacity-50 disabled:bg-warm-gray",
+        error && "border-red-400",
+      )}
+    />
+  );
+}
+
+export default function PackageForm({
+  initialData,
+  initialItems = [],
+  onSubmit,
+  submitting,
+  submitLabel = "Guardar",
+}) {
+  const init = initialData
+    ? {
+        ...EMPTY,
+        ...initialData,
+        totalPrice: initialData.totalPrice ?? "",
+        durationDays: initialData.durationDays ?? "",
+        capacity: initialData.capacity ?? "",
+        sortOrder: initialData.sortOrder ?? "",
+        heroImageId: initialData.heroImageId ?? "",
+      }
+    : { ...EMPTY };
+
+  const [form, setForm] = useState(init);
+  const [items, setItems] = useState(initialItems);
+  const [errors, setErrors] = useState({});
+  const [slugManual, setSlugManual] = useState(!!initialData);
+
+  function set(field, value) {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    if (errors[field])
+      setErrors((prev) => {
+        const e = { ...prev };
+        delete e[field];
+        return e;
+      });
+  }
+
+  useEffect(() => {
+    if (!slugManual && form.name) {
+      set("slug", slugify(form.name));
+    }
+  }, [form.name, slugManual]);
+
+  async function validate() {
+    const e = {};
+    if (!form.name.trim()) e.name = "El nombre es requerido";
+    if (!form.slug.trim()) {
+      e.slug = "El slug es requerido";
+    } else {
+      const available = await checkPackageSlugAvailable(
+        form.slug.trim(),
+        initialData?.$id,
+      );
+      if (!available) e.slug = "Este slug ya está en uso";
+    }
+    const price = parseFloat(form.totalPrice);
+    if (isNaN(price) || price < 0) {
+      e.totalPrice = "El precio no puede ser negativo";
+    }
+    if (!form.currency) e.currency = "La moneda es requerida";
+    if (!form.status) e.status = "El estado es requerido";
+    if (form.status === "published" && items.length === 0) {
+      e.items = "Agrega al menos un elemento para publicar el paquete";
+    }
+    return e;
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const validationErrors = await validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    const payload = {
+      name: form.name.trim(),
+      nameEs: form.nameEs.trim() || null,
+      slug: form.slug.trim(),
+      description: form.description.trim() || null,
+      descriptionEs: form.descriptionEs.trim() || null,
+      totalPrice: parseFloat(form.totalPrice),
+      currency: form.currency,
+      durationDays: form.durationDays ? parseInt(form.durationDays) : null,
+      capacity: form.capacity ? parseInt(form.capacity) : null,
+      heroImageId: form.heroImageId || null,
+      status: form.status,
+      sortOrder: form.sortOrder ? parseInt(form.sortOrder) : 0,
+    };
+
+    onSubmit(payload, items);
+  }
+
+  const isDisabled = submitting;
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Identidad */}
+      <Card className="p-5 space-y-4">
+        <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
+          Identidad
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Field label="Nombre" required error={errors.name}>
+            <Input
+              value={form.name}
+              onChange={(e) => set("name", e.target.value)}
+              placeholder="Deep Rest Retreat — 3 Days"
+              disabled={isDisabled}
+              className={errors.name ? "border-red-400" : ""}
+            />
+          </Field>
+          <Field label="Nombre (ES)">
+            <Input
+              value={form.nameEs}
+              onChange={(e) => set("nameEs", e.target.value)}
+              placeholder="Retiro Descanso Profundo — 3 Días"
+              disabled={isDisabled}
+            />
+          </Field>
+        </div>
+        <Field
+          label="Slug"
+          required
+          error={errors.slug}
+          hint="Se genera automáticamente, editable manualmente"
+        >
+          <Input
+            value={form.slug}
+            onChange={(e) => {
+              setSlugManual(true);
+              set("slug", e.target.value);
+            }}
+            placeholder="deep-rest-retreat-3-days"
+            disabled={isDisabled}
+            className={errors.slug ? "border-red-400" : ""}
+          />
+        </Field>
+      </Card>
+
+      {/* Descripción */}
+      <Card className="p-5 space-y-4">
+        <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
+          Descripción
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Field label="Descripción (EN)">
+            <Textarea
+              value={form.description}
+              onChange={(v) => set("description", v)}
+              placeholder="A complete immersive retreat combining breathwork, forest bathing, and guided meditation..."
+              disabled={isDisabled}
+              rows={4}
+            />
+          </Field>
+          <Field label="Descripción (ES)">
+            <Textarea
+              value={form.descriptionEs}
+              onChange={(v) => set("descriptionEs", v)}
+              placeholder="Un retiro inmersivo completo que combina breathwork, baño de bosque y meditación guiada..."
+              disabled={isDisabled}
+              rows={4}
+            />
+          </Field>
+        </div>
+      </Card>
+
+      {/* Precio y logística */}
+      <Card className="p-5 space-y-4">
+        <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
+          Precio y logística
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Field label="Precio total" required error={errors.totalPrice}>
+            <Input
+              type="number"
+              min={0}
+              step="0.01"
+              value={form.totalPrice}
+              onChange={(e) => set("totalPrice", e.target.value)}
+              placeholder="12500.00"
+              disabled={isDisabled}
+              className={errors.totalPrice ? "border-red-400" : ""}
+            />
+          </Field>
+          <Field label="Moneda" required error={errors.currency}>
+            <AdminSelect
+              value={form.currency}
+              onChange={(v) => set("currency", v)}
+              options={CURRENCY_OPTIONS}
+              disabled={isDisabled}
+              error={errors.currency}
+            />
+          </Field>
+          <Field
+            label="Duración (días)"
+            hint="Dejar vacío si el paquete no tiene duración fija"
+          >
+            <Input
+              type="number"
+              min={1}
+              value={form.durationDays}
+              onChange={(e) => set("durationDays", e.target.value)}
+              placeholder="3"
+              disabled={isDisabled}
+            />
+          </Field>
+          <Field
+            label="Capacidad"
+            hint="Número máximo de participantes. Dejar vacío si no aplica"
+          >
+            <Input
+              type="number"
+              min={1}
+              value={form.capacity}
+              onChange={(e) => set("capacity", e.target.value)}
+              placeholder="12"
+              disabled={isDisabled}
+            />
+          </Field>
+        </div>
+      </Card>
+
+      {/* Elementos del paquete */}
+      <Card className="p-5 space-y-4">
+        <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
+          Elementos incluidos
+        </h2>
+        {errors.items && <p className="text-xs text-red-600">{errors.items}</p>}
+        <PackageItemsEditor
+          items={items}
+          onChange={setItems}
+          disabled={isDisabled}
+        />
+      </Card>
+
+      {/* Estado y orden */}
+      <Card className="p-5 space-y-4">
+        <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
+          Estado y orden
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Field label="Estado" required error={errors.status}>
+            <AdminSelect
+              value={form.status}
+              onChange={(v) => set("status", v)}
+              options={STATUS_OPTIONS.filter((o) =>
+                (
+                  STATUS_TRANSITIONS[initialData?.status || "draft"] ||
+                  STATUS_TRANSITIONS.draft
+                ).includes(o.value),
+              )}
+              disabled={isDisabled}
+              error={errors.status}
+            />
+          </Field>
+          <Field label="Orden" hint="Orden de aparición (menor = primero)">
+            <Input
+              type="number"
+              min={0}
+              value={form.sortOrder}
+              onChange={(e) => set("sortOrder", e.target.value)}
+              placeholder="0"
+              disabled={isDisabled}
+            />
+          </Field>
+        </div>
+      </Card>
+
+      {/* Imagen de portada */}
+      <Card className="p-5 space-y-4">
+        <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
+          Imagen de portada
+        </h2>
+        <div className="max-w-lg">
+          <ImageUpload
+            fileId={form.heroImageId}
+            onUpload={(id) => set("heroImageId", id)}
+            onRemove={() => set("heroImageId", "")}
+            disabled={isDisabled}
+          />
+        </div>
+      </Card>
+
+      {/* Acciones */}
+      <div className="flex items-center gap-3 pb-6">
+        <Button type="submit" disabled={isDisabled} size="md">
+          {submitting ? (
+            <span className="flex items-center gap-2">
+              <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+              Guardando...
+            </span>
+          ) : (
+            submitLabel
+          )}
+        </Button>
+      </div>
+    </form>
+  );
+}

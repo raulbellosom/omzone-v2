@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin/*
+Disallow: /portal/*
+Disallow: /checkout/*
+Disallow: /login
+Disallow: /register
+Disallow: /verify-email*
+Disallow: /forbidden
+
+Sitemap: https://omzone.com/sitemap.xml

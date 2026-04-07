@@ -1,0 +1,156 @@
+import { formatPrice } from "@/components/public/checkout/utils";
+import { cn } from "@/lib/utils";
+
+export default function SelectionStep({
+  experience,
+  pricingTiers,
+  slots,
+  selectedTierId,
+  setSelectedTierId,
+  selectedSlotId,
+  setSelectedSlotId,
+  quantity,
+  setQuantity,
+}) {
+  const minQty = experience.minQuantity || 1;
+  const maxQty = experience.maxQuantity || 20;
+
+  return (
+    <div className="space-y-6">
+      {/* Experience summary */}
+      <div className="rounded-xl border border-warm-gray-dark/20 bg-white p-4 flex gap-4 items-center">
+        <div className="flex-shrink-0 w-16 h-16 rounded-lg bg-warm-gray flex items-center justify-center text-2xl">
+          🧘
+        </div>
+        <div className="min-w-0">
+          <p className="text-xs text-charcoal-subtle uppercase tracking-wider">
+            {experience.type}
+          </p>
+          <h3 className="text-base font-semibold text-charcoal truncate">
+            {experience.publicName}
+          </h3>
+        </div>
+      </div>
+
+      {/* Pricing tier selection */}
+      <fieldset className="space-y-3">
+        <legend className="text-sm font-semibold text-charcoal mb-2">
+          Select your option
+        </legend>
+        <div className="grid gap-2">
+          {pricingTiers.map((tier) => (
+            <label
+              key={tier.$id}
+              className={cn(
+                "flex items-center justify-between rounded-xl px-4 py-3 border cursor-pointer transition-all",
+                selectedTierId === tier.$id
+                  ? "border-sage bg-sage/5 ring-1 ring-sage/40"
+                  : "border-warm-gray-dark/20 bg-white hover:border-charcoal/20",
+              )}
+            >
+              <div className="flex items-center gap-3">
+                <input
+                  type="radio"
+                  name="pricingTier"
+                  value={tier.$id}
+                  checked={selectedTierId === tier.$id}
+                  onChange={() => setSelectedTierId(tier.$id)}
+                  className="accent-sage"
+                />
+                <div>
+                  <span className="text-sm font-medium text-charcoal">
+                    {tier.name}
+                  </span>
+                  {tier.badge && (
+                    <span className="ml-2 text-xs bg-sage text-white rounded-full px-2 py-0.5">
+                      {tier.badge}
+                    </span>
+                  )}
+                  {tier.description && (
+                    <p className="text-xs text-charcoal-subtle mt-0.5">
+                      {tier.description}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <span className="text-sm font-bold text-charcoal whitespace-nowrap">
+                {formatPrice(tier.basePrice, tier.currency)}
+              </span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      {/* Slot selection */}
+      {experience.requiresSchedule && slots.length > 0 && (
+        <fieldset className="space-y-2">
+          <legend className="text-sm font-semibold text-charcoal mb-2">
+            Choose a date & time
+          </legend>
+          <select
+            value={selectedSlotId}
+            onChange={(e) => setSelectedSlotId(e.target.value)}
+            className="w-full rounded-xl border border-warm-gray-dark/20 bg-white px-4 py-3 text-sm text-charcoal focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
+          >
+            <option value="">Select a time slot</option>
+            {slots.map((slot) => {
+              const start = new Date(slot.startDatetime);
+              const end = new Date(slot.endDatetime);
+              const available = slot.capacity - slot.bookedCount;
+              return (
+                <option key={slot.$id} value={slot.$id}>
+                  {start.toLocaleDateString("en-US", {
+                    weekday: "short",
+                    month: "short",
+                    day: "numeric",
+                  })}{" "}
+                  ·{" "}
+                  {start.toLocaleTimeString("en-US", {
+                    hour: "numeric",
+                    minute: "2-digit",
+                  })}
+                  {" – "}
+                  {end.toLocaleTimeString("en-US", {
+                    hour: "numeric",
+                    minute: "2-digit",
+                  })}{" "}
+                  ({available} {available === 1 ? "spot" : "spots"} left)
+                </option>
+              );
+            })}
+          </select>
+        </fieldset>
+      )}
+
+      {/* Quantity selector */}
+      {experience.allowQuantity && (
+        <fieldset className="space-y-2">
+          <legend className="text-sm font-semibold text-charcoal mb-2">
+            Number of attendees
+          </legend>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setQuantity(Math.max(minQty, quantity - 1))}
+              disabled={quantity <= minQty}
+              className="w-10 h-10 rounded-full border border-warm-gray-dark/20 bg-white flex items-center justify-center text-charcoal hover:bg-warm-gray disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              −
+            </button>
+            <span className="text-lg font-semibold text-charcoal w-8 text-center">
+              {quantity}
+            </span>
+            <button
+              type="button"
+              onClick={() => setQuantity(Math.min(maxQty, quantity + 1))}
+              disabled={quantity >= maxQty}
+              className="w-10 h-10 rounded-full border border-warm-gray-dark/20 bg-white flex items-center justify-center text-charcoal hover:bg-warm-gray disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              +
+            </button>
+          </div>
+        </fieldset>
+      )}
+    </div>
+  );
+}

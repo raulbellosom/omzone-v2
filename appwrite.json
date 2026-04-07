@@ -1,0 +1,4637 @@
+{
+  "projectId": "omzone-dev",
+  "projectName": "OMZONE",
+  "functions": [
+    {
+      "$id": "assign-user-label",
+      "name": "assign-user-label",
+      "runtime": "node-22",
+      "execute": [
+        "any"
+      ],
+      "events": [
+        "users.*.create"
+      ],
+      "timeout": 15,
+      "enabled": true,
+      "logging": true,
+      "deploymentRetention": 0,
+      "entrypoint": "src/main.js",
+      "commands": "npm install",
+      "path": "functions/assign-user-label"
+    },
+    {
+      "$id": "create-checkout",
+      "name": "create-checkout",
+      "runtime": "node-22",
+      "execute": [
+        "users"
+      ],
+      "events": [],
+      "timeout": 30,
+      "enabled": true,
+      "logging": true,
+      "deploymentRetention": 0,
+      "entrypoint": "src/main.js",
+      "commands": "npm install",
+      "path": "functions/create-checkout"
+    },
+    {
+      "$id": "stripe-webhook",
+      "name": "stripe-webhook",
+      "runtime": "node-22",
+      "execute": [
+        "any"
+      ],
+      "events": [],
+      "timeout": 30,
+      "enabled": true,
+      "logging": true,
+      "deploymentRetention": 0,
+      "entrypoint": "src/main.js",
+      "commands": "npm install",
+      "path": "functions/stripe-webhook"
+    },
+    {
+      "$id": "generate-ticket",
+      "name": "generate-ticket",
+      "runtime": "node-22",
+      "execute": [
+        "users"
+      ],
+      "events": [],
+      "timeout": 30,
+      "enabled": true,
+      "logging": true,
+      "deploymentRetention": 0,
+      "entrypoint": "src/main.js",
+      "commands": "npm install",
+      "path": "functions/generate-ticket"
+    },
+    {
+      "$id": "validate-ticket",
+      "name": "validate-ticket",
+      "runtime": "node-22",
+      "execute": [
+        "users"
+      ],
+      "events": [],
+      "timeout": 15,
+      "enabled": true,
+      "logging": true,
+      "deploymentRetention": 0,
+      "entrypoint": "src/main.js",
+      "commands": "npm install",
+      "path": "functions/validate-ticket"
+    },
+    {
+      "$id": "consume-pass",
+      "name": "consume-pass",
+      "runtime": "node-22",
+      "execute": [
+        "users"
+      ],
+      "events": [],
+      "timeout": 30,
+      "enabled": true,
+      "logging": true,
+      "deploymentRetention": 0,
+      "entrypoint": "src/main.js",
+      "commands": "npm install",
+      "path": "functions/consume-pass"
+    },
+    {
+      "$id": "send-confirmation",
+      "name": "send-confirmation",
+      "runtime": "node-22",
+      "execute": [],
+      "events": [],
+      "timeout": 30,
+      "enabled": true,
+      "logging": true,
+      "deploymentRetention": 0,
+      "entrypoint": "src/main.js",
+      "commands": "npm install",
+      "path": "functions/send-confirmation"
+    },
+    {
+      "$id": "send-reminder",
+      "name": "send-reminder",
+      "runtime": "node-22",
+      "execute": [],
+      "events": [],
+      "schedule": "0 8 * * *",
+      "timeout": 120,
+      "enabled": true,
+      "logging": true,
+      "deploymentRetention": 0,
+      "entrypoint": "src/main.js",
+      "commands": "npm install",
+      "path": "functions/send-reminder"
+    }
+  ],
+  "databases": [
+    {
+      "$id": "omzone_db",
+      "name": "omzone_db",
+      "enabled": true
+    }
+  ],
+  "tablesDB": [
+    {
+      "$id": "omzone_db",
+      "name": "omzone_db",
+      "enabled": true
+    }
+  ],
+  "tables": [
+    {
+      "$id": "experiences",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "experiences",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "publicName",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "publicNameEs",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "slug",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "type",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "session",
+            "immersion",
+            "retreat",
+            "stay",
+            "private",
+            "package"
+          ]
+        },
+        {
+          "key": "saleMode",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "direct",
+            "request",
+            "assisted",
+            "pass"
+          ]
+        },
+        {
+          "key": "fulfillmentType",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "ticket",
+            "booking",
+            "pass",
+            "package"
+          ]
+        },
+        {
+          "key": "shortDescription",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "shortDescriptionEs",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "longDescription",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "longDescriptionEs",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "heroImageId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "galleryImageIds",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "requiresSchedule",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "requiresDate",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "allowQuantity",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "maxQuantity",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "minQuantity",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "generatesTickets",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "draft",
+            "published",
+            "archived"
+          ]
+        },
+        {
+          "key": "sortOrder",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "seoTitle",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "seoDescription",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "ogImageId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_slug",
+          "type": "unique",
+          "status": "available",
+          "columns": [
+            "slug"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "status"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_type",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "type"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_type_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "type",
+            "status"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_publicName_fulltext",
+          "type": "fulltext",
+          "status": "available",
+          "columns": [
+            "publicName"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "publications",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "publications",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "title",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "titleEs",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "slug",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "subtitle",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "subtitleEs",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "excerpt",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "excerptEs",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "category",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "landing",
+            "blog",
+            "highlight",
+            "institutional",
+            "faq"
+          ]
+        },
+        {
+          "key": "experienceId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "heroImageId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "draft",
+            "published",
+            "archived"
+          ]
+        },
+        {
+          "key": "publishedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "seoTitle",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "seoDescription",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "ogImageId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_slug",
+          "type": "unique",
+          "status": "available",
+          "columns": [
+            "slug"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "status"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_category_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "category",
+            "status"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_experienceId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "experienceId"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "sections",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "sections",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "publicationId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "sectionType",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "hero",
+            "text",
+            "gallery",
+            "highlights",
+            "faq",
+            "itinerary",
+            "testimonials",
+            "inclusions",
+            "restrictions",
+            "cta",
+            "video"
+          ]
+        },
+        {
+          "key": "title",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "titleEs",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "content",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "contentEs",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "mediaIds",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "metadata",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "sortOrder",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "isVisible",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": null
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_publicationId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "publicationId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_publicationId_sortOrder",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "publicationId",
+            "sortOrder"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "tags",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "tags",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 100,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "nameEs",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 100,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "slug",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 100,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "category",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "wellness",
+            "activity",
+            "level",
+            "duration",
+            "location",
+            "audience"
+          ]
+        },
+        {
+          "key": "sortOrder",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": 0,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_slug",
+          "type": "unique",
+          "status": "available",
+          "columns": [
+            "slug"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_category",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "category"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "experience_tags",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "experience_tags",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "experienceId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "tagId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_experienceId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "experienceId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_tagId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "tagId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_experienceId_tagId",
+          "type": "unique",
+          "status": "available",
+          "columns": [
+            "experienceId",
+            "tagId"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "editions",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "editions",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "experienceId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "nameEs",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "description",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "descriptionEs",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "startDate",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "endDate",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "registrationOpens",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "registrationCloses",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "capacity",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "draft",
+            "open",
+            "closed",
+            "completed",
+            "cancelled"
+          ]
+        },
+        {
+          "key": "heroImageId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_experienceId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "experienceId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "status"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_experienceId_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "experienceId",
+            "status"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_startDate",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "startDate"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "pricing_tiers",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "pricing_tiers",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "experienceId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "editionId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "nameEs",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "description",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "descriptionEs",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "priceType",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "fixed",
+            "per-person",
+            "per-group",
+            "from",
+            "quote"
+          ]
+        },
+        {
+          "key": "basePrice",
+          "type": "double",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -1.7976931348623157e+308,
+          "max": 1.7976931348623157e+308
+        },
+        {
+          "key": "currency",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 3,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "minPersons",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "maxPersons",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "badge",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 50,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "isHighlighted",
+          "type": "boolean",
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "isActive",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "sortOrder",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_experienceId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "experienceId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_experienceId_isActive",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "experienceId",
+            "isActive"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_editionId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "editionId"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "pricing_rules",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "pricing_rules",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "pricingTierId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "ruleType",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "early-bird",
+            "quantity-discount",
+            "date-range",
+            "promo-code"
+          ]
+        },
+        {
+          "key": "condition",
+          "type": "text",
+          "required": true,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "adjustment",
+          "type": "text",
+          "required": true,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "priority",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "isActive",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "validFrom",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "validUntil",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_pricingTierId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "pricingTierId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_pricingTierId_isActive",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "pricingTierId",
+            "isActive"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "addons",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "addons",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "nameEs",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "slug",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "description",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "descriptionEs",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "addonType",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "service",
+            "transport",
+            "food",
+            "accommodation",
+            "equipment",
+            "other"
+          ]
+        },
+        {
+          "key": "priceType",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "fixed",
+            "per-person",
+            "per-day",
+            "per-unit",
+            "quote"
+          ]
+        },
+        {
+          "key": "basePrice",
+          "type": "double",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -1.7976931348623157e+308,
+          "max": 1.7976931348623157e+308
+        },
+        {
+          "key": "currency",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 3,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "isStandalone",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "isPublic",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "followsMainDuration",
+          "type": "boolean",
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "maxQuantity",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "heroImageId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "active",
+            "inactive"
+          ]
+        },
+        {
+          "key": "sortOrder",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_slug",
+          "type": "unique",
+          "status": "available",
+          "columns": [
+            "slug"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "status"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_addonType",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "addonType"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "addon_assignments",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "addon_assignments",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "addonId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "experienceId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "editionId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "isRequired",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "isDefault",
+          "type": "boolean",
+          "required": false,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "overridePrice",
+          "type": "double",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -1.7976931348623157e+308,
+          "max": 1.7976931348623157e+308
+        },
+        {
+          "key": "sortOrder",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_addonId_experienceId",
+          "type": "unique",
+          "status": "available",
+          "columns": [
+            "addonId",
+            "experienceId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_experienceId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "experienceId"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "packages",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "packages",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "nameEs",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "slug",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "description",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "descriptionEs",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "totalPrice",
+          "type": "double",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -1.7976931348623157e+308,
+          "max": 1.7976931348623157e+308
+        },
+        {
+          "key": "currency",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 3,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "durationDays",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "capacity",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "heroImageId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "draft",
+            "published",
+            "archived"
+          ]
+        },
+        {
+          "key": "sortOrder",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_slug",
+          "type": "unique",
+          "status": "available",
+          "columns": [
+            "slug"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "status"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "package_items",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "package_items",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "packageId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "itemType",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "experience",
+            "addon",
+            "benefit",
+            "accommodation",
+            "meal"
+          ]
+        },
+        {
+          "key": "referenceId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "description",
+          "type": "text",
+          "required": true,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "descriptionEs",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "quantity",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "sortOrder",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_packageId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "packageId"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "passes",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "passes",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "nameEs",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "slug",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "description",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "descriptionEs",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "totalCredits",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "basePrice",
+          "type": "double",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -1.7976931348623157e+308,
+          "max": 1.7976931348623157e+308
+        },
+        {
+          "key": "currency",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 3,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "validityDays",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "validExperienceIds",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "heroImageId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "active",
+            "inactive"
+          ]
+        },
+        {
+          "key": "sortOrder",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_slug",
+          "type": "unique",
+          "status": "available",
+          "columns": [
+            "slug"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "status"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "locations",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "read(\"label:operator\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "locations",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "description",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "address",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "coordinates",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 100,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "isActive",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": null
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "rooms",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "read(\"label:operator\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "rooms",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "locationId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "description",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "capacity",
+          "type": "integer",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "type",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "studio",
+            "therapy_room",
+            "outdoor",
+            "pool_area",
+            "other"
+          ]
+        },
+        {
+          "key": "isActive",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": null
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_locationId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "locationId"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "resources",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "read(\"label:operator\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "resources",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "type",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "facilitator",
+            "instructor",
+            "therapist",
+            "equipment"
+          ]
+        },
+        {
+          "key": "description",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "photoId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "contactInfo",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "isActive",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": null
+        },
+        {
+          "key": "metadata",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_type",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "type"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_type_isActive",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "type",
+            "isActive"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "slots",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "update(\"label:operator\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "slots",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "experienceId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "editionId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "slotType",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "single_session",
+            "multi_day",
+            "retreat_day",
+            "private"
+          ]
+        },
+        {
+          "key": "startDatetime",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "endDatetime",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "timezone",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 50,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "capacity",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "bookedCount",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "locationId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "roomId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "draft",
+            "published",
+            "full",
+            "cancelled"
+          ]
+        },
+        {
+          "key": "notes",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_experienceId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "experienceId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_editionId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "editionId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_startDatetime",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "startDatetime"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "status"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_experienceId_status_start",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "experienceId",
+            "status",
+            "startDatetime"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "slot_resources",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "read(\"label:operator\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "slot_resources",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "slotId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "resourceId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "role",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "lead",
+            "assistant",
+            "support",
+            "equipment"
+          ]
+        },
+        {
+          "key": "notes",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_slotId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "slotId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_resourceId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "resourceId"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "orders",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "orders",
+      "enabled": true,
+      "rowSecurity": true,
+      "columns": [
+        {
+          "key": "userId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "orderNumber",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 50,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "orderType",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "direct",
+            "assisted",
+            "request-conversion"
+          ]
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "pending",
+            "paid",
+            "confirmed",
+            "cancelled",
+            "refunded"
+          ]
+        },
+        {
+          "key": "paymentStatus",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "pending",
+            "processing",
+            "succeeded",
+            "failed",
+            "refunded"
+          ]
+        },
+        {
+          "key": "currency",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 3,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "subtotal",
+          "type": "double",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -1.7976931348623157e+308,
+          "max": 1.7976931348623157e+308
+        },
+        {
+          "key": "taxAmount",
+          "type": "double",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": -1.7976931348623157e+308,
+          "max": 1.7976931348623157e+308
+        },
+        {
+          "key": "totalAmount",
+          "type": "double",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -1.7976931348623157e+308,
+          "max": 1.7976931348623157e+308
+        },
+        {
+          "key": "stripeSessionId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "stripePaymentIntentId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "snapshot",
+          "type": "text",
+          "required": true,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "customerName",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "customerEmail",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "notes",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "paidAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "cancelledAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_userId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "userId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_orderNumber",
+          "type": "unique",
+          "status": "available",
+          "columns": [
+            "orderNumber"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "status"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_paymentStatus",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "paymentStatus"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_userId_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "userId",
+            "status"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_stripeSessionId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "stripeSessionId"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "order_items",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "order_items",
+      "enabled": true,
+      "rowSecurity": true,
+      "columns": [
+        {
+          "key": "orderId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "referenceId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "itemType",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "edition",
+            "package",
+            "pass",
+            "addon"
+          ]
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "quantity",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "unitPrice",
+          "type": "double",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -1.7976931348623157e+308,
+          "max": 1.7976931348623157e+308
+        },
+        {
+          "key": "currency",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 3,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "totalPrice",
+          "type": "double",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -1.7976931348623157e+308,
+          "max": 1.7976931348623157e+308
+        },
+        {
+          "key": "slotId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "itemSnapshot",
+          "type": "text",
+          "required": true,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_orderId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "orderId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_itemType",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "itemType"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "payments",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "payments",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "orderId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "stripePaymentIntentId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "stripeChargeId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "amount",
+          "type": "double",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -1.7976931348623157e+308,
+          "max": 1.7976931348623157e+308
+        },
+        {
+          "key": "currency",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 3,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "pending",
+            "succeeded",
+            "failed",
+            "refunded"
+          ]
+        },
+        {
+          "key": "method",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 50,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "metadata",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_orderId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "orderId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_stripePaymentIntentId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "stripePaymentIntentId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "status"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "tickets",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "read(\"label:operator\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "update(\"label:operator\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "tickets",
+      "enabled": true,
+      "rowSecurity": true,
+      "columns": [
+        {
+          "key": "orderId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "orderItemId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "userId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "experienceId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "slotId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "ticketCode",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 100,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "participantName",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "participantEmail",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "valid",
+            "used",
+            "cancelled",
+            "expired"
+          ]
+        },
+        {
+          "key": "usedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "ticketSnapshot",
+          "type": "text",
+          "required": true,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_orderId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "orderId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_userId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "userId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_ticketCode",
+          "type": "unique",
+          "status": "available",
+          "columns": [
+            "ticketCode"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "status"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_userId_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "userId",
+            "status"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_slotId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "slotId"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "ticket_redemptions",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "read(\"label:operator\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "create(\"label:operator\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "ticket_redemptions",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "ticketId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "redeemedBy",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "redeemedAt",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "method",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "qr_scan",
+            "manual",
+            "system"
+          ]
+        },
+        {
+          "key": "notes",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_ticketId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "ticketId"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "user_passes",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "user_passes",
+      "enabled": true,
+      "rowSecurity": true,
+      "columns": [
+        {
+          "key": "userId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "passId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "orderId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "orderItemId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "totalCredits",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "usedCredits",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "active",
+            "exhausted",
+            "expired",
+            "cancelled"
+          ]
+        },
+        {
+          "key": "expiresAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "passSnapshot",
+          "type": "text",
+          "required": true,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_userId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "userId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_passId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "passId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_orderId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "orderId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_userId_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "userId",
+            "status"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "pass_consumptions",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "pass_consumptions",
+      "enabled": true,
+      "rowSecurity": true,
+      "columns": [
+        {
+          "key": "userPassId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "slotId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "experienceId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "creditsUsed",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "consumedAt",
+          "type": "datetime",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "notes",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_userPassId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "userPassId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_consumedAt",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "consumedAt"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "refunds",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "refunds",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "orderId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "paymentId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "stripeRefundId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "amount",
+          "type": "double",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -1.7976931348623157e+308,
+          "max": 1.7976931348623157e+308
+        },
+        {
+          "key": "currency",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 3,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "pending",
+            "succeeded",
+            "failed"
+          ]
+        },
+        {
+          "key": "reason",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "refundSnapshot",
+          "type": "text",
+          "required": true,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "processedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_orderId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "orderId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_paymentId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "paymentId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "status"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "booking_requests",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "create(\"any\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "booking_requests",
+      "enabled": true,
+      "rowSecurity": true,
+      "columns": [
+        {
+          "key": "userId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "experienceId",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "editionId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "requestedDate",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "participants",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "contactName",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "contactEmail",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "contactPhone",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 50,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "message",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "pending",
+            "reviewing",
+            "approved",
+            "rejected",
+            "converted"
+          ]
+        },
+        {
+          "key": "adminNotes",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "quotedAmount",
+          "type": "float",
+          "required": false,
+          "array": false,
+          "default": null,
+          "min": 0,
+          "max": 999999999
+        },
+        {
+          "key": "convertedOrderId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "respondedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_userId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "userId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_experienceId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "experienceId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "status"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "user_profiles",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "user_profiles",
+      "enabled": true,
+      "rowSecurity": true,
+      "columns": [
+        {
+          "key": "displayName",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "firstName",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "lastName",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "phone",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 50,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "language",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "es",
+            "en"
+          ]
+        },
+        {
+          "key": "photoId",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "bio",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "$id": "admin_activity_logs",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "create(\"label:operator\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "admin_activity_logs",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "userId",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "action",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 100,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "entityType",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 100,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "entityId",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "details",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "ipAddress",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 50,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_userId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "userId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_entityType_entityId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "entityType",
+            "entityId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_action",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "action"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "settings",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "settings",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "key",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 100,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "value",
+          "type": "text",
+          "required": true,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "category",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "general",
+            "branding",
+            "checkout",
+            "notifications",
+            "seo"
+          ]
+        },
+        {
+          "key": "description",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_key",
+          "type": "unique",
+          "status": "available",
+          "columns": [
+            "key"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_category",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "category"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "notification_templates",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "notification_templates",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "key",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 100,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "type",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "email",
+            "sms",
+            "push"
+          ]
+        },
+        {
+          "key": "subject",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "subjectEs",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "body",
+          "type": "text",
+          "required": true,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "bodyEs",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "isActive",
+          "type": "boolean",
+          "required": true,
+          "array": false,
+          "default": null
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_key",
+          "type": "unique",
+          "status": "available",
+          "columns": [
+            "key"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_type_isActive",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "type",
+            "isActive"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "bookings",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "read(\"label:operator\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "update(\"label:operator\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "bookings",
+      "enabled": true,
+      "rowSecurity": true,
+      "columns": [
+        {
+          "key": "orderId",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "orderItemId",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "slotId",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "userId",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "participantCount",
+          "type": "integer",
+          "required": true,
+          "array": false,
+          "default": null,
+          "min": 1,
+          "max": 9999
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "required": true,
+          "array": false,
+          "default": null,
+          "format": "enum",
+          "elements": [
+            "confirmed",
+            "checked-in",
+            "no-show",
+            "cancelled"
+          ]
+        },
+        {
+          "key": "checkedInAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "notes",
+          "type": "text",
+          "required": false,
+          "array": false,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_orderId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "orderId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_slotId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "slotId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_userId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "userId"
+          ],
+          "orders": []
+        },
+        {
+          "key": "idx_slotId_status",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "slotId",
+            "status"
+          ],
+          "orders": []
+        }
+      ]
+    },
+    {
+      "$id": "booking_participants",
+      "$permissions": [
+        "read(\"label:root\")",
+        "read(\"label:admin\")",
+        "read(\"label:operator\")",
+        "create(\"label:root\")",
+        "create(\"label:admin\")",
+        "update(\"label:root\")",
+        "update(\"label:admin\")",
+        "delete(\"label:root\")",
+        "delete(\"label:admin\")"
+      ],
+      "databaseId": "omzone_db",
+      "name": "booking_participants",
+      "enabled": true,
+      "rowSecurity": false,
+      "columns": [
+        {
+          "key": "bookingId",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "fullName",
+          "type": "varchar",
+          "required": true,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "email",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "phone",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 50,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "notes",
+          "type": "varchar",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "idx_bookingId",
+          "type": "key",
+          "status": "available",
+          "columns": [
+            "bookingId"
+          ],
+          "orders": []
+        }
+      ]
+    }
+  ],
+  "buckets": [
+    {
+      "$id": "experience_media",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:admin\")",
+        "update(\"label:admin\")",
+        "delete(\"label:admin\")",
+        "create(\"label:root\")",
+        "update(\"label:root\")",
+        "delete(\"label:root\")"
+      ],
+      "name": "Experience Media",
+      "enabled": true,
+      "maximumFileSize": 10485760,
+      "allowedFileExtensions": [
+        "jpg",
+        "jpeg",
+        "png",
+        "webp",
+        "gif"
+      ],
+      "compression": "gzip",
+      "encryption": false,
+      "antivirus": true,
+      "fileSecurity": false
+    },
+    {
+      "$id": "publication_media",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:admin\")",
+        "update(\"label:admin\")",
+        "delete(\"label:admin\")",
+        "create(\"label:root\")",
+        "update(\"label:root\")",
+        "delete(\"label:root\")"
+      ],
+      "name": "Publication Media",
+      "enabled": true,
+      "maximumFileSize": 10485760,
+      "allowedFileExtensions": [
+        "jpg",
+        "jpeg",
+        "png",
+        "webp",
+        "gif"
+      ],
+      "compression": "gzip",
+      "encryption": false,
+      "antivirus": true,
+      "fileSecurity": false
+    },
+    {
+      "$id": "addon_images",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:admin\")",
+        "update(\"label:admin\")",
+        "delete(\"label:admin\")",
+        "create(\"label:root\")",
+        "update(\"label:root\")",
+        "delete(\"label:root\")"
+      ],
+      "name": "Addon Images",
+      "enabled": true,
+      "maximumFileSize": 10485760,
+      "allowedFileExtensions": [
+        "jpg",
+        "jpeg",
+        "png",
+        "webp",
+        "gif"
+      ],
+      "compression": "gzip",
+      "encryption": false,
+      "antivirus": true,
+      "fileSecurity": false
+    },
+    {
+      "$id": "package_images",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:admin\")",
+        "update(\"label:admin\")",
+        "delete(\"label:admin\")",
+        "create(\"label:root\")",
+        "update(\"label:root\")",
+        "delete(\"label:root\")"
+      ],
+      "name": "Package Images",
+      "enabled": true,
+      "maximumFileSize": 10485760,
+      "allowedFileExtensions": [
+        "jpg",
+        "jpeg",
+        "png",
+        "webp",
+        "gif"
+      ],
+      "compression": "gzip",
+      "encryption": false,
+      "antivirus": true,
+      "fileSecurity": false
+    },
+    {
+      "$id": "user_avatars",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"users\")",
+        "update(\"users\")",
+        "delete(\"label:admin\")",
+        "delete(\"label:root\")"
+      ],
+      "name": "User Avatars",
+      "enabled": true,
+      "maximumFileSize": 2097152,
+      "allowedFileExtensions": [
+        "jpg",
+        "jpeg",
+        "png",
+        "webp"
+      ],
+      "compression": "gzip",
+      "encryption": false,
+      "antivirus": true,
+      "fileSecurity": false
+    },
+    {
+      "$id": "documents",
+      "$permissions": [
+        "read(\"users\")",
+        "create(\"label:admin\")",
+        "delete(\"label:admin\")",
+        "create(\"label:root\")",
+        "delete(\"label:root\")"
+      ],
+      "name": "Documents",
+      "enabled": true,
+      "maximumFileSize": 20971520,
+      "allowedFileExtensions": [
+        "pdf",
+        "jpg",
+        "png"
+      ],
+      "compression": "gzip",
+      "encryption": true,
+      "antivirus": true,
+      "fileSecurity": false
+    },
+    {
+      "$id": "public-resources",
+      "$permissions": [
+        "read(\"any\")",
+        "create(\"label:admin\")",
+        "update(\"label:admin\")",
+        "delete(\"label:admin\")",
+        "create(\"label:root\")",
+        "update(\"label:root\")",
+        "delete(\"label:root\")"
+      ],
+      "name": "Recursos Publicos",
+      "enabled": true,
+      "maximumFileSize": 30000000,
+      "allowedFileExtensions": [
+        "jpg",
+        "jpeg",
+        "png",
+        "webp",
+        "svg",
+        "gif",
+        "mp4",
+        "pdf"
+      ],
+      "compression": "gzip",
+      "encryption": false,
+      "antivirus": true,
+      "fileSecurity": false
+    }
+  ]
+}

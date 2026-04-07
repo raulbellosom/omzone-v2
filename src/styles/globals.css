@@ -1,0 +1,271 @@
+/* ─── Google Fonts (must precede all other rules) ─── */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap");
+
+@import "tailwindcss";
+
+/* ─── Design Tokens ─── */
+@theme {
+  /* Brand palette */
+  --color-cream: #faf8f5;
+  --color-cream-dark: #f2ede6;
+  --color-sand: #e8dfd3;
+  --color-sand-dark: #d4c8b8;
+  --color-warm-gray: #f0ece6;
+  --color-warm-gray-dark: #d6cfc5;
+  --color-sage: #7c8c6e;
+  --color-sage-dark: #65755a;
+  --color-sage-muted: #c5ccbe;
+  --color-sage-darker: #4d5c42;
+  --color-olive: #5c6b4f;
+  --color-charcoal: #2c2c2c;
+  --color-charcoal-light: #3d3d3d;
+  --color-charcoal-muted: #6b6b6b;
+  --color-charcoal-subtle: #9b9b9b;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.03);
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+  --shadow-modal:
+    0 8px 40px rgba(0, 0, 0, 0.12), 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shadow-premium:
+    0 12px 48px rgba(0, 0, 0, 0.1), 0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-button: 0 2px 6px rgba(0, 0, 0, 0.06);
+
+  /* Radii */
+  --radius-card: 1rem;
+  --radius-button: 9999px;
+  --radius-input: 0.75rem;
+
+  /* Fonts */
+  --font-display: "Playfair Display", serif;
+  --font-body: "Inter", sans-serif;
+
+  /* Animations */
+  --animate-fade-in: fade-in 0.2s ease-out;
+  --animate-fade-out: fade-out 0.15s ease-in;
+  --animate-fade-in-up: fade-in-up 0.25s ease-out;
+  --animate-slide-up: slide-up 0.3s ease-out;
+  --animate-slide-down: slide-down 0.3s ease-out;
+  --animate-scale-in: scale-in 0.2s ease-out;
+  --animate-overlay-in: overlay-in 0.2s ease-out;
+  --animate-overlay-out: overlay-out 0.15s ease-in;
+  --animate-sheet-in-right: sheet-in-right 0.3s ease-out;
+  --animate-sheet-out-right: sheet-out-right 0.2s ease-in;
+  --animate-sheet-in-left: sheet-in-left 0.3s ease-out;
+  --animate-sheet-out-left: sheet-out-left 0.2s ease-in;
+  --animate-sheet-in-bottom: sheet-in-bottom 0.3s ease-out;
+  --animate-sheet-out-bottom: sheet-out-bottom 0.2s ease-in;
+  --animate-ken-burns: ken-burns 25s ease-in-out infinite alternate;
+}
+
+/* ─── Base ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-charcoal);
+  background-color: var(--color-cream);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+}
+
+.container-shell {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .container-shell {
+    padding-inline: 2rem;
+  }
+}
+@media (min-width: 1024px) {
+  .container-shell {
+    padding-inline: 3rem;
+  }
+}
+
+/* ─── Keyframes ─── */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes sheet-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes sheet-out-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes sheet-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes sheet-out-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes sheet-in-bottom {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes sheet-out-bottom {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-sand-dark);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-charcoal-subtle);
+}
+
+/* ─── Skeleton ─── */
+.skeleton-line {
+  height: 1em;
+  border-radius: 0.25rem;
+  background: linear-gradient(
+    90deg,
+    var(--color-warm-gray) 25%,
+    var(--color-cream-dark) 50%,
+    var(--color-warm-gray) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+}
+@keyframes ken-burns {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.12) translate(-2%, -1.5%);
+  }
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
