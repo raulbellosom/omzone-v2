@@ -1,5 +1,6 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Calendar, Clock, Users } from "lucide-react";
+import { useState, useCallback } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Calendar, Clock, Users } from "lucide-react";
 import { useExperienceDetail } from "@/hooks/useExperienceDetail";
 import { useExperienceSEO } from "@/hooks/useSEO";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -10,6 +11,7 @@ import SectionRenderer from "@/components/public/experience-detail/SectionRender
 import PricingSection from "@/components/public/experience-detail/PricingSection";
 import AgendaSection from "@/components/public/experience-detail/AgendaSection";
 import AddonsSection from "@/components/public/experience-detail/AddonsSection";
+import ExperienceGallery from "@/components/public/experience-detail/ExperienceGallery";
 import ExperienceCTA from "@/components/public/experience-detail/ExperienceCTA";
 import BookingRequestForm from "@/components/public/experience-detail/BookingRequestForm";
 import NotFoundPage from "@/pages/NotFoundPage";
@@ -47,23 +49,6 @@ function LoadingSkeleton() {
   );
 }
 
-// ─── Back link ────────────────────────────────────────────────────────────────
-
-function BackLink() {
-  const { t } = useLanguage();
-  return (
-    <div className="container-shell pt-4 pb-0">
-      <Link
-        to={ROUTES.EXPERIENCES}
-        className="inline-flex items-center gap-1.5 text-sm text-charcoal-subtle hover:text-charcoal transition-colors group"
-      >
-        <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-        {t("experienceDetail.allExperiences")}
-      </Link>
-    </div>
-  );
-}
-
 // ─── Long description block (no publication) ─────────────────────────────────
 
 function LongDescriptionBlock({ experience }) {
@@ -89,7 +74,7 @@ function formatPrice(amount, currency = "MXN") {
   }).format(amount);
 }
 
-function PricingSidebar({ tiers, experience }) {
+function PricingSidebar({ tiers, experience, selectedAddonIds = [] }) {
   const navigate = useNavigate();
   const { t } = useLanguage();
 
@@ -177,8 +162,12 @@ function PricingSidebar({ tiers, experience }) {
               className="w-full"
               onClick={() => {
                 if (experience.saleMode === "direct") {
+                  const addonParam =
+                    selectedAddonIds.length > 0
+                      ? `&addonIds=${selectedAddonIds.join(",")}`
+                      : "";
                   navigate(
-                    `${ROUTES.CHECKOUT}?experienceId=${experience.$id}&slug=${experience.slug}`,
+                    `${ROUTES.CHECKOUT}?experienceId=${experience.$id}&slug=${experience.slug}${addonParam}`,
                   );
                 }
               }}
@@ -207,6 +196,16 @@ export default function ExperienceDetailPage() {
   const { t } = useLanguage();
   const seo = useExperienceSEO(experience, { slots, pricingTiers });
 
+  // ─── Addon selection state ────────────────────────────────────────────
+  const [selectedAddonIds, setSelectedAddonIds] = useState([]);
+  const toggleAddon = useCallback((addonId) => {
+    setSelectedAddonIds((prev) =>
+      prev.includes(addonId)
+        ? prev.filter((id) => id !== addonId)
+        : [...prev, addonId],
+    );
+  }, []);
+
   if (loading) return <LoadingSkeleton />;
   if (error === "not_found" || !experience) return <NotFoundPage />;
   if (error) {
@@ -222,6 +221,17 @@ export default function ExperienceDetailPage() {
   const hasPublication = sections.length > 0;
   const showAgenda = experience.requiresSchedule && slots.length > 0;
 
+  // Parse gallery image IDs (stored as JSON string)
+  let galleryImageIds = [];
+  if (experience.galleryImageIds) {
+    try {
+      const parsed = JSON.parse(experience.galleryImageIds);
+      if (Array.isArray(parsed)) galleryImageIds = parsed.filter(Boolean);
+    } catch {
+      // invalid JSON — skip gallery
+    }
+  }
+
   return (
     <div className="min-h-screen bg-cream">
       <SEOHead
@@ -233,10 +243,7 @@ export default function ExperienceDetailPage() {
       />
       <StructuredData data={seo.structuredData} />
 
-      {/* Back nav */}
-      <BackLink />
-
-      {/* Hero */}
+      {/* Hero — full width, extends under navbar */}
       <ExperienceHero experience={experience} />
 
       {/* ── Two-column layout on lg+: main content | pricing sidebar ── */}
@@ -250,6 +257,14 @@ export default function ExperienceDetailPage() {
               <LongDescriptionBlock experience={experience} />
             )}
 
+            {/* Gallery images */}
+            {galleryImageIds.length > 0 && (
+              <ExperienceGallery
+                imageIds={galleryImageIds}
+                alt={experience.publicName}
+              />
+            )}
+
             {/* Agenda — inside main column */}
             {showAgenda && (
               <div className="-mx-4 md:mx-0">
@@ -257,8 +272,12 @@ export default function ExperienceDetailPage() {
               </div>
             )}
 
-            {/* Addons — inside main column */}
-            <AddonsSection addons={addons} />
+            {/* Addons — inside main column, selectable */}
+            <AddonsSection
+              addons={addons}
+              selectedAddonIds={selectedAddonIds}
+              onToggleAddon={toggleAddon}
+            />
 
             {/* Pricing full-width on mobile (hidden on lg where sidebar shows) */}
             <div className="lg:hidden mt-10">
@@ -274,13 +293,20 @@ export default function ExperienceDetailPage() {
 
           {/* ── Sidebar: pricing (lg+) ── */}
           <div className="hidden lg:block mt-2">
-            <PricingSidebar tiers={pricingTiers} experience={experience} />
+            <PricingSidebar
+              tiers={pricingTiers}
+              experience={experience}
+              selectedAddonIds={selectedAddonIds}
+            />
           </div>
         </div>
       </div>
 
       {/* CTA full-width */}
-      <ExperienceCTA experience={experience} />
+      <ExperienceCTA
+        experience={experience}
+        selectedAddonIds={selectedAddonIds}
+      />
     </div>
   );
 }

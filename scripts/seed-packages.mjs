@@ -41,9 +41,9 @@ async function seedPackages() {
     nameEs: "Retiro Descanso Profundo — 3 Días",
     slug: "deep-rest-retreat-3-days",
     description:
-      "Three days of intentional stillness in the Sierra Norte mountains. This immersive retreat weaves breathwork, forest bathing, and guided meditation into a rhythm designed to dissolve accumulated tension and restore your body's natural capacity for deep rest. Includes boutique accommodation, three plant-based meals daily, and all guided sessions.",
+      "Three days of intentional stillness in the Sierra de Vallejo foothills above Riviera Nayarit. This immersive retreat weaves breathwork, forest bathing, and guided meditation into a rhythm designed to dissolve accumulated tension and restore your body's natural capacity for deep rest. Includes boutique casita accommodation, three plant-based meals daily, and all guided sessions.",
     descriptionEs:
-      "Tres días de quietud intencional en las montañas de la Sierra Norte. Este retiro inmersivo entrelaza breathwork, baño de bosque y meditación guiada en un ritmo diseñado para disolver la tensión acumulada y restaurar la capacidad natural de tu cuerpo para el descanso profundo. Incluye hospedaje boutique, tres comidas a base de plantas por día y todas las sesiones guiadas.",
+      "Tres días de quietud intencional en las faldas de la Sierra de Vallejo, Riviera Nayarit. Este retiro inmersivo entrelaza breathwork, baño de bosque y meditación guiada en un ritmo diseñado para disolver la tensión acumulada y restaurar la capacidad natural de tu cuerpo para el descanso profundo. Incluye hospedaje en casita boutique, tres comidas a base de plantas por día y todas las sesiones guiadas.",
     totalPrice: 18500,
     currency: "MXN",
     durationDays: 3,
@@ -58,9 +58,9 @@ async function seedPackages() {
     nameEs: "Reset Urbano — Medio Día de Bienestar",
     slug: "urban-reset-half-day-wellness",
     description:
-      "A curated half-day escape in our Condesa studio, designed for those who need a deep pause without leaving the city. Begin with a breathwork activation to release mental noise, flow into a sunrise-inspired guided meditation, and close with an artisanal herbal tea ceremony. Professional photography captures the essence of your journey.",
+      "A curated half-day escape at our Zona Romántica studio in Puerto Vallarta. Begin with a breathwork activation to release mental noise, flow into a sunrise-inspired guided meditation, and close with an artisanal herbal tea ceremony. Professional photography captures the essence of your journey.",
     descriptionEs:
-      "Un escape de medio día curado en nuestro estudio de Condesa, diseñado para quienes necesitan una pausa profunda sin salir de la ciudad. Comienza con una activación de breathwork para liberar el ruido mental, fluye hacia una meditación guiada inspirada en el amanecer, y cierra con una ceremonia artesanal de té herbal. La fotografía profesional captura la esencia de tu experiencia.",
+      "Un escape de medio día curado en nuestro estudio de la Zona Romántica en Puerto Vallarta. Comienza con una activación de breathwork para liberar el ruido mental, fluye hacia una meditación guiada inspirada en el amanecer, y cierra con una ceremonia artesanal de té herbal. La fotografía profesional captura la esencia de tu experiencia.",
     totalPrice: 4200,
     currency: "MXN",
     durationDays: null,
@@ -75,9 +75,9 @@ async function seedPackages() {
     nameEs: "Inmersión Sierra — 5 Días",
     slug: "sierra-immersion-5-days",
     description:
-      "Five days of full sensory immersion in ancient Oaxacan forest. Extended breathwork journeys, daily forest bathing, evening meditation circles, farm-to-table meals, and private cabin accommodation. This is our deepest offering — for those ready to truly let go.",
+      "Five days of full sensory immersion in the tropical sierra above Bahía de Banderas. Extended breathwork journeys, daily forest bathing along jungle trails and waterfalls, evening meditation circles, farm-to-table meals, and private casita accommodation. This is our deepest offering — for those ready to truly let go.",
     descriptionEs:
-      "Cinco días de inmersión sensorial completa en el bosque ancestral oaxaqueño. Jornadas extendidas de breathwork, baño de bosque diario, círculos de meditación vespertinos, comidas de la granja a la mesa, y alojamiento en cabaña privada. Esta es nuestra oferta más profunda — para quienes están listos para soltar de verdad.",
+      "Cinco días de inmersión sensorial completa en la sierra tropical sobre Bahía de Banderas. Jornadas extendidas de breathwork, baño de bosque diario por senderos de selva y cascadas, círculos de meditación vespertinos, comidas de la granja a la mesa, y alojamiento en casita privada. Esta es nuestra oferta más profunda — para quienes están listos para soltar de verdad.",
     totalPrice: 35000,
     currency: "MXN",
     durationDays: 5,
@@ -113,9 +113,9 @@ async function seedPackageItems() {
     itemType: "experience",
     referenceId: "exp-forest",
     description:
-      "Three forest bathing immersions through ancient cloud forest trails",
+      "Three forest bathing immersions through tropical Sierra de Vallejo trails",
     descriptionEs:
-      "Tres inmersiones de baño de bosque por senderos de bosque de niebla ancestral",
+      "Tres inmersiones de baño de bosque por senderos de la Sierra de Vallejo",
     quantity: 3,
     sortOrder: 1,
   });
@@ -124,9 +124,9 @@ async function seedPackageItems() {
     packageId: "pkg-deep-rest-3d",
     itemType: "experience",
     referenceId: "exp-sunrise",
-    description: "Daily sunrise meditation with panoramic mountain views",
+    description: "Daily sunrise meditation with panoramic Bahía de Banderas views",
     descriptionEs:
-      "Meditación al amanecer diaria con vistas panorámicas a la montaña",
+      "Meditación al amanecer diaria con vistas panorámicas a la Bahía de Banderas",
     quantity: 3,
     sortOrder: 2,
   });
@@ -136,9 +136,9 @@ async function seedPackageItems() {
     itemType: "accommodation",
     referenceId: null,
     description:
-      "Boutique cabin accommodation — 3 nights, private room with forest views",
+      "Boutique casita accommodation — 3 nights, private room with jungle canopy views",
     descriptionEs:
-      "Alojamiento en cabaña boutique — 3 noches, habitación privada con vista al bosque",
+      "Alojamiento en casita boutique — 3 noches, habitación privada con vista al dosel de la selva",
     quantity: 3,
     sortOrder: 3,
   });
@@ -261,9 +261,9 @@ async function seedPackageItems() {
     itemType: "experience",
     referenceId: "exp-forest",
     description:
-      "Guided forest bathing excursions through ancient cloud forest and river trails",
+      "Guided forest bathing excursions through tropical sierra trails and jungle waterfalls",
     descriptionEs:
-      "Excursiones guiadas de baño de bosque por senderos de bosque de niebla ancestral y río",
+      "Excursiones guiadas de baño de bosque por senderos de sierra tropical y cascadas de selva",
     quantity: 5,
     sortOrder: 1,
   });
@@ -285,9 +285,9 @@ async function seedPackageItems() {
     itemType: "accommodation",
     referenceId: null,
     description:
-      "Private forest cabin — 5 nights with views of the canopy and mountain ridge",
+      "Private jungle casita — 5 nights overlooking the canopy and Bahía de Banderas coastline",
     descriptionEs:
-      "Cabaña privada en el bosque — 5 noches con vistas al dosel y la cresta montañosa",
+      "Casita privada en la selva — 5 noches con vista al dosel y la costa de Bahía de Banderas",
     quantity: 5,
     sortOrder: 3,
   });

@@ -3,6 +3,7 @@ import { account, ID } from "@/lib/appwrite";
 import { ROLES } from "@/constants/roles";
 
 const VERIFY_URL = `${window.location.origin}/verify-email`;
+const RECOVERY_URL = `${window.location.origin}/reset-password`;
 
 export const AuthContext = createContext(null);
 
@@ -102,6 +103,18 @@ export function AuthProvider({ children }) {
     setLabels([]);
   }
 
+  async function changePassword(oldPassword, newPassword) {
+    await account.updatePassword(newPassword, oldPassword);
+  }
+
+  async function requestPasswordRecovery(email) {
+    await account.createRecovery(email, RECOVERY_URL);
+  }
+
+  async function confirmPasswordRecovery(userId, secret, newPassword) {
+    await account.updateRecovery(userId, secret, newPassword);
+  }
+
   function hasLabel(label) {
     return labels.includes(label);
   }
@@ -121,6 +134,9 @@ export function AuthProvider({ children }) {
         register,
         logout,
         resendVerification,
+        changePassword,
+        requestPasswordRecovery,
+        confirmPasswordRecovery,
         hasLabel,
         isAdmin,
         isClient,

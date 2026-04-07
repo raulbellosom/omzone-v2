@@ -21,6 +21,7 @@
       "publications": "Publications",
       "media": "Media",
       "settings": "Settings",
+      "account": "My Account",
       "admin": "Admin"
     },
     "breadcrumbs": {
@@ -946,6 +947,12 @@
       "previous": "Previous",
       "next": "Next",
       "pageOf": "Page {page} of {total}"
+    },
+    "account": {
+      "heading": "My Account",
+      "subtitle": "Manage your profile and security settings",
+      "sectionProfile": "Profile",
+      "sectionSecurity": "Security"
     }
   }
 }

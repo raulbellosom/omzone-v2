@@ -17,6 +17,7 @@ import {
   FileText,
   Image,
   Settings,
+  UserCog,
 } from "lucide-react";
 
 const NAV_SECTIONS = [
@@ -110,6 +111,11 @@ const NAV_SECTIONS = [
   {
     labelKey: "admin.sidebar.system",
     items: [
+      {
+        nameKey: "admin.sidebar.account",
+        path: ROUTES.ADMIN_ACCOUNT,
+        icon: UserCog,
+      },
       {
         nameKey: "admin.sidebar.settings",
         path: ROUTES.ADMIN_SETTINGS,

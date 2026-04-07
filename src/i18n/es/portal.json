@@ -1,1 +1,46 @@
-{}
+{
+  "portal": {
+    "profile": {
+      "pageTitle": "Mi Perfil — OMZONE",
+      "heading": "Mi Perfil",
+      "subtitle": "Administra tu información personal y preferencias",
+      "sectionPersonal": "Información Personal",
+      "sectionPersonalDesc": "Cómo te ven los demás en OMZONE",
+      "sectionContact": "Contacto y Preferencias",
+      "sectionContactDesc": "Configuración de comunicación e idioma",
+      "sectionSecurity": "Seguridad",
+      "sectionSecurityDesc": "Administra tu contraseña",
+      "emailLabel": "Email",
+      "emailHelper": "Para cambiar tu email, contacta a soporte.",
+      "displayNameLabel": "Nombre visible",
+      "displayNamePlaceholder": "Cómo quieres que te llamemos",
+      "firstNameLabel": "Nombre",
+      "firstNamePlaceholder": "Nombre",
+      "lastNameLabel": "Apellido",
+      "lastNamePlaceholder": "Apellido",
+      "phoneLabel": "Teléfono",
+      "phonePlaceholder": "+52 55 1234 5678",
+      "languageLabel": "Idioma preferido",
+      "bioLabel": "Sobre ti",
+      "bioPlaceholder": "Cuéntanos un poco sobre ti…",
+      "bioCount": "{{count}}/{{max}}",
+      "saveButton": "Guardar Cambios",
+      "saving": "Guardando…",
+      "saved": "Perfil actualizado",
+      "changePhoto": "Cambiar foto",
+      "uploading": "Subiendo…",
+      "photoHint": "JPG, PNG o WebP · máx. 2 MB",
+      "errorDisplayName": "Se requiere al menos nombre visible o nombre.",
+      "noProfileYet": "Tu perfil aún no se ha configurado. Intenta más tarde o contacta soporte."
+    },
+    "sidebar": {
+      "myPortal": "Mi Portal",
+      "dashboard": "Dashboard",
+      "orders": "Mis Órdenes",
+      "tickets": "Mis Tickets",
+      "passes": "Mis Pases",
+      "profile": "Mi Perfil",
+      "logout": "Cerrar sesión"
+    }
+  }
+}

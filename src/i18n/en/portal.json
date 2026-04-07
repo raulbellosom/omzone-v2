@@ -1,1 +1,46 @@
-{}
+{
+  "portal": {
+    "profile": {
+      "pageTitle": "My Profile — OMZONE",
+      "heading": "My Profile",
+      "subtitle": "Manage your personal information and preferences",
+      "sectionPersonal": "Personal Information",
+      "sectionPersonalDesc": "How others see you on OMZONE",
+      "sectionContact": "Contact & Preferences",
+      "sectionContactDesc": "Communication and language settings",
+      "sectionSecurity": "Security",
+      "sectionSecurityDesc": "Manage your password",
+      "emailLabel": "Email",
+      "emailHelper": "To change your email, contact support.",
+      "displayNameLabel": "Display name",
+      "displayNamePlaceholder": "How would you like to be called",
+      "firstNameLabel": "First name",
+      "firstNamePlaceholder": "First name",
+      "lastNameLabel": "Last name",
+      "lastNamePlaceholder": "Last name",
+      "phoneLabel": "Phone",
+      "phonePlaceholder": "+52 55 1234 5678",
+      "languageLabel": "Preferred language",
+      "bioLabel": "About you",
+      "bioPlaceholder": "Tell us a bit about yourself…",
+      "bioCount": "{{count}}/{{max}}",
+      "saveButton": "Save Changes",
+      "saving": "Saving…",
+      "saved": "Profile updated",
+      "changePhoto": "Change photo",
+      "uploading": "Uploading…",
+      "photoHint": "JPG, PNG or WebP · max. 2 MB",
+      "errorDisplayName": "A display name or first name is required.",
+      "noProfileYet": "Your profile hasn't been set up yet. Please try again later or contact support."
+    },
+    "sidebar": {
+      "myPortal": "My Portal",
+      "dashboard": "Dashboard",
+      "orders": "My Orders",
+      "tickets": "My Tickets",
+      "passes": "My Passes",
+      "profile": "My Profile",
+      "logout": "Sign Out"
+    }
+  }
+}

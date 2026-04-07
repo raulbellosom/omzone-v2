@@ -36,7 +36,11 @@ const CTA_CONFIG = {
   },
 };
 
-export default function ExperienceCTA({ experience, className }) {
+export default function ExperienceCTA({
+  experience,
+  selectedAddonIds = [],
+  className,
+}) {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const config = CTA_CONFIG[experience.saleMode] ?? CTA_CONFIG.direct;
@@ -44,18 +48,31 @@ export default function ExperienceCTA({ experience, className }) {
 
   function handleClick() {
     if (config.action === "checkout") {
-      navigate(`${ROUTES.CHECKOUT}?experienceId=${experience.$id}&slug=${experience.slug}`);
+      const addonParam =
+        selectedAddonIds.length > 0
+          ? `&addonIds=${selectedAddonIds.join(",")}`
+          : "";
+      navigate(
+        `${ROUTES.CHECKOUT}?experienceId=${experience.$id}&slug=${experience.slug}${addonParam}`,
+      );
     }
     // Other modes are placeholders for now
   }
 
   return (
-    <section className={cn("py-12 md:py-16 bg-sage/5 border-t border-sage/20", className)}>
+    <section
+      className={cn(
+        "py-12 md:py-16 bg-sage/5 border-t border-sage/20",
+        className,
+      )}
+    >
       <div className="container-shell text-center">
         <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-2">
           {t("experienceCTA.readyTo").replace("{name}", experience.publicName)}
         </h2>
-        <p className="text-charcoal-muted mb-8 max-w-xl mx-auto">{t(config.sublabelKey)}</p>
+        <p className="text-charcoal-muted mb-8 max-w-xl mx-auto">
+          {t(config.sublabelKey)}
+        </p>
 
         <Button
           type="button"

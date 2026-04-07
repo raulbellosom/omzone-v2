@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { databases } from "@/lib/appwrite";
-import { Query } from "appwrite";
+import { Permission, Role } from "appwrite";
 import env from "@/config/env";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -10,6 +10,7 @@ const COL = env.collectionUserProfiles;
 /**
  * Reads and updates the authenticated user's profile from user_profiles.
  * The profile document uses $id = userId (set by assign-user-label function).
+ * If the document doesn't exist, it auto-creates it with sensible defaults.
  */
 export function useUserProfile() {
   const { user } = useAuth();
@@ -28,16 +29,44 @@ export function useUserProfile() {
       const doc = await databases.getDocument(DB, COL, user.$id);
       setProfile(doc);
     } catch (err) {
-      // 404 = profile doesn't exist yet — not an error for display
       if (err.code === 404) {
-        setProfile(null);
+        // Profile doesn't exist yet — auto-create with defaults
+        try {
+          const nameParts = (user.name || "").trim().split(/\s+/);
+          const firstName = nameParts[0] || "";
+          const lastName =
+            nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+          const displayName =
+            user.name || (user.email ? user.email.split("@")[0] : "");
+
+          const doc = await databases.createDocument(
+            DB,
+            COL,
+            user.$id,
+            { displayName, firstName, lastName, language: "es" },
+            [
+              Permission.read(Role.user(user.$id)),
+              Permission.update(Role.user(user.$id)),
+              Permission.read(Role.label("admin")),
+              Permission.update(Role.label("admin")),
+            ],
+          );
+          setProfile(doc);
+        } catch (createErr) {
+          // Client users without collection-level create — profile just not available yet
+          if (createErr.code === 401 || createErr.code === 403) {
+            setProfile(null);
+          } else {
+            setError(createErr.message);
+          }
+        }
       } else {
         setError(err.message);
       }
     } finally {
       setLoading(false);
     }
-  }, [user?.$id]);
+  }, [user?.$id, user?.name, user?.email]);
 
   useEffect(() => {
     fetch();

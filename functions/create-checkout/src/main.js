@@ -49,7 +49,16 @@
  *   assisted + Stripe:     { ok: true, data: { paymentLink, orderId } }
  */
 
-import { Client, Databases, Users, Functions, Query, ID, Permission, Role } from "node-appwrite";
+import {
+  Client,
+  Databases,
+  Users,
+  Functions,
+  Query,
+  ID,
+  Permission,
+  Role,
+} from "node-appwrite";
 import Stripe from "stripe";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -111,7 +120,8 @@ function buildDocPermissions(userId) {
  */
 async function triggerGenerateTicket(client, orderId, log, error) {
   try {
-    const fnId = process.env.APPWRITE_FUNCTION_GENERATE_TICKET || "generate-ticket";
+    const fnId =
+      process.env.APPWRITE_FUNCTION_GENERATE_TICKET || "generate-ticket";
     const functions = new Functions(client);
     await functions.createExecution(fnId, JSON.stringify({ orderId }), true);
     log(`Triggered generate-ticket for order ${orderId}`);
@@ -125,7 +135,10 @@ async function triggerGenerateTicket(client, orderId, log, error) {
 export default async ({ req, res, log, error }) => {
   if (req.method !== "POST") {
     return res.json(
-      { ok: false, error: { code: "ERR_METHOD_NOT_ALLOWED", message: "Only POST allowed" } },
+      {
+        ok: false,
+        error: { code: "ERR_METHOD_NOT_ALLOWED", message: "Only POST allowed" },
+      },
       405,
     );
   }
@@ -136,7 +149,8 @@ export default async ({ req, res, log, error }) => {
 
   try {
     // ── 1. Parse input ─────────────────────────────────────────────────────
-    const body = JSON.parse(req.body || "{}");
+    const rawBody = req.bodyText ?? req.body ?? "{}";
+    const body = typeof rawBody === "string" ? JSON.parse(rawBody) : rawBody;
     const {
       experienceId,
       pricingTierId,
@@ -158,36 +172,138 @@ export default async ({ req, res, log, error }) => {
     if (!experienceId || typeof experienceId !== "string") {
       // experienceId is optional for request-conversion (comes from booking request)
       if (!isConversionType) {
-        return res.json({ ok: false, error: { code: "ERR_CHECKOUT_MISSING_EXPERIENCE", message: "experienceId is required" } }, 400);
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_MISSING_EXPERIENCE",
+              message: "experienceId is required",
+            },
+          },
+          400,
+        );
       }
     }
-    if (!isConversionType && (!pricingTierId || typeof pricingTierId !== "string")) {
-      return res.json({ ok: false, error: { code: "ERR_CHECKOUT_MISSING_TIER", message: "pricingTierId is required" } }, 400);
+    if (
+      !isConversionType &&
+      (!pricingTierId || typeof pricingTierId !== "string")
+    ) {
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_MISSING_TIER",
+            message: "pricingTierId is required",
+          },
+        },
+        400,
+      );
     }
     if (!isConversionType && (!Number.isInteger(quantity) || quantity < 1)) {
-      return res.json({ ok: false, error: { code: "ERR_CHECKOUT_INVALID_QUANTITY", message: "quantity must be an integer >= 1" } }, 400);
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_INVALID_QUANTITY",
+            message: "quantity must be an integer >= 1",
+          },
+        },
+        400,
+      );
     }
-    if (!isConversionType && (!customerName || typeof customerName !== "string" || customerName.trim().length === 0)) {
-      return res.json({ ok: false, error: { code: "ERR_CHECKOUT_MISSING_NAME", message: "customerName is required" } }, 400);
+    if (
+      !isConversionType &&
+      (!customerName ||
+        typeof customerName !== "string" ||
+        customerName.trim().length === 0)
+    ) {
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_MISSING_NAME",
+            message: "customerName is required",
+          },
+        },
+        400,
+      );
     }
-    if (!isConversionType && (!customerEmail || typeof customerEmail !== "string" || !EMAIL_RE.test(customerEmail))) {
-      return res.json({ ok: false, error: { code: "ERR_CHECKOUT_INVALID_EMAIL", message: "Valid customerEmail is required" } }, 400);
+    if (
+      !isConversionType &&
+      (!customerEmail ||
+        typeof customerEmail !== "string" ||
+        !EMAIL_RE.test(customerEmail))
+    ) {
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_INVALID_EMAIL",
+            message: "Valid customerEmail is required",
+          },
+        },
+        400,
+      );
     }
     if (slotId !== undefined && slotId !== null && typeof slotId !== "string") {
-      return res.json({ ok: false, error: { code: "ERR_CHECKOUT_INVALID_SLOT", message: "slotId must be a string" } }, 400);
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_INVALID_SLOT",
+            message: "slotId must be a string",
+          },
+        },
+        400,
+      );
     }
-    if (!Array.isArray(addonIds) || addonIds.some((id) => typeof id !== "string")) {
-      return res.json({ ok: false, error: { code: "ERR_CHECKOUT_INVALID_ADDONS", message: "addonIds must be an array of strings" } }, 400);
+    if (
+      !Array.isArray(addonIds) ||
+      addonIds.some((id) => typeof id !== "string")
+    ) {
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_INVALID_ADDONS",
+            message: "addonIds must be an array of strings",
+          },
+        },
+        400,
+      );
     }
     if (!["direct", "assisted", "request-conversion"].includes(orderType)) {
-      return res.json({ ok: false, error: { code: "ERR_CHECKOUT_INVALID_ORDER_TYPE", message: "orderType must be 'direct', 'assisted', or 'request-conversion'" } }, 400);
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_INVALID_ORDER_TYPE",
+            message:
+              "orderType must be 'direct', 'assisted', or 'request-conversion'",
+          },
+        },
+        400,
+      );
     }
 
     // ── 3. Authenticate ────────────────────────────────────────────────────
     const callerUserId = req.headers["x-appwrite-user-id"];
     if (!callerUserId) {
-      return res.json({ ok: false, error: { code: "ERR_AUTH_REQUIRED", message: "Authentication required" } }, 401);
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_AUTH_REQUIRED",
+            message: "Authentication required",
+          },
+        },
+        401,
+      );
     }
+
+    log(
+      `Caller: ${callerUserId}, orderType: ${orderType}, hasApiKey: ${!!req.headers["x-appwrite-key"]}`,
+    );
 
     // ── 3b. Assisted/conversion: verify caller is admin/root ────────────────
     const isAssistedSale = orderType === "assisted";
@@ -196,35 +312,73 @@ export default async ({ req, res, log, error }) => {
       let callerUser;
       try {
         callerUser = await users.get(callerUserId);
-      } catch {
-        return res.json({ ok: false, error: { code: "ERR_AUTH_FORBIDDEN", message: "Cannot verify caller identity" } }, 403);
+      } catch (authErr) {
+        error(
+          `users.get(${callerUserId}) failed: ${authErr.message} [code=${authErr.code}, type=${authErr.type}]`,
+        );
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_AUTH_FORBIDDEN",
+              message: "Cannot verify caller identity",
+            },
+          },
+          403,
+        );
       }
       const callerLabels = callerUser.labels ?? [];
       if (!callerLabels.includes("admin") && !callerLabels.includes("root")) {
-        return res.json({ ok: false, error: { code: "ERR_AUTH_FORBIDDEN", message: "Only admin users can create assisted sales or convert requests" } }, 403);
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_AUTH_FORBIDDEN",
+              message:
+                "Only admin users can create assisted sales or convert requests",
+            },
+          },
+          403,
+        );
       }
     }
 
     // For assisted: the order owner is the targetUserId (if provided) or the caller
-    const orderUserId = isAssistedSale && targetUserId ? targetUserId : callerUserId;
+    const orderUserId =
+      isAssistedSale && targetUserId ? targetUserId : callerUserId;
 
     // ── 4. Environment ─────────────────────────────────────────────────────
     const DB = process.env.APPWRITE_DATABASE_ID || "omzone_db";
-    const COL_EXPERIENCES = process.env.APPWRITE_COLLECTION_EXPERIENCES || "experiences";
-    const COL_PRICING_TIERS = process.env.APPWRITE_COLLECTION_PRICING_TIERS || "pricing_tiers";
+    const COL_EXPERIENCES =
+      process.env.APPWRITE_COLLECTION_EXPERIENCES || "experiences";
+    const COL_PRICING_TIERS =
+      process.env.APPWRITE_COLLECTION_PRICING_TIERS || "pricing_tiers";
     const COL_SLOTS = process.env.APPWRITE_COLLECTION_SLOTS || "slots";
     const COL_ADDONS = process.env.APPWRITE_COLLECTION_ADDONS || "addons";
-    const COL_ADDON_ASSIGNMENTS = process.env.APPWRITE_COLLECTION_ADDON_ASSIGNMENTS || "addon_assignments";
+    const COL_ADDON_ASSIGNMENTS =
+      process.env.APPWRITE_COLLECTION_ADDON_ASSIGNMENTS || "addon_assignments";
     const COL_ORDERS = process.env.APPWRITE_COLLECTION_ORDERS || "orders";
-    const COL_ORDER_ITEMS = process.env.APPWRITE_COLLECTION_ORDER_ITEMS || "order_items";
-    const COL_ACTIVITY_LOGS = process.env.APPWRITE_COLLECTION_ADMIN_ACTIVITY_LOGS || "admin_activity_logs";
+    const COL_ORDER_ITEMS =
+      process.env.APPWRITE_COLLECTION_ORDER_ITEMS || "order_items";
+    const COL_ACTIVITY_LOGS =
+      process.env.APPWRITE_COLLECTION_ADMIN_ACTIVITY_LOGS ||
+      "admin_activity_logs";
     const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY;
     const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 
     // Stripe is only required for non-skipStripe flows
     if (!skipStripe && !STRIPE_SECRET) {
       error("STRIPE_SECRET_KEY not configured");
-      return res.json({ ok: false, error: { code: "ERR_CONFIG", message: "Payment service not configured" } }, 500);
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CONFIG",
+            message: "Payment service not configured",
+          },
+        },
+        500,
+      );
     }
 
     const stripe = STRIPE_SECRET ? new Stripe(STRIPE_SECRET) : null;
@@ -232,34 +386,97 @@ export default async ({ req, res, log, error }) => {
     // ── 4b. Request-conversion: early branch ───────────────────────────────
     if (isRequestConversion) {
       if (!bookingRequestId || typeof bookingRequestId !== "string") {
-        return res.json({ ok: false, error: { code: "ERR_CHECKOUT_MISSING_REQUEST", message: "bookingRequestId is required for request-conversion" } }, 400);
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_MISSING_REQUEST",
+              message: "bookingRequestId is required for request-conversion",
+            },
+          },
+          400,
+        );
       }
       if (typeof quotedAmount !== "number" || quotedAmount <= 0) {
-        return res.json({ ok: false, error: { code: "ERR_CHECKOUT_INVALID_AMOUNT", message: "quotedAmount must be a positive number" } }, 400);
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_INVALID_AMOUNT",
+              message: "quotedAmount must be a positive number",
+            },
+          },
+          400,
+        );
       }
 
-      const COL_BOOKING_REQUESTS = process.env.APPWRITE_COLLECTION_BOOKING_REQUESTS || "booking_requests";
+      const COL_BOOKING_REQUESTS =
+        process.env.APPWRITE_COLLECTION_BOOKING_REQUESTS || "booking_requests";
 
       // Fetch & validate booking request
       let bookingReq;
       try {
-        bookingReq = await db.getDocument(DB, COL_BOOKING_REQUESTS, bookingRequestId);
+        bookingReq = await db.getDocument(
+          DB,
+          COL_BOOKING_REQUESTS,
+          bookingRequestId,
+        );
       } catch {
-        return res.json({ ok: false, error: { code: "ERR_CHECKOUT_REQUEST_NOT_FOUND", message: "Booking request not found" } }, 404);
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_REQUEST_NOT_FOUND",
+              message: "Booking request not found",
+            },
+          },
+          404,
+        );
       }
       if (bookingReq.status !== "approved") {
-        return res.json({ ok: false, error: { code: "ERR_CHECKOUT_REQUEST_NOT_APPROVED", message: "Booking request must be approved before conversion" } }, 400);
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_REQUEST_NOT_APPROVED",
+              message: "Booking request must be approved before conversion",
+            },
+          },
+          400,
+        );
       }
       if (bookingReq.convertedOrderId) {
-        return res.json({ ok: false, error: { code: "ERR_CHECKOUT_REQUEST_ALREADY_CONVERTED", message: "Booking request was already converted" } }, 409);
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_REQUEST_ALREADY_CONVERTED",
+              message: "Booking request was already converted",
+            },
+          },
+          409,
+        );
       }
 
       // Fetch experience (minimal validation)
       let rcExperience;
       try {
-        rcExperience = await db.getDocument(DB, COL_EXPERIENCES, bookingReq.experienceId || experienceId);
+        rcExperience = await db.getDocument(
+          DB,
+          COL_EXPERIENCES,
+          bookingReq.experienceId || experienceId,
+        );
       } catch {
-        return res.json({ ok: false, error: { code: "ERR_CHECKOUT_EXPERIENCE_NOT_FOUND", message: "Experience not found" } }, 404);
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_EXPERIENCE_NOT_FOUND",
+              message: "Experience not found",
+            },
+          },
+          404,
+        );
       }
 
       const rcCurrency = "MXN";
@@ -283,7 +500,9 @@ export default async ({ req, res, log, error }) => {
         taxAmount: 0,
         totalAmount: quotedAmount,
         customerName: (customerName || bookingReq.contactName || "").trim(),
-        customerEmail: (customerEmail || bookingReq.contactEmail || "").trim().toLowerCase(),
+        customerEmail: (customerEmail || bookingReq.contactEmail || "")
+          .trim()
+          .toLowerCase(),
         customerPhone: customerPhone || bookingReq.contactPhone || null,
         requestedDate: bookingReq.requestedDate || null,
         participants: rcQuantity,
@@ -307,52 +526,74 @@ export default async ({ req, res, log, error }) => {
         taxAmount: 0,
         totalAmount: quotedAmount,
         customerName: (customerName || bookingReq.contactName || "").trim(),
-        customerEmail: (customerEmail || bookingReq.contactEmail || "").trim().toLowerCase(),
+        customerEmail: (customerEmail || bookingReq.contactEmail || "")
+          .trim()
+          .toLowerCase(),
         snapshot: rcSnapshot,
         notes: `Converted from booking request ${bookingReq.$id}`,
       };
       if (rcPaidAt) rcOrderData.paidAt = rcPaidAt;
 
-      const rcOrder = await db.createDocument(DB, COL_ORDERS, ID.unique(), rcOrderData, rcPermissions);
-      log(`Request-conversion order created: ${rcOrder.$id} (${rcOrderNumber}) from request ${bookingReq.$id}`);
+      const rcOrder = await db.createDocument(
+        DB,
+        COL_ORDERS,
+        ID.unique(),
+        rcOrderData,
+        rcPermissions,
+      );
+      log(
+        `Request-conversion order created: ${rcOrder.$id} (${rcOrderNumber}) from request ${bookingReq.$id}`,
+      );
 
       // Create single order item
-      await db.createDocument(DB, COL_ORDER_ITEMS, ID.unique(), {
-        orderId: rcOrder.$id,
-        referenceId: rcExperience.$id,
-        itemType: "edition",
-        name: rcExperience.publicName,
-        quantity: rcQuantity,
-        unitPrice: quotedAmount / rcQuantity,
-        currency: rcCurrency,
-        totalPrice: quotedAmount,
-        itemSnapshot: JSON.stringify({
-          experienceId: rcExperience.$id,
-          experienceName: rcExperience.publicName,
-          experienceType: rcExperience.type,
-          quotedAmount,
-          bookingRequestId: bookingReq.$id,
-        }),
-      }, rcPermissions);
+      await db.createDocument(
+        DB,
+        COL_ORDER_ITEMS,
+        ID.unique(),
+        {
+          orderId: rcOrder.$id,
+          referenceId: rcExperience.$id,
+          itemType: "edition",
+          name: rcExperience.publicName,
+          quantity: rcQuantity,
+          unitPrice: quotedAmount / rcQuantity,
+          currency: rcCurrency,
+          totalPrice: quotedAmount,
+          itemSnapshot: JSON.stringify({
+            experienceId: rcExperience.$id,
+            experienceName: rcExperience.publicName,
+            experienceType: rcExperience.type,
+            quotedAmount,
+            bookingRequestId: bookingReq.$id,
+          }),
+        },
+        rcPermissions,
+      );
 
       // Log admin activity
       try {
-        await db.createDocument(DB, COL_ACTIVITY_LOGS, ID.unique(), {
-          userId: callerUserId,
-          action: "request-conversion",
-          entityType: "order",
-          entityId: rcOrder.$id,
-          details: JSON.stringify({
-            orderNumber: rcOrderNumber,
-            bookingRequestId: bookingReq.$id,
-            quotedAmount,
-            currency: rcCurrency,
-            skipStripe,
-          }),
-        }, [
-          Permission.read(Role.label("admin")),
-          Permission.read(Role.label("root")),
-        ]);
+        await db.createDocument(
+          DB,
+          COL_ACTIVITY_LOGS,
+          ID.unique(),
+          {
+            userId: callerUserId,
+            action: "request-conversion",
+            entityType: "order",
+            entityId: rcOrder.$id,
+            details: JSON.stringify({
+              orderNumber: rcOrderNumber,
+              bookingRequestId: bookingReq.$id,
+              quotedAmount,
+              currency: rcCurrency,
+              skipStripe,
+            }),
+          },
+          [
+            Permission.read(Role.label("admin")),
+            Permission.read(Role.label("root")),
+          ],
+        );
       } catch (logErr) {
         error("Activity log failed: " + logErr.message);
       }
@@ -380,32 +621,50 @@ export default async ({ req, res, log, error }) => {
       }
 
       // Generate Stripe Payment Link for conversion
-      const rcLineItems = [{
-        price_data: {
-          currency: rcCurrency.toLowerCase(),
-          unit_amount: Math.round(quotedAmount * 100),
-          product_data: { name: `${rcExperience.publicName} — Booking Request` },
+      const rcLineItems = [
+        {
+          price_data: {
+            currency: rcCurrency.toLowerCase(),
+            unit_amount: Math.round(quotedAmount * 100),
+            product_data: {
+              name: `${rcExperience.publicName} — Booking Request`,
+            },
+          },
+          quantity: 1,
         },
-        quantity: 1,
-      }];
+      ];
       const rcPaymentLink = await stripe.paymentLinks.create({
         line_items: rcLineItems.map((item) => ({
           price_data: item.price_data,
           quantity: item.quantity,
         })),
-        metadata: { orderId: rcOrder.$id, userId: rcOrderUserId, bookingRequestId: bookingReq.$id },
+        metadata: {
+          orderId: rcOrder.$id,
+          userId: rcOrderUserId,
+          bookingRequestId: bookingReq.$id,
+        },
         after_completion: {
           type: "redirect",
-          redirect: { url: `${FRONTEND_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}` },
+          redirect: {
+            url: `${FRONTEND_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+          },
         },
       });
 
-      await db.updateDocument(DB, COL_ORDERS, rcOrder.$id, { stripeSessionId: rcPaymentLink.id });
-      log(`Stripe Payment Link for request-conversion: ${rcPaymentLink.id} for order ${rcOrder.$id}`);
+      await db.updateDocument(DB, COL_ORDERS, rcOrder.$id, {
+        stripeSessionId: rcPaymentLink.id,
+      });
+      log(
+        `Stripe Payment Link for request-conversion: ${rcPaymentLink.id} for order ${rcOrder.$id}`,
+      );
 
       return res.json({
         ok: true,
-        data: { paymentLink: rcPaymentLink.url, orderId: rcOrder.$id, orderNumber: rcOrderNumber },
+        data: {
+          paymentLink: rcPaymentLink.url,
+          orderId: rcOrder.$id,
+          orderNumber: rcOrderNumber,
+        },
       });
     }
 
@@ -414,23 +673,68 @@ export default async ({ req, res, log, error }) => {
     try {
       experience = await db.getDocument(DB, COL_EXPERIENCES, experienceId);
     } catch {
-      return res.json({ ok: false, error: { code: "ERR_CHECKOUT_EXPERIENCE_NOT_FOUND", message: "Experience not found" } }, 404);
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_EXPERIENCE_NOT_FOUND",
+            message: "Experience not found",
+          },
+        },
+        404,
+      );
     }
 
     if (experience.status !== "published") {
-      return res.json({ ok: false, error: { code: "ERR_CHECKOUT_EXPERIENCE_NOT_PUBLISHED", message: "Experience is not available" } }, 400);
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_EXPERIENCE_NOT_PUBLISHED",
+            message: "Experience is not available",
+          },
+        },
+        400,
+      );
     }
 
     // Assisted sales bypass the saleMode check (admin can sell any mode)
     if (!isAssistedSale && experience.saleMode !== "direct") {
-      return res.json({ ok: false, error: { code: "ERR_CHECKOUT_SALE_MODE", message: "Experience is not available for direct purchase" } }, 400);
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_SALE_MODE",
+            message: "Experience is not available for direct purchase",
+          },
+        },
+        400,
+      );
     }
 
     if (experience.minQuantity && quantity < experience.minQuantity) {
-      return res.json({ ok: false, error: { code: "ERR_CHECKOUT_MIN_QUANTITY", message: `Minimum quantity is ${experience.minQuantity}` } }, 400);
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_MIN_QUANTITY",
+            message: `Minimum quantity is ${experience.minQuantity}`,
+          },
+        },
+        400,
+      );
     }
     if (experience.maxQuantity && quantity > experience.maxQuantity) {
-      return res.json({ ok: false, error: { code: "ERR_CHECKOUT_MAX_QUANTITY", message: `Maximum quantity is ${experience.maxQuantity}` } }, 400);
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_MAX_QUANTITY",
+            message: `Maximum quantity is ${experience.maxQuantity}`,
+          },
+        },
+        400,
+      );
     }
 
     // ── 6. Validate pricing tier ───────────────────────────────────────────
@@ -438,42 +742,123 @@ export default async ({ req, res, log, error }) => {
     try {
       tier = await db.getDocument(DB, COL_PRICING_TIERS, pricingTierId);
     } catch {
-      return res.json({ ok: false, error: { code: "ERR_CHECKOUT_TIER_NOT_FOUND", message: "Pricing tier not found" } }, 404);
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_TIER_NOT_FOUND",
+            message: "Pricing tier not found",
+          },
+        },
+        404,
+      );
     }
 
     if (tier.experienceId !== experienceId) {
-      return res.json({ ok: false, error: { code: "ERR_CHECKOUT_TIER_MISMATCH", message: "Pricing tier does not belong to this experience" } }, 400);
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_TIER_MISMATCH",
+            message: "Pricing tier does not belong to this experience",
+          },
+        },
+        400,
+      );
     }
     if (!tier.isActive) {
-      return res.json({ ok: false, error: { code: "ERR_CHECKOUT_TIER_INACTIVE", message: "Pricing tier is not active" } }, 400);
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_TIER_INACTIVE",
+            message: "Pricing tier is not active",
+          },
+        },
+        400,
+      );
     }
 
     // ── 7. Validate slot (if required) ─────────────────────────────────────
     let slot = null;
 
     if (experience.requiresSchedule && !slotId) {
-      return res.json({ ok: false, error: { code: "ERR_CHECKOUT_SLOT_REQUIRED", message: "A slot is required for this experience" } }, 400);
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_SLOT_REQUIRED",
+            message: "A slot is required for this experience",
+          },
+        },
+        400,
+      );
     }
 
     if (slotId) {
       try {
         slot = await db.getDocument(DB, COL_SLOTS, slotId);
       } catch {
-        return res.json({ ok: false, error: { code: "ERR_CHECKOUT_SLOT_NOT_FOUND", message: "Slot not found" } }, 404);
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_SLOT_NOT_FOUND",
+              message: "Slot not found",
+            },
+          },
+          404,
+        );
       }
 
       if (slot.experienceId !== experienceId) {
-        return res.json({ ok: false, error: { code: "ERR_CHECKOUT_SLOT_MISMATCH", message: "Slot does not belong to this experience" } }, 400);
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_SLOT_MISMATCH",
+              message: "Slot does not belong to this experience",
+            },
+          },
+          400,
+        );
       }
       if (slot.status !== "published") {
-        return res.json({ ok: false, error: { code: "ERR_CHECKOUT_SLOT_UNAVAILABLE", message: "Slot is not available" } }, 400);
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_SLOT_UNAVAILABLE",
+              message: "Slot is not available",
+            },
+          },
+          400,
+        );
       }
       if (new Date(slot.startDatetime) <= new Date()) {
-        return res.json({ ok: false, error: { code: "ERR_CHECKOUT_SLOT_PAST", message: "Slot date has already passed" } }, 400);
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_SLOT_PAST",
+              message: "Slot date has already passed",
+            },
+          },
+          400,
+        );
       }
       const available = slot.capacity - slot.bookedCount;
       if (available < quantity) {
-        return res.json({ ok: false, error: { code: "ERR_CHECKOUT_SLOT_CAPACITY", message: `Only ${available} spots available` } }, 409);
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_SLOT_CAPACITY",
+              message: `Only ${available} spots available`,
+            },
+          },
+          409,
+        );
       }
     }
 
@@ -484,27 +869,60 @@ export default async ({ req, res, log, error }) => {
       try {
         addon = await db.getDocument(DB, COL_ADDONS, addonId);
       } catch {
-        return res.json({ ok: false, error: { code: "ERR_CHECKOUT_ADDON_NOT_FOUND", message: `Addon ${addonId} not found` } }, 404);
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_ADDON_NOT_FOUND",
+              message: `Addon ${addonId} not found`,
+            },
+          },
+          404,
+        );
       }
       if (addon.status !== "active") {
-        return res.json({ ok: false, error: { code: "ERR_CHECKOUT_ADDON_INACTIVE", message: `Addon "${addon.name}" is not active` } }, 400);
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_ADDON_INACTIVE",
+              message: `Addon "${addon.name}" is not active`,
+            },
+          },
+          400,
+        );
       }
       const assignments = await db.listDocuments(DB, COL_ADDON_ASSIGNMENTS, [
         Query.equal("addonId", addonId),
         Query.equal("experienceId", experienceId),
       ]);
       if (assignments.total === 0) {
-        return res.json({ ok: false, error: { code: "ERR_CHECKOUT_ADDON_NOT_ASSIGNED", message: `Addon "${addon.name}" is not available for this experience` } }, 400);
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_ADDON_NOT_ASSIGNED",
+              message: `Addon "${addon.name}" is not available for this experience`,
+            },
+          },
+          400,
+        );
       }
       const assignment = assignments.documents[0];
-      const effectivePrice = assignment.overridePrice != null ? assignment.overridePrice : addon.basePrice;
+      const effectivePrice =
+        assignment.overridePrice != null
+          ? assignment.overridePrice
+          : addon.basePrice;
       validatedAddons.push({ addon, assignment, effectivePrice });
     }
 
     // ── 9. Calculate prices (server-side only) ─────────────────────────────
     const currency = tier.currency || "MXN";
     const subtotal = tier.basePrice * quantity;
-    const addonsTotal = validatedAddons.reduce((sum, { effectivePrice }) => sum + effectivePrice * quantity, 0);
+    const addonsTotal = validatedAddons.reduce(
+      (sum, { effectivePrice }) => sum + effectivePrice * quantity,
+      0,
+    );
     const taxAmount = 0;
     const totalAmount = subtotal + addonsTotal + taxAmount;
 
@@ -521,7 +939,8 @@ export default async ({ req, res, log, error }) => {
           const snap = JSON.parse(pendingOrder.snapshot || "{}");
           const matchesExperience = snap.experienceId === experienceId;
           const matchesTier = snap.pricingTierId === pricingTierId;
-          const matchesSlot = (!slotId && !snap.slotId) || snap.slotId === slotId;
+          const matchesSlot =
+            (!slotId && !snap.slotId) || snap.slotId === slotId;
           if (matchesExperience && matchesTier && matchesSlot) {
             log(`Reusing pending order ${pendingOrder.$id}`);
             const session = await stripe.checkout.sessions.create({
@@ -531,14 +950,23 @@ export default async ({ req, res, log, error }) => {
               client_reference_id: pendingOrder.$id,
               customer_email: customerEmail.trim().toLowerCase(),
               metadata: { orderId: pendingOrder.$id, userId: orderUserId },
-              line_items: buildLineItems(experience, tier, validatedAddons, quantity, currency),
+              line_items: buildLineItems(
+                experience,
+                tier,
+                validatedAddons,
+                quantity,
+                currency,
+              ),
             });
             await db.updateDocument(DB, COL_ORDERS, pendingOrder.$id, {
               stripeSessionId: session.id,
               customerName: customerName.trim(),
               customerEmail: customerEmail.trim().toLowerCase(),
             });
-            return res.json({ ok: true, data: { sessionUrl: session.url, orderId: pendingOrder.$id } });
+            return res.json({
+              ok: true,
+              data: { sessionUrl: session.url, orderId: pendingOrder.$id },
+            });
           }
         } catch {
           // Skip malformed snapshots
@@ -591,8 +1019,10 @@ export default async ({ req, res, log, error }) => {
 
     // Assisted + skipStripe → create as paid immediately
     const initialStatus = isAssistedSale && skipStripe ? "paid" : "pending";
-    const initialPaymentStatus = isAssistedSale && skipStripe ? "succeeded" : "pending";
-    const paidAt = isAssistedSale && skipStripe ? new Date().toISOString() : null;
+    const initialPaymentStatus =
+      isAssistedSale && skipStripe ? "succeeded" : "pending";
+    const paidAt =
+      isAssistedSale && skipStripe ? new Date().toISOString() : null;
 
     const orderData = {
       userId: orderUserId,
@@ -611,8 +1041,16 @@ export default async ({ req, res, log, error }) => {
     };
     if (paidAt) orderData.paidAt = paidAt;
 
-    const order = await db.createDocument(DB, COL_ORDERS, ID.unique(), orderData, permissions);
-    log(`Order created: ${order.$id} (${orderNumber}) type=${orderType} status=${initialStatus}`);
+    const order = await db.createDocument(
+      DB,
+      COL_ORDERS,
+      ID.unique(),
+      orderData,
+      permissions,
+    );
+    log(
+      `Order created: ${order.$id} (${orderNumber}) type=${orderType} status=${initialStatus}`,
+    );
 
     // ── 13. Create order items ─────────────────────────────────────────────
     const mainItemData = {
@@ -638,49 +1076,67 @@ export default async ({ req, res, log, error }) => {
       }),
     };
     if (slot) mainItemData.slotId = slot.$id;
-    await db.createDocument(DB, COL_ORDER_ITEMS, ID.unique(), mainItemData, permissions);
+    await db.createDocument(
+      DB,
+      COL_ORDER_ITEMS,
+      ID.unique(),
+      mainItemData,
+      permissions,
+    );
 
     for (const { addon, effectivePrice } of validatedAddons) {
-      await db.createDocument(DB, COL_ORDER_ITEMS, ID.unique(), {
-        orderId: order.$id,
-        referenceId: addon.$id,
-        itemType: "addon",
-        name: addon.name,
-        quantity,
-        unitPrice: effectivePrice,
-        currency,
-        totalPrice: effectivePrice * quantity,
-        itemSnapshot: JSON.stringify({
-          addonId: addon.$id,
-          addonName: addon.name,
-          addonType: addon.addonType,
-          basePrice: addon.basePrice,
-          effectivePrice,
-          priceType: addon.priceType,
-        }),
-      }, permissions);
+      await db.createDocument(
+        DB,
+        COL_ORDER_ITEMS,
+        ID.unique(),
+        {
+          orderId: order.$id,
+          referenceId: addon.$id,
+          itemType: "addon",
+          name: addon.name,
+          quantity,
+          unitPrice: effectivePrice,
+          currency,
+          totalPrice: effectivePrice * quantity,
+          itemSnapshot: JSON.stringify({
+            addonId: addon.$id,
+            addonName: addon.name,
+            addonType: addon.addonType,
+            basePrice: addon.basePrice,
+            effectivePrice,
+            priceType: addon.priceType,
+          }),
+        },
+        permissions,
+      );
     }
 
     // ── 14. Log admin activity ─────────────────────────────────────────────
     if (isAssistedSale) {
       try {
-        await db.createDocument(DB, COL_ACTIVITY_LOGS, ID.unique(), {
-          userId: callerUserId,
-          action: "assisted-sale",
-          entityType: "order",
-          entityId: order.$id,
-          details: JSON.stringify({
-            orderNumber,
-            orderType,
-            totalAmount,
-            currency,
-            customerEmail: customerEmail.trim().toLowerCase(),
-            skipStripe,
-          }),
-        }, [
-          Permission.read(Role.label("admin")),
-          Permission.read(Role.label("root")),
-        ]);
+        await db.createDocument(
+          DB,
+          COL_ACTIVITY_LOGS,
+          ID.unique(),
+          {
+            userId: callerUserId,
+            action: "assisted-sale",
+            entityType: "order",
+            entityId: order.$id,
+            details: JSON.stringify({
+              orderNumber,
+              orderType,
+              totalAmount,
+              currency,
+              customerEmail: customerEmail.trim().toLowerCase(),
+              skipStripe,
+            }),
+          },
+          [
+            Permission.read(Role.label("admin")),
+            Permission.read(Role.label("root")),
+          ],
+        );
       } catch (logErr) {
         // Non-fatal — log failure but don't abort the sale
         error("Activity log failed: " + logErr.message);
@@ -705,17 +1161,29 @@ export default async ({ req, res, log, error }) => {
 
     // ── 16. For assisted + Stripe: create Payment Link ────────────────────
     if (isAssistedSale && !skipStripe) {
-      const lineItems = buildLineItems(experience, tier, validatedAddons, quantity, currency);
+      const lineItems = buildLineItems(
+        experience,
+        tier,
+        validatedAddons,
+        quantity,
+        currency,
+      );
       // Create a Stripe Payment Link (reusable link admin sends to client)
       const paymentLink = await stripe.paymentLinks.create({
         line_items: lineItems.map((item) => ({
           price_data: item.price_data,
           quantity: item.quantity,
         })),
-        metadata: { orderId: order.$id, userId: orderUserId, assistedByUserId: callerUserId },
+        metadata: {
+          orderId: order.$id,
+          userId: orderUserId,
+          assistedByUserId: callerUserId,
+        },
         after_completion: {
           type: "redirect",
-          redirect: { url: `${FRONTEND_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}` },
+          redirect: {
+            url: `${FRONTEND_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+          },
         },
       });
 
@@ -723,7 +1191,9 @@ export default async ({ req, res, log, error }) => {
         stripeSessionId: paymentLink.id,
       });
 
-      log(`Stripe Payment Link created: ${paymentLink.id} for order ${order.$id}`);
+      log(
+        `Stripe Payment Link created: ${paymentLink.id} for order ${order.$id}`,
+      );
       return res.json({
         ok: true,
         data: { paymentLink: paymentLink.url, orderId: order.$id, orderNumber },
@@ -731,7 +1201,13 @@ export default async ({ req, res, log, error }) => {
     }
 
     // ── 17. Direct sale: create Stripe Checkout Session ───────────────────
-    const lineItems = buildLineItems(experience, tier, validatedAddons, quantity, currency);
+    const lineItems = buildLineItems(
+      experience,
+      tier,
+      validatedAddons,
+      quantity,
+      currency,
+    );
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       success_url: `${FRONTEND_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -742,13 +1218,20 @@ export default async ({ req, res, log, error }) => {
       line_items: lineItems,
     });
 
-    await db.updateDocument(DB, COL_ORDERS, order.$id, { stripeSessionId: session.id });
+    await db.updateDocument(DB, COL_ORDERS, order.$id, {
+      stripeSessionId: session.id,
+    });
     log(`Stripe session created: ${session.id} for order ${order.$id}`);
 
-    return res.json({ ok: true, data: { sessionUrl: session.url, orderId: order.$id } });
-
+    return res.json({
+      ok: true,
+      data: { sessionUrl: session.url, orderId: order.$id },
+    });
   } catch (err) {
     error("create-checkout failed: " + err.message);
-    return res.json({ ok: false, error: { code: "ERR_INTERNAL", message: "Internal error" } }, 500);
+    return res.json(
+      { ok: false, error: { code: "ERR_INTERNAL", message: "Internal error" } },
+      500,
+    );
   }
 };

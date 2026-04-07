@@ -13,7 +13,11 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { displayRoleName } from "@/constants/roles";
 import { ROUTES } from "@/constants/routes";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/common/avatar";
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+} from "@/components/common/avatar";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -32,7 +36,7 @@ function getInitials(name) {
 }
 
 export default function UserMenuDropdown({ transparent = false }) {
-  const { user, labels, logout, isAdmin, isClient } = useAuth();
+  const { user, labels, logout, isAdmin, isClient, isRoot } = useAuth();
   const navigate = useNavigate();
 
   if (!user) return null;
@@ -55,11 +59,15 @@ export default function UserMenuDropdown({ transparent = false }) {
           className="flex items-center gap-2 rounded-full px-1 py-1 hover:bg-warm-gray/60 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sage/50 cursor-pointer"
           aria-label="Menú de usuario"
         >
-          <span className={`hidden sm:block text-sm font-medium truncate max-w-32 transition-colors duration-300 ${transparent ? "text-white" : "text-charcoal"}`}>
+          <span
+            className={`hidden sm:block text-sm font-medium truncate max-w-32 transition-colors duration-300 ${transparent ? "text-white" : "text-charcoal"}`}
+          >
             {user.name?.split(" ")[0] || "User"}
           </span>
           <Avatar className="h-8 w-8">
-            {user.avatarUrl && <AvatarImage src={user.avatarUrl} alt={displayName} />}
+            {user.avatarUrl && (
+              <AvatarImage src={user.avatarUrl} alt={displayName} />
+            )}
             <AvatarFallback className="text-xs">{initials}</AvatarFallback>
           </Avatar>
         </button>
@@ -68,14 +76,18 @@ export default function UserMenuDropdown({ transparent = false }) {
       <DropdownMenuContent className="w-56" sideOffset={8}>
         {/* Header */}
         <div className="px-3 py-3">
-          <p className="text-sm font-semibold text-charcoal leading-tight">{displayName}</p>
-          <p className="text-xs text-charcoal-muted mt-0.5 truncate">{user.email}</p>
+          <p className="text-sm font-semibold text-charcoal leading-tight">
+            {displayName}
+          </p>
+          <p className="text-xs text-charcoal-muted mt-0.5 truncate">
+            {user.email}
+          </p>
         </div>
 
         <DropdownMenuSeparator />
 
         {/* Client section */}
-        {isClient && (
+        {(isClient || isRoot) && (
           <>
             <DropdownMenuLabel>Cliente</DropdownMenuLabel>
             <DropdownMenuGroup>
@@ -109,7 +121,7 @@ export default function UserMenuDropdown({ transparent = false }) {
                 <LayoutDashboard className="h-4 w-4 text-charcoal-muted" />
                 Panel de administración
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={go(ROUTES.ADMIN_SETTINGS)}>
+              <DropdownMenuItem onClick={go(ROUTES.ADMIN_ACCOUNT)}>
                 <UserCog className="h-4 w-4 text-charcoal-muted" />
                 Mi cuenta admin
               </DropdownMenuItem>
@@ -131,7 +143,10 @@ export default function UserMenuDropdown({ transparent = false }) {
         <DropdownMenuSeparator />
 
         {/* Logout */}
-        <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600">
+        <DropdownMenuItem
+          onClick={handleLogout}
+          className="text-red-600 focus:text-red-600"
+        >
           <LogOut className="h-4 w-4" />
           Cerrar sesión
         </DropdownMenuItem>

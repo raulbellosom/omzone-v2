@@ -27,6 +27,9 @@ const ExperiencesListPage = lazy(
 const ExperienceDetailPage = lazy(
   () => import("@/pages/public/ExperienceDetailPage"),
 );
+const PackageDetailPage = lazy(
+  () => import("@/pages/public/PackageDetailPage"),
+);
 const PublicationPage = lazy(() => import("@/pages/public/PublicationPage"));
 const CheckoutPage = lazy(() => import("@/pages/public/CheckoutPage"));
 const CheckoutSuccessPage = lazy(
@@ -43,6 +46,10 @@ const VerifyEmailPendingPage = lazy(
   () => import("@/pages/auth/VerifyEmailPendingPage"),
 );
 const VerifyEmailPage = lazy(() => import("@/pages/auth/VerifyEmailPage"));
+const ForgotPasswordPage = lazy(
+  () => import("@/pages/auth/ForgotPasswordPage"),
+);
+const ResetPasswordPage = lazy(() => import("@/pages/auth/ResetPasswordPage"));
 
 // ─── Admin pages (chunked together) ───
 const AdminLayout = lazy(() => import("@/layouts/AdminLayout"));
@@ -99,11 +106,14 @@ const RoomEditPage = lazy(() => import("@/pages/admin/resources/RoomEditPage"));
 const OrderListPage = lazy(() => import("@/pages/admin/OrderListPage"));
 const OrderDetailPage = lazy(() => import("@/pages/admin/OrderDetailPage"));
 const AdminTicketListPage = lazy(() => import("@/pages/admin/TicketListPage"));
-const AdminTicketDetailPage = lazy(() => import("@/pages/admin/TicketDetailPage"));
+const AdminTicketDetailPage = lazy(
+  () => import("@/pages/admin/TicketDetailPage"),
+);
 const MediaManagerPage = lazy(() => import("@/pages/admin/MediaManagerPage"));
 const ClientListPage = lazy(() => import("@/pages/admin/ClientListPage"));
 const ClientDetailPage = lazy(() => import("@/pages/admin/ClientDetailPage"));
 const SettingsPage = lazy(() => import("@/pages/admin/SettingsPage"));
+const AdminAccountPage = lazy(() => import("@/pages/admin/AdminAccountPage"));
 const CheckInPage = lazy(() => import("@/pages/admin/CheckInPage"));
 const PassListPage = lazy(() => import("@/pages/admin/PassListPage"));
 const PassCreatePage = lazy(() => import("@/pages/admin/PassCreatePage"));
@@ -193,6 +203,7 @@ export default function App() {
               path="/experiences/:slug"
               element={<ExperienceDetailPage />}
             />
+            <Route path="/packages/:slug" element={<PackageDetailPage />} />
             <Route path="/p/:slug" element={<PublicationPage />} />
             <Route path="/forbidden" element={<ForbiddenPage />} />
             <Route path="*" element={<NotFoundPage />} />
@@ -203,6 +214,7 @@ export default function App() {
             <Route element={<AuthLayout />}>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             </Route>
           </Route>
 
@@ -213,6 +225,7 @@ export default function App() {
               element={<VerifyEmailPendingPage />}
             />
             <Route path="/verify-email" element={<VerifyEmailPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
           </Route>
 
           {/* Checkout — requires auth, any label */}
@@ -322,16 +335,13 @@ export default function App() {
               <Route path="orders" element={<OrderListPage />} />
               <Route path="orders/:orderId" element={<OrderDetailPage />} />
               <Route path="tickets" element={<AdminTicketListPage />} />
-              <Route path="tickets/:ticketId" element={<AdminTicketDetailPage />} />
+              <Route
+                path="tickets/:ticketId"
+                element={<AdminTicketDetailPage />}
+              />
               <Route path="check-in" element={<CheckInPage />} />
-              <Route
-                path="clients"
-                element={<ClientListPage />}
-              />
-              <Route
-                path="clients/:userId"
-                element={<ClientDetailPage />}
-              />
+              <Route path="clients" element={<ClientListPage />} />
+              <Route path="clients/:userId" element={<ClientDetailPage />} />
               <Route path="publications" element={<PublicationListPage />} />
               <Route
                 path="publications/new"
@@ -346,6 +356,7 @@ export default function App() {
                 element={<PublicationSectionsPage />}
               />
               <Route path="media" element={<MediaManagerPage />} />
+              <Route path="account" element={<AdminAccountPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>

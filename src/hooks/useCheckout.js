@@ -20,6 +20,7 @@ export function useCheckout() {
   // ─── URL params ─────────────────────────────────────────────────────────
   const experienceId = searchParams.get("experienceId");
   const initialTierId = searchParams.get("pricingTierId");
+  const initialAddonIds = searchParams.get("addonIds");
 
   // ─── Data loading state ─────────────────────────────────────────────────
   const [experience, setExperience] = useState(null);
@@ -145,14 +146,19 @@ export function useCheckout() {
             setSelectedTierId(tiers[0].$id);
           }
 
-          // Pre-select required/default addons
-          const preSelected = [];
+          // Pre-select required/default addons + addons from URL param
+          const preSelected = new Set();
           for (const assignment of assignments) {
             if (assignment.isRequired || assignment.isDefault) {
-              preSelected.push(assignment.addonId);
+              preSelected.add(assignment.addonId);
             }
           }
-          setSelectedAddonIds(preSelected);
+          if (initialAddonIds) {
+            for (const id of initialAddonIds.split(",")) {
+              if (id) preSelected.add(id);
+            }
+          }
+          setSelectedAddonIds([...preSelected]);
 
           // Pre-fill customer info from auth user
           if (user) {

@@ -1,6 +1,7 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserProfile } from "@/hooks/useUserProfile";
+import { useLanguage } from "@/hooks/useLanguage";
 import UserAvatar from "@/components/common/UserAvatar";
 import { ROUTES } from "@/constants/routes";
 import {
@@ -14,11 +15,11 @@ import {
 } from "lucide-react";
 
 const NAV_ITEMS = [
-  { name: "Dashboard", path: ROUTES.PORTAL, icon: LayoutDashboard, end: true },
-  { name: "Mis Órdenes", path: ROUTES.PORTAL_ORDERS, icon: ShoppingBag },
-  { name: "Mis Tickets", path: ROUTES.PORTAL_TICKETS, icon: Ticket },
-  { name: "Mis Pases", path: ROUTES.PORTAL_PASSES, icon: Sparkles },
-  { name: "Mi Perfil", path: ROUTES.PORTAL_PROFILE, icon: User },
+  { key: "dashboard", path: ROUTES.PORTAL, icon: LayoutDashboard, end: true },
+  { key: "orders", path: ROUTES.PORTAL_ORDERS, icon: ShoppingBag },
+  { key: "tickets", path: ROUTES.PORTAL_TICKETS, icon: Ticket },
+  { key: "passes", path: ROUTES.PORTAL_PASSES, icon: Sparkles },
+  { key: "profile", path: ROUTES.PORTAL_PROFILE, icon: User },
 ];
 
 /**
@@ -27,6 +28,7 @@ const NAV_ITEMS = [
 export default function PortalSidebar({ open, onClose }) {
   const { user, logout } = useAuth();
   const { profile } = useUserProfile();
+  const { t } = useLanguage();
 
   const displayName =
     profile?.displayName || user?.name || user?.email?.split("@")[0] || "User";
@@ -60,7 +62,7 @@ export default function PortalSidebar({ open, onClose }) {
         <div className="p-5 border-b border-warm-gray-dark/10">
           <div className="flex items-center justify-between mb-4 lg:hidden">
             <span className="font-display text-sm font-semibold text-charcoal tracking-wider uppercase">
-              Mi Portal
+              {t("portal.sidebar.myPortal")}
             </span>
             <button
               onClick={onClose}
@@ -100,7 +102,7 @@ export default function PortalSidebar({ open, onClose }) {
                   }
                 >
                   <item.icon className="w-5 h-5 shrink-0" />
-                  {item.name}
+                  {t(`portal.sidebar.${item.key}`)}
                 </NavLink>
               </li>
             ))}
@@ -114,7 +116,7 @@ export default function PortalSidebar({ open, onClose }) {
             className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-charcoal-muted hover:bg-red-50 hover:text-red-600 transition-colors"
           >
             <LogOut className="w-5 h-5 shrink-0" />
-            Cerrar sesión
+            {t("portal.sidebar.logout")}
           </button>
         </div>
       </aside>

@@ -89,6 +89,60 @@
       "errorHeading": "Verification failed",
       "errorMessage": "The verification link may be expired or invalid. Please try signing in to receive a new verification email.",
       "errorButton": "Back to Sign In"
-    }
+    },
+    "forgotPassword": {
+      "pageTitle": "Forgot Password — OMZONE",
+      "heading": "Forgot your password?",
+      "subtitle": "Enter your email and we'll send you a reset link.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "submit": "Send Reset Link",
+      "submitting": "Sending…",
+      "errorGeneric": "Something went wrong. Please try again.",
+      "backToLogin": "Back to Sign In",
+      "sentHeading": "Check your email",
+      "sentMessageTo": "We've sent a password reset link to",
+      "sentMessageAction": "Click the link to set a new password.",
+      "rememberPassword": "Remember your password?",
+      "signIn": "Sign in"
+    },
+    "resetPassword": {
+      "pageTitle": "Reset Password — OMZONE",
+      "heading": "Set a new password",
+      "subtitle": "Choose a strong password for your account.",
+      "newPasswordLabel": "New password",
+      "newPasswordPlaceholder": "Min. 8 characters",
+      "confirmPasswordLabel": "Confirm password",
+      "confirmPasswordPlaceholder": "Repeat your password",
+      "submit": "Reset Password",
+      "submitting": "Resetting…",
+      "errorPasswordShort": "Password must be at least 8 characters.",
+      "errorMismatch": "Passwords do not match.",
+      "errorGeneric": "Something went wrong. The link may be expired. Please request a new one.",
+      "doneHeading": "Password updated!",
+      "doneMessage": "Your password has been reset. You can now sign in with your new password.",
+      "goToLogin": "Go to Sign In",
+      "invalidLinkHeading": "Invalid link",
+      "invalidLinkMessage": "This password reset link is invalid or has expired.",
+      "requestNewLink": "Request a new link"
+    },
+    "changePassword": {
+      "sectionTitle": "Change Password",
+      "currentLabel": "Current password",
+      "currentPlaceholder": "Enter current password",
+      "newLabel": "New password",
+      "newPlaceholder": "Min. 8 characters",
+      "confirmLabel": "Confirm new password",
+      "confirmPlaceholder": "Repeat new password",
+      "submit": "Update Password",
+      "submitting": "Updating…",
+      "success": "Password updated successfully.",
+      "errorCurrentRequired": "Please enter your current password.",
+      "errorPasswordShort": "New password must be at least 8 characters.",
+      "errorMismatch": "Passwords do not match.",
+      "errorWrongPassword": "Current password is incorrect.",
+      "errorGeneric": "Something went wrong. Please try again."
+    },
+    "forgotPasswordLink": "Forgot your password?"
   }
 }

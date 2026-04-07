@@ -21,6 +21,7 @@
       "publications": "Publicaciones",
       "media": "Media",
       "settings": "Configuración",
+      "account": "Mi Cuenta",
       "admin": "Admin"
     },
     "breadcrumbs": {
@@ -105,7 +106,7 @@
       "tabEditions": "Ediciones",
       "tabPricing": "Precios",
       "tabAddons": "Complementos",
-      "tabSlots": "Slots"
+      "tabSlots": "Horarios"
     },
     "experienceForm": {
       "sectionIdentity": "Identidad",
@@ -946,6 +947,12 @@
       "previous": "Anterior",
       "next": "Siguiente",
       "pageOf": "Página {page} de {total}"
+    },
+    "account": {
+      "heading": "Mi Cuenta",
+      "subtitle": "Administra tu perfil y seguridad",
+      "sectionProfile": "Perfil",
+      "sectionSecurity": "Seguridad"
     }
   }
 }

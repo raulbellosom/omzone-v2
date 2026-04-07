@@ -89,6 +89,60 @@
       "errorHeading": "Verificación fallida",
       "errorMessage": "El enlace de verificación puede estar expirado o ser inválido. Intenta iniciar sesión para recibir un nuevo correo de verificación.",
       "errorButton": "Volver a Iniciar Sesión"
-    }
+    },
+    "forgotPassword": {
+      "pageTitle": "Olvidé mi Contraseña — OMZONE",
+      "heading": "¿Olvidaste tu contraseña?",
+      "subtitle": "Ingresa tu correo y te enviaremos un enlace para restablecerla.",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "tu@ejemplo.com",
+      "submit": "Enviar enlace",
+      "submitting": "Enviando…",
+      "errorGeneric": "Algo salió mal. Intenta de nuevo.",
+      "backToLogin": "Volver a Iniciar Sesión",
+      "sentHeading": "Revisa tu correo",
+      "sentMessageTo": "Enviamos un enlace para restablecer tu contraseña a",
+      "sentMessageAction": "Haz clic en el enlace para crear una nueva contraseña.",
+      "rememberPassword": "¿Recuerdas tu contraseña?",
+      "signIn": "Inicia sesión"
+    },
+    "resetPassword": {
+      "pageTitle": "Restablecer Contraseña — OMZONE",
+      "heading": "Crea una nueva contraseña",
+      "subtitle": "Elige una contraseña segura para tu cuenta.",
+      "newPasswordLabel": "Nueva contraseña",
+      "newPasswordPlaceholder": "Mín. 8 caracteres",
+      "confirmPasswordLabel": "Confirmar contraseña",
+      "confirmPasswordPlaceholder": "Repite tu contraseña",
+      "submit": "Restablecer Contraseña",
+      "submitting": "Restableciendo…",
+      "errorPasswordShort": "La contraseña debe tener al menos 8 caracteres.",
+      "errorMismatch": "Las contraseñas no coinciden.",
+      "errorGeneric": "Algo salió mal. El enlace puede estar expirado. Solicita uno nuevo.",
+      "doneHeading": "¡Contraseña actualizada!",
+      "doneMessage": "Tu contraseña ha sido restablecida. Ya puedes iniciar sesión con tu nueva contraseña.",
+      "goToLogin": "Ir a Iniciar Sesión",
+      "invalidLinkHeading": "Enlace inválido",
+      "invalidLinkMessage": "Este enlace de restablecimiento es inválido o ha expirado.",
+      "requestNewLink": "Solicitar un nuevo enlace"
+    },
+    "changePassword": {
+      "sectionTitle": "Cambiar Contraseña",
+      "currentLabel": "Contraseña actual",
+      "currentPlaceholder": "Ingresa tu contraseña actual",
+      "newLabel": "Nueva contraseña",
+      "newPlaceholder": "Mín. 8 caracteres",
+      "confirmLabel": "Confirmar nueva contraseña",
+      "confirmPlaceholder": "Repite la nueva contraseña",
+      "submit": "Actualizar Contraseña",
+      "submitting": "Actualizando…",
+      "success": "Contraseña actualizada correctamente.",
+      "errorCurrentRequired": "Ingresa tu contraseña actual.",
+      "errorPasswordShort": "La nueva contraseña debe tener al menos 8 caracteres.",
+      "errorMismatch": "Las contraseñas no coinciden.",
+      "errorWrongPassword": "La contraseña actual es incorrecta.",
+      "errorGeneric": "Algo salió mal. Intenta de nuevo."
+    },
+    "forgotPasswordLink": "¿Olvidaste tu contraseña?"
   }
 }

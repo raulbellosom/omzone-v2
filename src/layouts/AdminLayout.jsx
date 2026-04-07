@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import AdminSidebar from "@/components/admin/layout/AdminSidebar";
@@ -7,6 +7,17 @@ import Breadcrumbs from "@/components/admin/layout/Breadcrumbs";
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Prevent external body/html scroll while admin layout is active
+  useEffect(() => {
+    const html = document.documentElement;
+    html.style.overflow = "hidden";
+    html.style.height = "100dvh";
+    return () => {
+      html.style.overflow = "";
+      html.style.height = "";
+    };
+  }, []);
 
   return (
     <div className="h-dvh flex overflow-hidden bg-warm-gray">

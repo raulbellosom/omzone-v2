@@ -6,12 +6,8 @@
       "$id": "assign-user-label",
       "name": "assign-user-label",
       "runtime": "node-22",
-      "execute": [
-        "any"
-      ],
-      "events": [
-        "users.*.create"
-      ],
+      "execute": ["any"],
+      "events": ["users.*.create"],
       "timeout": 15,
       "enabled": true,
       "logging": true,
@@ -24,8 +20,15 @@
       "$id": "create-checkout",
       "name": "create-checkout",
       "runtime": "node-22",
-      "execute": [
-        "users"
+      "execute": ["users"],
+      "scopes": [
+        "users.read",
+        "documents.read",
+        "documents.write",
+        "collections.read",
+        "databases.read",
+        "functions.write",
+        "execution.write"
       ],
       "events": [],
       "timeout": 30,
@@ -40,9 +43,7 @@
       "$id": "stripe-webhook",
       "name": "stripe-webhook",
       "runtime": "node-22",
-      "execute": [
-        "any"
-      ],
+      "execute": ["any"],
       "events": [],
       "timeout": 30,
       "enabled": true,
@@ -56,9 +57,7 @@
       "$id": "generate-ticket",
       "name": "generate-ticket",
       "runtime": "node-22",
-      "execute": [
-        "users"
-      ],
+      "execute": ["users"],
       "events": [],
       "timeout": 30,
       "enabled": true,
@@ -72,9 +71,7 @@
       "$id": "validate-ticket",
       "name": "validate-ticket",
       "runtime": "node-22",
-      "execute": [
-        "users"
-      ],
+      "execute": ["users"],
       "events": [],
       "timeout": 15,
       "enabled": true,
@@ -88,9 +85,7 @@
       "$id": "consume-pass",
       "name": "consume-pass",
       "runtime": "node-22",
-      "execute": [
-        "users"
-      ],
+      "execute": ["users"],
       "events": [],
       "timeout": 30,
       "enabled": true,
@@ -220,12 +215,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "direct",
-            "request",
-            "assisted",
-            "pass"
-          ]
+          "elements": ["direct", "request", "assisted", "pass"]
         },
         {
           "key": "fulfillmentType",
@@ -234,12 +224,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "ticket",
-            "booking",
-            "pass",
-            "package"
-          ]
+          "elements": ["ticket", "booking", "pass", "package"]
         },
         {
           "key": "shortDescription",
@@ -345,11 +330,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "draft",
-            "published",
-            "archived"
-          ]
+          "elements": ["draft", "published", "archived"]
         },
         {
           "key": "sortOrder",
@@ -393,46 +374,35 @@
           "key": "idx_slug",
           "type": "unique",
           "status": "available",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "orders": []
         },
         {
           "key": "idx_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "orders": []
         },
         {
           "key": "idx_type",
           "type": "key",
           "status": "available",
-          "columns": [
-            "type"
-          ],
+          "columns": ["type"],
           "orders": []
         },
         {
           "key": "idx_type_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "type",
-            "status"
-          ],
+          "columns": ["type", "status"],
           "orders": []
         },
         {
           "key": "idx_publicName_fulltext",
           "type": "fulltext",
           "status": "available",
-          "columns": [
-            "publicName"
-          ],
+          "columns": ["publicName"],
           "orders": []
         }
       ]
@@ -521,13 +491,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "landing",
-            "blog",
-            "highlight",
-            "institutional",
-            "faq"
-          ]
+          "elements": ["landing", "blog", "highlight", "institutional", "faq"]
         },
         {
           "key": "experienceId",
@@ -554,11 +518,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "draft",
-            "published",
-            "archived"
-          ]
+          "elements": ["draft", "published", "archived"]
         },
         {
           "key": "publishedAt",
@@ -601,37 +561,28 @@
           "key": "idx_slug",
           "type": "unique",
           "status": "available",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "orders": []
         },
         {
           "key": "idx_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "orders": []
         },
         {
           "key": "idx_category_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "category",
-            "status"
-          ],
+          "columns": ["category", "status"],
           "orders": []
         },
         {
           "key": "idx_experienceId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "experienceId"
-          ],
+          "columns": ["experienceId"],
           "orders": []
         }
       ]
@@ -754,19 +705,14 @@
           "key": "idx_publicationId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "publicationId"
-          ],
+          "columns": ["publicationId"],
           "orders": []
         },
         {
           "key": "idx_publicationId_sortOrder",
           "type": "key",
           "status": "available",
-          "columns": [
-            "publicationId",
-            "sortOrder"
-          ],
+          "columns": ["publicationId", "sortOrder"],
           "orders": []
         }
       ]
@@ -845,18 +791,14 @@
           "key": "idx_slug",
           "type": "unique",
           "status": "available",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "orders": []
         },
         {
           "key": "idx_category",
           "type": "key",
           "status": "available",
-          "columns": [
-            "category"
-          ],
+          "columns": ["category"],
           "orders": []
         }
       ]
@@ -901,28 +843,21 @@
           "key": "idx_experienceId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "experienceId"
-          ],
+          "columns": ["experienceId"],
           "orders": []
         },
         {
           "key": "idx_tagId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "tagId"
-          ],
+          "columns": ["tagId"],
           "orders": []
         },
         {
           "key": "idx_experienceId_tagId",
           "type": "unique",
           "status": "available",
-          "columns": [
-            "experienceId",
-            "tagId"
-          ],
+          "columns": ["experienceId", "tagId"],
           "orders": []
         }
       ]
@@ -1034,13 +969,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "draft",
-            "open",
-            "closed",
-            "completed",
-            "cancelled"
-          ]
+          "elements": ["draft", "open", "closed", "completed", "cancelled"]
         },
         {
           "key": "heroImageId",
@@ -1057,37 +986,28 @@
           "key": "idx_experienceId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "experienceId"
-          ],
+          "columns": ["experienceId"],
           "orders": []
         },
         {
           "key": "idx_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "orders": []
         },
         {
           "key": "idx_experienceId_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "experienceId",
-            "status"
-          ],
+          "columns": ["experienceId", "status"],
           "orders": []
         },
         {
           "key": "idx_startDate",
           "type": "key",
           "status": "available",
-          "columns": [
-            "startDate"
-          ],
+          "columns": ["startDate"],
           "orders": []
         }
       ]
@@ -1167,13 +1087,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "fixed",
-            "per-person",
-            "per-group",
-            "from",
-            "quote"
-          ]
+          "elements": ["fixed", "per-person", "per-group", "from", "quote"]
         },
         {
           "key": "basePrice",
@@ -1181,8 +1095,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -1.7976931348623157e+308,
-          "max": 1.7976931348623157e+308
+          "min": -1.7976931348623157e308,
+          "max": 1.7976931348623157e308
         },
         {
           "key": "currency",
@@ -1249,28 +1163,21 @@
           "key": "idx_experienceId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "experienceId"
-          ],
+          "columns": ["experienceId"],
           "orders": []
         },
         {
           "key": "idx_experienceId_isActive",
           "type": "key",
           "status": "available",
-          "columns": [
-            "experienceId",
-            "isActive"
-          ],
+          "columns": ["experienceId", "isActive"],
           "orders": []
         },
         {
           "key": "idx_editionId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "editionId"
-          ],
+          "columns": ["editionId"],
           "orders": []
         }
       ]
@@ -1369,19 +1276,14 @@
           "key": "idx_pricingTierId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "pricingTierId"
-          ],
+          "columns": ["pricingTierId"],
           "orders": []
         },
         {
           "key": "idx_pricingTierId_isActive",
           "type": "key",
           "status": "available",
-          "columns": [
-            "pricingTierId",
-            "isActive"
-          ],
+          "columns": ["pricingTierId", "isActive"],
           "orders": []
         }
       ]
@@ -1468,13 +1370,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "fixed",
-            "per-person",
-            "per-day",
-            "per-unit",
-            "quote"
-          ]
+          "elements": ["fixed", "per-person", "per-day", "per-unit", "quote"]
         },
         {
           "key": "basePrice",
@@ -1482,8 +1378,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -1.7976931348623157e+308,
-          "max": 1.7976931348623157e+308
+          "min": -1.7976931348623157e308,
+          "max": 1.7976931348623157e308
         },
         {
           "key": "currency",
@@ -1540,10 +1436,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "active",
-            "inactive"
-          ]
+          "elements": ["active", "inactive"]
         },
         {
           "key": "sortOrder",
@@ -1560,27 +1453,21 @@
           "key": "idx_slug",
           "type": "unique",
           "status": "available",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "orders": []
         },
         {
           "key": "idx_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "orders": []
         },
         {
           "key": "idx_addonType",
           "type": "key",
           "status": "available",
-          "columns": [
-            "addonType"
-          ],
+          "columns": ["addonType"],
           "orders": []
         }
       ]
@@ -1648,8 +1535,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -1.7976931348623157e+308,
-          "max": 1.7976931348623157e+308
+          "min": -1.7976931348623157e308,
+          "max": 1.7976931348623157e308
         },
         {
           "key": "sortOrder",
@@ -1666,19 +1553,14 @@
           "key": "idx_addonId_experienceId",
           "type": "unique",
           "status": "available",
-          "columns": [
-            "addonId",
-            "experienceId"
-          ],
+          "columns": ["addonId", "experienceId"],
           "orders": []
         },
         {
           "key": "idx_experienceId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "experienceId"
-          ],
+          "columns": ["experienceId"],
           "orders": []
         }
       ]
@@ -1748,8 +1630,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -1.7976931348623157e+308,
-          "max": 1.7976931348623157e+308
+          "min": -1.7976931348623157e308,
+          "max": 1.7976931348623157e308
         },
         {
           "key": "currency",
@@ -1788,17 +1670,22 @@
           "encrypt": false
         },
         {
+          "key": "galleryImageIds",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 65535,
+          "default": null,
+          "encrypt": false
+        },
+        {
           "key": "status",
           "type": "string",
           "required": true,
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "draft",
-            "published",
-            "archived"
-          ]
+          "elements": ["draft", "published", "archived"]
         },
         {
           "key": "sortOrder",
@@ -1815,18 +1702,14 @@
           "key": "idx_slug",
           "type": "unique",
           "status": "available",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "orders": []
         },
         {
           "key": "idx_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "orders": []
         }
       ]
@@ -1920,9 +1803,7 @@
           "key": "idx_packageId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "packageId"
-          ],
+          "columns": ["packageId"],
           "orders": []
         }
       ]
@@ -2001,8 +1882,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -1.7976931348623157e+308,
-          "max": 1.7976931348623157e+308
+          "min": -1.7976931348623157e308,
+          "max": 1.7976931348623157e308
         },
         {
           "key": "currency",
@@ -2046,10 +1927,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "active",
-            "inactive"
-          ]
+          "elements": ["active", "inactive"]
         },
         {
           "key": "sortOrder",
@@ -2066,18 +1944,14 @@
           "key": "idx_slug",
           "type": "unique",
           "status": "available",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "orders": []
         },
         {
           "key": "idx_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "orders": []
         }
       ]
@@ -2226,9 +2100,7 @@
           "key": "idx_locationId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "locationId"
-          ],
+          "columns": ["locationId"],
           "orders": []
         }
       ]
@@ -2267,12 +2139,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "facilitator",
-            "instructor",
-            "therapist",
-            "equipment"
-          ]
+          "elements": ["facilitator", "instructor", "therapist", "equipment"]
         },
         {
           "key": "description",
@@ -2321,19 +2188,14 @@
           "key": "idx_type",
           "type": "key",
           "status": "available",
-          "columns": [
-            "type"
-          ],
+          "columns": ["type"],
           "orders": []
         },
         {
           "key": "idx_type_isActive",
           "type": "key",
           "status": "available",
-          "columns": [
-            "type",
-            "isActive"
-          ],
+          "columns": ["type", "isActive"],
           "orders": []
         }
       ]
@@ -2380,12 +2242,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "single_session",
-            "multi_day",
-            "retreat_day",
-            "private"
-          ]
+          "elements": ["single_session", "multi_day", "retreat_day", "private"]
         },
         {
           "key": "startDatetime",
@@ -2455,12 +2312,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "draft",
-            "published",
-            "full",
-            "cancelled"
-          ]
+          "elements": ["draft", "published", "full", "cancelled"]
         },
         {
           "key": "notes",
@@ -2476,47 +2328,35 @@
           "key": "idx_experienceId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "experienceId"
-          ],
+          "columns": ["experienceId"],
           "orders": []
         },
         {
           "key": "idx_editionId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "editionId"
-          ],
+          "columns": ["editionId"],
           "orders": []
         },
         {
           "key": "idx_startDatetime",
           "type": "key",
           "status": "available",
-          "columns": [
-            "startDatetime"
-          ],
+          "columns": ["startDatetime"],
           "orders": []
         },
         {
           "key": "idx_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "orders": []
         },
         {
           "key": "idx_experienceId_status_start",
           "type": "key",
           "status": "available",
-          "columns": [
-            "experienceId",
-            "status",
-            "startDatetime"
-          ],
+          "columns": ["experienceId", "status", "startDatetime"],
           "orders": []
         }
       ]
@@ -2564,12 +2404,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "lead",
-            "assistant",
-            "support",
-            "equipment"
-          ]
+          "elements": ["lead", "assistant", "support", "equipment"]
         },
         {
           "key": "notes",
@@ -2586,18 +2421,14 @@
           "key": "idx_slotId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "slotId"
-          ],
+          "columns": ["slotId"],
           "orders": []
         },
         {
           "key": "idx_resourceId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "resourceId"
-          ],
+          "columns": ["resourceId"],
           "orders": []
         }
       ]
@@ -2642,11 +2473,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "direct",
-            "assisted",
-            "request-conversion"
-          ]
+          "elements": ["direct", "assisted", "request-conversion"]
         },
         {
           "key": "status",
@@ -2655,13 +2482,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "pending",
-            "paid",
-            "confirmed",
-            "cancelled",
-            "refunded"
-          ]
+          "elements": ["pending", "paid", "confirmed", "cancelled", "refunded"]
         },
         {
           "key": "paymentStatus",
@@ -2693,8 +2514,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -1.7976931348623157e+308,
-          "max": 1.7976931348623157e+308
+          "min": -1.7976931348623157e308,
+          "max": 1.7976931348623157e308
         },
         {
           "key": "taxAmount",
@@ -2702,8 +2523,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -1.7976931348623157e+308,
-          "max": 1.7976931348623157e+308
+          "min": -1.7976931348623157e308,
+          "max": 1.7976931348623157e308
         },
         {
           "key": "totalAmount",
@@ -2711,8 +2532,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -1.7976931348623157e+308,
-          "max": 1.7976931348623157e+308
+          "min": -1.7976931348623157e308,
+          "max": 1.7976931348623157e308
         },
         {
           "key": "stripeSessionId",
@@ -2788,55 +2609,42 @@
           "key": "idx_userId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "orders": []
         },
         {
           "key": "idx_orderNumber",
           "type": "unique",
           "status": "available",
-          "columns": [
-            "orderNumber"
-          ],
+          "columns": ["orderNumber"],
           "orders": []
         },
         {
           "key": "idx_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "orders": []
         },
         {
           "key": "idx_paymentStatus",
           "type": "key",
           "status": "available",
-          "columns": [
-            "paymentStatus"
-          ],
+          "columns": ["paymentStatus"],
           "orders": []
         },
         {
           "key": "idx_userId_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "userId",
-            "status"
-          ],
+          "columns": ["userId", "status"],
           "orders": []
         },
         {
           "key": "idx_stripeSessionId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "stripeSessionId"
-          ],
+          "columns": ["stripeSessionId"],
           "orders": []
         }
       ]
@@ -2883,12 +2691,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "edition",
-            "package",
-            "pass",
-            "addon"
-          ]
+          "elements": ["edition", "package", "pass", "addon"]
         },
         {
           "key": "name",
@@ -2914,8 +2717,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -1.7976931348623157e+308,
-          "max": 1.7976931348623157e+308
+          "min": -1.7976931348623157e308,
+          "max": 1.7976931348623157e308
         },
         {
           "key": "currency",
@@ -2932,8 +2735,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -1.7976931348623157e+308,
-          "max": 1.7976931348623157e+308
+          "min": -1.7976931348623157e308,
+          "max": 1.7976931348623157e308
         },
         {
           "key": "slotId",
@@ -2958,18 +2761,14 @@
           "key": "idx_orderId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "orderId"
-          ],
+          "columns": ["orderId"],
           "orders": []
         },
         {
           "key": "idx_itemType",
           "type": "key",
           "status": "available",
-          "columns": [
-            "itemType"
-          ],
+          "columns": ["itemType"],
           "orders": []
         }
       ]
@@ -3022,8 +2821,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -1.7976931348623157e+308,
-          "max": 1.7976931348623157e+308
+          "min": -1.7976931348623157e308,
+          "max": 1.7976931348623157e308
         },
         {
           "key": "currency",
@@ -3041,12 +2840,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "pending",
-            "succeeded",
-            "failed",
-            "refunded"
-          ]
+          "elements": ["pending", "succeeded", "failed", "refunded"]
         },
         {
           "key": "method",
@@ -3071,27 +2865,21 @@
           "key": "idx_orderId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "orderId"
-          ],
+          "columns": ["orderId"],
           "orders": []
         },
         {
           "key": "idx_stripePaymentIntentId",
           "type": "unique",
           "status": "available",
-          "columns": [
-            "stripePaymentIntentId"
-          ],
+          "columns": ["stripePaymentIntentId"],
           "orders": []
         },
         {
           "key": "idx_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "orders": []
         }
       ]
@@ -3192,12 +2980,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "valid",
-            "used",
-            "cancelled",
-            "expired"
-          ]
+          "elements": ["valid", "used", "cancelled", "expired"]
         },
         {
           "key": "usedAt",
@@ -3221,55 +3004,42 @@
           "key": "idx_orderId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "orderId"
-          ],
+          "columns": ["orderId"],
           "orders": []
         },
         {
           "key": "idx_userId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "orders": []
         },
         {
           "key": "idx_ticketCode",
           "type": "unique",
           "status": "available",
-          "columns": [
-            "ticketCode"
-          ],
+          "columns": ["ticketCode"],
           "orders": []
         },
         {
           "key": "idx_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "orders": []
         },
         {
           "key": "idx_userId_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "userId",
-            "status"
-          ],
+          "columns": ["userId", "status"],
           "orders": []
         },
         {
           "key": "idx_slotId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "slotId"
-          ],
+          "columns": ["slotId"],
           "orders": []
         }
       ]
@@ -3322,11 +3092,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "qr_scan",
-            "manual",
-            "system"
-          ]
+          "elements": ["qr_scan", "manual", "system"]
         },
         {
           "key": "notes",
@@ -3343,9 +3109,7 @@
           "key": "idx_ticketId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "ticketId"
-          ],
+          "columns": ["ticketId"],
           "orders": []
         }
       ]
@@ -3426,12 +3190,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "active",
-            "exhausted",
-            "expired",
-            "cancelled"
-          ]
+          "elements": ["active", "exhausted", "expired", "cancelled"]
         },
         {
           "key": "expiresAt",
@@ -3455,37 +3214,28 @@
           "key": "idx_userId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "orders": []
         },
         {
           "key": "idx_passId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "passId"
-          ],
+          "columns": ["passId"],
           "orders": []
         },
         {
           "key": "idx_orderId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "orderId"
-          ],
+          "columns": ["orderId"],
           "orders": []
         },
         {
           "key": "idx_userId_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "userId",
-            "status"
-          ],
+          "columns": ["userId", "status"],
           "orders": []
         }
       ]
@@ -3562,18 +3312,14 @@
           "key": "idx_userPassId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "userPassId"
-          ],
+          "columns": ["userPassId"],
           "orders": []
         },
         {
           "key": "idx_consumedAt",
           "type": "key",
           "status": "available",
-          "columns": [
-            "consumedAt"
-          ],
+          "columns": ["consumedAt"],
           "orders": []
         }
       ]
@@ -3624,8 +3370,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -1.7976931348623157e+308,
-          "max": 1.7976931348623157e+308
+          "min": -1.7976931348623157e308,
+          "max": 1.7976931348623157e308
         },
         {
           "key": "currency",
@@ -3643,11 +3389,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "pending",
-            "succeeded",
-            "failed"
-          ]
+          "elements": ["pending", "succeeded", "failed"]
         },
         {
           "key": "reason",
@@ -3679,27 +3421,21 @@
           "key": "idx_orderId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "orderId"
-          ],
+          "columns": ["orderId"],
           "orders": []
         },
         {
           "key": "idx_paymentId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "paymentId"
-          ],
+          "columns": ["paymentId"],
           "orders": []
         },
         {
           "key": "idx_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "orders": []
         }
       ]
@@ -3852,27 +3588,21 @@
           "key": "idx_userId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "orders": []
         },
         {
           "key": "idx_experienceId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "experienceId"
-          ],
+          "columns": ["experienceId"],
           "orders": []
         },
         {
           "key": "idx_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "orders": []
         }
       ]
@@ -3935,10 +3665,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "es",
-            "en"
-          ]
+          "elements": ["es", "en"]
         },
         {
           "key": "photoId",
@@ -4033,28 +3760,21 @@
           "key": "idx_userId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "orders": []
         },
         {
           "key": "idx_entityType_entityId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "entityType",
-            "entityId"
-          ],
+          "columns": ["entityType", "entityId"],
           "orders": []
         },
         {
           "key": "idx_action",
           "type": "key",
           "status": "available",
-          "columns": [
-            "action"
-          ],
+          "columns": ["action"],
           "orders": []
         }
       ]
@@ -4123,18 +3843,14 @@
           "key": "idx_key",
           "type": "unique",
           "status": "available",
-          "columns": [
-            "key"
-          ],
+          "columns": ["key"],
           "orders": []
         },
         {
           "key": "idx_category",
           "type": "key",
           "status": "available",
-          "columns": [
-            "category"
-          ],
+          "columns": ["category"],
           "orders": []
         }
       ]
@@ -4172,11 +3888,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "email",
-            "sms",
-            "push"
-          ]
+          "elements": ["email", "sms", "push"]
         },
         {
           "key": "subject",
@@ -4225,19 +3937,14 @@
           "key": "idx_key",
           "type": "unique",
           "status": "available",
-          "columns": [
-            "key"
-          ],
+          "columns": ["key"],
           "orders": []
         },
         {
           "key": "idx_type_isActive",
           "type": "key",
           "status": "available",
-          "columns": [
-            "type",
-            "isActive"
-          ],
+          "columns": ["type", "isActive"],
           "orders": []
         }
       ]
@@ -4313,12 +4020,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": [
-            "confirmed",
-            "checked-in",
-            "no-show",
-            "cancelled"
-          ]
+          "elements": ["confirmed", "checked-in", "no-show", "cancelled"]
         },
         {
           "key": "checkedInAt",
@@ -4342,37 +4044,28 @@
           "key": "idx_orderId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "orderId"
-          ],
+          "columns": ["orderId"],
           "orders": []
         },
         {
           "key": "idx_slotId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "slotId"
-          ],
+          "columns": ["slotId"],
           "orders": []
         },
         {
           "key": "idx_userId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "orders": []
         },
         {
           "key": "idx_slotId_status",
           "type": "key",
           "status": "available",
-          "columns": [
-            "slotId",
-            "status"
-          ],
+          "columns": ["slotId", "status"],
           "orders": []
         }
       ]
@@ -4446,9 +4139,7 @@
           "key": "idx_bookingId",
           "type": "key",
           "status": "available",
-          "columns": [
-            "bookingId"
-          ],
+          "columns": ["bookingId"],
           "orders": []
         }
       ]
@@ -4469,13 +4160,7 @@
       "name": "Experience Media",
       "enabled": true,
       "maximumFileSize": 10485760,
-      "allowedFileExtensions": [
-        "jpg",
-        "jpeg",
-        "png",
-        "webp",
-        "gif"
-      ],
+      "allowedFileExtensions": ["jpg", "jpeg", "png", "webp", "gif"],
       "compression": "gzip",
       "encryption": false,
       "antivirus": true,
@@ -4495,13 +4180,7 @@
       "name": "Publication Media",
       "enabled": true,
       "maximumFileSize": 10485760,
-      "allowedFileExtensions": [
-        "jpg",
-        "jpeg",
-        "png",
-        "webp",
-        "gif"
-      ],
+      "allowedFileExtensions": ["jpg", "jpeg", "png", "webp", "gif"],
       "compression": "gzip",
       "encryption": false,
       "antivirus": true,
@@ -4521,13 +4200,7 @@
       "name": "Addon Images",
       "enabled": true,
       "maximumFileSize": 10485760,
-      "allowedFileExtensions": [
-        "jpg",
-        "jpeg",
-        "png",
-        "webp",
-        "gif"
-      ],
+      "allowedFileExtensions": ["jpg", "jpeg", "png", "webp", "gif"],
       "compression": "gzip",
       "encryption": false,
       "antivirus": true,
@@ -4547,13 +4220,7 @@
       "name": "Package Images",
       "enabled": true,
       "maximumFileSize": 10485760,
-      "allowedFileExtensions": [
-        "jpg",
-        "jpeg",
-        "png",
-        "webp",
-        "gif"
-      ],
+      "allowedFileExtensions": ["jpg", "jpeg", "png", "webp", "gif"],
       "compression": "gzip",
       "encryption": false,
       "antivirus": true,
@@ -4571,12 +4238,7 @@
       "name": "User Avatars",
       "enabled": true,
       "maximumFileSize": 2097152,
-      "allowedFileExtensions": [
-        "jpg",
-        "jpeg",
-        "png",
-        "webp"
-      ],
+      "allowedFileExtensions": ["jpg", "jpeg", "png", "webp"],
       "compression": "gzip",
       "encryption": false,
       "antivirus": true,
@@ -4594,11 +4256,7 @@
       "name": "Documents",
       "enabled": true,
       "maximumFileSize": 20971520,
-      "allowedFileExtensions": [
-        "pdf",
-        "jpg",
-        "png"
-      ],
+      "allowedFileExtensions": ["pdf", "jpg", "png"],
       "compression": "gzip",
       "encryption": true,
       "antivirus": true,

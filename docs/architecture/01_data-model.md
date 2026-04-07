@@ -330,7 +330,8 @@ Paquetes fijos compuestos por múltiples experiencias + addons.
 | `currency` | string(3) | sí | Moneda |
 | `durationDays` | integer | no | Duración en días |
 | `capacity` | integer | no | Capacidad máxima |
-| `heroImageId` | string(255) | no | fileId portada |
+| `heroImageId` | string(255) | no | fileId portada (bucket: `package_images`) |
+| `galleryImageIds` | text(65535) | no | JSON array de fileIds para galería (bucket: `package_images`) |
 | `status` | enum | sí | `draft`, `published`, `archived` |
 | `sortOrder` | integer | no | Orden |
 

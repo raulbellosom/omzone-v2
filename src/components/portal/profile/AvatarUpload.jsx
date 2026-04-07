@@ -1,10 +1,12 @@
 import { useRef, useState } from "react";
 import { Camera } from "lucide-react";
 import { useAvatarUpload } from "@/hooks/useAvatarUpload";
+import { useLanguage } from "@/hooks/useLanguage";
 import UserAvatar from "@/components/common/UserAvatar";
 
 export default function AvatarUpload({ name, photoId, onUploaded }) {
   const { upload, getPreviewUrl, uploading, error } = useAvatarUpload();
+  const { t } = useLanguage();
   const inputRef = useRef(null);
   const [preview, setPreview] = useState(null);
 
@@ -28,7 +30,8 @@ export default function AvatarUpload({ name, photoId, onUploaded }) {
     e.target.value = "";
   }
 
-  const avatarUrl = preview || getPreviewUrl(photoId, { width: 200, height: 200 });
+  const avatarUrl =
+    preview || getPreviewUrl(photoId, { width: 200, height: 200 });
 
   return (
     <div className="flex flex-col items-center gap-3">
@@ -46,7 +49,7 @@ export default function AvatarUpload({ name, photoId, onUploaded }) {
         onClick={() => inputRef.current?.click()}
         disabled={uploading}
         className="relative group cursor-pointer disabled:cursor-not-allowed"
-        aria-label="Cambiar foto de perfil"
+        aria-label={t("portal.profile.changePhoto")}
       >
         {avatarUrl ? (
           <img
@@ -75,11 +78,15 @@ export default function AvatarUpload({ name, photoId, onUploaded }) {
         disabled={uploading}
         className="text-xs text-sage font-medium hover:underline disabled:opacity-50"
       >
-        {uploading ? "Subiendo…" : "Cambiar foto"}
+        {uploading
+          ? t("portal.profile.uploading")
+          : t("portal.profile.changePhoto")}
       </button>
 
       {error && <p className="text-xs text-red-600 text-center">{error}</p>}
-      <p className="text-[11px] text-charcoal-subtle">JPG, PNG o WebP · máx. 2 MB</p>
+      <p className="text-[11px] text-charcoal-subtle">
+        {t("portal.profile.photoHint")}
+      </p>
     </div>
   );
 }

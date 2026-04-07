@@ -3,9 +3,11 @@ import { Input } from "@/components/common/Input";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 import ImageUpload from "@/components/admin/experiences/ImageUpload";
+import GalleryManager from "@/components/admin/media/GalleryManager";
 import PackageItemsEditor from "@/components/admin/packages/PackageItemsEditor";
 import { slugify, checkPackageSlugAvailable } from "@/hooks/usePackages";
 import AdminSelect from "@/components/common/AdminSelect";
+import env from "@/config/env";
 import { cn } from "@/lib/utils";
 
 const STATUS_OPTIONS = [
@@ -36,6 +38,7 @@ const EMPTY = {
   durationDays: "",
   capacity: "",
   heroImageId: "",
+  galleryImageIds: [],
   status: "draft",
   sortOrder: "",
 };
@@ -88,6 +91,9 @@ export default function PackageForm({
         capacity: initialData.capacity ?? "",
         sortOrder: initialData.sortOrder ?? "",
         heroImageId: initialData.heroImageId ?? "",
+        galleryImageIds: initialData.galleryImageIds
+          ? (() => { try { const p = JSON.parse(initialData.galleryImageIds); return Array.isArray(p) ? p : []; } catch { return []; } })()
+          : [],
       }
     : { ...EMPTY };
 
@@ -155,6 +161,7 @@ export default function PackageForm({
       durationDays: form.durationDays ? parseInt(form.durationDays) : null,
       capacity: form.capacity ? parseInt(form.capacity) : null,
       heroImageId: form.heroImageId || null,
+      galleryImageIds: form.galleryImageIds.length > 0 ? JSON.stringify(form.galleryImageIds) : null,
       status: form.status,
       sortOrder: form.sortOrder ? parseInt(form.sortOrder) : 0,
     };
@@ -348,9 +355,24 @@ export default function PackageForm({
             fileId={form.heroImageId}
             onUpload={(id) => set("heroImageId", id)}
             onRemove={() => set("heroImageId", "")}
+            bucketId={env.bucketPackageImages}
             disabled={isDisabled}
           />
         </div>
+      </Card>
+
+      {/* Galería de imágenes */}
+      <Card className="p-5 space-y-4">
+        <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
+          Galería de imágenes
+        </h2>
+        <GalleryManager
+          value={form.galleryImageIds}
+          onChange={(ids) => set("galleryImageIds", ids)}
+          bucketId={env.bucketPackageImages}
+          isAdmin
+          disabled={isDisabled}
+        />
       </Card>
 
       {/* Acciones */}

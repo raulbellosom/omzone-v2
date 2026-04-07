@@ -1,5 +1,9 @@
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import Badge from "@/components/common/Badge";
 import OptimizedImage from "@/components/common/OptimizedImage";
+import { useLanguage } from "@/hooks/useLanguage";
+import { ROUTES } from "@/constants/routes";
 
 const TYPE_LABELS = {
   session: "Session",
@@ -19,8 +23,10 @@ const TYPE_BADGE = {
 };
 
 export default function ExperienceHero({ experience }) {
+  const { t } = useLanguage();
+
   return (
-    <div className="relative w-full">
+    <div className="relative w-full -mt-20">
       {/* Image */}
       <div className="relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden bg-warm-gray">
         <OptimizedImage
@@ -33,6 +39,19 @@ export default function ExperienceHero({ experience }) {
         />
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+
+        {/* Back link — overlaid top-left, below navbar */}
+        <div className="absolute top-20 left-0 right-0 z-10">
+          <div className="container-shell">
+            <Link
+              to={ROUTES.EXPERIENCES}
+              className="inline-flex items-center gap-1.5 text-sm text-white/90 hover:text-white transition-colors group backdrop-blur-sm bg-black/20 rounded-full px-3 py-1.5"
+            >
+              <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+              {t("experienceDetail.allExperiences")}
+            </Link>
+          </div>
+        </div>
 
         {/* Content over image */}
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">

@@ -54,7 +54,11 @@ export default function LoginPage() {
       tabIndex={-1}
       onClick={() => setShowPassword((v) => !v)}
       className="text-charcoal-subtle hover:text-charcoal transition-colors"
-      aria-label={showPassword ? t("auth.login.hidePassword") : t("auth.login.showPassword")}
+      aria-label={
+        showPassword
+          ? t("auth.login.hidePassword")
+          : t("auth.login.showPassword")
+      }
     >
       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
     </button>
@@ -139,6 +143,14 @@ export default function LoginPage() {
                 required
                 autoComplete="current-password"
               />
+              <div className="text-right">
+                <Link
+                  to={ROUTES.FORGOT_PASSWORD}
+                  className="text-xs text-sage-dark hover:text-sage transition-colors"
+                >
+                  {t("auth.forgotPasswordLink")}
+                </Link>
+              </div>
             </div>
 
             {error && (

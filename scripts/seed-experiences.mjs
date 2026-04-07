@@ -117,6 +117,20 @@ async function seedTags() {
     category: "duration",
     sortOrder: 10,
   });
+  await createDoc("tags", "tag-yoga", {
+    name: "Yoga",
+    nameEs: "Yoga",
+    slug: "yoga",
+    category: "wellness",
+    sortOrder: 11,
+  });
+  await createDoc("tags", "tag-overnight", {
+    name: "Overnight Stay",
+    nameEs: "Estancia con Hospedaje",
+    slug: "overnight-stay",
+    category: "duration",
+    sortOrder: 12,
+  });
 }
 
 // ─── Experiences ──────────────────────────────────────────────────────────
@@ -273,6 +287,99 @@ async function seedExperiences() {
     seoDescription:
       "Bespoke 90-minute couples massage in a private garden suite. Aromatherapy, warm stones, and complete privacy in Puerto Vallarta.",
   });
+
+  // 6 ── Sound Healing Journey (session)
+  await createDoc("experiences", "exp-sound-healing", {
+    name: "Sound Healing Journey",
+    publicName: "Sound Healing Journey",
+    publicNameEs: "Viaje de Sanación con Sonido",
+    slug: "sound-healing-journey",
+    type: "session",
+    saleMode: "direct",
+    fulfillmentType: "ticket",
+    shortDescription:
+      "A 75-minute immersive sound bath with Tibetan singing bowls, crystal bowls, and gongs — a vibrational journey that dissolves tension and opens space for deep inner stillness.",
+    shortDescriptionEs:
+      "Un baño de sonido inmersivo de 75 minutos con cuencos tibetanos, cuencos de cristal y gongs — un viaje vibracional que disuelve la tensión y abre espacio para una profunda quietud interior.",
+    longDescription:
+      "Close your eyes. Let sound do what words cannot.\n\nThis 75-minute sound healing journey guides you through layers of resonance created by Tibetan singing bowls, quartz crystal bowls, and a symphonic gong — each tuned to frequencies that interact with your body's natural energy centers.\n\nYou will lie comfortably on a cushioned mat, covered with a light blanket, as our facilitator Diego builds a soundscape that moves from gentle overtones into deep, resonant waves. Participants often describe the sensation as floating, melting, or being held by the sound itself.\n\nThe session begins with a brief body scan and breath awareness practice, then transitions into the sound bath. No prior experience is needed — the sound meets you wherever you are, whether your mind is racing or already quiet.\n\nAfter the journey, there is space for silent integration and a guided return to waking awareness. We close with a cup of warm herbal tea in candlelight.\n\nMany guests report improved sleep, emotional release, reduced anxiety, and a deep sense of calm that lasts for days after the session.",
+    longDescriptionEs:
+      "Cierra los ojos. Deja que el sonido haga lo que las palabras no pueden.\n\nEste viaje de sanación con sonido de 75 minutos te guía a través de capas de resonancia creadas por cuencos tibetanos, cuencos de cristal de cuarzo y un gong sinfónico — cada uno afinado a frecuencias que interactúan con los centros energéticos naturales de tu cuerpo.\n\nEstarás cómodamente recostado sobre un tapete acolchado, cubierto con una manta ligera, mientras nuestro facilitador Diego construye un paisaje sonoro que se mueve desde armónicos suaves hasta olas resonantes y profundas. Los participantes frecuentemente describen la sensación como flotar, derretirse o ser sostenidos por el sonido mismo.\n\nLa sesión comienza con un breve escaneo corporal y práctica de atención a la respiración, luego transiciona hacia el baño de sonido. No se necesita experiencia previa — el sonido te encuentra donde sea que estés, ya sea que tu mente esté acelerada o ya quieta.\n\nDespués del viaje, hay espacio para integración en silencio y un retorno guiado a la conciencia despierta. Cerramos con una taza de té herbal caliente a la luz de las velas.\n\nMuchos huéspedes reportan mejor sueño, liberación emocional, reducción de ansiedad y una profunda sensación de calma que dura días después de la sesión.",
+    requiresSchedule: true,
+    requiresDate: false,
+    allowQuantity: true,
+    maxQuantity: 4,
+    minQuantity: 1,
+    generatesTickets: true,
+    status: "published",
+    sortOrder: 6,
+    seoTitle:
+      "Sound Healing Journey — Tibetan Bowls & Gong Bath | OMZONE Puerto Vallarta",
+    seoDescription:
+      "75-minute sound healing session with Tibetan singing bowls, crystal bowls, and gongs in Puerto Vallarta. Deep relaxation and vibrational therapy.",
+  });
+
+  // 7 ── Tropical Vinyasa Flow (session)
+  await createDoc("experiences", "exp-yoga-flow", {
+    name: "Tropical Vinyasa Flow",
+    publicName: "Tropical Vinyasa Flow",
+    publicNameEs: "Vinyasa Flow Tropical",
+    slug: "tropical-vinyasa-flow",
+    type: "session",
+    saleMode: "direct",
+    fulfillmentType: "ticket",
+    shortDescription:
+      "A 60-minute morning yoga flow on an oceanfront terrace — breath-synchronized movement, tropical breeze, and the sound of Pacific waves as your soundtrack.",
+    shortDescriptionEs:
+      "Un flujo de yoga matutino de 60 minutos en una terraza frente al mar — movimiento sincronizado con la respiración, brisa tropical y el sonido de las olas del Pacífico como tu banda sonora.",
+    longDescription:
+      "The alarm is the sunrise. The studio is the ocean.\n\nThis 60-minute Vinyasa flow takes place on our Beachfront Terrace, an elevated open-air deck perched above Conchas Chinas, where the Pacific stretches endlessly to the west. You will move through a dynamic sequence of poses linked by breath — building heat, cultivating balance, and softening into stillness.\n\nInstructor Diego Ramírez designs each class around a theme drawn from the surrounding environment: the fluidity of water, the rootedness of tropical trees, the expansiveness of the horizon. The sequence progresses from sun salutations to standing poses, arm balances (optional), and floor work, closing with a 10-minute savasana accompanied by the rhythm of the waves below.\n\nAll levels are welcome. Modifications are offered for every pose, and the atmosphere is non-competitive — this is not a performance. It is a practice.\n\nAfter class, linger on the terrace. Watch the pelicans. Breathe the salt air. There is nowhere else to be.",
+    longDescriptionEs:
+      "La alarma es el amanecer. El estudio es el océano.\n\nEste flujo de Vinyasa de 60 minutos tiene lugar en nuestra Terraza Frente al Mar, una plataforma elevada al aire libre sobre Conchas Chinas, donde el Pacífico se extiende infinitamente hacia el oeste. Te moverás a través de una secuencia dinámica de posturas enlazadas por la respiración — generando calor, cultivando equilibrio y suavizándote hacia la quietud.\n\nEl instructor Diego Ramírez diseña cada clase alrededor de un tema inspirado por el entorno: la fluidez del agua, el arraigo de los árboles tropicales, la expansividad del horizonte. La secuencia progresa desde saludos al sol hacia posturas de pie, balances sobre brazos (opcionales) y trabajo en piso, cerrando con un savasana de 10 minutos acompañado por el ritmo de las olas debajo.\n\nTodos los niveles son bienvenidos. Se ofrecen modificaciones para cada postura, y la atmósfera es no competitiva — esto no es una presentación. Es una práctica.\n\nDespués de la clase, quédate en la terraza. Observa los pelícanos. Respira el aire salado. No hay otro lugar donde necesites estar.",
+    requiresSchedule: true,
+    requiresDate: false,
+    allowQuantity: true,
+    maxQuantity: 3,
+    minQuantity: 1,
+    generatesTickets: true,
+    status: "published",
+    sortOrder: 7,
+    seoTitle:
+      "Tropical Vinyasa Flow — Oceanfront Yoga | OMZONE Puerto Vallarta",
+    seoDescription:
+      "Morning Vinyasa yoga on a beachfront terrace in Puerto Vallarta. 60-minute flow with ocean views, all levels welcome. Book your spot today.",
+  });
+
+  // 8 ── Weekend Wellness Stay (stay)
+  await createDoc("experiences", "exp-wellness-weekend", {
+    name: "Weekend Wellness Stay",
+    publicName: "Weekend Wellness Stay",
+    publicNameEs: "Estancia Wellness de Fin de Semana",
+    slug: "weekend-wellness-stay",
+    type: "stay",
+    saleMode: "direct",
+    fulfillmentType: "booking",
+    shortDescription:
+      "Two nights at our Jungle Sanctuary in the Sierra de Vallejo — yoga, meditation, forest bathing, nourishing meals, and spa treatments woven into a weekend designed for complete restoration.",
+    shortDescriptionEs:
+      "Dos noches en nuestro Santuario en la Selva en la Sierra de Vallejo — yoga, meditación, baño de bosque, comidas nutritivas y tratamientos de spa entrelazados en un fin de semana diseñado para una restauración completa.",
+    longDescription:
+      "Some things require more than an afternoon. Some things require surrendering an entire weekend.\n\nThe Weekend Wellness Stay is OMZONE's signature overnight experience — two nights and three days at our Jungle Sanctuary, hidden in the foothills of the Sierra de Vallejo, 35 minutes north of Puerto Vallarta. From Friday afternoon to Sunday noon, you will live a rhythm shaped by nature: rising with the birds, moving with the breeze, eating when the body is hungry, resting when it asks.\n\nYour stay includes:\n\n• Two nights in a private casita (adobe walls, king bed, terrace with valley views, outdoor shower)\n• Daily morning yoga on the Open Air Pavilion (6:30 AM)\n• Guided meditation on the Meditation Deck\n• One half-day forest bathing immersion led by Marco Iván Torres\n• One 60-minute aromatherapy massage by Elena Cisneros\n• Three plant-forward meals daily, prepared with local ingredients from the Bahía de Banderas region\n• Unlimited access to herbal tea bar and cold-pressed juice station\n• Optional evening sound bath (Friday night)\n\nThe sanctuary accommodates a maximum of 4 guests per weekend to preserve intimacy and silence. There is no Wi-Fi by design — only birdsong, river sounds, and the wind through the trees.\n\nGuests consistently describe this experience as the reset they have been searching for — not a vacation from life, but a return to it.",
+    longDescriptionEs:
+      "Algunas cosas requieren más que una tarde. Algunas cosas requieren entregar un fin de semana completo.\n\nLa Estancia Wellness de Fin de Semana es la experiencia insignia con hospedaje de OMZONE — dos noches y tres días en nuestro Santuario en la Selva, escondido en las estribaciones de la Sierra de Vallejo, a 35 minutos al norte de Puerto Vallarta. Desde el viernes por la tarde hasta el domingo al mediodía, vivirás un ritmo moldeado por la naturaleza: levantarte con los pájaros, moverte con la brisa, comer cuando el cuerpo tiene hambre, descansar cuando lo pide.\n\nTu estancia incluye:\n\n• Dos noches en casita privada (paredes de adobe, cama king, terraza con vista al valle, regadera al aire libre)\n• Yoga matutino diario en el Pabellón al Aire Libre (6:30 AM)\n• Meditación guiada en la Plataforma de Meditación\n• Una inmersión de medio día de baño de bosque guiada por Marco Iván Torres\n• Un masaje de aromaterapia de 60 minutos por Elena Cisneros\n• Tres comidas diarias de base vegetal, preparadas con ingredientes locales de la región de Bahía de Banderas\n• Acceso ilimitado a barra de té herbal y estación de jugos prensados en frío\n• Baño de sonido opcional (viernes por la noche)\n\nEl santuario hospeda máximo 4 invitados por fin de semana para preservar la intimidad y el silencio. No hay Wi-Fi por diseño — solo el canto de los pájaros, los sonidos del río y el viento entre los árboles.\n\nLos huéspedes describen consistentemente esta experiencia como el reinicio que habían estado buscando — no unas vacaciones de la vida, sino un regreso a ella.",
+    requiresSchedule: true,
+    requiresDate: true,
+    allowQuantity: true,
+    maxQuantity: 2,
+    minQuantity: 1,
+    generatesTickets: false,
+    status: "published",
+    sortOrder: 8,
+    seoTitle:
+      "Weekend Wellness Stay — 2 Nights at Jungle Sanctuary | OMZONE Puerto Vallarta",
+    seoDescription:
+      "Two-night wellness retreat in the Sierra de Vallejo jungle near Puerto Vallarta. Yoga, forest bathing, spa, and nourishing meals. Limited to 4 guests.",
+  });
 }
 
 // ─── Editions ─────────────────────────────────────────────────────────────
@@ -357,6 +464,57 @@ async function seedEditions() {
       "Reserva tu fecha y horario preferidos. Sujeto a disponibilidad.",
     status: "open",
     capacity: 100,
+  });
+
+  // Sound Healing — rolling monthly edition
+  await createDoc("editions", "ed-sound-may", {
+    experienceId: "exp-sound-healing",
+    name: "May 2025 Sound Sessions",
+    nameEs: "Sesiones de Sonido Mayo 2025",
+    description:
+      "All sound healing sessions scheduled for May 2025. Friday evenings and one special outdoor edition.",
+    descriptionEs:
+      "Todas las sesiones de sanación con sonido programadas para mayo 2025. Viernes por la noche y una edición especial al aire libre.",
+    startDate: futureDate(0),
+    endDate: futureDate(30),
+    registrationOpens: futureDate(-7),
+    registrationCloses: futureDate(28),
+    capacity: 42,
+    status: "open",
+  });
+
+  // Yoga Flow — rolling monthly edition
+  await createDoc("editions", "ed-yoga-may", {
+    experienceId: "exp-yoga-flow",
+    name: "May 2025 Morning Flows",
+    nameEs: "Flujos Matutinos Mayo 2025",
+    description:
+      "Morning Vinyasa sessions through May on our Beachfront Terrace, plus one special jungle edition.",
+    descriptionEs:
+      "Sesiones de Vinyasa matutinas durante mayo en nuestra Terraza Frente al Mar, más una edición especial en la selva.",
+    startDate: futureDate(0),
+    endDate: futureDate(30),
+    registrationOpens: futureDate(-7),
+    registrationCloses: futureDate(28),
+    capacity: 51,
+    status: "open",
+  });
+
+  // Wellness Weekend Stay — monthly edition
+  await createDoc("editions", "ed-stay-may", {
+    experienceId: "exp-wellness-weekend",
+    name: "May 2025 Weekend Stays",
+    nameEs: "Estancias de Fin de Semana Mayo 2025",
+    description:
+      "Two available weekends in May at the Jungle Sanctuary. Maximum 4 guests per weekend.",
+    descriptionEs:
+      "Dos fines de semana disponibles en mayo en el Santuario en la Selva. Máximo 4 huéspedes por fin de semana.",
+    startDate: futureDate(0),
+    endDate: futureDate(30),
+    registrationOpens: futureDate(-14),
+    registrationCloses: futureDate(10),
+    capacity: 8,
+    status: "open",
   });
 }
 
@@ -502,6 +660,91 @@ async function seedPricingTiers() {
     isActive: true,
     sortOrder: 2,
   });
+
+  // Sound Healing — 2 tiers
+  await createDoc("pricing_tiers", "pt-sound-standard", {
+    experienceId: "exp-sound-healing",
+    editionId: "ed-sound-may",
+    name: "Sound Bath",
+    nameEs: "Baño de Sonido",
+    description:
+      "75-minute sound healing journey with cushioned mat, blanket, eye mask, and closing tea ceremony.",
+    descriptionEs:
+      "Viaje de sanación con sonido de 75 minutos con tapete acolchado, manta, antifaz y ceremonia de té de cierre.",
+    priceType: "per-person",
+    basePrice: 750,
+    currency: "MXN",
+    isActive: true,
+    sortOrder: 1,
+  });
+  await createDoc("pricing_tiers", "pt-sound-premium", {
+    experienceId: "exp-sound-healing",
+    editionId: "ed-sound-may",
+    name: "Sound Bath Premium",
+    nameEs: "Baño de Sonido Premium",
+    description:
+      "Everything in Standard plus priority front-row placement, complimentary mindfulness journal, and a 15-minute private sound integration with crystal bowls after the group session.",
+    descriptionEs:
+      "Todo lo del Estándar más ubicación prioritaria en primera fila, diario de mindfulness de cortesía y 15 minutos de integración sonora privada con cuencos de cristal después de la sesión grupal.",
+    priceType: "per-person",
+    basePrice: 1250,
+    currency: "MXN",
+    badge: "DEEP EXPERIENCE",
+    isHighlighted: true,
+    isActive: true,
+    sortOrder: 2,
+  });
+
+  // Yoga Flow — single tier
+  await createDoc("pricing_tiers", "pt-yoga-standard", {
+    experienceId: "exp-yoga-flow",
+    editionId: "ed-yoga-may",
+    name: "Morning Flow",
+    nameEs: "Flujo Matutino",
+    description:
+      "60-minute Vinyasa flow on the Beachfront Terrace with yoga mat provided. All levels welcome.",
+    descriptionEs:
+      "Flujo de Vinyasa de 60 minutos en la Terraza Frente al Mar con tapete de yoga incluido. Todos los niveles bienvenidos.",
+    priceType: "per-person",
+    basePrice: 550,
+    currency: "MXN",
+    isActive: true,
+    sortOrder: 1,
+  });
+
+  // Wellness Weekend Stay — 2 tiers
+  await createDoc("pricing_tiers", "pt-stay-shared", {
+    experienceId: "exp-wellness-weekend",
+    editionId: "ed-stay-may",
+    name: "Shared Casita",
+    nameEs: "Casita Compartida",
+    description:
+      "Two nights in a shared casita (2 guests). All meals, daily yoga, meditation, one forest bathing immersion, and one 60-minute massage included.",
+    descriptionEs:
+      "Dos noches en casita compartida (2 huéspedes). Incluye todas las comidas, yoga diario, meditación, una inmersión de baño de bosque y un masaje de 60 minutos.",
+    priceType: "per-person",
+    basePrice: 9800,
+    currency: "MXN",
+    isActive: true,
+    sortOrder: 1,
+  });
+  await createDoc("pricing_tiers", "pt-stay-private", {
+    experienceId: "exp-wellness-weekend",
+    editionId: "ed-stay-may",
+    name: "Private Casita",
+    nameEs: "Casita Privada",
+    description:
+      "Two nights in a private casita (1 guest). All meals, daily yoga, meditation, one forest bathing immersion, two 60-minute massages, aromatherapy kit to take home, and a private sound healing session.",
+    descriptionEs:
+      "Dos noches en casita privada (1 huésped). Incluye todas las comidas, yoga diario, meditación, una inmersión de baño de bosque, dos masajes de 60 minutos, kit de aromaterapia para llevar y una sesión privada de sanación con sonido.",
+    priceType: "per-person",
+    basePrice: 14500,
+    currency: "MXN",
+    badge: "ALL-INCLUSIVE",
+    isHighlighted: true,
+    isActive: true,
+    sortOrder: 2,
+  });
 }
 
 // ─── Experience ↔ Tag Assignments ─────────────────────────────────────────
@@ -531,6 +774,20 @@ async function seedExperienceTags() {
     ["exp-couples-massage", "tag-couples"],
     ["exp-couples-massage", "tag-spa"],
     ["exp-couples-massage", "tag-pvr"],
+    // Sound Healing
+    ["exp-sound-healing", "tag-sound-healing"],
+    ["exp-sound-healing", "tag-beginner"],
+    ["exp-sound-healing", "tag-pvr"],
+    // Yoga Flow
+    ["exp-yoga-flow", "tag-yoga"],
+    ["exp-yoga-flow", "tag-beginner"],
+    ["exp-yoga-flow", "tag-pvr"],
+    // Wellness Weekend
+    ["exp-wellness-weekend", "tag-retreat"],
+    ["exp-wellness-weekend", "tag-overnight"],
+    ["exp-wellness-weekend", "tag-nature"],
+    ["exp-wellness-weekend", "tag-pvr"],
+    ["exp-wellness-weekend", "tag-spa"],
   ];
 
   for (const [expId, tagId] of assignments) {
