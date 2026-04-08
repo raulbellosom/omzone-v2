@@ -290,7 +290,8 @@ Lo que SÍ incluye esta tarea:
 
 ## Notas de implementación (post-deploy)
 
-> Actualizado: 2026-04-06
+> Actualizado: 2026-04-07
 
 - **`user_profiles` — `userId` eliminado como atributo:** El `$id` del documento ahora es el Auth userId directamente. Se eliminó el atributo `userId` y el índice `idx_userId`. Esto simplifica lookups a `getDocument(db, collection, userId)` sin necesidad de `Query.equal('userId', ...)`. El modelo de datos (`01_data-model.md`) y `appwrite.json` ya reflejan este cambio.
 - **Atributos finales de `user_profiles`:** 7 atributos (`displayName`, `firstName`, `lastName`, `phone`, `language`, `photoId`, `bio`), 0 índices custom.
+- **ADR-002 confirmado — sin campo `role` en `user_profiles`:** La Function `assign-user-label` tenía un bug crítico: escribía `role: "client"` en `createDocument`, campo que no existe en el schema. Appwrite rechazaba el documento con 400 "Unknown attribute", el catch lo silenciaba y el perfil nunca se creaba. Corregido eliminando todas las escrituras de `role` de la Function (event trigger, ensure-profile y manual assignment). La fuente de verdad de roles son los **Auth labels**, conforme a ADR-002.

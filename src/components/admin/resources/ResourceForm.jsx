@@ -129,13 +129,13 @@ export default function ResourceForm({
 
   function validate() {
     const e = {};
-    if (!form.name.trim()) e.name = t("admin.resourceForms.nameRequired");
-    if (!form.type) e.type = t("admin.resourceForms.typeRequired");
+    if (!form.name.trim()) e.name = "El nombre es requerido";
+    if (!form.type) e.type = "El tipo es requerido";
     if (form.metadata.trim()) {
       try {
         JSON.parse(form.metadata);
       } catch {
-        e.metadata = t("admin.resourceForms.invalidJson");
+        e.metadata = "JSON inválido";
       }
     }
     return e;
@@ -167,14 +167,10 @@ export default function ResourceForm({
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          {t("admin.resourceForms.resourceSection")}
+          Identidad
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field
-            label={t("admin.resourceForms.name")}
-            required
-            error={errors.name}
-          >
+          <Field label="Nombre" required error={errors.name}>
             <Input
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
@@ -183,11 +179,7 @@ export default function ResourceForm({
               className={errors.name ? "border-red-400" : ""}
             />
           </Field>
-          <Field
-            label={t("admin.resourceForms.type")}
-            required
-            error={errors.type}
-          >
+          <Field label="Tipo" required error={errors.type}>
             <AdminSelect
               value={form.type}
               onChange={(v) => set("type", v)}
@@ -197,8 +189,8 @@ export default function ResourceForm({
             />
           </Field>
           <Field
-            label={t("admin.resourceForms.contact")}
-            hint={t("admin.resourceForms.contactHint")}
+            label="Contacto"
+            hint="Email, teléfono u otra referencia de contacto"
           >
             <Input
               value={form.contactInfo}
@@ -212,7 +204,7 @@ export default function ResourceForm({
             <Toggle
               checked={form.isActive}
               onChange={(v) => set("isActive", v)}
-              label={t("admin.resourceForms.resourceActive")}
+              label="Recurso activo"
               disabled={submitting}
             />
           </div>
@@ -222,9 +214,9 @@ export default function ResourceForm({
       {/* Descripción */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          {t("admin.resourceForms.descriptionSection")}
+          Descripción
         </h2>
-        <Field label={t("admin.resourceForms.description")}>
+        <Field label="Descripción">
           <Textarea
             value={form.description}
             onChange={(v) => set("description", v)}
@@ -238,7 +230,7 @@ export default function ResourceForm({
       {/* Foto */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          {t("admin.resourceForms.resourcePhoto")}
+          Foto del recurso
         </h2>
         <div className="max-w-sm">
           <ImageUpload
@@ -256,8 +248,8 @@ export default function ResourceForm({
           Metadata
         </h2>
         <Field
-          label={t("admin.resourceForms.metadata")}
-          hint={t("admin.resourceForms.metadataHint")}
+          label="Metadata (JSON)"
+          hint="Datos adicionales en formato JSON. Opcional."
           error={errors.metadata}
         >
           <Textarea
@@ -276,10 +268,10 @@ export default function ResourceForm({
           {submitting ? (
             <span className="flex items-center gap-2">
               <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-              {t("admin.resourceForms.saving")}
+              Guardando...
             </span>
           ) : (
-            submitLabel || t("admin.resourceForms.save")
+            submitLabel
           )}
         </Button>
       </div>

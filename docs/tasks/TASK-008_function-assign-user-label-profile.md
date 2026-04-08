@@ -169,9 +169,17 @@ N/A — esta tarea no involucra rutas frontend.
 >
 > - El documento de `user_profiles` se crea con `$id = userId` (sin atributo `userId` separado).
 > - `name` del Auth user se parsea: primer token → `firstName`, resto → `lastName`. `displayName` = `name` completo.
-> - Atributos enviados al crear: `displayName`, `firstName`, `lastName`, `phone`, `avatarUrl`, `bio`, `language`.
+> - Atributos enviados al crear: `displayName`, `firstName`, `lastName`, `language`.
 > - La Function usa try/catch con `getDocument($id)` para idempotencia: si el documento ya existe, no falla.
 > - Estos cambios aplican tanto al Flujo A (evento) como al Flujo B (HTTP manual).
+
+> **2026-04-07 — Bug crítico corregido: `role` inexistente causaba fallo silencioso en createDocument**
+>
+> - La Function escribía `role: "client"` al crear el documento, pero `user_profiles` **no tiene atributo `role`** (ADR-002: roles viven en Auth labels, no en el perfil).
+> - Appwrite rechazaba el `createDocument` con 400 "Unknown attribute: role". El catch lo silenciaba y el perfil nunca se creaba en ninguno de los flujos (evento, ensure-profile, manual).
+> - **Corrección:** eliminado `role` de todas las escrituras en la Function. Los tres flujos ya no lo incluyen.
+> - Eliminado también el bloque "Sync role to user_profiles" de `handleManualAssignment` por la misma razón.
+> - **Flujo C (ensure-profile)** añadido: se llama sincrónicamente desde `AuthContext.register()` mientras la sesión sigue activa, garantizando que el perfil exista antes de que el usuario llegue al login. Esto elimina la dependencia del evento `users.*.create` para la creación del perfil.
 
 ## Nota de infraestructura — Evento `users.*.create`
 
