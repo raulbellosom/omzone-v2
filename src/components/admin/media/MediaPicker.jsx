@@ -355,7 +355,9 @@ export default function MediaPicker({
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-4 pb-0 shrink-0">
           <h2 className="text-base font-semibold text-charcoal">
-            {multiple ? "Seleccionar imágenes" : "Seleccionar imagen"}
+            {multiple
+              ? t("admin.mediaPicker.titleMultiple")
+              : t("admin.mediaPicker.titleSingle")}
           </h2>
           <button
             type="button"
@@ -394,12 +396,15 @@ export default function MediaPicker({
         <div className="shrink-0 flex items-center justify-between gap-3 px-4 py-3 border-t border-sand-dark/30">
           <span className="text-sm text-charcoal-muted">
             {selected.length > 0
-              ? `${selected.length} seleccionada${selected.length > 1 ? "s" : ""}`
-              : "Ninguna seleccionada"}
+              ? t("admin.mediaPicker.selectedCount").replace(
+                  "{count}",
+                  selected.length,
+                )
+              : t("admin.mediaPicker.noneSelected")}
           </span>
           <div className="flex gap-2">
             <Button type="button" variant="outline" size="sm" onClick={onClose}>
-              Cancelar
+              {t("admin.mediaPicker.cancel")}
             </Button>
             <Button
               type="button"
@@ -407,7 +412,9 @@ export default function MediaPicker({
               disabled={selected.length === 0}
               onClick={handleConfirm}
             >
-              {multiple ? "Agregar selección" : "Seleccionar"}
+              {multiple
+                ? t("admin.mediaPicker.addSelection")
+                : t("admin.mediaPicker.select")}
             </Button>
           </div>
         </div>

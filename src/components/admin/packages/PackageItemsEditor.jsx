@@ -2,16 +2,14 @@ import { useState } from "react";
 import { Plus, Pencil, Trash2, GripVertical } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
+import { useLanguage } from "@/hooks/useLanguage";
 import SortableList from "@/components/common/SortableList";
 import SortableItem from "@/components/common/SortableItem";
 import ItemTypeBadge from "@/components/admin/packages/ItemTypeBadge";
 import PackageItemForm from "@/components/admin/packages/PackageItemForm";
 
-export default function PackageItemsEditor({
-  items = [],
-  onChange,
-  disabled,
-}) {
+export default function PackageItemsEditor({ items = [], onChange, disabled }) {
+  const { t } = useLanguage();
   const [showForm, setShowForm] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
 
@@ -41,8 +39,7 @@ export default function PackageItemsEditor({
     <div className="space-y-3">
       {items.length === 0 && (
         <p className="text-sm text-charcoal-subtle italic py-3">
-          Aún no hay elementos en este paquete. Agrega experiencias, addons,
-          beneficios, hospedaje o alimentación.
+          {t("admin.packageItemsEditor.emptyState")}
         </p>
       )}
 
@@ -69,7 +66,7 @@ export default function PackageItemsEditor({
                       type="button"
                       className="touch-none shrink-0 cursor-grab active:cursor-grabbing p-0.5 text-charcoal-muted hover:text-charcoal disabled:cursor-not-allowed disabled:opacity-30"
                       disabled={disabled}
-                      aria-label="Arrastrar para reordenar"
+                      aria-label={t("admin.packageItemsEditor.dragToReorder")}
                       {...listeners}
                     >
                       <GripVertical className="h-3.5 w-3.5" />
@@ -128,7 +125,7 @@ export default function PackageItemsEditor({
         disabled={disabled}
       >
         <Plus className="h-4 w-4" />
-        Agregar elemento
+        {t("admin.packageItemsEditor.addItem")}
       </Button>
 
       {showForm && (

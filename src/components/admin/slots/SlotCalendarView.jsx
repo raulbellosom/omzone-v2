@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/common/Button";
+import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 
 const HOURS = Array.from({ length: 16 }, (_, i) => i + 6); // 6:00 – 21:00
@@ -20,8 +21,8 @@ function addDays(date, n) {
   return d;
 }
 
-function formatDay(date) {
-  return date.toLocaleDateString("es-MX", { weekday: "short", day: "numeric" });
+function formatDay(date, locale = "en-US") {
+  return date.toLocaleDateString(locale, { weekday: "short", day: "numeric" });
 }
 
 function formatHour(h) {
@@ -29,18 +30,29 @@ function formatHour(h) {
 }
 
 function isSameDay(a, b) {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
 }
 
 const STATUS_COLORS = {
   draft: "bg-amber-100 border-amber-300 text-amber-800",
   published: "bg-sage/20 border-sage text-sage-dark",
   full: "bg-red-100 border-red-300 text-red-800",
-  cancelled: "bg-charcoal/10 border-charcoal/20 text-charcoal-muted line-through",
+  cancelled:
+    "bg-charcoal/10 border-charcoal/20 text-charcoal-muted line-through",
 };
 
-export default function SlotCalendarView({ slots = [], experienceId, experienceNames = {} }) {
+export default function SlotCalendarView({
+  slots = [],
+  experienceId,
+  experienceNames = {},
+}) {
   const navigate = useNavigate();
+  const { t, lang } = useLanguage();
+  const locale = lang === "es" ? "es-MX" : "en-US";
   const [weekStart, setWeekStart] = useState(() => getWeekStart(new Date()));
 
   const days = useMemo(
@@ -74,7 +86,7 @@ export default function SlotCalendarView({ slots = [], experienceId, experienceN
     navigate(`/admin/experiences/${eid}/slots/${slot.$id}/edit`);
   }
 
-  const weekLabel = `${weekStart.toLocaleDateString("es-MX", { month: "short", day: "numeric" })} — ${addDays(weekStart, 6).toLocaleDateString("es-MX", { month: "short", day: "numeric", year: "numeric" })}`;
+  const weekLabel = `${weekStart.toLocaleDateString(locale, { month: "short", day: "numeric" })} — ${addDays(weekStart, 6).toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" })}`;
 
   return (
     <div className="space-y-3">
@@ -92,7 +104,7 @@ export default function SlotCalendarView({ slots = [], experienceId, experienceN
           </Button>
         </div>
         <Button variant="outline" size="sm" onClick={goToday}>
-          Hoy
+          {t("admin.slotCalendar.today")}
         </Button>
       </div>
 
@@ -112,7 +124,7 @@ export default function SlotCalendarView({ slots = [], experienceId, experienceN
                     isToday ? "text-sage font-semibold" : "text-charcoal-muted",
                   )}
                 >
-                  {formatDay(day)}
+                  {formatDay(day, locale)}
                 </div>
               );
             })}
@@ -146,15 +158,22 @@ export default function SlotCalendarView({ slots = [], experienceId, experienceN
                           "w-full text-left text-[10px] leading-tight px-1.5 py-1 rounded border mb-0.5 cursor-pointer truncate transition-opacity hover:opacity-80",
                           STATUS_COLORS[slot.status] || STATUS_COLORS.draft,
                         )}
-                        title={`${experienceNames[slot.experienceId] || ""} ${new Date(slot.startDatetime).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" })} — ${slot.bookedCount}/${slot.capacity}`}
+                        title={`${experienceNames[slot.experienceId] || ""} ${new Date(slot.startDatetime).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })} — ${slot.bookedCount}/${slot.capacity}`}
                       >
                         <span className="font-medium">
-                          {new Date(slot.startDatetime).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" })}
+                          {new Date(slot.startDatetime).toLocaleTimeString(
+                            locale,
+                            { hour: "2-digit", minute: "2-digit" },
+                          )}
                         </span>
                         {experienceNames[slot.experienceId] && (
-                          <span className="block truncate">{experienceNames[slot.experienceId]}</span>
+                          <span className="block truncate">
+                            {experienceNames[slot.experienceId]}
+                          </span>
                         )}
-                        <span className="block">{slot.bookedCount}/{slot.capacity}</span>
+                        <span className="block">
+                          {slot.bookedCount}/{slot.capacity}
+                        </span>
                       </button>
                     ))}
                   </div>
@@ -173,11 +192,19 @@ export default function SlotCalendarView({ slots = [], experienceId, experienceN
           if (daySlots.length === 0) return null;
           return (
             <div key={dayKey}>
-              <h3 className={cn(
-                "text-xs font-semibold uppercase tracking-wide mb-1",
-                isSameDay(day, new Date()) ? "text-sage" : "text-charcoal-muted",
-              )}>
-                {day.toLocaleDateString("es-MX", { weekday: "long", day: "numeric", month: "short" })}
+              <h3
+                className={cn(
+                  "text-xs font-semibold uppercase tracking-wide mb-1",
+                  isSameDay(day, new Date())
+                    ? "text-sage"
+                    : "text-charcoal-muted",
+                )}
+              >
+                {day.toLocaleDateString(locale, {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "short",
+                })}
               </h3>
               <div className="space-y-1">
                 {daySlots.map((slot) => (
@@ -190,14 +217,24 @@ export default function SlotCalendarView({ slots = [], experienceId, experienceN
                     )}
                   >
                     <span className="font-medium">
-                      {new Date(slot.startDatetime).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" })}
+                      {new Date(slot.startDatetime).toLocaleTimeString(locale, {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                       {" – "}
-                      {new Date(slot.endDatetime).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" })}
+                      {new Date(slot.endDatetime).toLocaleTimeString(locale, {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </span>
                     {experienceNames[slot.experienceId] && (
-                      <span className="ml-2">{experienceNames[slot.experienceId]}</span>
+                      <span className="ml-2">
+                        {experienceNames[slot.experienceId]}
+                      </span>
                     )}
-                    <span className="float-right">{slot.bookedCount}/{slot.capacity}</span>
+                    <span className="float-right">
+                      {slot.bookedCount}/{slot.capacity}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -205,7 +242,9 @@ export default function SlotCalendarView({ slots = [], experienceId, experienceN
           );
         })}
         {slots.length === 0 && (
-          <p className="text-sm text-charcoal-muted text-center py-4">Sin slots esta semana</p>
+          <p className="text-sm text-charcoal-muted text-center py-4">
+            {t("admin.slotCalendar.noSlotsThisWeek")}
+          </p>
         )}
       </div>
     </div>

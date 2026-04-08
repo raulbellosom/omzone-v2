@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Input } from "@/components/common/Input";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
+import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 
 function Field({ label, required, error, hint, children }) {
@@ -55,6 +56,7 @@ export default function AddonAssignmentForm({
   submitting,
 }) {
   const isEdit = !!initialData;
+  const { t } = useLanguage();
 
   const [form, setForm] = useState({
     addonId: initialData?.addonId || "",
@@ -77,14 +79,14 @@ export default function AddonAssignmentForm({
 
   function validate() {
     const e = {};
-    if (!form.addonId) e.addonId = "Selecciona un addon";
+    if (!form.addonId) e.addonId = t("admin.validation.selectAddon");
     if (!isEdit && form.addonId && existingAddonIds.includes(form.addonId)) {
-      e.addonId = "Este addon ya está asignado a esta experiencia";
+      e.addonId = t("admin.validation.addonAlreadyAssigned");
     }
     if (form.overridePrice !== "" && form.overridePrice !== null) {
       const price = parseFloat(form.overridePrice);
       if (isNaN(price) || price < 0) {
-        e.overridePrice = "El precio debe ser 0 o mayor";
+        e.overridePrice = t("admin.validation.priceZeroOrMore");
       }
     }
     return e;
@@ -120,10 +122,16 @@ export default function AddonAssignmentForm({
   return (
     <Card className="p-5 space-y-4 border-sage/40">
       <h3 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-        {isEdit ? "Editar asignación" : "Asignar addon"}
+        {isEdit
+          ? t("admin.addonAssignment.editTitle")
+          : t("admin.addonAssignment.assignTitle")}
       </h3>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Field label="Addon" required error={errors.addonId}>
+        <Field
+          label={t("admin.addonAssignment.addonLabel")}
+          required
+          error={errors.addonId}
+        >
           <select
             value={form.addonId}
             onChange={(e) => set("addonId", e.target.value)}
@@ -135,7 +143,7 @@ export default function AddonAssignmentForm({
               errors.addonId && "border-red-400",
             )}
           >
-            <option value="">Seleccionar addon...</option>
+            <option value="">{t("admin.addonAssignment.selectAddon")}</option>
             {selectableAddons.map((addon) => (
               <option key={addon.$id} value={addon.$id}>
                 {addon.name} — ${addon.basePrice} {addon.currency}
@@ -149,21 +157,21 @@ export default function AddonAssignmentForm({
             checked={form.isRequired}
             onChange={(v) => set("isRequired", v)}
             disabled={submitting}
-            label="Requerido (se incluye obligatoriamente)"
+            label={t("admin.addonAssignment.requiredToggle")}
           />
           <Toggle
             checked={form.isDefault}
             onChange={(v) => set("isDefault", v)}
             disabled={submitting}
-            label="Seleccionado por defecto en checkout"
+            label={t("admin.addonAssignment.defaultToggle")}
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field
-            label="Precio override"
+            label={t("admin.addonAssignment.overridePrice")}
             error={errors.overridePrice}
-            hint="Dejar vacío para usar precio base del addon"
+            hint={t("admin.addonAssignment.overridePriceHint")}
           >
             <Input
               type="number"
@@ -171,12 +179,15 @@ export default function AddonAssignmentForm({
               step="0.01"
               value={form.overridePrice}
               onChange={(e) => set("overridePrice", e.target.value)}
-              placeholder="Precio base"
+              placeholder={t("admin.addonAssignment.basePrice")}
               disabled={submitting}
               className={errors.overridePrice ? "border-red-400" : ""}
             />
           </Field>
-          <Field label="Orden" hint="Orden de aparición">
+          <Field
+            label={t("admin.addonAssignment.order")}
+            hint={t("admin.addonAssignment.orderHint")}
+          >
             <Input
               type="number"
               min={0}
@@ -193,12 +204,12 @@ export default function AddonAssignmentForm({
             {submitting ? (
               <span className="flex items-center gap-2">
                 <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                Guardando...
+                {t("admin.addonAssignment.saving")}
               </span>
             ) : isEdit ? (
-              "Guardar"
+              t("admin.addonAssignment.save")
             ) : (
-              "Asignar"
+              t("admin.addonAssignment.assign")
             )}
           </Button>
           {onCancel && (
@@ -209,7 +220,7 @@ export default function AddonAssignmentForm({
               onClick={onCancel}
               disabled={submitting}
             >
-              Cancelar
+              {t("admin.addonAssignment.cancel")}
             </Button>
           )}
         </div>

@@ -1048,14 +1048,6 @@
         "stripeLinkDesc": "A link is created that you can send to the customer for online payment."
       }
     },
-    "experienceTypes": {
-      "session": "Session",
-      "immersion": "Immersion",
-      "retreat": "Retreat",
-      "stay": "Stay",
-      "private": "Private",
-      "package": "Package"
-    },
     "experienceSaleModes": {
       "direct": "Direct",
       "request": "By request",
@@ -1216,6 +1208,205 @@
         "from": "From",
         "quote": "Quote"
       }
-    }
+    },
+    "validation": {
+      "nameRequired": "Name is required",
+      "publicNameRequired": "Public name is required",
+      "slugRequired": "Slug is required",
+      "slugInvalid": "Slug can only contain lowercase letters, numbers and hyphens",
+      "slugInUse": "This slug is already in use",
+      "typeRequired": "Type is required",
+      "saleModeRequired": "Sale mode is required",
+      "fulfillmentRequired": "Fulfillment type is required",
+      "priceTypeRequired": "Price type is required",
+      "pricePositive": "Price must be greater than 0",
+      "priceNotNegative": "Price cannot be negative",
+      "currencyRequired": "Currency is required",
+      "statusRequired": "Status is required",
+      "creditsMinOne": "Credits must be at least 1",
+      "endDateAfterStart": "End date must be after start date",
+      "registrationCloseBeforeStart": "Registration close must be before start date",
+      "selectAddon": "Select an addon",
+      "addonAlreadyAssigned": "This addon is already assigned to this experience",
+      "priceZeroOrMore": "Price must be 0 or greater",
+      "itemTypeRequired": "Item type is required",
+      "descriptionRequired": "Description is required",
+      "atLeastOneItemToPublish": "Add at least one item to publish the package"
+    },
+    "sections": {
+      "behavior": "Behavior",
+      "publication": "Publication",
+      "seo": "SEO",
+      "identity": "Identity",
+      "description": "Description",
+      "priceAndLogistics": "Price & logistics",
+      "includedItems": "Included items",
+      "statusAndOrder": "Status & order",
+      "coverImage": "Cover image",
+      "imageGallery": "Image gallery"
+    },
+    "addonAssignment": {
+      "editTitle": "Edit assignment",
+      "assignTitle": "Assign addon",
+      "addonLabel": "Addon",
+      "selectAddon": "Select addon…",
+      "requiredToggle": "Required (included automatically)",
+      "defaultToggle": "Selected by default in checkout",
+      "overridePrice": "Override price",
+      "overridePriceHint": "Leave empty to use addon base price",
+      "order": "Order",
+      "orderHint": "Display order",
+      "saving": "Saving…",
+      "save": "Save",
+      "assign": "Assign",
+      "cancel": "Cancel",
+      "tableAddon": "Addon",
+      "tableRequired": "Required",
+      "tableDefault": "Default",
+      "tableOverridePrice": "Override price",
+      "tableOrder": "Order",
+      "tableActions": "Actions",
+      "yes": "Yes",
+      "no": "No",
+      "basePrice": "Base price",
+      "editAriaLabel": "Edit assignment",
+      "deleteAriaLabel": "Delete assignment",
+      "editMobileLabel": "Edit",
+      "deleteMobileLabel": "Delete",
+      "confirmDelete": "Click again to confirm",
+      "confirmDeleteMobile": "Tap delete again to confirm",
+      "requiredBadge": "Required",
+      "defaultBadge": "Default"
+    },
+    "packageForm": {
+      "name": "Name",
+      "nameEs": "Name (ES)",
+      "slug": "Slug",
+      "slugHint": "Auto-generated, manually editable",
+      "descriptionEn": "Description (EN)",
+      "descriptionEs": "Description (ES)",
+      "totalPrice": "Total price",
+      "currency": "Currency",
+      "durationDays": "Duration (days)",
+      "durationHint": "Leave empty if the package has no fixed duration",
+      "capacity": "Capacity",
+      "capacityHint": "Maximum number of participants. Leave empty if not applicable",
+      "status": "Status",
+      "order": "Order",
+      "orderHint": "Display order (lower = first)",
+      "saving": "Saving…"
+    },
+    "packageItemForm": {
+      "editTitle": "Edit item",
+      "addTitle": "Add item",
+      "itemType": "Item type",
+      "selectPlaceholder": "Select…",
+      "descriptionEn": "Description (EN)",
+      "descriptionEs": "Description (ES)",
+      "quantity": "Quantity",
+      "quantityHint": "Leave empty if not applicable",
+      "order": "Order",
+      "orderHint": "Position in the list",
+      "cancel": "Cancel",
+      "saving": "Saving…",
+      "save": "Save",
+      "add": "Add",
+      "itemTypes": {
+        "experience": "Experience",
+        "addon": "Addon",
+        "benefit": "Benefit",
+        "accommodation": "Accommodation",
+        "meal": "Meal"
+      },
+      "referenceExperience": "Experience",
+      "referenceAddon": "Addon",
+      "referenceHint": "Link to an existing record (optional)",
+      "loadingOptions": "Loading…",
+      "noReference": "No specific reference"
+    },
+    "packageItemsEditor": {
+      "emptyState": "No items in this package yet. Add experiences, addons, benefits, accommodation or meals.",
+      "dragToReorder": "Drag to reorder",
+      "addItem": "Add item",
+      "addMore": "more"
+    },
+    "packagePreview": {
+      "days": "days",
+      "upToPeople": "Up to {count} people",
+      "includes": "Includes",
+      "noItemsYet": "No items included yet."
+    },
+    "packageStatuses": {
+      "draft": "Draft",
+      "published": "Published",
+      "archived": "Archived"
+    },
+    "slotResource": {
+      "title": "Assigned resources",
+      "assignResource": "Assign resource",
+      "noResources": "No resources registered in the system.",
+      "noAssignments": "No resources assigned to this slot.",
+      "resourceLabel": "Resource",
+      "selectResource": "Select resource",
+      "searchResource": "Search resource",
+      "noResourcesAvailable": "No resources available.",
+      "allResourcesAssigned": "All resources are already assigned",
+      "roleLabel": "Role",
+      "notesLabel": "Notes (optional)",
+      "notesPlaceholder": "Optional notes…",
+      "cancel": "Cancel",
+      "assigning": "Assigning…",
+      "assign": "Assign",
+      "deleteConfirm": "Delete this assignment?",
+      "deleteAriaLabel": "Delete assignment",
+      "roles": {
+        "lead": "Lead / Instructor",
+        "assistant": "Assistant",
+        "support": "Support",
+        "equipment": "Equipment"
+      },
+      "roleLabels": {
+        "lead": "Lead",
+        "assistant": "Assistant",
+        "support": "Support",
+        "equipment": "Equipment"
+      }
+    },
+    "slotCalendar": {
+      "noSlotsThisWeek": "No slots this week",
+      "today": "Today"
+    },
+    "slugInput": {
+      "hint": "Lowercase letters, numbers and hyphens only. Auto-generated from the public name."
+    },
+    "imageUpload": {
+      "uploading": "Uploading…",
+      "dropHere": "Drop here",
+      "selectOrDrag": "<span>Select</span> or drag here",
+      "select": "Select",
+      "orDragHere": "or drag here",
+      "removeImage": "Remove image",
+      "removeFile": "Remove file",
+      "uploadedImageAlt": "Uploaded image"
+    },
+    "gallery": {
+      "dragToReorder": "Drag to reorder",
+      "removeImage": "Remove image",
+      "moveLeft": "Move left",
+      "moveRight": "Move right",
+      "addImage": "Add image",
+      "addMore": "more",
+      "noImages": "No images"
+    },
+    "mediaPicker": {
+      "titleSingle": "Select image",
+      "titleMultiple": "Select images",
+      "addSelection": "Add selection",
+      "select": "Select",
+      "selectedCount": "{count} selected",
+      "noneSelected": "None selected",
+      "cancel": "Cancel"
+    },
+    "displayOrderHint": "Number used to sort in public listing"
   }
 }

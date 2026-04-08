@@ -75,7 +75,7 @@ export default function EditionForm({
   initialData,
   onSubmit,
   submitting,
-  submitLabel = "Guardar",
+  submitLabel,
 }) {
   const { t } = useLanguage();
   const init = initialData
@@ -105,18 +105,17 @@ export default function EditionForm({
 
   function validate() {
     const e = {};
-    if (!form.name.trim()) e.name = "El nombre es requerido";
-    if (!form.status) e.status = "El estado es requerido";
+    if (!form.name.trim()) e.name = t("admin.validation.nameRequired");
+    if (!form.status) e.status = t("admin.validation.statusRequired");
     if (form.startDate && form.endDate && form.endDate <= form.startDate) {
-      e.endDate = "La fecha de fin debe ser posterior a la de inicio";
+      e.endDate = t("admin.validation.endDateAfterStart");
     }
     if (
       form.registrationCloses &&
       form.startDate &&
       form.registrationCloses >= form.startDate
     ) {
-      e.registrationCloses =
-        "El cierre de registro debe ser anterior al inicio";
+      e.registrationCloses = t("admin.validation.registrationCloseBeforeStart");
     }
     return e;
   }
@@ -316,7 +315,7 @@ export default function EditionForm({
           {submitting ? (
             <span className="flex items-center gap-2">
               <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-              Guardando...
+              {t("admin.common.saving")}
             </span>
           ) : (
             submitLabel

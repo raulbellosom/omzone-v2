@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
+import { useLanguage } from "@/hooks/useLanguage";
 
 function formatPrice(amount, currency) {
   if (amount == null) return "—";
@@ -21,6 +22,7 @@ export default function AddonAssignmentTable({
   deleting,
 }) {
   const [confirmId, setConfirmId] = useState(null);
+  const { t } = useLanguage();
 
   function handleDelete(id) {
     if (confirmId === id) {
@@ -38,12 +40,24 @@ export default function AddonAssignmentTable({
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
-              <th className="px-4 py-3 font-medium">Addon</th>
-              <th className="px-4 py-3 font-medium text-center">Requerido</th>
-              <th className="px-4 py-3 font-medium text-center">Por defecto</th>
-              <th className="px-4 py-3 font-medium">Precio override</th>
-              <th className="px-4 py-3 font-medium text-center">Orden</th>
-              <th className="px-4 py-3 font-medium text-right">Acciones</th>
+              <th className="px-4 py-3 font-medium">
+                {t("admin.addonAssignment.tableAddon")}
+              </th>
+              <th className="px-4 py-3 font-medium text-center">
+                {t("admin.addonAssignment.tableRequired")}
+              </th>
+              <th className="px-4 py-3 font-medium text-center">
+                {t("admin.addonAssignment.tableDefault")}
+              </th>
+              <th className="px-4 py-3 font-medium">
+                {t("admin.addonAssignment.tableOverridePrice")}
+              </th>
+              <th className="px-4 py-3 font-medium text-center">
+                {t("admin.addonAssignment.tableOrder")}
+              </th>
+              <th className="px-4 py-3 font-medium text-right">
+                {t("admin.addonAssignment.tableActions")}
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-sand-dark">
@@ -59,22 +73,30 @@ export default function AddonAssignmentTable({
                   </td>
                   <td className="px-4 py-3 text-center">
                     {a.isRequired ? (
-                      <Badge variant="sage">Sí</Badge>
+                      <Badge variant="sage">
+                        {t("admin.addonAssignment.yes")}
+                      </Badge>
                     ) : (
-                      <span className="text-charcoal-muted">No</span>
+                      <span className="text-charcoal-muted">
+                        {t("admin.addonAssignment.no")}
+                      </span>
                     )}
                   </td>
                   <td className="px-4 py-3 text-center">
                     {a.isDefault ? (
-                      <Badge variant="warm">Sí</Badge>
+                      <Badge variant="warm">
+                        {t("admin.addonAssignment.yes")}
+                      </Badge>
                     ) : (
-                      <span className="text-charcoal-muted">No</span>
+                      <span className="text-charcoal-muted">
+                        {t("admin.addonAssignment.no")}
+                      </span>
                     )}
                   </td>
                   <td className="px-4 py-3 text-charcoal-muted">
                     {a.overridePrice != null
                       ? formatPrice(a.overridePrice, addon?.currency)
-                      : "Precio base"}
+                      : t("admin.addonAssignment.basePrice")}
                   </td>
                   <td className="px-4 py-3 text-center text-charcoal-muted">
                     {a.sortOrder ?? 0}
@@ -84,7 +106,7 @@ export default function AddonAssignmentTable({
                       <button
                         onClick={() => onEdit(a)}
                         className="p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
-                        aria-label="Editar asignación"
+                        aria-label={t("admin.addonAssignment.editAriaLabel")}
                       >
                         <Pencil className="h-4 w-4" />
                       </button>
@@ -92,14 +114,14 @@ export default function AddonAssignmentTable({
                         onClick={() => handleDelete(a.$id)}
                         disabled={deleting === a.$id}
                         className="p-1.5 rounded-lg text-charcoal-muted hover:text-red-600 hover:bg-red-50 transition-colors"
-                        aria-label="Eliminar asignación"
+                        aria-label={t("admin.addonAssignment.deleteAriaLabel")}
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
                     {confirmId === a.$id && (
                       <p className="text-xs text-red-600 mt-1">
-                        Clic de nuevo para confirmar
+                        {t("admin.addonAssignment.confirmDelete")}
                       </p>
                     )}
                   </td>
@@ -124,7 +146,7 @@ export default function AddonAssignmentTable({
                   <button
                     onClick={() => onEdit(a)}
                     className="p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
-                    aria-label="Editar"
+                    aria-label={t("admin.addonAssignment.editMobileLabel")}
                   >
                     <Pencil className="h-4 w-4" />
                   </button>
@@ -132,25 +154,35 @@ export default function AddonAssignmentTable({
                     onClick={() => handleDelete(a.$id)}
                     disabled={deleting === a.$id}
                     className="p-1.5 rounded-lg text-charcoal-muted hover:text-red-600 hover:bg-red-50 transition-colors"
-                    aria-label="Eliminar"
+                    aria-label={t("admin.addonAssignment.deleteMobileLabel")}
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-2 text-xs text-charcoal-muted">
-                {a.isRequired && <Badge variant="sage">Requerido</Badge>}
-                {a.isDefault && <Badge variant="warm">Por defecto</Badge>}
+                {a.isRequired && (
+                  <Badge variant="sage">
+                    {t("admin.addonAssignment.requiredBadge")}
+                  </Badge>
+                )}
+                {a.isDefault && (
+                  <Badge variant="warm">
+                    {t("admin.addonAssignment.defaultBadge")}
+                  </Badge>
+                )}
                 <span>
                   {a.overridePrice != null
                     ? formatPrice(a.overridePrice, addon?.currency)
-                    : "Precio base"}
+                    : t("admin.addonAssignment.basePrice")}
                 </span>
-                <span>Orden: {a.sortOrder ?? 0}</span>
+                <span>
+                  {t("admin.addonAssignment.tableOrder")}: {a.sortOrder ?? 0}
+                </span>
               </div>
               {confirmId === a.$id && (
                 <p className="text-xs text-red-600">
-                  Toca eliminar de nuevo para confirmar
+                  {t("admin.addonAssignment.confirmDeleteMobile")}
                 </p>
               )}
             </Card>

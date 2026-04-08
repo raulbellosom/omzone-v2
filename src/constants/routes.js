@@ -5,6 +5,8 @@ export const ROUTES = {
   EXPERIENCE: "/experiences/:slug",
   PACKAGES: "/packages",
   PACKAGE: "/packages/:slug",
+  PASSES: "/passes",
+  PASS: "/passes/:slug",
   ABOUT: "/about",
   CONTACT: "/contact",
   PRIVACY: "/privacy",

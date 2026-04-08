@@ -32,7 +32,7 @@ const CTA_CONFIG = {
     sublabelKey: "experienceCTA.viewPassesSub",
     icon: Ticket,
     variant: "outline",
-    action: "placeholder",
+    action: "passes",
   },
 };
 
@@ -55,6 +55,8 @@ export default function ExperienceCTA({
       navigate(
         `${ROUTES.CHECKOUT}?experienceId=${experience.$id}&slug=${experience.slug}${addonParam}`,
       );
+    } else if (config.action === "passes") {
+      navigate(`${ROUTES.PASSES}?experience=${experience.$id}`);
     }
     // Other modes are placeholders for now
   }

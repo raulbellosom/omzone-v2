@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useCallback } from "react";
-import { account, ID, functions } from "@/lib/appwrite";
+import { account, ID, functions, syncLocale } from "@/lib/appwrite";
 import { ROLES } from "@/constants/roles";
 
 const VERIFY_URL = `${window.location.origin}/verify-email`;
@@ -45,6 +45,7 @@ export function AuthProvider({ children }) {
     if (!authUser.emailVerification) {
       // Send a fresh verification email while we still have a session
       try {
+        syncLocale();
         await account.createVerification(VERIFY_URL);
       } catch {
         /* verification email may already be pending */
@@ -102,6 +103,7 @@ export function AuthProvider({ children }) {
     // 4. Send verification email BEFORE any phone update to avoid interference
     let verificationSent = true;
     try {
+      syncLocale();
       await account.createVerification(VERIFY_URL);
     } catch {
       verificationSent = false;
@@ -126,6 +128,7 @@ export function AuthProvider({ children }) {
 
   async function resendVerification() {
     // Caller must ensure there's an active session or handle the error
+    syncLocale();
     await account.createVerification(VERIFY_URL);
   }
 
@@ -133,6 +136,7 @@ export function AuthProvider({ children }) {
     // Create a temporary session, send verification, destroy session
     await account.createEmailPasswordSession(email, password);
     try {
+      syncLocale();
       await account.createVerification(VERIFY_URL);
     } finally {
       await account.deleteSession("current").catch(() => {});
@@ -154,6 +158,7 @@ export function AuthProvider({ children }) {
   }
 
   async function requestPasswordRecovery(email) {
+    syncLocale();
     await account.createRecovery(email, RECOVERY_URL);
   }
 

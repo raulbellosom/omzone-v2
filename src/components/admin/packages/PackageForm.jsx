@@ -7,13 +7,14 @@ import GalleryManager from "@/components/admin/media/GalleryManager";
 import PackageItemsEditor from "@/components/admin/packages/PackageItemsEditor";
 import { slugify, checkPackageSlugAvailable } from "@/hooks/usePackages";
 import AdminSelect from "@/components/common/AdminSelect";
+import { useLanguage } from "@/hooks/useLanguage";
 import env from "@/config/env";
 import { cn } from "@/lib/utils";
 
 const STATUS_OPTIONS = [
-  { value: "draft", label: "Borrador" },
-  { value: "published", label: "Publicado" },
-  { value: "archived", label: "Archivado" },
+  { value: "draft", i18nKey: "admin.packageStatuses.draft" },
+  { value: "published", i18nKey: "admin.packageStatuses.published" },
+  { value: "archived", i18nKey: "admin.packageStatuses.archived" },
 ];
 
 const STATUS_TRANSITIONS = {
@@ -80,8 +81,9 @@ export default function PackageForm({
   initialItems = [],
   onSubmit,
   submitting,
-  submitLabel = "Guardar",
+  submitLabel,
 }) {
+  const { t } = useLanguage();
   const init = initialData
     ? {
         ...EMPTY,
@@ -127,24 +129,24 @@ export default function PackageForm({
 
   async function validate() {
     const e = {};
-    if (!form.name.trim()) e.name = "El nombre es requerido";
+    if (!form.name.trim()) e.name = t("admin.validation.nameRequired");
     if (!form.slug.trim()) {
-      e.slug = "El slug es requerido";
+      e.slug = t("admin.validation.slugRequired");
     } else {
       const available = await checkPackageSlugAvailable(
         form.slug.trim(),
         initialData?.$id,
       );
-      if (!available) e.slug = "Este slug ya está en uso";
+      if (!available) e.slug = t("admin.validation.slugInUse");
     }
     const price = parseFloat(form.totalPrice);
     if (isNaN(price) || price < 0) {
-      e.totalPrice = "El precio no puede ser negativo";
+      e.totalPrice = t("admin.validation.priceNotNegative");
     }
-    if (!form.currency) e.currency = "La moneda es requerida";
-    if (!form.status) e.status = "El estado es requerido";
+    if (!form.currency) e.currency = t("admin.validation.currencyRequired");
+    if (!form.status) e.status = t("admin.validation.statusRequired");
     if (form.status === "published" && items.length === 0) {
-      e.items = "Agrega al menos un elemento para publicar el paquete";
+      e.items = t("admin.validation.atLeastOneItemToPublish");
     }
     return e;
   }
@@ -186,10 +188,14 @@ export default function PackageForm({
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Identidad
+          {t("admin.sections.identity")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Nombre" required error={errors.name}>
+          <Field
+            label={t("admin.packageForm.name")}
+            required
+            error={errors.name}
+          >
             <Input
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
@@ -198,7 +204,7 @@ export default function PackageForm({
               className={errors.name ? "border-red-400" : ""}
             />
           </Field>
-          <Field label="Nombre (ES)">
+          <Field label={t("admin.packageForm.nameEs")}>
             <Input
               value={form.nameEs}
               onChange={(e) => set("nameEs", e.target.value)}
@@ -208,10 +214,10 @@ export default function PackageForm({
           </Field>
         </div>
         <Field
-          label="Slug"
+          label={t("admin.packageForm.slug")}
           required
           error={errors.slug}
-          hint="Se genera automáticamente, editable manualmente"
+          hint={t("admin.packageForm.slugHint")}
         >
           <Input
             value={form.slug}
@@ -229,10 +235,10 @@ export default function PackageForm({
       {/* Descripción */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Descripción
+          {t("admin.sections.description")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Descripción (EN)">
+          <Field label={t("admin.packageForm.descriptionEn")}>
             <Textarea
               value={form.description}
               onChange={(v) => set("description", v)}
@@ -241,7 +247,7 @@ export default function PackageForm({
               rows={4}
             />
           </Field>
-          <Field label="Descripción (ES)">
+          <Field label={t("admin.packageForm.descriptionEs")}>
             <Textarea
               value={form.descriptionEs}
               onChange={(v) => set("descriptionEs", v)}
@@ -256,10 +262,14 @@ export default function PackageForm({
       {/* Precio y logística */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Precio y logística
+          {t("admin.sections.priceAndLogistics")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Precio total" required error={errors.totalPrice}>
+          <Field
+            label={t("admin.packageForm.totalPrice")}
+            required
+            error={errors.totalPrice}
+          >
             <Input
               type="number"
               min={0}
@@ -271,7 +281,11 @@ export default function PackageForm({
               className={errors.totalPrice ? "border-red-400" : ""}
             />
           </Field>
-          <Field label="Moneda" required error={errors.currency}>
+          <Field
+            label={t("admin.packageForm.currency")}
+            required
+            error={errors.currency}
+          >
             <AdminSelect
               value={form.currency}
               onChange={(v) => set("currency", v)}
@@ -281,8 +295,8 @@ export default function PackageForm({
             />
           </Field>
           <Field
-            label="Duración (días)"
-            hint="Dejar vacío si el paquete no tiene duración fija"
+            label={t("admin.packageForm.durationDays")}
+            hint={t("admin.packageForm.durationHint")}
           >
             <Input
               type="number"
@@ -294,8 +308,8 @@ export default function PackageForm({
             />
           </Field>
           <Field
-            label="Capacidad"
-            hint="Número máximo de participantes. Dejar vacío si no aplica"
+            label={t("admin.packageForm.capacity")}
+            hint={t("admin.packageForm.capacityHint")}
           >
             <Input
               type="number"
@@ -312,7 +326,7 @@ export default function PackageForm({
       {/* Elementos del paquete */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Elementos incluidos
+          {t("admin.sections.includedItems")}
         </h2>
         {errors.items && <p className="text-xs text-red-600">{errors.items}</p>}
         <PackageItemsEditor
@@ -325,10 +339,14 @@ export default function PackageForm({
       {/* Estado y orden */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Estado y orden
+          {t("admin.sections.statusAndOrder")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Estado" required error={errors.status}>
+          <Field
+            label={t("admin.packageForm.status")}
+            required
+            error={errors.status}
+          >
             <AdminSelect
               value={form.status}
               onChange={(v) => set("status", v)}
@@ -337,12 +355,15 @@ export default function PackageForm({
                   STATUS_TRANSITIONS[initialData?.status || "draft"] ||
                   STATUS_TRANSITIONS.draft
                 ).includes(o.value),
-              )}
+              ).map((o) => ({ ...o, label: t(o.i18nKey) }))}
               disabled={isDisabled}
               error={errors.status}
             />
           </Field>
-          <Field label="Orden" hint="Orden de aparición (menor = primero)">
+          <Field
+            label={t("admin.packageForm.order")}
+            hint={t("admin.packageForm.orderHint")}
+          >
             <Input
               type="number"
               min={0}
@@ -358,7 +379,7 @@ export default function PackageForm({
       {/* Imagen de portada */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Imagen de portada
+          {t("admin.sections.coverImage")}
         </h2>
         <div className="max-w-lg">
           <ImageUpload
@@ -374,7 +395,7 @@ export default function PackageForm({
       {/* Galería de imágenes */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Galería de imágenes
+          {t("admin.sections.imageGallery")}
         </h2>
         <GalleryManager
           value={form.galleryImageIds}
@@ -391,10 +412,10 @@ export default function PackageForm({
           {submitting ? (
             <span className="flex items-center gap-2">
               <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-              Guardando...
+              {t("admin.packageForm.saving")}
             </span>
           ) : (
-            submitLabel
+            submitLabel || t("admin.common.save")
           )}
         </Button>
       </div>

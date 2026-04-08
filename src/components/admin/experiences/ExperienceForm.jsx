@@ -144,7 +144,7 @@ export default function ExperienceForm({
   initialData,
   onSubmit,
   submitting,
-  submitLabel = "Guardar",
+  submitLabel,
 }) {
   const { t } = useLanguage();
   const [form, setForm] = useState(() => ({
@@ -182,21 +182,21 @@ export default function ExperienceForm({
 
   async function validate() {
     const e = {};
-    if (!form.name.trim()) e.name = "El nombre interno es requerido";
+    if (!form.name.trim()) e.name = t("admin.validation.nameRequired");
     if (!form.publicName.trim())
-      e.publicName = "El nombre público es requerido";
+      e.publicName = t("admin.validation.publicNameRequired");
     if (!form.slug.trim()) {
-      e.slug = "El slug es requerido";
+      e.slug = t("admin.validation.slugRequired");
     } else if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(form.slug)) {
-      e.slug = "El slug solo puede contener minúsculas, números y guiones";
+      e.slug = t("admin.validation.slugInvalid");
     } else {
       const available = await checkSlugAvailable(form.slug, initialData?.$id);
-      if (!available) e.slug = "Este slug ya está en uso";
+      if (!available) e.slug = t("admin.validation.slugInUse");
     }
-    if (!form.type) e.type = "El tipo es requerido";
-    if (!form.saleMode) e.saleMode = "El modo de venta es requerido";
+    if (!form.type) e.type = t("admin.validation.typeRequired");
+    if (!form.saleMode) e.saleMode = t("admin.validation.saleModeRequired");
     if (!form.fulfillmentType)
-      e.fulfillmentType = "El fulfillment es requerido";
+      e.fulfillmentType = t("admin.validation.fulfillmentRequired");
     return e;
   }
 
@@ -443,7 +443,7 @@ export default function ExperienceForm({
       {/* Comportamiento */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Comportamiento
+          {t("admin.sections.behavior")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Toggle
@@ -500,7 +500,7 @@ export default function ExperienceForm({
       {/* Publicación */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          Publicación
+          {t("admin.sections.publication")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label={t("admin.experienceForm.status")} required>
@@ -516,7 +516,7 @@ export default function ExperienceForm({
           </Field>
           <Field
             label={t("admin.experienceForm.displayOrder")}
-            hint="Número para ordenar en listado público"
+            hint={t("admin.displayOrderHint")}
           >
             <Input
               type="number"
@@ -570,7 +570,7 @@ export default function ExperienceForm({
           {submitting ? (
             <span className="flex items-center gap-2">
               <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-              Guardando...
+              {t("admin.common.saving")}
             </span>
           ) : (
             submitLabel

@@ -52,7 +52,7 @@ const env = {
   collectionPublications:
     import.meta.env.VITE_APPWRITE_COLLECTION_PUBLICATIONS || "publications",
   collectionSections:
-    import.meta.env.VITE_APPWRITE_COLLECTION_SECTIONS || "publication_sections",
+    import.meta.env.VITE_APPWRITE_COLLECTION_SECTIONS || "sections",
   collectionTags: import.meta.env.VITE_APPWRITE_COLLECTION_TAGS || "tags",
   collectionExperienceTags:
     import.meta.env.VITE_APPWRITE_COLLECTION_EXPERIENCE_TAGS ||

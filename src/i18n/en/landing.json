@@ -321,5 +321,43 @@
     "home": "Home",
     "relatedExperience": "Related Experience",
     "exploreExperience": "Explore Experience"
+  },
+  "passes": {
+    "pageTitle": "Wellness Passes",
+    "pageDescription": "Multi-session wellness passes for transformative experiences in Puerto Vallarta. Save on sessions, immersions and retreats.",
+    "heroTitle": "Wellness Passes",
+    "heroSubtitle": "Unlock multiple sessions with a single pass — your gateway to deeper transformation and meaningful savings.",
+    "allPasses": "All Passes",
+    "credits": "{count} credits",
+    "validDays": "{days} days",
+    "getPass": "Get Pass",
+    "buyPass": "Buy This Pass",
+    "passPrice": "Pass price",
+    "eligibleExperiences": "Eligible Experiences",
+    "errorLoading": "Could not load passes. Please try again.",
+    "tryAgain": "Try Again",
+    "emptyTitle": "No passes available",
+    "emptySubtitle": "Check back soon for new wellness passes."
+  },
+  "publications": {
+    "pageTitle": "Stories & Insights",
+    "pageDescription": "Explore wellness stories, guides and insights from OMZONE in Puerto Vallarta — breathwork, sound healing, retreats and more.",
+    "heroTitle": "Stories & Insights",
+    "heroSubtitle": "Dive into the world of mindful living — stories, guides and inspiration from our wellness community.",
+    "allCategories": "All",
+    "readMore": "Read more",
+    "errorLoading": "Could not load publications. Please try again.",
+    "tryAgain": "Try Again",
+    "emptyTitle": "No stories yet",
+    "emptySubtitle": "We're crafting something beautiful. Check back soon.",
+    "noFilterResults": "No publications in this category.",
+    "clearFilter": "Show all",
+    "category": {
+      "blog": "Blog",
+      "highlight": "Highlight",
+      "landing": "Landing",
+      "institutional": "About",
+      "faq": "FAQ"
+    }
   }
 }

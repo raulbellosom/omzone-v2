@@ -82,7 +82,7 @@ export default function PassForm({
   initialData,
   onSubmit,
   submitting,
-  submitLabel = "Guardar",
+  submitLabel,
 }) {
   const { t } = useLanguage();
   const init = initialData
@@ -120,26 +120,26 @@ export default function PassForm({
 
   async function validate() {
     const e = {};
-    if (!form.name.trim()) e.name = "El nombre es requerido";
+    if (!form.name.trim()) e.name = t("admin.validation.nameRequired");
     if (!form.slug.trim()) {
-      e.slug = "El slug es requerido";
+      e.slug = t("admin.validation.slugRequired");
     } else {
       const available = await checkPassSlugAvailable(
         form.slug.trim(),
         initialData?.$id,
       );
-      if (!available) e.slug = "Este slug ya está en uso";
+      if (!available) e.slug = t("admin.validation.slugInUse");
     }
     const credits = parseInt(form.totalCredits);
     if (isNaN(credits) || credits < 1) {
-      e.totalCredits = "Los créditos deben ser al menos 1";
+      e.totalCredits = t("admin.validation.creditsMinOne");
     }
     const price = parseFloat(form.basePrice);
     if (isNaN(price) || price <= 0) {
-      e.basePrice = "El precio debe ser mayor a 0";
+      e.basePrice = t("admin.validation.pricePositive");
     }
-    if (!form.currency) e.currency = "La moneda es requerida";
-    if (!form.status) e.status = "El estado es requerido";
+    if (!form.currency) e.currency = t("admin.validation.currencyRequired");
+    if (!form.status) e.status = t("admin.validation.statusRequired");
     return e;
   }
 

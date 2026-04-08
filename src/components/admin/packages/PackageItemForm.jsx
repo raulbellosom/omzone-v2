@@ -4,17 +4,24 @@ import env from "@/config/env";
 import { Input } from "@/components/common/Input";
 import { Button } from "@/components/common/Button";
 import AdminSelect from "@/components/common/AdminSelect";
+import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 
 const DB = env.appwriteDatabaseId;
 
 const ITEM_TYPES = [
-  { value: "experience", label: "Experiencia" },
-  { value: "addon", label: "Addon" },
-  { value: "benefit", label: "Beneficio" },
-  { value: "accommodation", label: "Hospedaje" },
-  { value: "meal", label: "Alimentación" },
+  {
+    value: "experience",
+    i18nKey: "admin.packageItemForm.itemTypes.experience",
+  },
+  { value: "addon", i18nKey: "admin.packageItemForm.itemTypes.addon" },
+  { value: "benefit", i18nKey: "admin.packageItemForm.itemTypes.benefit" },
+  {
+    value: "accommodation",
+    i18nKey: "admin.packageItemForm.itemTypes.accommodation",
+  },
+  { value: "meal", i18nKey: "admin.packageItemForm.itemTypes.meal" },
 ];
 
 function Textarea({ value, onChange, placeholder, disabled, rows = 3, error }) {
@@ -50,6 +57,7 @@ function Field({ label, required, error, hint, children }) {
 }
 
 function ReferencePicker({ type, value, onChange, disabled }) {
+  const { t } = useLanguage();
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -77,8 +85,12 @@ function ReferencePicker({ type, value, onChange, disabled }) {
 
   return (
     <Field
-      label={type === "experience" ? "Experiencia" : "Addon"}
-      hint="Vincula a un registro existente (opcional)"
+      label={
+        type === "experience"
+          ? t("admin.packageItemForm.referenceExperience")
+          : t("admin.packageItemForm.referenceAddon")
+      }
+      hint={t("admin.packageItemForm.referenceHint")}
     >
       <select
         value={value}
@@ -91,7 +103,9 @@ function ReferencePicker({ type, value, onChange, disabled }) {
         )}
       >
         <option value="">
-          {loading ? "Cargando..." : "Sin referencia específica"}
+          {loading
+            ? t("admin.packageItemForm.loadingOptions")
+            : t("admin.packageItemForm.noReference")}
         </option>
         {options.map((o) => (
           <option key={o.value} value={o.value}>
@@ -118,6 +132,7 @@ export default function PackageItemForm({
   onCancel,
   submitting,
 }) {
+  const { t } = useLanguage();
   const init = initialData
     ? {
         itemType: initialData.itemType || "",
@@ -146,8 +161,9 @@ export default function PackageItemForm({
 
   function validate() {
     const e = {};
-    if (!form.itemType) e.itemType = "El tipo es requerido";
-    if (!form.description.trim()) e.description = "La descripción es requerida";
+    if (!form.itemType) e.itemType = t("admin.validation.itemTypeRequired");
+    if (!form.description.trim())
+      e.description = t("admin.validation.descriptionRequired");
     return e;
   }
 
@@ -178,7 +194,9 @@ export default function PackageItemForm({
       <div className="relative w-full max-w-lg rounded-2xl bg-white shadow-xl">
         <div className="flex items-center justify-between border-b border-sand-dark px-5 py-4">
           <h3 className="text-base font-semibold text-charcoal">
-            {initialData ? "Editar elemento" : "Agregar elemento"}
+            {initialData
+              ? t("admin.packageItemForm.editTitle")
+              : t("admin.packageItemForm.addTitle")}
           </h3>
           <button
             onClick={onCancel}
@@ -189,15 +207,19 @@ export default function PackageItemForm({
         </div>
 
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
-          <Field label="Tipo de elemento" required error={errors.itemType}>
+          <Field
+            label={t("admin.packageItemForm.itemType")}
+            required
+            error={errors.itemType}
+          >
             <AdminSelect
               value={form.itemType}
               onChange={(v) => {
                 set("itemType", v);
                 if (v !== "experience" && v !== "addon") set("referenceId", "");
               }}
-              options={ITEM_TYPES}
-              placeholder="Seleccionar..."
+              options={ITEM_TYPES.map((o) => ({ ...o, label: t(o.i18nKey) }))}
+              placeholder={t("admin.packageItemForm.selectPlaceholder")}
               disabled={isDisabled}
               error={errors.itemType}
             />
@@ -211,7 +233,11 @@ export default function PackageItemForm({
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Field label="Descripción (EN)" required error={errors.description}>
+            <Field
+              label={t("admin.packageItemForm.descriptionEn")}
+              required
+              error={errors.description}
+            >
               <Textarea
                 value={form.description}
                 onChange={(v) => set("description", v)}
@@ -221,7 +247,7 @@ export default function PackageItemForm({
                 error={errors.description}
               />
             </Field>
-            <Field label="Descripción (ES)">
+            <Field label={t("admin.packageItemForm.descriptionEs")}>
               <Textarea
                 value={form.descriptionEs}
                 onChange={(v) => set("descriptionEs", v)}
@@ -233,7 +259,10 @@ export default function PackageItemForm({
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <Field label="Cantidad" hint="Dejar vacío si no aplica">
+            <Field
+              label={t("admin.packageItemForm.quantity")}
+              hint={t("admin.packageItemForm.quantityHint")}
+            >
               <Input
                 type="number"
                 min={1}
@@ -243,7 +272,10 @@ export default function PackageItemForm({
                 disabled={isDisabled}
               />
             </Field>
-            <Field label="Orden" hint="Posición en la lista">
+            <Field
+              label={t("admin.packageItemForm.order")}
+              hint={t("admin.packageItemForm.orderHint")}
+            >
               <Input
                 type="number"
                 min={0}
@@ -263,14 +295,14 @@ export default function PackageItemForm({
               onClick={onCancel}
               disabled={isDisabled}
             >
-              Cancelar
+              {t("admin.packageItemForm.cancel")}
             </Button>
             <Button type="submit" size="sm" disabled={isDisabled}>
               {submitting
-                ? "Guardando..."
+                ? t("admin.packageItemForm.saving")
                 : initialData
-                  ? "Guardar"
-                  : "Agregar"}
+                  ? t("admin.packageItemForm.save")
+                  : t("admin.packageItemForm.add")}
             </Button>
           </div>
         </form>

@@ -1048,14 +1048,6 @@
         "stripeLinkDesc": "Se crea un link que puedes enviar al cliente para que pague en línea."
       }
     },
-    "experienceTypes": {
-      "session": "Sesión",
-      "immersion": "Inmersión",
-      "retreat": "Retiro",
-      "stay": "Estancia",
-      "private": "Privada",
-      "package": "Paquete"
-    },
     "experienceSaleModes": {
       "direct": "Directa",
       "request": "Por solicitud",
@@ -1216,6 +1208,205 @@
         "from": "Desde",
         "quote": "Cotización"
       }
-    }
+    },
+    "validation": {
+      "nameRequired": "El nombre es requerido",
+      "publicNameRequired": "El nombre público es requerido",
+      "slugRequired": "El slug es requerido",
+      "slugInvalid": "El slug solo puede contener minúsculas, números y guiones",
+      "slugInUse": "Este slug ya está en uso",
+      "typeRequired": "El tipo es requerido",
+      "saleModeRequired": "El modo de venta es requerido",
+      "fulfillmentRequired": "El fulfillment es requerido",
+      "priceTypeRequired": "El tipo de precio es requerido",
+      "pricePositive": "El precio debe ser mayor a 0",
+      "priceNotNegative": "El precio no puede ser negativo",
+      "currencyRequired": "La moneda es requerida",
+      "statusRequired": "El estado es requerido",
+      "creditsMinOne": "Los créditos deben ser al menos 1",
+      "endDateAfterStart": "La fecha de fin debe ser posterior a la de inicio",
+      "registrationCloseBeforeStart": "El cierre de registro debe ser anterior al inicio",
+      "selectAddon": "Selecciona un addon",
+      "addonAlreadyAssigned": "Este addon ya está asignado a esta experiencia",
+      "priceZeroOrMore": "El precio debe ser 0 o mayor",
+      "itemTypeRequired": "El tipo es requerido",
+      "descriptionRequired": "La descripción es requerida",
+      "atLeastOneItemToPublish": "Agrega al menos un elemento para publicar el paquete"
+    },
+    "sections": {
+      "behavior": "Comportamiento",
+      "publication": "Publicación",
+      "seo": "SEO",
+      "identity": "Identidad",
+      "description": "Descripción",
+      "priceAndLogistics": "Precio y logística",
+      "includedItems": "Elementos incluidos",
+      "statusAndOrder": "Estado y orden",
+      "coverImage": "Imagen de portada",
+      "imageGallery": "Galería de imágenes"
+    },
+    "addonAssignment": {
+      "editTitle": "Editar asignación",
+      "assignTitle": "Asignar addon",
+      "addonLabel": "Addon",
+      "selectAddon": "Seleccionar addon…",
+      "requiredToggle": "Requerido (se incluye obligatoriamente)",
+      "defaultToggle": "Seleccionado por defecto en checkout",
+      "overridePrice": "Precio override",
+      "overridePriceHint": "Dejar vacío para usar precio base del addon",
+      "order": "Orden",
+      "orderHint": "Orden de aparición",
+      "saving": "Guardando…",
+      "save": "Guardar",
+      "assign": "Asignar",
+      "cancel": "Cancelar",
+      "tableAddon": "Addon",
+      "tableRequired": "Requerido",
+      "tableDefault": "Por defecto",
+      "tableOverridePrice": "Precio override",
+      "tableOrder": "Orden",
+      "tableActions": "Acciones",
+      "yes": "Sí",
+      "no": "No",
+      "basePrice": "Precio base",
+      "editAriaLabel": "Editar asignación",
+      "deleteAriaLabel": "Eliminar asignación",
+      "editMobileLabel": "Editar",
+      "deleteMobileLabel": "Eliminar",
+      "confirmDelete": "Clic de nuevo para confirmar",
+      "confirmDeleteMobile": "Toca eliminar de nuevo para confirmar",
+      "requiredBadge": "Requerido",
+      "defaultBadge": "Por defecto"
+    },
+    "packageForm": {
+      "name": "Nombre",
+      "nameEs": "Nombre (ES)",
+      "slug": "Slug",
+      "slugHint": "Se genera automáticamente, editable manualmente",
+      "descriptionEn": "Descripción (EN)",
+      "descriptionEs": "Descripción (ES)",
+      "totalPrice": "Precio total",
+      "currency": "Moneda",
+      "durationDays": "Duración (días)",
+      "durationHint": "Dejar vacío si el paquete no tiene duración fija",
+      "capacity": "Capacidad",
+      "capacityHint": "Número máximo de participantes. Dejar vacío si no aplica",
+      "status": "Estado",
+      "order": "Orden",
+      "orderHint": "Orden de aparición (menor = primero)",
+      "saving": "Guardando…"
+    },
+    "packageItemForm": {
+      "editTitle": "Editar elemento",
+      "addTitle": "Agregar elemento",
+      "itemType": "Tipo de elemento",
+      "selectPlaceholder": "Seleccionar…",
+      "descriptionEn": "Descripción (EN)",
+      "descriptionEs": "Descripción (ES)",
+      "quantity": "Cantidad",
+      "quantityHint": "Dejar vacío si no aplica",
+      "order": "Orden",
+      "orderHint": "Posición en la lista",
+      "cancel": "Cancelar",
+      "saving": "Guardando…",
+      "save": "Guardar",
+      "add": "Agregar",
+      "itemTypes": {
+        "experience": "Experiencia",
+        "addon": "Addon",
+        "benefit": "Beneficio",
+        "accommodation": "Hospedaje",
+        "meal": "Alimentación"
+      },
+      "referenceExperience": "Experiencia",
+      "referenceAddon": "Addon",
+      "referenceHint": "Vincula a un registro existente (opcional)",
+      "loadingOptions": "Cargando…",
+      "noReference": "Sin referencia específica"
+    },
+    "packageItemsEditor": {
+      "emptyState": "Aún no hay elementos en este paquete. Agrega experiencias, addons, beneficios, hospedaje o alimentación.",
+      "dragToReorder": "Arrastrar para reordenar",
+      "addItem": "Agregar elemento",
+      "addMore": "más"
+    },
+    "packagePreview": {
+      "days": "días",
+      "upToPeople": "Hasta {count} personas",
+      "includes": "Incluye",
+      "noItemsYet": "Sin elementos incluidos aún."
+    },
+    "packageStatuses": {
+      "draft": "Borrador",
+      "published": "Publicado",
+      "archived": "Archivado"
+    },
+    "slotResource": {
+      "title": "Recursos asignados",
+      "assignResource": "Asignar recurso",
+      "noResources": "No hay recursos registrados en el sistema.",
+      "noAssignments": "Sin recursos asignados a este slot.",
+      "resourceLabel": "Recurso",
+      "selectResource": "Seleccionar recurso",
+      "searchResource": "Buscar recurso",
+      "noResourcesAvailable": "No hay recursos disponibles.",
+      "allResourcesAssigned": "Todos los recursos ya están asignados",
+      "roleLabel": "Rol",
+      "notesLabel": "Notas (opcional)",
+      "notesPlaceholder": "Notas opcionales…",
+      "cancel": "Cancelar",
+      "assigning": "Asignando…",
+      "assign": "Asignar",
+      "deleteConfirm": "¿Eliminar esta asignación?",
+      "deleteAriaLabel": "Eliminar asignación",
+      "roles": {
+        "lead": "Lead / Instructor",
+        "assistant": "Asistente",
+        "support": "Soporte",
+        "equipment": "Equipo"
+      },
+      "roleLabels": {
+        "lead": "Lead",
+        "assistant": "Asistente",
+        "support": "Soporte",
+        "equipment": "Equipo"
+      }
+    },
+    "slotCalendar": {
+      "noSlotsThisWeek": "Sin slots esta semana",
+      "today": "Hoy"
+    },
+    "slugInput": {
+      "hint": "Solo minúsculas, números y guiones. Se genera automáticamente desde el nombre público."
+    },
+    "imageUpload": {
+      "uploading": "Subiendo…",
+      "dropHere": "Suelta aquí",
+      "selectOrDrag": "<span>Seleccionar</span> o arrastra aquí",
+      "select": "Seleccionar",
+      "orDragHere": "o arrastra aquí",
+      "removeImage": "Eliminar imagen",
+      "removeFile": "Eliminar archivo",
+      "uploadedImageAlt": "Imagen subida"
+    },
+    "gallery": {
+      "dragToReorder": "Arrastrar para reordenar",
+      "removeImage": "Eliminar imagen",
+      "moveLeft": "Mover izquierda",
+      "moveRight": "Mover derecha",
+      "addImage": "Agregar imagen",
+      "addMore": "más",
+      "noImages": "Sin imágenes"
+    },
+    "mediaPicker": {
+      "titleSingle": "Seleccionar imagen",
+      "titleMultiple": "Seleccionar imágenes",
+      "addSelection": "Agregar selección",
+      "select": "Seleccionar",
+      "selectedCount": "{count} seleccionada(s)",
+      "noneSelected": "Ninguna seleccionada",
+      "cancel": "Cancelar"
+    },
+    "displayOrderHint": "Número para ordenar en listado público"
   }
 }

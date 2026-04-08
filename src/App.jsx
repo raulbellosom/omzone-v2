@@ -31,6 +31,13 @@ const PackageDetailPage = lazy(
   () => import("@/pages/public/PackageDetailPage"),
 );
 const PublicationPage = lazy(() => import("@/pages/public/PublicationPage"));
+const PassesListPage = lazy(() => import("@/pages/public/PassesListPage"));
+const PublicPassDetailPage = lazy(
+  () => import("@/pages/public/PassDetailPage"),
+);
+const PublicationsListPage = lazy(
+  () => import("@/pages/public/PublicationsListPage"),
+);
 const CheckoutPage = lazy(() => import("@/pages/public/CheckoutPage"));
 const CheckoutSuccessPage = lazy(
   () => import("@/pages/public/CheckoutSuccessPage"),
@@ -204,6 +211,9 @@ export default function App() {
               element={<ExperienceDetailPage />}
             />
             <Route path="/packages/:slug" element={<PackageDetailPage />} />
+            <Route path="/passes" element={<PassesListPage />} />
+            <Route path="/passes/:slug" element={<PublicPassDetailPage />} />
+            <Route path="/publications" element={<PublicationsListPage />} />
             <Route path="/p/:slug" element={<PublicationPage />} />
             <Route path="/forbidden" element={<ForbiddenPage />} />
             <Route path="*" element={<NotFoundPage />} />

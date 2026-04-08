@@ -321,5 +321,43 @@
     "home": "Inicio",
     "relatedExperience": "Experiencia Relacionada",
     "exploreExperience": "Explorar Experiencia"
+  },
+  "passes": {
+    "pageTitle": "Pases de Bienestar",
+    "pageDescription": "Pases multi-sesión de bienestar para experiencias transformadoras en Puerto Vallarta. Ahorra en sesiones, inmersiones y retiros.",
+    "heroTitle": "Pases de Bienestar",
+    "heroSubtitle": "Desbloquea múltiples sesiones con un solo pase — tu puerta a una transformación más profunda y ahorros significativos.",
+    "allPasses": "Todos los Pases",
+    "credits": "{count} créditos",
+    "validDays": "{days} días",
+    "getPass": "Obtener Pase",
+    "buyPass": "Comprar Este Pase",
+    "passPrice": "Precio del pase",
+    "eligibleExperiences": "Experiencias Elegibles",
+    "errorLoading": "No se pudieron cargar los pases. Intenta de nuevo.",
+    "tryAgain": "Reintentar",
+    "emptyTitle": "Sin pases disponibles",
+    "emptySubtitle": "Vuelve pronto para nuevos pases de bienestar."
+  },
+  "publications": {
+    "pageTitle": "Historias e Insights",
+    "pageDescription": "Explora historias, guías e insights de bienestar de OMZONE en Puerto Vallarta — breathwork, sanación sonora, retiros y más.",
+    "heroTitle": "Historias e Insights",
+    "heroSubtitle": "Sumérgete en el mundo del vivir consciente — historias, guías e inspiración de nuestra comunidad de bienestar.",
+    "allCategories": "Todas",
+    "readMore": "Leer más",
+    "errorLoading": "No se pudieron cargar las publicaciones. Intenta de nuevo.",
+    "tryAgain": "Reintentar",
+    "emptyTitle": "Aún no hay historias",
+    "emptySubtitle": "Estamos creando algo hermoso. Vuelve pronto.",
+    "noFilterResults": "No hay publicaciones en esta categoría.",
+    "clearFilter": "Ver todas",
+    "category": {
+      "blog": "Blog",
+      "highlight": "Destacado",
+      "landing": "Landing",
+      "institutional": "Institucional",
+      "faq": "FAQ"
+    }
   }
 }
