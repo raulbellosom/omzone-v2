@@ -32,7 +32,7 @@ export default function SlugInput({ value, onChange, error, disabled }) {
           value={value}
           onChange={handleChange}
           disabled={disabled}
-          placeholder="mi-experiencia-slug"
+          placeholder={t("admin.placeholders.slugInput")}
           className={cn(
             error && "border-red-400 focus:border-red-400 focus:ring-red-100",
           )}

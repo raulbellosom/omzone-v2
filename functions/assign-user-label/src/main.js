@@ -46,6 +46,11 @@ const DB = process.env.APPWRITE_DATABASE_ID || "omzone_db";
 const COLLECTION_PROFILES =
   process.env.APPWRITE_COLLECTION_USER_PROFILES || "user_profiles";
 
+function logConfig(log) {
+  log(`Config: DB=${DB}, COLLECTION_PROFILES=${COLLECTION_PROFILES}`);
+  log(`Env raw: DB=${process.env.APPWRITE_DATABASE_ID ?? '(undefined)'}, COL=${process.env.APPWRITE_COLLECTION_USER_PROFILES ?? '(undefined)'}`);
+}
+
 function initClient(req) {
   return new Client()
     .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
@@ -107,25 +112,32 @@ async function handleSignupEvent({ req, res, log, error }) {
     const displayName = userName || (userEmail ? userEmail.split("@")[0] : "");
 
     // Create user_profiles document — $id = Auth userId
-    await db.createDocument(
-      DB,
-      COLLECTION_PROFILES,
-      userId,
-      {
-        displayName,
-        firstName,
-        lastName,
-        language: "es",
-      },
-      [
-        `read("user:${userId}")`,
-        `update("user:${userId}")`,
-        `read("label:admin")`,
-        `update("label:admin")`,
-      ],
-    );
-
-    log(`Profile created for user ${userId}`);
+    try {
+      const created = await db.createDocument(
+        DB,
+        COLLECTION_PROFILES,
+        userId,
+        {
+          displayName,
+          firstName,
+          lastName,
+          language: "es",
+        },
+        [
+          `read("user:${userId}")`,
+          `update("user:${userId}")`,
+          `read("label:admin")`,
+          `update("label:admin")`,
+        ],
+      );
+      log(`Profile created for user ${userId} (docId=${created.$id})`);
+    } catch (createErr) {
+      if (createErr.code === 409) {
+        log(`Profile already exists (race condition) for ${userId} — skipping`);
+      } else {
+        throw createErr;
+      }
+    }
 
     // Read current labels and merge with 'client'
     const user = await users.get(userId);
@@ -206,7 +218,7 @@ async function handleEnsureProfile({ req, res, log, error }) {
     const displayName = userName || (userEmail ? userEmail.split("@")[0] : "");
 
     try {
-      await db.createDocument(
+      const created = await db.createDocument(
         DB,
         COLLECTION_PROFILES,
         userId,
@@ -218,7 +230,15 @@ async function handleEnsureProfile({ req, res, log, error }) {
           `update("label:admin")`,
         ],
       );
-      log(`ensure-profile: created profile for ${userId}`);
+      log(`ensure-profile: created profile for ${userId} (docId=${created.$id}, db=${created.$databaseId}, col=${created.$collectionId})`);
+
+      // Verify the document actually persisted
+      try {
+        await db.getDocument(DB, COLLECTION_PROFILES, userId);
+        log(`ensure-profile: verified profile exists for ${userId}`);
+      } catch (verifyErr) {
+        error(`ensure-profile: CREATED but verification FAILED for ${userId}: ${verifyErr.message}`);
+      }
     } catch (createErr) {
       // Handle race condition — another call may have created the profile
       if (createErr.code === 409) {
@@ -413,6 +433,7 @@ export default async (context) => {
 
   if (isEvent) {
     log("Trigger: event (users.*.create)");
+    logConfig(log);
     return handleSignupEvent(context);
   }
 
@@ -440,6 +461,7 @@ export default async (context) => {
 
   if (body.action === "ensure-profile") {
     log("Trigger: HTTP POST (ensure-profile)");
+    logConfig(log);
     return handleEnsureProfile(context);
   }
 

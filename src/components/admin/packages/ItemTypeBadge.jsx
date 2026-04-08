@@ -1,19 +1,34 @@
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const ITEM_TYPE_CONFIG = {
-  experience: { label: "Experiencia", icon: "🧘", color: "bg-sage/15 text-sage-dark" },
-  addon: { label: "Addon", icon: "✨", color: "bg-amber-50 text-amber-700" },
-  benefit: { label: "Beneficio", icon: "🎁", color: "bg-purple-50 text-purple-700" },
-  accommodation: { label: "Hospedaje", icon: "🏠", color: "bg-blue-50 text-blue-700" },
-  meal: { label: "Alimentación", icon: "🍽️", color: "bg-orange-50 text-orange-700" },
+  experience: {
+    i18nKey: "experience",
+    icon: "🧘",
+    color: "bg-sage/15 text-sage-dark",
+  },
+  addon: { i18nKey: "addon", icon: "✨", color: "bg-amber-50 text-amber-700" },
+  benefit: {
+    i18nKey: "benefit",
+    icon: "🎁",
+    color: "bg-purple-50 text-purple-700",
+  },
+  accommodation: {
+    i18nKey: "accommodation",
+    icon: "🏠",
+    color: "bg-blue-50 text-blue-700",
+  },
+  meal: { i18nKey: "meal", icon: "🍽️", color: "bg-orange-50 text-orange-700" },
 };
 
 export default function ItemTypeBadge({ type, className }) {
+  const { t } = useLanguage();
   const config = ITEM_TYPE_CONFIG[type] || {
-    label: type,
+    i18nKey: null,
     icon: "📦",
     color: "bg-warm-gray text-charcoal-muted",
   };
+  const label = config.i18nKey ? t(`admin.itemType.${config.i18nKey}`) : type;
 
   return (
     <span
@@ -24,7 +39,7 @@ export default function ItemTypeBadge({ type, className }) {
       )}
     >
       <span>{config.icon}</span>
-      {config.label}
+      {label}
     </span>
   );
 }

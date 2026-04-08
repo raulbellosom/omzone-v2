@@ -1,55 +1,65 @@
-import { Clock, CreditCard, CheckCircle, XCircle, RefreshCw } from "lucide-react";
-
-function formatTimestamp(iso) {
-  if (!iso) return null;
-  return new Date(iso).toLocaleString("es-MX", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
+import {
+  Clock,
+  CreditCard,
+  CheckCircle,
+  XCircle,
+  RefreshCw,
+} from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const EVENTS = [
   {
     key: "created",
     icon: Clock,
-    label: "Order created",
+    i18nKey: "orderCreated",
     getDate: (order) => order.$createdAt,
     color: "text-charcoal-muted",
   },
   {
     key: "paid",
     icon: CreditCard,
-    label: "Payment confirmed",
+    i18nKey: "paymentConfirmed",
     getDate: (order) => order.paidAt,
     color: "text-emerald-600",
   },
   {
     key: "confirmed",
     icon: CheckCircle,
-    label: "Order confirmed",
-    getDate: (order) => (order.status === "confirmed" ? order.$updatedAt : null),
+    i18nKey: "orderConfirmed",
+    getDate: (order) =>
+      order.status === "confirmed" ? order.$updatedAt : null,
     color: "text-sage",
   },
   {
     key: "cancelled",
     icon: XCircle,
-    label: "Order cancelled",
+    i18nKey: "orderCancelled",
     getDate: (order) => order.cancelledAt,
     color: "text-red-500",
   },
   {
     key: "refunded",
     icon: RefreshCw,
-    label: "Order refunded",
+    i18nKey: "orderRefunded",
     getDate: (order) => (order.status === "refunded" ? order.$updatedAt : null),
     color: "text-charcoal-muted",
   },
 ];
 
 export default function OrderTimeline({ order }) {
+  const { t, lang } = useLanguage();
+
+  function formatTimestamp(iso) {
+    if (!iso) return null;
+    return new Date(iso).toLocaleString(lang === "es" ? "es-MX" : "en-US", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
+
   const timeline = EVENTS.map((ev) => ({
     ...ev,
     date: ev.getDate(order),
@@ -59,7 +69,9 @@ export default function OrderTimeline({ order }) {
 
   return (
     <div className="space-y-2">
-      <h3 className="text-sm font-medium text-charcoal">Timeline</h3>
+      <h3 className="text-sm font-medium text-charcoal">
+        {t("admin.orderTimeline.title")}
+      </h3>
       <div className="space-y-3">
         {timeline.map((ev) => {
           const Icon = ev.icon;
@@ -69,8 +81,12 @@ export default function OrderTimeline({ order }) {
                 <Icon className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-sm text-charcoal">{ev.label}</p>
-                <p className="text-xs text-charcoal-muted">{formatTimestamp(ev.date)}</p>
+                <p className="text-sm text-charcoal">
+                  {t(`admin.orderTimeline.${ev.i18nKey}`)}
+                </p>
+                <p className="text-xs text-charcoal-muted">
+                  {formatTimestamp(ev.date)}
+                </p>
               </div>
             </div>
           );

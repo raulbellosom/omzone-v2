@@ -163,7 +163,7 @@ export default function EditionForm({
             <Input
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
-              placeholder="Edición Primavera 2026"
+              placeholder={t("admin.placeholders.editionName")}
               disabled={isDisabled}
               className={errors.name ? "border-red-400" : ""}
             />
@@ -172,7 +172,7 @@ export default function EditionForm({
             <Input
               value={form.nameEs}
               onChange={(e) => set("nameEs", e.target.value)}
-              placeholder="Edición Primavera 2026"
+              placeholder={t("admin.placeholders.editionNameEs")}
               disabled={isDisabled}
             />
           </Field>
@@ -189,7 +189,7 @@ export default function EditionForm({
             <Textarea
               value={form.description}
               onChange={(v) => set("description", v)}
-              placeholder="Spring edition details..."
+              placeholder={t("admin.placeholders.editionDescEn")}
               disabled={isDisabled}
               rows={4}
             />
@@ -198,7 +198,7 @@ export default function EditionForm({
             <Textarea
               value={form.descriptionEs}
               onChange={(v) => set("descriptionEs", v)}
-              placeholder="Detalles de la edición..."
+              placeholder={t("admin.placeholders.editionDescEs")}
               disabled={isDisabled}
               rows={4}
             />

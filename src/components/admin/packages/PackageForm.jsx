@@ -188,7 +188,7 @@ export default function PackageForm({
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          {t("admin.sections.identity")}
+          {t("admin.formSections.identity")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field
@@ -235,7 +235,7 @@ export default function PackageForm({
       {/* Descripción */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          {t("admin.sections.description")}
+          {t("admin.formSections.description")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field label={t("admin.packageForm.descriptionEn")}>
@@ -262,7 +262,7 @@ export default function PackageForm({
       {/* Precio y logística */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          {t("admin.sections.priceAndLogistics")}
+          {t("admin.formSections.priceAndLogistics")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field
@@ -326,7 +326,7 @@ export default function PackageForm({
       {/* Elementos del paquete */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          {t("admin.sections.includedItems")}
+          {t("admin.formSections.includedItems")}
         </h2>
         {errors.items && <p className="text-xs text-red-600">{errors.items}</p>}
         <PackageItemsEditor
@@ -339,7 +339,7 @@ export default function PackageForm({
       {/* Estado y orden */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          {t("admin.sections.statusAndOrder")}
+          {t("admin.formSections.statusAndOrder")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field
@@ -379,7 +379,7 @@ export default function PackageForm({
       {/* Imagen de portada */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          {t("admin.sections.coverImage")}
+          {t("admin.formSections.coverImage")}
         </h2>
         <div className="max-w-lg">
           <ImageUpload
@@ -395,7 +395,7 @@ export default function PackageForm({
       {/* Galería de imágenes */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          {t("admin.sections.imageGallery")}
+          {t("admin.formSections.imageGallery")}
         </h2>
         <GalleryManager
           value={form.galleryImageIds}

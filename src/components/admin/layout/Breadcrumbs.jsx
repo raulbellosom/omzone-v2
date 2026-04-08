@@ -48,7 +48,7 @@ export default function Breadcrumbs() {
 
   return (
     <nav
-      aria-label="Breadcrumb"
+      aria-label={t("admin.breadcrumbsAriaLabel")}
       className="flex items-center gap-1 text-sm overflow-x-auto scrollbar-none"
     >
       {crumbs.map((crumb, i) => (

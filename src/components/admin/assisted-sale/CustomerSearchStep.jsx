@@ -159,7 +159,7 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
               <Input
                 value={wizard.customerName}
                 onChange={(e) => setWizardField("customerName", e.target.value)}
-                placeholder="María García"
+                placeholder={t("admin.placeholders.customerName")}
               />
             </div>
             <div className="space-y-1.5">
@@ -173,7 +173,7 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
                 onChange={(e) =>
                   setWizardField("customerEmail", e.target.value)
                 }
-                placeholder="cliente@email.com"
+                placeholder={t("admin.placeholders.customerEmail")}
               />
             </div>
             <div className="space-y-1.5 sm:col-span-2">
@@ -188,7 +188,7 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
                   if (!e.target.value.trim()) setPhoneTouched(false);
                 }}
                 onBlur={() => setPhoneTouched(true)}
-                placeholder="+52 984 123 4567"
+                placeholder={t("admin.placeholders.customerPhone")}
               />
               {phoneTouched &&
                 wizard.customerPhone?.trim() &&

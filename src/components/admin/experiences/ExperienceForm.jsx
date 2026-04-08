@@ -381,7 +381,7 @@ export default function ExperienceForm({
             <Textarea
               value={form.shortDescriptionEs}
               onChange={(v) => set("shortDescriptionEs", v)}
-              placeholder="Una sesión de yoga transformadora al amanecer..."
+              placeholder={t("admin.placeholders.shortDescEs")}
               disabled={isDisabled}
               maxLength={500}
             />
@@ -443,7 +443,7 @@ export default function ExperienceForm({
       {/* Comportamiento */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          {t("admin.sections.behavior")}
+          {t("admin.formSections.behavior")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Toggle
@@ -500,7 +500,7 @@ export default function ExperienceForm({
       {/* Publicación */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          {t("admin.sections.publication")}
+          {t("admin.formSections.publication")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label={t("admin.experienceForm.status")} required>
@@ -543,7 +543,7 @@ export default function ExperienceForm({
             <Input
               value={form.seoTitle}
               onChange={(e) => set("seoTitle", e.target.value)}
-              placeholder="Sunrise Yoga Experience | OMZONE"
+              placeholder={t("admin.placeholders.seoTitle")}
               disabled={isDisabled}
               maxLength={255}
             />
@@ -555,7 +555,7 @@ export default function ExperienceForm({
             <Textarea
               value={form.seoDescription}
               onChange={(v) => set("seoDescription", v)}
-              placeholder="Discover our transformative sunrise yoga..."
+              placeholder={t("admin.placeholders.seoDescription")}
               disabled={isDisabled}
               maxLength={500}
               rows={2}

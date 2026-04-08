@@ -3,25 +3,22 @@ import { ChevronRight, Layers } from "lucide-react";
 import StatusBadge from "@/components/admin/experiences/StatusBadge";
 import { Card } from "@/components/common/Card";
 import { ROUTES } from "@/constants/routes";
+import { useLanguage } from "@/hooks/useLanguage";
 
-const CATEGORY_LABELS = {
-  landing: "Landing",
-  blog: "Blog",
-  highlight: "Highlight",
-  institutional: "Institucional",
-  faq: "FAQ",
-};
+const CATEGORY_KEYS = ["landing", "blog", "highlight", "institutional", "faq"];
 
 export default function PublicationCard({ publication }) {
   const navigate = useNavigate();
-  const editUrl = ROUTES.ADMIN_PUBLICATION_EDIT.replace(
-    ":id",
-    publication.$id,
-  );
+  const { t, lang } = useLanguage();
+  const editUrl = ROUTES.ADMIN_PUBLICATION_EDIT.replace(":id", publication.$id);
   const sectionsUrl = ROUTES.ADMIN_PUBLICATION_SECTIONS.replace(
     ":id",
     publication.$id,
   );
+
+  const categoryLabel = CATEGORY_KEYS.includes(publication.category)
+    ? t(`admin.publicationCard.categories.${publication.category}`)
+    : publication.category;
 
   return (
     <Card className="p-4 space-y-2">
@@ -37,13 +34,16 @@ export default function PublicationCard({ publication }) {
         <StatusBadge status={publication.status} />
       </div>
       <div className="flex items-center justify-between text-xs text-charcoal-subtle">
-        <span>{CATEGORY_LABELS[publication.category] ?? publication.category}</span>
+        <span>{categoryLabel}</span>
         {publication.publishedAt && (
           <span>
-            {new Date(publication.publishedAt).toLocaleDateString("es-MX", {
-              day: "numeric",
-              month: "short",
-            })}
+            {new Date(publication.publishedAt).toLocaleDateString(
+              lang === "es" ? "es-MX" : "en-US",
+              {
+                day: "numeric",
+                month: "short",
+              },
+            )}
           </span>
         )}
       </div>
@@ -53,7 +53,7 @@ export default function PublicationCard({ publication }) {
           onClick={() => navigate(editUrl)}
           className="flex items-center gap-1 text-xs text-sage font-medium hover:underline"
         >
-          Editar
+          {t("admin.publicationCard.edit")}
           <ChevronRight className="w-3 h-3" />
         </button>
         <button
@@ -62,7 +62,7 @@ export default function PublicationCard({ publication }) {
           className="flex items-center gap-1 text-xs text-sage font-medium hover:underline"
         >
           <Layers className="w-3 h-3" />
-          Secciones
+          {t("admin.publicationCard.sections")}
         </button>
       </div>
     </Card>

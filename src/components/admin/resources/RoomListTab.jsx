@@ -59,7 +59,15 @@ function SkeletonRow() {
   );
 }
 
-function RoomCard({ room, locationName, onToggle, canAdmin, navigate }) {
+function RoomCard({
+  room,
+  locationName,
+  onToggle,
+  canAdmin,
+  navigate,
+  t,
+  roomTypeLabel,
+}) {
   return (
     <Card className="p-4 space-y-3">
       <div className="flex items-start justify-between gap-2">
@@ -70,15 +78,19 @@ function RoomCard({ room, locationName, onToggle, canAdmin, navigate }) {
           </p>
         </div>
         <Badge variant={room.isActive ? "success" : "warm"}>
-          {room.isActive ? "Activo" : "Inactivo"}
+          {room.isActive
+            ? t("admin.resourceLists.active")
+            : t("admin.resourceLists.inactive")}
         </Badge>
       </div>
       <div className="flex items-center gap-3 text-xs text-charcoal-subtle flex-wrap">
-        <span>{ROOM_TYPE_LABELS[room.type] ?? room.type ?? "—"}</span>
+        <span>{roomTypeLabel}</span>
         {room.capacity && (
           <>
             <span className="text-sand-dark">·</span>
-            <span>{room.capacity} personas</span>
+            <span>
+              {room.capacity} {t("admin.resourceLists.persAbbr")}
+            </span>
           </>
         )}
       </div>
@@ -90,12 +102,14 @@ function RoomCard({ room, locationName, onToggle, canAdmin, navigate }) {
           onClick={() => navigate(ROOM_EDIT_ROUTE.replace(":id", room.$id))}
           className="flex-1 justify-center"
         >
-          <Pencil className="h-3.5 w-3.5" /> Editar
+          <Pencil className="h-3.5 w-3.5" /> {t("admin.resourceLists.edit")}
         </Button>
         {canAdmin && (
           <div className="flex items-center gap-2 ml-auto">
             <span className="text-xs text-charcoal-subtle">
-              {room.isActive ? "Activo" : "Inactivo"}
+              {room.isActive
+                ? t("admin.resourceLists.active")
+                : t("admin.resourceLists.inactive")}
             </span>
             <ActiveToggle
               isActive={room.isActive}

@@ -426,7 +426,8 @@
       "created": "Creado",
       "expires": "Vence",
       "usedOfTotal": "{used} usados de {total}",
-      "available": "{count} disponibles"
+      "available": "{count} disponibles",
+      "notFound": "Pase no encontrado"
     },
     "creditAdjust": {
       "title": "Ajustar créditos",
@@ -1233,7 +1234,7 @@
       "descriptionRequired": "La descripción es requerida",
       "atLeastOneItemToPublish": "Agrega al menos un elemento para publicar el paquete"
     },
-    "sections": {
+    "formSections": {
       "behavior": "Comportamiento",
       "publication": "Publicación",
       "seo": "SEO",
@@ -1407,6 +1408,166 @@
       "noneSelected": "Ninguna seleccionada",
       "cancel": "Cancelar"
     },
-    "displayOrderHint": "Número para ordenar en listado público"
+    "displayOrderHint": "Número para ordenar en listado público",
+    "orderTransitions": {
+      "changeStatus": "Cambiar estado",
+      "confirmChange": "Confirmar cambio de estado",
+      "changeBody": "Esta acción no se puede deshacer. El estado de la orden cambiará a:",
+      "cancelButton": "Cancelar",
+      "confirm": "Confirmar",
+      "markAsPaid": "Marcar como pagado",
+      "confirmOrder": "Confirmar",
+      "cancelOrder": "Cancelar",
+      "markAsRefunded": "Marcar como reembolsado"
+    },
+    "paymentStatus": {
+      "pending": "Pendiente",
+      "processing": "Procesando",
+      "succeeded": "Exitoso",
+      "failed": "Fallido",
+      "refunded": "Reembolsado"
+    },
+    "orderTimeline": {
+      "title": "Línea de tiempo",
+      "orderCreated": "Orden creada",
+      "paymentConfirmed": "Pago confirmado",
+      "orderConfirmed": "Orden confirmada",
+      "orderCancelled": "Orden cancelada",
+      "orderRefunded": "Orden reembolsada"
+    },
+    "snapshot": {
+      "title": "Snapshot",
+      "collapse": "Colapsar",
+      "expand": "Expandir"
+    },
+    "ticketStatus": {
+      "valid": "Válido",
+      "used": "Usado",
+      "cancelled": "Cancelado",
+      "expired": "Expirado"
+    },
+    "itemType": {
+      "experience": "Experiencia",
+      "addon": "Addon",
+      "benefit": "Beneficio",
+      "accommodation": "Hospedaje",
+      "meal": "Alimentación"
+    },
+    "publicationPreview": {
+      "sectionTypes": {
+        "hero": "Hero",
+        "text": "Texto",
+        "gallery": "Galería",
+        "highlights": "Highlights",
+        "faq": "FAQ",
+        "itinerary": "Itinerario",
+        "testimonials": "Testimonios",
+        "inclusions": "Inclusiones",
+        "restrictions": "Restricciones",
+        "cta": "Call to Action",
+        "video": "Video"
+      },
+      "noFaqContent": "Sin contenido FAQ",
+      "preview": "Preview",
+      "noVisibleSections": "Sin secciones visibles para previsualizar."
+    },
+    "publicationCard": {
+      "categories": {
+        "landing": "Landing",
+        "blog": "Blog",
+        "highlight": "Highlight",
+        "institutional": "Institucional",
+        "faq": "FAQ"
+      },
+      "edit": "Editar",
+      "sections": "Secciones"
+    },
+    "experiencePicker": {
+      "loading": "Cargando...",
+      "allExperiences": "Todas las experiencias (sin restricción)",
+      "selectedCount": "{count} experiencia(s) seleccionada(s)",
+      "noPublished": "Sin experiencias publicadas"
+    },
+    "pricingTierTable": {
+      "typeLabels": {
+        "fixed": "Fijo",
+        "perPerson": "Por persona",
+        "perGroup": "Por grupo",
+        "from": "Desde",
+        "quote": "Cotización"
+      },
+      "headers": {
+        "name": "Nombre",
+        "type": "Tipo",
+        "price": "Precio",
+        "badge": "Badge",
+        "active": "Activo",
+        "actions": "Acciones"
+      },
+      "dragReorder": "Arrastrar para reordenar",
+      "editTier": "Editar tier"
+    },
+    "systemInfo": {
+      "buckets": {
+        "experienceMedia": "Media de experiencias",
+        "publicationMedia": "Media de publicaciones",
+        "addonImages": "Imágenes de addons",
+        "packageImages": "Imágenes de paquetes",
+        "userAvatars": "Avatares de usuarios",
+        "documents": "Documentos",
+        "publicResources": "Recursos públicos"
+      }
+    },
+    "bookingDetail": {
+      "phone": "Teléfono",
+      "message": "Mensaje",
+      "viewPublicPage": "Ver página pública",
+      "title": "Solicitud de Reserva",
+      "created": "Creada",
+      "convertedOrder": "Orden Convertida",
+      "respondedAt": "Respondida el",
+      "actions": "Acciones",
+      "contactInfo": "Información de Contacto",
+      "adminNotes": "Notas Internas y Precio",
+      "internalNotes": "Notas Internas",
+      "notesPlaceholder": "Notas internas sobre esta solicitud...",
+      "quotedAmount": "Monto Cotizado (MXN)",
+      "saving": "Guardando...",
+      "saveNotes": "Guardar Notas"
+    },
+    "placeholders": {
+      "slugInput": "mi-experiencia-slug",
+      "locationName": "Estudio principal",
+      "locationAddress": "Av. Tulum 123, Tulum, Q.R.",
+      "locationCoordinates": "20.2114,-87.4653",
+      "locationDescription": "Estudio de yoga y meditación con capacidad para 30 personas...",
+      "roomName": "Sala de yoga principal",
+      "roomCapacity": "20",
+      "roomDescription": "Sala equipada con espejos, sistema de sonido y ventilación natural...",
+      "resourceName": "María García",
+      "resourceContact": "maria@ejemplo.com",
+      "resourceDescription": "Instructora de yoga certificada con 10 años de experiencia...",
+      "resourceMetadata": "{\"certificaciones\": [\"RYT-200\"], \"idiomas\": [\"es\", \"en\"]}",
+      "shortDescEs": "Una sesión de yoga transformadora al amanecer...",
+      "editionName": "Edición Primavera 2026",
+      "editionNameEs": "Edición Primavera 2026",
+      "editionDescEn": "Spring edition details...",
+      "editionDescEs": "Detalles de la edición...",
+      "tierName": "Admisión General",
+      "tierNameEs": "Admisión General",
+      "tierDescEn": "What's included in this tier...",
+      "tierDescEs": "Qué incluye este tier...",
+      "tierBadge": "Popular",
+      "tierPrice": "1500.00",
+      "tierMinPersons": "1",
+      "tierMaxPersons": "10",
+      "customerName": "María García",
+      "customerEmail": "cliente@email.com",
+      "customerPhone": "+52 984 123 4567",
+      "seoTitle": "Sunrise Yoga Experience | OMZONE",
+      "seoDescription": "Descubre nuestra transformadora yoga al amanecer..."
+    },
+    "templatePreviewTitle": "Vista previa de plantilla",
+    "breadcrumbsAriaLabel": "Navegación de migas"
   }
 }

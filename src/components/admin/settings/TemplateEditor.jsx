@@ -12,7 +12,12 @@ import { Eye, Code, Save, Loader2 } from "lucide-react";
 
 const LANG_TABS = ["en", "es"];
 
-export default function TemplateEditor({ template, open, onOpenChange, onSave }) {
+export default function TemplateEditor({
+  template,
+  open,
+  onOpenChange,
+  onSave,
+}) {
   const { t } = useLanguage();
   const iframeRef = useRef(null);
 
@@ -133,7 +138,8 @@ export default function TemplateEditor({ template, open, onOpenChange, onSave })
               </>
             ) : (
               <>
-                <Eye className="h-3.5 w-3.5" /> {t("admin.settings.viewPreview")}
+                <Eye className="h-3.5 w-3.5" />{" "}
+                {t("admin.settings.viewPreview")}
               </>
             )}
           </button>
@@ -142,7 +148,7 @@ export default function TemplateEditor({ template, open, onOpenChange, onSave })
         {showPreview ? (
           <iframe
             ref={iframeRef}
-            title="Template preview"
+            title={t("admin.templatePreviewTitle")}
             srcDoc={currentBody}
             sandbox=""
             className="w-full h-80 border border-sand-dark rounded-lg bg-white"

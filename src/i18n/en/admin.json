@@ -426,7 +426,8 @@
       "created": "Created",
       "expires": "Expires",
       "usedOfTotal": "{used} used of {total}",
-      "available": "{count} available"
+      "available": "{count} available",
+      "notFound": "Pass not found"
     },
     "creditAdjust": {
       "title": "Adjust credits",
@@ -1233,7 +1234,7 @@
       "descriptionRequired": "Description is required",
       "atLeastOneItemToPublish": "Add at least one item to publish the package"
     },
-    "sections": {
+    "formSections": {
       "behavior": "Behavior",
       "publication": "Publication",
       "seo": "SEO",
@@ -1407,6 +1408,166 @@
       "noneSelected": "None selected",
       "cancel": "Cancel"
     },
-    "displayOrderHint": "Number used to sort in public listing"
+    "displayOrderHint": "Number used to sort in public listing",
+    "orderTransitions": {
+      "changeStatus": "Change status",
+      "confirmChange": "Confirm status change",
+      "changeBody": "This action cannot be undone. The order status will change to:",
+      "cancelButton": "Cancel",
+      "confirm": "Confirm",
+      "markAsPaid": "Mark as Paid",
+      "confirmOrder": "Confirm",
+      "cancelOrder": "Cancel",
+      "markAsRefunded": "Mark as Refunded"
+    },
+    "paymentStatus": {
+      "pending": "Pending",
+      "processing": "Processing",
+      "succeeded": "Succeeded",
+      "failed": "Failed",
+      "refunded": "Refunded"
+    },
+    "orderTimeline": {
+      "title": "Timeline",
+      "orderCreated": "Order created",
+      "paymentConfirmed": "Payment confirmed",
+      "orderConfirmed": "Order confirmed",
+      "orderCancelled": "Order cancelled",
+      "orderRefunded": "Order refunded"
+    },
+    "snapshot": {
+      "title": "Snapshot",
+      "collapse": "Collapse",
+      "expand": "Expand"
+    },
+    "ticketStatus": {
+      "valid": "Valid",
+      "used": "Used",
+      "cancelled": "Cancelled",
+      "expired": "Expired"
+    },
+    "itemType": {
+      "experience": "Experience",
+      "addon": "Addon",
+      "benefit": "Benefit",
+      "accommodation": "Lodging",
+      "meal": "Food & Beverage"
+    },
+    "publicationPreview": {
+      "sectionTypes": {
+        "hero": "Hero",
+        "text": "Text",
+        "gallery": "Gallery",
+        "highlights": "Highlights",
+        "faq": "FAQ",
+        "itinerary": "Itinerary",
+        "testimonials": "Testimonials",
+        "inclusions": "Inclusions",
+        "restrictions": "Restrictions",
+        "cta": "Call to Action",
+        "video": "Video"
+      },
+      "noFaqContent": "No FAQ content",
+      "preview": "Preview",
+      "noVisibleSections": "No visible sections to preview."
+    },
+    "publicationCard": {
+      "categories": {
+        "landing": "Landing",
+        "blog": "Blog",
+        "highlight": "Highlight",
+        "institutional": "Institutional",
+        "faq": "FAQ"
+      },
+      "edit": "Edit",
+      "sections": "Sections"
+    },
+    "experiencePicker": {
+      "loading": "Loading...",
+      "allExperiences": "All experiences (no restriction)",
+      "selectedCount": "{count} experience(s) selected",
+      "noPublished": "No published experiences"
+    },
+    "pricingTierTable": {
+      "typeLabels": {
+        "fixed": "Fixed",
+        "perPerson": "Per person",
+        "perGroup": "Per group",
+        "from": "From",
+        "quote": "Quote"
+      },
+      "headers": {
+        "name": "Name",
+        "type": "Type",
+        "price": "Price",
+        "badge": "Badge",
+        "active": "Active",
+        "actions": "Actions"
+      },
+      "dragReorder": "Drag to reorder",
+      "editTier": "Edit tier"
+    },
+    "systemInfo": {
+      "buckets": {
+        "experienceMedia": "Experience Media",
+        "publicationMedia": "Publication Media",
+        "addonImages": "Addon Images",
+        "packageImages": "Package Images",
+        "userAvatars": "User Avatars",
+        "documents": "Documents",
+        "publicResources": "Public Resources"
+      }
+    },
+    "bookingDetail": {
+      "phone": "Phone",
+      "message": "Message",
+      "viewPublicPage": "View public page",
+      "title": "Booking Request",
+      "created": "Created",
+      "convertedOrder": "Converted Order",
+      "respondedAt": "Responded At",
+      "actions": "Actions",
+      "contactInfo": "Contact Information",
+      "adminNotes": "Admin Notes & Pricing",
+      "internalNotes": "Internal Notes",
+      "notesPlaceholder": "Internal notes about this request...",
+      "quotedAmount": "Quoted Amount (MXN)",
+      "saving": "Saving...",
+      "saveNotes": "Save Notes"
+    },
+    "placeholders": {
+      "slugInput": "my-experience-slug",
+      "locationName": "Main Studio",
+      "locationAddress": "123 Tulum Ave, Tulum, Q.R.",
+      "locationCoordinates": "20.2114,-87.4653",
+      "locationDescription": "Yoga and meditation studio with capacity for 30 people...",
+      "roomName": "Main yoga room",
+      "roomCapacity": "20",
+      "roomDescription": "Room equipped with mirrors, sound system and natural ventilation...",
+      "resourceName": "María García",
+      "resourceContact": "maria@example.com",
+      "resourceDescription": "Certified yoga instructor with 10 years of experience...",
+      "resourceMetadata": "{\"certifications\": [\"RYT-200\"], \"languages\": [\"es\", \"en\"]}",
+      "shortDescEs": "A transformative sunrise yoga session...",
+      "editionName": "Spring Edition 2026",
+      "editionNameEs": "Edición Primavera 2026",
+      "editionDescEn": "Spring edition details...",
+      "editionDescEs": "Edition details...",
+      "tierName": "General Admission",
+      "tierNameEs": "General Admission",
+      "tierDescEn": "What's included in this tier...",
+      "tierDescEs": "What this tier includes...",
+      "tierBadge": "Popular",
+      "tierPrice": "1500.00",
+      "tierMinPersons": "1",
+      "tierMaxPersons": "10",
+      "customerName": "María García",
+      "customerEmail": "client@email.com",
+      "customerPhone": "+52 984 123 4567",
+      "seoTitle": "Sunrise Yoga Experience | OMZONE",
+      "seoDescription": "Discover our transformative sunrise yoga..."
+    },
+    "templatePreviewTitle": "Template preview",
+    "breadcrumbsAriaLabel": "Breadcrumb"
   }
 }

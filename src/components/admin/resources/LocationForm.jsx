@@ -140,7 +140,7 @@ export default function LocationForm({
             <Input
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
-              placeholder="Estudio principal"
+              placeholder={t("admin.placeholders.locationName")}
               disabled={submitting}
               className={errors.name ? "border-red-400" : ""}
             />
@@ -152,7 +152,7 @@ export default function LocationForm({
             <Input
               value={form.address}
               onChange={(e) => set("address", e.target.value)}
-              placeholder="Av. Tulum 123, Tulum, Q.R."
+              placeholder={t("admin.placeholders.locationAddress")}
               disabled={submitting}
               maxLength={500}
             />
@@ -164,7 +164,7 @@ export default function LocationForm({
             <Input
               value={form.coordinates}
               onChange={(e) => set("coordinates", e.target.value)}
-              placeholder="20.2114,-87.4653"
+              placeholder={t("admin.placeholders.locationCoordinates")}
               disabled={submitting}
               maxLength={100}
             />
@@ -189,7 +189,7 @@ export default function LocationForm({
           <Textarea
             value={form.description}
             onChange={(v) => set("description", v)}
-            placeholder="Estudio de yoga y meditación con capacidad para 30 personas..."
+            placeholder={t("admin.placeholders.locationDescription")}
             disabled={submitting}
             maxLength={5000}
           />

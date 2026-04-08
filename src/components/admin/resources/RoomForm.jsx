@@ -188,7 +188,7 @@ export default function RoomForm({
             <Input
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
-              placeholder="Sala de yoga principal"
+              placeholder={t("admin.placeholders.roomName")}
               disabled={submitting}
               className={errors.name ? "border-red-400" : ""}
             />
@@ -211,7 +211,7 @@ export default function RoomForm({
               min={1}
               value={form.capacity}
               onChange={(e) => set("capacity", e.target.value)}
-              placeholder="20"
+              placeholder={t("admin.placeholders.roomCapacity")}
               disabled={submitting}
               className={errors.capacity ? "border-red-400" : ""}
             />
@@ -236,7 +236,7 @@ export default function RoomForm({
           <Textarea
             value={form.description}
             onChange={(v) => set("description", v)}
-            placeholder="Sala equipada con espejos, sistema de sonido y ventilación natural..."
+            placeholder={t("admin.placeholders.roomDescription")}
             disabled={submitting}
           />
         </Field>

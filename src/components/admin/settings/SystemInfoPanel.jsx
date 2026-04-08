@@ -3,14 +3,32 @@ import { Card } from "@/components/common/Card";
 import env from "@/config/env";
 import { Server, Database, HardDrive, Info } from "lucide-react";
 
-const BUCKETS = [
-  { label: "Experience Media", id: env.bucketExperienceMedia },
-  { label: "Publication Media", id: env.bucketPublicationMedia },
-  { label: "Addon Images", id: env.bucketAddonImages },
-  { label: "Package Images", id: env.bucketPackageImages },
-  { label: "User Avatars", id: env.bucketUserAvatars },
-  { label: "Documents", id: env.bucketDocuments },
-  { label: "Public Resources", id: env.bucketPublicResources },
+const BUCKET_KEYS = [
+  {
+    i18nKey: "admin.systemInfo.buckets.experienceMedia",
+    id: env.bucketExperienceMedia,
+  },
+  {
+    i18nKey: "admin.systemInfo.buckets.publicationMedia",
+    id: env.bucketPublicationMedia,
+  },
+  {
+    i18nKey: "admin.systemInfo.buckets.addonImages",
+    id: env.bucketAddonImages,
+  },
+  {
+    i18nKey: "admin.systemInfo.buckets.packageImages",
+    id: env.bucketPackageImages,
+  },
+  {
+    i18nKey: "admin.systemInfo.buckets.userAvatars",
+    id: env.bucketUserAvatars,
+  },
+  { i18nKey: "admin.systemInfo.buckets.documents", id: env.bucketDocuments },
+  {
+    i18nKey: "admin.systemInfo.buckets.publicResources",
+    id: env.bucketPublicResources,
+  },
 ];
 
 function InfoRow({ label, value, mono = false }) {
@@ -39,10 +57,7 @@ export default function SystemInfoPanel() {
         </h3>
         <div className="space-y-0">
           <InfoRow label={t("admin.settings.appVersion")} value="0.1.0" />
-          <InfoRow
-            label={t("admin.settings.siteName")}
-            value={env.siteName}
-          />
+          <InfoRow label={t("admin.settings.siteName")} value={env.siteName} />
           <InfoRow
             label={t("admin.settings.siteUrl")}
             value={env.siteUrl}
@@ -83,8 +98,8 @@ export default function SystemInfoPanel() {
           {t("admin.settings.storageBuckets")}
         </h3>
         <div className="space-y-0">
-          {BUCKETS.map((b) => (
-            <InfoRow key={b.id} label={b.label} value={b.id} mono />
+          {BUCKET_KEYS.map((b) => (
+            <InfoRow key={b.id} label={t(b.i18nKey)} value={b.id} mono />
           ))}
         </div>
       </Card>

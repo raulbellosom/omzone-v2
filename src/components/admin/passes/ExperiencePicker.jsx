@@ -3,6 +3,7 @@ import { databases, Query } from "@/lib/appwrite";
 import env from "@/config/env";
 import { cn } from "@/lib/utils";
 import { X, ChevronDown, Check } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const DB = env.appwriteDatabaseId;
 const COL = env.collectionExperiences;
@@ -17,6 +18,7 @@ export default function ExperiencePicker({
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     databases
@@ -68,10 +70,13 @@ export default function ExperiencePicker({
       >
         <span className="flex-1 truncate text-charcoal-subtle">
           {loading
-            ? "Cargando..."
+            ? t("admin.experiencePicker.loading")
             : value.length === 0
-              ? "Todas las experiencias (sin restricción)"
-              : `${value.length} experiencia(s) seleccionada(s)`}
+              ? t("admin.experiencePicker.allExperiences")
+              : t("admin.experiencePicker.selectedCount").replace(
+                  "{count}",
+                  value.length,
+                )}
         </span>
         <ChevronDown className="h-4 w-4 text-charcoal-muted shrink-0" />
       </button>
@@ -102,7 +107,7 @@ export default function ExperiencePicker({
         <div className="absolute z-20 mt-1 w-full max-h-60 overflow-y-auto rounded-xl border border-sand-dark bg-white shadow-lg">
           {experiences.length === 0 && (
             <p className="px-3 py-2 text-sm text-charcoal-muted">
-              Sin experiencias publicadas
+              {t("admin.experiencePicker.noPublished")}
             </p>
           )}
           {experiences.map((exp) => {

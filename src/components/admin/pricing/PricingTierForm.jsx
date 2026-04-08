@@ -194,7 +194,7 @@ export default function PricingTierForm({
             <Input
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
-              placeholder="General Admission"
+              placeholder={t("admin.placeholders.tierName")}
               disabled={isDisabled}
               className={errors.name ? "border-red-400" : ""}
             />
@@ -203,7 +203,7 @@ export default function PricingTierForm({
             <Input
               value={form.nameEs}
               onChange={(e) => set("nameEs", e.target.value)}
-              placeholder="Admisión General"
+              placeholder={t("admin.placeholders.tierNameEs")}
               disabled={isDisabled}
             />
           </Field>
@@ -213,7 +213,7 @@ export default function PricingTierForm({
             <Textarea
               value={form.description}
               onChange={(v) => set("description", v)}
-              placeholder="What's included in this tier..."
+              placeholder={t("admin.placeholders.tierDescEn")}
               disabled={isDisabled}
             />
           </Field>
@@ -221,7 +221,7 @@ export default function PricingTierForm({
             <Textarea
               value={form.descriptionEs}
               onChange={(v) => set("descriptionEs", v)}
-              placeholder="Qué incluye este tier..."
+              placeholder={t("admin.placeholders.tierDescEs")}
               disabled={isDisabled}
             />
           </Field>
@@ -258,7 +258,7 @@ export default function PricingTierForm({
               min="0.01"
               value={form.basePrice}
               onChange={(e) => set("basePrice", e.target.value)}
-              placeholder="1500.00"
+              placeholder={t("admin.placeholders.tierPrice")}
               disabled={isDisabled}
               className={errors.basePrice ? "border-red-400" : ""}
             />
@@ -294,7 +294,7 @@ export default function PricingTierForm({
               min={1}
               value={form.minPersons}
               onChange={(e) => set("minPersons", e.target.value)}
-              placeholder="1"
+              placeholder={t("admin.placeholders.tierMinPersons")}
               disabled={isDisabled}
             />
           </Field>
@@ -304,7 +304,7 @@ export default function PricingTierForm({
               min={1}
               value={form.maxPersons}
               onChange={(e) => set("maxPersons", e.target.value)}
-              placeholder="10"
+              placeholder={t("admin.placeholders.tierMaxPersons")}
               disabled={isDisabled}
             />
           </Field>
@@ -324,7 +324,7 @@ export default function PricingTierForm({
             <Input
               value={form.badge}
               onChange={(e) => set("badge", e.target.value)}
-              placeholder="Popular"
+              placeholder={t("admin.placeholders.tierBadge")}
               disabled={isDisabled}
               maxLength={50}
             />

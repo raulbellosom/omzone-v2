@@ -20,13 +20,14 @@ import { CSS } from "@dnd-kit/utilities";
 import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
-const TYPE_LABELS = {
-  fixed: "Fijo",
-  "per-person": "Por persona",
-  "per-group": "Por grupo",
-  from: "Desde",
-  quote: "Cotización",
+const TYPE_LABEL_KEYS = {
+  fixed: "fixed",
+  "per-person": "perPerson",
+  "per-group": "perGroup",
+  from: "from",
+  quote: "quote",
 };
 
 function Toggle({ checked, onChange, disabled }) {
@@ -62,7 +63,7 @@ function formatPrice(amount, currency) {
   }).format(amount);
 }
 
-function SortableRow({ tier, onToggle, togglingId, onEdit, swapping }) {
+function SortableRow({ tier, onToggle, togglingId, onEdit, swapping, t }) {
   const {
     attributes,
     listeners,
@@ -94,7 +95,7 @@ function SortableRow({ tier, onToggle, togglingId, onEdit, swapping }) {
         <button
           type="button"
           className="touch-none cursor-grab active:cursor-grabbing p-1 text-charcoal-muted hover:text-charcoal"
-          aria-label="Arrastrar para reordenar"
+          aria-label={t("admin.pricingTierTable.dragReorder")}
           {...listeners}
         >
           <GripVertical className="h-4 w-4" />
@@ -109,7 +110,9 @@ function SortableRow({ tier, onToggle, togglingId, onEdit, swapping }) {
         </span>
       </td>
       <td className="px-4 py-3 text-charcoal-muted">
-        {TYPE_LABELS[tier.priceType] || tier.priceType}
+        {t(
+          `admin.pricingTierTable.typeLabels.${TYPE_LABEL_KEYS[tier.priceType]}`,
+        ) || tier.priceType}
       </td>
       <td className="px-4 py-3 text-right font-medium text-charcoal">
         {formatPrice(tier.basePrice, tier.currency)}
@@ -132,7 +135,7 @@ function SortableRow({ tier, onToggle, togglingId, onEdit, swapping }) {
         <button
           onClick={() => onEdit(tier)}
           className="p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
-          aria-label="Editar tier"
+          aria-label={t("admin.pricingTierTable.editTier")}
         >
           <Pencil className="h-4 w-4" />
         </button>
@@ -141,7 +144,14 @@ function SortableRow({ tier, onToggle, togglingId, onEdit, swapping }) {
   );
 }
 
-function SortableMobileCard({ tier, onToggle, togglingId, onEdit, swapping }) {
+function SortableMobileCard({
+  tier,
+  onToggle,
+  togglingId,
+  onEdit,
+  swapping,
+  t,
+}) {
   const {
     attributes,
     listeners,
@@ -171,7 +181,7 @@ function SortableMobileCard({ tier, onToggle, togglingId, onEdit, swapping }) {
           <button
             type="button"
             className="touch-none shrink-0 cursor-grab active:cursor-grabbing p-1 -ml-1 mt-0.5 text-charcoal-muted hover:text-charcoal"
-            aria-label="Arrastrar para reordenar"
+            aria-label={t("admin.pricingTierTable.dragReorder")}
             {...listeners}
           >
             <GripVertical className="h-4 w-4" />
@@ -184,7 +194,9 @@ function SortableMobileCard({ tier, onToggle, togglingId, onEdit, swapping }) {
               {tier.name}
             </span>
             <span className="text-xs text-charcoal-muted block mt-0.5">
-              {TYPE_LABELS[tier.priceType] || tier.priceType}
+              {t(
+                `admin.pricingTierTable.typeLabels.${TYPE_LABEL_KEYS[tier.priceType]}`,
+              ) || tier.priceType}
             </span>
           </div>
           <span className="text-sm font-semibold text-charcoal whitespace-nowrap">
@@ -204,7 +216,7 @@ function SortableMobileCard({ tier, onToggle, togglingId, onEdit, swapping }) {
           <button
             onClick={() => onEdit(tier)}
             className="p-1.5 rounded text-charcoal-muted hover:text-sage transition-colors"
-            aria-label="Editar tier"
+            aria-label={t("admin.pricingTierTable.editTier")}
           >
             <Pencil className="h-4 w-4" />
           </button>
@@ -222,6 +234,7 @@ export default function PricingTierTable({
   swapping,
 }) {
   const [togglingId, setTogglingId] = useState(null);
+  const { t } = useLanguage();
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -262,20 +275,29 @@ export default function PricingTierTable({
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <SortableContext
-          items={ids}
-          strategy={verticalListSortingStrategy}
-        >
+        <SortableContext items={ids} strategy={verticalListSortingStrategy}>
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
                 <th className="px-3 py-3 font-medium w-10" />
-                <th className="px-4 py-3 font-medium">Nombre</th>
-                <th className="px-4 py-3 font-medium">Tipo</th>
-                <th className="px-4 py-3 font-medium text-right">Precio</th>
-                <th className="px-4 py-3 font-medium text-center">Badge</th>
-                <th className="px-4 py-3 font-medium text-center">Activo</th>
-                <th className="px-4 py-3 font-medium text-right">Acciones</th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.pricingTierTable.headers.name")}
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  {t("admin.pricingTierTable.headers.type")}
+                </th>
+                <th className="px-4 py-3 font-medium text-right">
+                  {t("admin.pricingTierTable.headers.price")}
+                </th>
+                <th className="px-4 py-3 font-medium text-center">
+                  {t("admin.pricingTierTable.headers.badge")}
+                </th>
+                <th className="px-4 py-3 font-medium text-center">
+                  {t("admin.pricingTierTable.headers.active")}
+                </th>
+                <th className="px-4 py-3 font-medium text-right">
+                  {t("admin.pricingTierTable.headers.actions")}
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-sand-dark">
@@ -287,6 +309,7 @@ export default function PricingTierTable({
                   togglingId={togglingId}
                   onEdit={onEdit}
                   swapping={swapping}
+                  t={t}
                 />
               ))}
             </tbody>
@@ -303,10 +326,7 @@ export default function PricingTierTable({
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
     >
-      <SortableContext
-        items={ids}
-        strategy={verticalListSortingStrategy}
-      >
+      <SortableContext items={ids} strategy={verticalListSortingStrategy}>
         <div className="md:hidden space-y-3">
           {tiers.map((tier) => (
             <SortableMobileCard
@@ -316,6 +336,7 @@ export default function PricingTierTable({
               togglingId={togglingId}
               onEdit={onEdit}
               swapping={swapping}
+              t={t}
             />
           ))}
         </div>

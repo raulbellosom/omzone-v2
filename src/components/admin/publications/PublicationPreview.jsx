@@ -1,20 +1,7 @@
 import { Card } from "@/components/common/Card";
 import Badge from "@/components/common/Badge";
 import { useImageUpload } from "@/hooks/useImageUpload";
-
-const TYPE_LABELS = {
-  hero: "Hero",
-  text: "Texto",
-  gallery: "Galería",
-  highlights: "Highlights",
-  faq: "FAQ",
-  itinerary: "Itinerario",
-  testimonials: "Testimonios",
-  inclusions: "Inclusiones",
-  restrictions: "Restricciones",
-  cta: "Call to Action",
-  video: "Video",
-};
+import { useLanguage } from "@/hooks/useLanguage";
 
 function HeroSection({ section, getPreviewUrl }) {
   const mediaIds = parseJson(section.mediaIds, []);
@@ -87,7 +74,7 @@ function GallerySection({ section, getPreviewUrl }) {
   );
 }
 
-function FaqSection({ section }) {
+function FaqSection({ section, t }) {
   const items = parseJson(section.metadata, []);
   return (
     <div>
@@ -99,7 +86,10 @@ function FaqSection({ section }) {
       {Array.isArray(items) && items.length > 0 ? (
         <div className="space-y-3">
           {items.map((item, i) => (
-            <div key={i} className="border border-warm-gray-dark/40 rounded-xl p-4">
+            <div
+              key={i}
+              className="border border-warm-gray-dark/40 rounded-xl p-4"
+            >
               <p className="font-medium text-charcoal text-sm">
                 {item.question || item.q}
               </p>
@@ -111,7 +101,7 @@ function FaqSection({ section }) {
         </div>
       ) : (
         <p className="text-sm text-charcoal-subtle italic">
-          {section.content || "Sin contenido FAQ"}
+          {section.content || t("admin.publicationPreview.noFaqContent")}
         </p>
       )}
     </div>
@@ -142,18 +132,30 @@ function parseJson(str, fallback) {
   }
 }
 
-function renderSection(section, getPreviewUrl) {
+function renderSection(section, getPreviewUrl, t) {
   if (!section.isVisible) return null;
   const key = section.$id;
   switch (section.sectionType) {
     case "hero":
-      return <HeroSection key={key} section={section} getPreviewUrl={getPreviewUrl} />;
+      return (
+        <HeroSection
+          key={key}
+          section={section}
+          getPreviewUrl={getPreviewUrl}
+        />
+      );
     case "text":
       return <TextSection key={key} section={section} />;
     case "gallery":
-      return <GallerySection key={key} section={section} getPreviewUrl={getPreviewUrl} />;
+      return (
+        <GallerySection
+          key={key}
+          section={section}
+          getPreviewUrl={getPreviewUrl}
+        />
+      );
     case "faq":
-      return <FaqSection key={key} section={section} />;
+      return <FaqSection key={key} section={section} t={t} />;
     default:
       return <GenericSection key={key} section={section} />;
   }
@@ -161,6 +163,7 @@ function renderSection(section, getPreviewUrl) {
 
 export default function PublicationPreview({ publication, sections }) {
   const { getPreviewUrl } = useImageUpload();
+  const { t } = useLanguage();
 
   const visibleSections = (sections || []).filter((s) => s.isVisible);
 
@@ -168,7 +171,7 @@ export default function PublicationPreview({ publication, sections }) {
     <Card className="overflow-hidden">
       <div className="bg-charcoal text-white px-4 py-2 text-xs font-medium uppercase tracking-wider flex items-center gap-2">
         <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-        Preview
+        {t("admin.publicationPreview.preview")}
       </div>
       <div className="p-5 md:p-8 space-y-8">
         {/* Publication header */}
@@ -189,11 +192,11 @@ export default function PublicationPreview({ publication, sections }) {
         {/* Sections */}
         {visibleSections.length === 0 ? (
           <p className="text-sm text-charcoal-subtle italic text-center py-8">
-            Sin secciones visibles para previsualizar.
+            {t("admin.publicationPreview.noVisibleSections")}
           </p>
         ) : (
           visibleSections.map((section) =>
-            renderSection(section, getPreviewUrl),
+            renderSection(section, getPreviewUrl, t),
           )
         )}
       </div>

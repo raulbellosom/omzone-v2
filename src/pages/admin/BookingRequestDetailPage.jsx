@@ -32,9 +32,9 @@ import { cn } from "@/lib/utils";
 import { functions } from "@/lib/appwrite";
 import env from "@/config/env";
 
-function formatDate(iso) {
+function formatDate(iso, locale = "en-US") {
   if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("es-MX", {
+  return new Date(iso).toLocaleDateString(locale === "es" ? "es-MX" : "en-US", {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -148,7 +148,7 @@ export default function BookingRequestDetailPage() {
 
   const { request, experience, loading, error, refetch } =
     useBookingRequestDetail(id);
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   const [adminNotes, setAdminNotes] = useState("");
   const [quotedAmount, setQuotedAmount] = useState("");
@@ -289,10 +289,10 @@ export default function BookingRequestDetailPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold text-charcoal">
-            Booking Request
+            {t("admin.bookingDetail.title")}
           </h1>
           <p className="text-sm text-charcoal-muted mt-0.5">
-            Created {formatDate(request.$createdAt)}
+            {t("admin.bookingDetail.created")} {formatDate(request.$createdAt, lang)}
           </p>
         </div>
         <span
@@ -335,7 +335,7 @@ export default function BookingRequestDetailPage() {
         {/* Contact info */}
         <Card className="p-6 space-y-4">
           <h2 className="text-base font-semibold text-charcoal mb-2">
-            Contact Information
+            {t("admin.bookingDetail.contactInfo")}
           </h2>
           <InfoRow
             icon={User}
@@ -347,7 +347,7 @@ export default function BookingRequestDetailPage() {
             label={t("admin.orderDetail.email")}
             value={request.contactEmail}
           />
-          <InfoRow icon={Phone} label="Phone" value={request.contactPhone} />
+          <InfoRow icon={Phone} label={t("admin.bookingDetail.phone")} value={request.contactPhone} />
           <InfoRow
             icon={Users}
             label={t("admin.bookingRequests.participant")}
@@ -356,13 +356,13 @@ export default function BookingRequestDetailPage() {
           <InfoRow
             icon={Calendar}
             label={t("admin.bookingRequests.date")}
-            value={formatDate(request.requestedDate)}
+            value={formatDate(request.requestedDate, lang)}
           />
           {request.message && (
             <div className="flex items-start gap-3">
               <MessageSquare className="h-4 w-4 text-charcoal-subtle mt-0.5 shrink-0" />
               <div>
-                <p className="text-xs text-charcoal-subtle">Message</p>
+                <p className="text-xs text-charcoal-subtle">{t("admin.bookingDetail.message")}</p>
                 <p className="text-sm text-charcoal whitespace-pre-wrap">
                   {request.message}
                 </p>
@@ -385,7 +385,7 @@ export default function BookingRequestDetailPage() {
                 {experience.type}
               </p>
               <p className="text-xs text-charcoal-subtle">
-                Sale mode:{" "}
+                {t("admin.experienceForm.saleMode")}:{" "}
                 <span className="font-medium">{experience.saleMode}</span>
               </p>
               <Link
@@ -393,7 +393,7 @@ export default function BookingRequestDetailPage() {
                 target="_blank"
                 className="inline-flex items-center gap-1 text-xs text-sage hover:underline"
               >
-                View public page <ExternalLink className="h-3 w-3" />
+                {t("admin.bookingDetail.viewPublicPage")} <ExternalLink className="h-3 w-3" />
               </Link>
             </>
           ) : (
@@ -404,7 +404,7 @@ export default function BookingRequestDetailPage() {
 
           {request.convertedOrderId && (
             <div className="pt-3 border-t border-sand-dark/40">
-              <p className="text-xs text-charcoal-subtle">Converted Order</p>
+              <p className="text-xs text-charcoal-subtle">{t("admin.bookingDetail.convertedOrder")}</p>
               <Link
                 to={ROUTES.ADMIN_ORDER_DETAIL.replace(
                   ":orderId",
@@ -419,9 +419,9 @@ export default function BookingRequestDetailPage() {
 
           {request.respondedAt && (
             <div>
-              <p className="text-xs text-charcoal-subtle">Responded At</p>
+              <p className="text-xs text-charcoal-subtle">{t("admin.bookingDetail.respondedAt")}</p>
               <p className="text-sm text-charcoal">
-                {formatDate(request.respondedAt)}
+                {formatDate(request.respondedAt, lang)}
               </p>
             </div>
           )}
@@ -431,19 +431,19 @@ export default function BookingRequestDetailPage() {
       {/* Admin notes & quoted amount */}
       <Card className="p-6 space-y-4">
         <h2 className="text-base font-semibold text-charcoal">
-          Admin Notes & Pricing
+          {t("admin.bookingDetail.adminNotes")}
         </h2>
 
         <div>
           <label className="block text-sm font-medium text-charcoal mb-1">
             <FileText className="inline h-3.5 w-3.5 mr-1" />
-            Internal Notes
+            {t("admin.bookingDetail.internalNotes")}
           </label>
           <textarea
             value={adminNotes}
             onChange={(e) => setAdminNotes(e.target.value)}
             rows={3}
-            placeholder="Internal notes about this request..."
+            placeholder={t("admin.bookingDetail.notesPlaceholder")}
             className="w-full rounded-xl border border-sand-dark bg-white px-4 py-2.5 text-sm text-charcoal placeholder-charcoal-subtle focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-none"
             disabled={request.status === "converted"}
           />
@@ -452,7 +452,7 @@ export default function BookingRequestDetailPage() {
         <div className="max-w-xs">
           <label className="block text-sm font-medium text-charcoal mb-1">
             <DollarSign className="inline h-3.5 w-3.5 mr-1" />
-            Quoted Amount (MXN)
+            {t("admin.bookingDetail.quotedAmount")}
           </label>
           <Input
             type="number"
@@ -472,7 +472,7 @@ export default function BookingRequestDetailPage() {
             onClick={handleSaveFields}
             disabled={saving}
           >
-            {saving ? "Saving..." : "Save Notes"}
+            {saving ? t("admin.bookingDetail.saving") : t("admin.bookingDetail.saveNotes")}
           </Button>
         )}
       </Card>
@@ -480,7 +480,7 @@ export default function BookingRequestDetailPage() {
       {/* Actions */}
       {request.status !== "converted" && (
         <Card className="p-6 space-y-3">
-          <h2 className="text-base font-semibold text-charcoal">Actions</h2>
+          <h2 className="text-base font-semibold text-charcoal">{t("admin.bookingDetail.actions")}</h2>
           <StatusActions
             request={request}
             isAdmin={isAdmin}
