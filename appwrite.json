@@ -312,8 +312,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "minQuantity",
@@ -321,8 +321,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "generatesTickets",
@@ -346,8 +346,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "seoTitle",
@@ -592,6 +592,13 @@
           "status": "available",
           "columns": ["experienceId"],
           "orders": []
+        },
+        {
+          "key": "idx_title_fulltext",
+          "type": "fulltext",
+          "status": "available",
+          "columns": ["title"],
+          "orders": []
         }
       ]
     },
@@ -697,8 +704,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "isVisible",
@@ -790,8 +797,8 @@
           "required": false,
           "array": false,
           "default": 0,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         }
       ],
       "indexes": [
@@ -967,8 +974,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "status",
@@ -1121,8 +1128,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "maxPersons",
@@ -1130,8 +1137,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "badge",
@@ -1162,8 +1169,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         }
       ],
       "indexes": [
@@ -1252,8 +1259,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "isActive",
@@ -1425,8 +1432,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "heroImageId",
@@ -1452,8 +1459,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         }
       ],
       "indexes": [
@@ -1476,6 +1483,13 @@
           "type": "key",
           "status": "available",
           "columns": ["addonType"],
+          "orders": []
+        },
+        {
+          "key": "idx_name_fulltext",
+          "type": "fulltext",
+          "status": "available",
+          "columns": ["name"],
           "orders": []
         }
       ]
@@ -1552,8 +1566,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         }
       ],
       "indexes": [
@@ -1656,8 +1670,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "capacity",
@@ -1665,8 +1679,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "heroImageId",
@@ -1701,8 +1715,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         }
       ],
       "indexes": [
@@ -1718,6 +1732,13 @@
           "type": "key",
           "status": "available",
           "columns": ["status"],
+          "orders": []
+        },
+        {
+          "key": "idx_name_fulltext",
+          "type": "fulltext",
+          "status": "available",
+          "columns": ["name"],
           "orders": []
         }
       ]
@@ -1793,8 +1814,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "sortOrder",
@@ -1802,8 +1823,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         }
       ],
       "indexes": [
@@ -1881,8 +1902,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "basePrice",
@@ -1908,8 +1929,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "validExperienceIds",
@@ -1943,8 +1964,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         }
       ],
       "indexes": [
@@ -1960,6 +1981,13 @@
           "type": "key",
           "status": "available",
           "columns": ["status"],
+          "orders": []
+        },
+        {
+          "key": "idx_name_fulltext",
+          "type": "fulltext",
+          "status": "available",
+          "columns": ["name"],
           "orders": []
         }
       ]
@@ -2077,8 +2105,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "type",
@@ -2205,6 +2233,13 @@
           "status": "available",
           "columns": ["type", "isActive"],
           "orders": []
+        },
+        {
+          "key": "idx_name_fulltext",
+          "type": "fulltext",
+          "status": "available",
+          "columns": ["name"],
+          "orders": []
         }
       ]
     },
@@ -2283,8 +2318,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "bookedCount",
@@ -2292,8 +2327,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "locationId",
@@ -2654,6 +2689,13 @@
           "status": "available",
           "columns": ["stripeSessionId"],
           "orders": []
+        },
+        {
+          "key": "idx_orderNumber_fulltext",
+          "type": "fulltext",
+          "status": "available",
+          "columns": ["orderNumber"],
+          "orders": []
         }
       ]
     },
@@ -2716,8 +2758,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "unitPrice",
@@ -3049,6 +3091,13 @@
           "status": "available",
           "columns": ["slotId"],
           "orders": []
+        },
+        {
+          "key": "idx_ticketCode_fulltext",
+          "type": "fulltext",
+          "status": "available",
+          "columns": ["ticketCode"],
+          "orders": []
         }
       ]
     },
@@ -3179,8 +3228,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "usedCredits",
@@ -3188,8 +3237,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "status",
@@ -3294,8 +3343,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "consumedAt",
@@ -3503,8 +3552,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854776000,
-          "max": 9223372036854776000
+          "min": -9223372036854775808,
+          "max": 9223372036854775807
         },
         {
           "key": "contactName",
@@ -3566,7 +3615,7 @@
         },
         {
           "key": "quotedAmount",
-          "type": "float",
+          "type": "double",
           "required": false,
           "array": false,
           "default": null,
@@ -3612,6 +3661,13 @@
           "status": "available",
           "columns": ["status"],
           "orders": []
+        },
+        {
+          "key": "idx_contactName_fulltext",
+          "type": "fulltext",
+          "status": "available",
+          "columns": ["contactName"],
+          "orders": []
         }
       ]
     },
@@ -3654,15 +3710,6 @@
           "required": false,
           "array": false,
           "size": 255,
-          "default": null,
-          "encrypt": false
-        },
-        {
-          "key": "phone",
-          "type": "varchar",
-          "required": false,
-          "array": false,
-          "size": 50,
           "default": null,
           "encrypt": false
         },

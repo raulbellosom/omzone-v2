@@ -116,7 +116,6 @@ async function handleSignupEvent({ req, res, log, error }) {
         firstName,
         lastName,
         language: "es",
-        role: "client",
       },
       [
         `read("user:${userId}")`,
@@ -206,20 +205,30 @@ async function handleEnsureProfile({ req, res, log, error }) {
     const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
     const displayName = userName || (userEmail ? userEmail.split("@")[0] : "");
 
-    await db.createDocument(
-      DB,
-      COLLECTION_PROFILES,
-      userId,
-      { displayName, firstName, lastName, language: "es" },
-      [
-        `read("user:${userId}")`,
-        `update("user:${userId}")`,
-        `read("label:admin")`,
-        `update("label:admin")`,
-      ],
-    );
-
-    log(`ensure-profile: created profile for ${userId}`);
+    try {
+      await db.createDocument(
+        DB,
+        COLLECTION_PROFILES,
+        userId,
+        { displayName, firstName, lastName, language: "es" },
+        [
+          `read("user:${userId}")`,
+          `update("user:${userId}")`,
+          `read("label:admin")`,
+          `update("label:admin")`,
+        ],
+      );
+      log(`ensure-profile: created profile for ${userId}`);
+    } catch (createErr) {
+      // Handle race condition — another call may have created the profile
+      if (createErr.code === 409) {
+        log(
+          `ensure-profile: profile already exists (race condition) for ${userId}`,
+        );
+      } else {
+        throw createErr;
+      }
+    }
 
     // Also ensure 'client' label exists
     const currentLabels = authUser.labels || [];
@@ -378,18 +387,6 @@ async function handleManualAssignment({ req, res, log, error }) {
 
     const updatedLabels = [...targetLabels, label];
     await users.updateLabels(targetUserId.trim(), updatedLabels);
-
-    // Sync role to user_profiles for ghost-user filtering
-    try {
-      const db = new Databases(client);
-      await db.updateDocument(DB, COLLECTION_PROFILES, targetUserId.trim(), {
-        role: label,
-      });
-    } catch {
-      log(
-        `Could not sync role to profile for ${targetUserId} — profile may not exist`,
-      );
-    }
 
     log(`Label '${label}' assigned to user ${targetUserId} by ${callerId}`);
 

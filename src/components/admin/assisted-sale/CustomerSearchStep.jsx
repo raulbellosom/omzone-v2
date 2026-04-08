@@ -27,9 +27,6 @@ function CustomerCard({ profile, selected, onSelect }) {
               t("admin.assistedSale.customer.noName")}
           </p>
           <p className="text-xs text-charcoal-muted">{profile.email}</p>
-          {profile.phone && (
-            <p className="text-xs text-charcoal-subtle">{profile.phone}</p>
-          )}
         </div>
         {selected && <CheckCircle2 className="h-5 w-5 text-sage shrink-0" />}
       </div>
@@ -60,7 +57,6 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
         `${profile.firstName ?? ""} ${profile.lastName ?? ""}`.trim(),
     );
     setWizardField("customerEmail", profile.email || "");
-    setWizardField("customerPhone", profile.phone || "");
     setWizardField("isNewCustomer", false);
     setShowNewForm(false);
   }

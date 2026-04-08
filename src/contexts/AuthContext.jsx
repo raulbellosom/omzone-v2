@@ -58,42 +58,48 @@ export function AuthProvider({ children }) {
       throw err;
     }
 
-    setUser(authUser);
-    setLabels(authUser.labels ?? []);
-
-    // Ensure user_profiles document exists (best-effort, non-blocking)
-    functions
-      .createExecution(
+    // Ensure user_profiles document + 'client' label exist (blocking)
+    try {
+      await functions.createExecution(
         "assign-user-label",
         JSON.stringify({ action: "ensure-profile" }),
         false,
         "/",
         "POST",
-      )
-      .catch(() => {
-        /* profile may already exist or function temporarily unavailable */
-      });
+      );
+    } catch {
+      /* profile may already exist or function temporarily unavailable */
+    }
 
-    return authUser;
+    // Re-read user to pick up any labels assigned by ensure-profile
+    const freshUser = await account.get();
+    setUser(freshUser);
+    setLabels(freshUser.labels ?? []);
+
+    return freshUser;
   }
 
   async function register(name, email, password, phone) {
-    // 1. Create account (optionally with phone)
+    // 1. Create account
     await account.create(ID.unique(), email, password, name);
 
-    // 2. Temporary session to send verification email
+    // 2. Temporary session to create profile and send verification
     await account.createEmailPasswordSession(email, password);
 
-    // 3. If phone provided, update it on the account
-    if (phone) {
-      try {
-        await account.updatePhone(phone, password);
-      } catch {
-        /* phone update is best-effort */
-      }
+    // 3. Create profile + assign 'client' label via server function (blocking)
+    try {
+      await functions.createExecution(
+        "assign-user-label",
+        JSON.stringify({ action: "ensure-profile" }),
+        false,
+        "/",
+        "POST",
+      );
+    } catch {
+      /* will be retried on first login */
     }
 
-    // 4. Send verification email
+    // 4. Send verification email BEFORE any phone update to avoid interference
     let verificationSent = true;
     try {
       await account.createVerification(VERIFY_URL);
@@ -101,7 +107,16 @@ export function AuthProvider({ children }) {
       verificationSent = false;
     }
 
-    // 5. Destroy session — user must verify before accessing the platform
+    // 5. If phone provided, update it on Auth after verification (best-effort)
+    if (phone) {
+      try {
+        await account.updatePhone(phone, password);
+      } catch {
+        /* phone update is best-effort — user can set it later from profile */
+      }
+    }
+
+    // 6. Destroy session — user must verify before accessing the platform
     await account.deleteSession("current");
     setUser(null);
     setLabels([]);

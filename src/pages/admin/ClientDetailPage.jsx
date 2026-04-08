@@ -286,7 +286,7 @@ export default function ClientDetailPage() {
               </DetailRow>
             )}
             <DetailRow label={t("admin.clientDetail.phone")}>
-              {profile?.phone || "—"}
+              {"—"}
             </DetailRow>
             <DetailRow label={t("admin.clientDetail.language")}>
               {profile?.language?.toUpperCase() || "—"}

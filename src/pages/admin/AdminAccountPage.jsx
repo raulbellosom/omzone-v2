@@ -17,7 +17,6 @@ import Input from "@/components/common/Input";
 import { Textarea } from "@/components/common/Textarea";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
-import { isValidPhone } from "@/lib/utils";
 
 const BIO_MAX = 1000;
 
@@ -30,7 +29,6 @@ export default function AdminAccountPage() {
     displayName: "",
     firstName: "",
     lastName: "",
-    phone: "",
     language: "es",
     bio: "",
   });
@@ -45,7 +43,6 @@ export default function AdminAccountPage() {
         displayName: profile.displayName || "",
         firstName: profile.firstName || "",
         lastName: profile.lastName || "",
-        phone: profile.phone || "",
         language: profile.language || "es",
         bio: profile.bio || "",
       });
@@ -73,7 +70,6 @@ export default function AdminAccountPage() {
       displayName: form.displayName.trim(),
       firstName: form.firstName.trim(),
       lastName: form.lastName.trim(),
-      phone: form.phone.trim(),
       language: form.language,
       bio: form.bio.trim(),
     };
@@ -81,9 +77,6 @@ export default function AdminAccountPage() {
     const errs = {};
     if (!trimmed.displayName && !trimmed.firstName) {
       errs.displayName = t("portal.profile.errorDisplayName");
-    }
-    if (trimmed.phone && !isValidPhone(trimmed.phone)) {
-      errs.phone = t("common.phoneError");
     }
     if (trimmed.bio && trimmed.bio.length > BIO_MAX) {
       errs.bio = `Max ${BIO_MAX}`;
@@ -313,7 +306,7 @@ export default function AdminAccountPage() {
               </p>
 
               <div className="space-y-4">
-                {/* Phone */}
+                {/* Phone (read-only from Auth) */}
                 <div>
                   <label className="block text-xs font-medium text-charcoal-muted mb-1.5">
                     {t("portal.profile.phoneLabel")}
@@ -321,13 +314,13 @@ export default function AdminAccountPage() {
                   <Input
                     icon={Phone}
                     type="tel"
-                    value={form.phone}
-                    onChange={(e) => handleChange("phone", e.target.value)}
-                    placeholder={t("portal.profile.phonePlaceholder")}
+                    value={user?.phone || ""}
+                    disabled
+                    className="bg-warm-gray/50 text-charcoal-muted"
                   />
-                  {errors.phone && (
-                    <p className="text-xs text-red-600 mt-1">{errors.phone}</p>
-                  )}
+                  <p className="text-[11px] text-charcoal-subtle mt-1">
+                    {t("portal.profile.phoneHelper") || "Phone is managed in your account settings"}
+                  </p>
                 </div>
 
                 {/* Bio */}

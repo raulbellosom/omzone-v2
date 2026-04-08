@@ -1,20 +1,16 @@
 import { useState, useEffect } from "react";
-import { User, Phone, Globe, FileText, Check } from "lucide-react";
+import { User, Globe, FileText, Check } from "lucide-react";
 import { Input } from "@/components/common/Input";
 import { Textarea } from "@/components/common/Textarea";
 import { Button } from "@/components/common/Button";
-import { isValidPhone } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 
 const BIO_MAX = 1000;
 
-function validate(form, t) {
+function validate(form) {
   const errors = {};
   if (!form.displayName?.trim() && !form.firstName?.trim()) {
     errors.displayName = "Se requiere al menos nombre visible o nombre.";
-  }
-  if (form.phone?.trim() && !isValidPhone(form.phone)) {
-    errors.phone = t("common.phoneError");
   }
   if (form.bio && form.bio.length > BIO_MAX) {
     errors.bio = `Máximo ${BIO_MAX} caracteres.`;
@@ -28,7 +24,6 @@ export default function ProfileForm({ profile, email, onSave, saving }) {
     displayName: "",
     firstName: "",
     lastName: "",
-    phone: "",
     language: "es",
     bio: "",
   });
@@ -41,7 +36,6 @@ export default function ProfileForm({ profile, email, onSave, saving }) {
         displayName: profile.displayName || "",
         firstName: profile.firstName || "",
         lastName: profile.lastName || "",
-        phone: profile.phone || "",
         language: profile.language || "es",
         bio: profile.bio || "",
       });
@@ -54,23 +48,16 @@ export default function ProfileForm({ profile, email, onSave, saving }) {
     setSuccess(false);
   }
 
-  function handlePhoneBlur() {
-    if (form.phone?.trim() && !isValidPhone(form.phone)) {
-      setErrors((prev) => ({ ...prev, phone: t("common.phoneError") }));
-    }
-  }
-
   async function handleSubmit(e) {
     e.preventDefault();
     const trimmed = {
       displayName: form.displayName.trim(),
       firstName: form.firstName.trim(),
       lastName: form.lastName.trim(),
-      phone: form.phone.trim(),
       language: form.language,
       bio: form.bio.trim(),
     };
-    const errs = validate(trimmed, t);
+    const errs = validate(trimmed);
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
       return;
@@ -139,24 +126,6 @@ export default function ProfileForm({ profile, email, onSave, saving }) {
             placeholder="Apellido"
           />
         </div>
-      </div>
-
-      {/* Phone */}
-      <div>
-        <label className="block text-xs font-medium text-charcoal-muted mb-1.5">
-          Teléfono
-        </label>
-        <Input
-          icon={Phone}
-          type="tel"
-          value={form.phone}
-          onChange={(e) => handleChange("phone", e.target.value)}
-          onBlur={handlePhoneBlur}
-          placeholder="+52 55 1234 5678"
-        />
-        {errors.phone && (
-          <p className="text-xs text-red-600 mt-1">{errors.phone}</p>
-        )}
       </div>
 
       {/* Language toggle */}

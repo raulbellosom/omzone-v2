@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import PortalSidebar from "@/components/portal/layout/PortalSidebar";
 import PortalBottomTabs from "@/components/portal/layout/PortalBottomTabs";
 import LanguageSwitcher from "@/components/common/LanguageSwitcher";
-import { Menu } from "lucide-react";
+import { Menu, ArrowLeft } from "lucide-react";
 
 export default function PortalLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -43,6 +43,14 @@ export default function PortalLayout() {
           </span>
 
           <div className="flex-1" />
+
+          <Link
+            to="/"
+            className="text-xs text-charcoal-muted hover:text-sage transition-colors flex items-center gap-1"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Back to OMZONE</span>
+          </Link>
 
           <LanguageSwitcher />
         </header>

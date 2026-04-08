@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { databases, functions } from "@/lib/appwrite";
-import { Permission, Role } from "appwrite";
 import env from "@/config/env";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -10,7 +9,7 @@ const COL = env.collectionUserProfiles;
 /**
  * Reads and updates the authenticated user's profile from user_profiles.
  * The profile document uses $id = userId (set by assign-user-label function).
- * If the document doesn't exist, it auto-creates it with sensible defaults.
+ * If the document doesn't exist, it calls the server function to create it.
  */
 export function useUserProfile() {
   const { user } = useAuth();
@@ -20,6 +19,7 @@ export function useUserProfile() {
 
   const fetch = useCallback(async () => {
     if (!user?.$id) {
+      setProfile(null);
       setLoading(false);
       return;
     }
@@ -40,38 +40,14 @@ export function useUserProfile() {
             "POST",
           );
           // Retry fetch after server-side creation
-          const doc = await databases.getDocument(DB, COL, user.$id);
-          setProfile(doc);
-        } catch (ensureErr) {
-          // Fallback: try client-side create (works for admin/root labels)
           try {
-            const nameParts = (user.name || "").trim().split(/\s+/);
-            const firstName = nameParts[0] || "";
-            const lastName =
-              nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
-            const displayName =
-              user.name || (user.email ? user.email.split("@")[0] : "");
-
-            const doc = await databases.createDocument(
-              DB,
-              COL,
-              user.$id,
-              { displayName, firstName, lastName, language: "es" },
-              [
-                Permission.read(Role.user(user.$id)),
-                Permission.update(Role.user(user.$id)),
-                Permission.read(Role.label("admin")),
-                Permission.update(Role.label("admin")),
-              ],
-            );
+            const doc = await databases.getDocument(DB, COL, user.$id);
             setProfile(doc);
-          } catch (createErr) {
-            if (createErr.code === 401 || createErr.code === 403) {
-              setProfile(null);
-            } else {
-              setError(createErr.message);
-            }
+          } catch {
+            setProfile(null);
           }
+        } catch {
+          setProfile(null);
         }
       } else {
         setError(err.message);
@@ -79,7 +55,7 @@ export function useUserProfile() {
     } finally {
       setLoading(false);
     }
-  }, [user?.$id, user?.name, user?.email]);
+  }, [user?.$id]);
 
   useEffect(() => {
     fetch();
