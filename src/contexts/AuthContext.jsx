@@ -81,7 +81,7 @@ export function AuthProvider({ children }) {
     // 1. Create account (optionally with phone)
     await account.create(ID.unique(), email, password, name);
 
-    // 2. Temporary session to send verification email
+    // 2. Temporary session to send verification email and call Functions
     await account.createEmailPasswordSession(email, password);
 
     // 3. If phone provided, update it on the account
@@ -93,7 +93,23 @@ export function AuthProvider({ children }) {
       }
     }
 
-    // 4. Send verification email
+    // 4. Guarantee user_profiles exists and 'client' label is assigned NOW —
+    //    the users.*.create event trigger is asynchronous and unreliable.
+    //    Calling ensure-profile synchronously while the session is active
+    //    means profile + label are ready before the user ever logs in.
+    try {
+      await functions.createExecution(
+        "assign-user-label",
+        JSON.stringify({ action: "ensure-profile" }),
+        false, // synchronous — wait for completion
+        "/",
+        "POST",
+      );
+    } catch {
+      /* non-blocking — event trigger will attempt again if this fails */
+    }
+
+    // 5. Send verification email
     let verificationSent = true;
     try {
       await account.createVerification(VERIFY_URL);
@@ -101,7 +117,7 @@ export function AuthProvider({ children }) {
       verificationSent = false;
     }
 
-    // 5. Destroy session — user must verify before accessing the platform
+    // 6. Destroy session — user must verify before accessing the platform
     await account.deleteSession("current");
     setUser(null);
     setLabels([]);
@@ -119,6 +135,19 @@ export function AuthProvider({ children }) {
     await account.createEmailPasswordSession(email, password);
     try {
       await account.createVerification(VERIFY_URL);
+    } catch (err) {
+      // Surface a specific signal when the account is already verified so
+      // the UI can redirect to login instead of showing a generic error
+      if (
+        err?.code === 401 ||
+        err?.type === "user_unauthorized" ||
+        err?.message?.toLowerCase().includes("already verified")
+      ) {
+        const e = new Error("Email already verified");
+        e.type = "already_verified";
+        throw e;
+      }
+      throw err;
     } finally {
       await account.deleteSession("current").catch(() => {});
     }

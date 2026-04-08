@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { MailCheck } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
@@ -11,6 +11,7 @@ const COOLDOWN_SECONDS = 60;
 
 export default function VerifyEmailPendingPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { resendVerificationWithCredentials } = useAuth();
   const { t } = useLanguage();
   const email = location.state?.email || "";
@@ -38,7 +39,15 @@ export default function VerifyEmailPendingPage() {
       await resendVerificationWithCredentials(email, vpRef.current);
       setFeedback(t("auth.verifyPending.resendSuccess"));
       setCooldown(COOLDOWN_SECONDS);
-    } catch {
+    } catch (err) {
+      if (err?.type === "already_verified") {
+        // Account is already verified — redirect to login
+        navigate(ROUTES.LOGIN, {
+          replace: true,
+          state: { message: t("auth.verifyPending.alreadyVerified") },
+        });
+        return;
+      }
       setFeedback(t("auth.verifyPending.resendError"));
     } finally {
       setResending(false);

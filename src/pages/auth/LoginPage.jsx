@@ -18,6 +18,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const infoMessage = location.state?.message || "";
 
   function handleChange(e) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -102,6 +103,12 @@ export default function LoginPage() {
               {t("auth.login.subtitle")}
             </p>
           </div>
+
+          {infoMessage && (
+            <div className="mb-4 rounded-xl bg-sage/10 border border-sage/30 px-4 py-3">
+              <p className="text-sm text-sage-dark">{infoMessage}</p>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-1.5">
