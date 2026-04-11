@@ -23,7 +23,7 @@
       "languageLabel": "Idioma preferido",
       "bioLabel": "Sobre ti",
       "bioPlaceholder": "Cuéntanos un poco sobre ti…",
-      "bioCount": "{{count}}/{{max}}",
+      "bioCount": "{count}/{max}",
       "saveButton": "Guardar Cambios",
       "saving": "Guardando…",
       "saved": "Perfil actualizado",

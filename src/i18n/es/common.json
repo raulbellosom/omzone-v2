@@ -77,7 +77,7 @@
       "folder": ".",
       "resendButton": "Reenviar correo de verificación",
       "resending": "Enviando…",
-      "resendCooldown": "Reenviar en {{seconds}}s",
+      "resendCooldown": "Reenviar en {seconds}s",
       "resendSuccess": "¡Correo de verificación enviado! Revisa tu bandeja de entrada.",
       "resendError": "No se pudo reenviar. Intenta iniciar sesión de nuevo para recibir un nuevo correo de verificación.",
       "resendLoginHint": "Para reenviar el correo de verificación, intenta iniciar sesión de nuevo.",

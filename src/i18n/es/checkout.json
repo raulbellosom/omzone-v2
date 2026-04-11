@@ -78,7 +78,7 @@
   "paymentStep": {
     "consent": "Acepto los <termsLink>Términos de Servicio</termsLink>, el <privacyLink>Aviso de Privacidad</privacyLink> y la <refundLink>Política de Reembolso</refundLink>",
     "consentRequired": "Debes aceptar los términos para continuar.",
-    "payButton": "Pagar {{amount}}",
+    "payButton": "Pagar {amount}",
     "processing": "Procesando pago…",
     "stripeDisclosure": "Pagos procesados de forma segura por Stripe. Tu información de tarjeta nunca se almacena en nuestros servidores.",
     "errorGeneric": "El pago falló. Por favor intenta de nuevo.",

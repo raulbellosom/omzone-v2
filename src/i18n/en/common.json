@@ -77,7 +77,7 @@
       "folder": "folder.",
       "resendButton": "Resend verification email",
       "resending": "Sending…",
-      "resendCooldown": "Resend in {{seconds}}s",
+      "resendCooldown": "Resend in {seconds}s",
       "resendSuccess": "Verification email sent! Check your inbox.",
       "resendError": "Could not resend. Please try signing in again to trigger a new verification email.",
       "resendLoginHint": "To resend the verification email, try signing in again.",

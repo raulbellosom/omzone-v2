@@ -131,7 +131,7 @@ export default function VerifyEmailPendingPage() {
                 {resending
                   ? t("auth.verifyPending.resending")
                   : cooldown > 0
-                    ? t("auth.verifyPending.resendCooldown").replace("{{seconds}}", cooldown)
+                    ? t("auth.verifyPending.resendCooldown", { seconds: cooldown })
                     : t("auth.verifyPending.resendButton")}
               </Button>
             ) : (

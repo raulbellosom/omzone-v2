@@ -64,14 +64,21 @@ export function LanguageProvider({ children }) {
   /**
    * Translate a static UI string by dot-path key.
    * Falls back to EN if key is missing in the current language, then to the key itself.
+   * Supports interpolation: t("key", { name: "Val" }) replaces {name} in the string.
    */
   const t = useCallback(
-    (key) => {
-      const val = resolve(messages[language], key);
-      if (val !== undefined) return val;
-      // Fallback to EN
-      const fallback = resolve(messages[DEFAULT_LANG], key);
-      return fallback !== undefined ? fallback : key;
+    (key, params) => {
+      let val = resolve(messages[language], key);
+      if (val === undefined) {
+        val = resolve(messages[DEFAULT_LANG], key);
+      }
+      if (val === undefined) return key;
+      if (params && typeof val === "string") {
+        return val.replace(/\{(\w+)\}/g, (_, k) =>
+          params[k] !== undefined ? params[k] : `{${k}}`,
+        );
+      }
+      return val;
     },
     [language],
   );
