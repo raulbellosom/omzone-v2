@@ -41,7 +41,16 @@
  * @returns {Object} { ok: true, data: { tickets: [...], bookings: [...], generated: boolean } }
  */
 
-import { Client, Databases, Functions, Query, ID, Users, Permission, Role } from "node-appwrite";
+import {
+  Client,
+  Databases,
+  Functions,
+  Query,
+  ID,
+  Users,
+  Permission,
+  Role,
+} from "node-appwrite";
 import { randomUUID } from "node:crypto";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -55,9 +64,14 @@ const TICKETABLE_ITEM_TYPES = ["edition"];
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function initClient(req) {
+  let endpoint = process.env.APPWRITE_FUNCTION_API_ENDPOINT;
+  if (endpoint && endpoint.startsWith("http://")) {
+    endpoint = endpoint.replace("http://", "https://");
+  }
   return new Client()
-    .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
+    .setEndpoint(endpoint)
     .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
+    .setSelfSigned(true)
     .setKey(req.headers["x-appwrite-key"]);
 }
 
@@ -309,18 +323,24 @@ export default async ({ req, res, log, error }) => {
           slotData,
         );
 
-        const ticket = await db.createDocument(DB, COL_TICKETS, ID.unique(), {
-          orderId,
-          orderItemId: item.$id,
-          userId: order.userId,
-          experienceId,
-          slotId: item.slotId || null,
-          ticketCode,
-          participantName: order.customerName || null,
-          participantEmail: order.customerEmail || null,
-          status: "valid",
-          ticketSnapshot,
-        }, buildDocPermissions(order.userId));
+        const ticket = await db.createDocument(
+          DB,
+          COL_TICKETS,
+          ID.unique(),
+          {
+            orderId,
+            orderItemId: item.$id,
+            userId: order.userId,
+            experienceId,
+            slotId: item.slotId || null,
+            ticketCode,
+            participantName: order.customerName || null,
+            participantEmail: order.customerEmail || null,
+            status: "valid",
+            ticketSnapshot,
+          },
+          buildDocPermissions(order.userId),
+        );
 
         createdTickets.push({
           $id: ticket.$id,

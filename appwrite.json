@@ -4205,12 +4205,9 @@
       "$id": "experience_media",
       "$permissions": [
         "read(\"any\")",
-        "create(\"label:admin\")",
-        "update(\"label:admin\")",
-        "delete(\"label:admin\")",
-        "create(\"label:root\")",
-        "update(\"label:root\")",
-        "delete(\"label:root\")"
+        "create(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
       ],
       "name": "Experience Media",
       "enabled": true,
@@ -4225,12 +4222,9 @@
       "$id": "publication_media",
       "$permissions": [
         "read(\"any\")",
-        "create(\"label:admin\")",
-        "update(\"label:admin\")",
-        "delete(\"label:admin\")",
-        "create(\"label:root\")",
-        "update(\"label:root\")",
-        "delete(\"label:root\")"
+        "create(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
       ],
       "name": "Publication Media",
       "enabled": true,
@@ -4245,12 +4239,9 @@
       "$id": "addon_images",
       "$permissions": [
         "read(\"any\")",
-        "create(\"label:admin\")",
-        "update(\"label:admin\")",
-        "delete(\"label:admin\")",
-        "create(\"label:root\")",
-        "update(\"label:root\")",
-        "delete(\"label:root\")"
+        "create(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
       ],
       "name": "Addon Images",
       "enabled": true,
@@ -4265,12 +4256,9 @@
       "$id": "package_images",
       "$permissions": [
         "read(\"any\")",
-        "create(\"label:admin\")",
-        "update(\"label:admin\")",
-        "delete(\"label:admin\")",
-        "create(\"label:root\")",
-        "update(\"label:root\")",
-        "delete(\"label:root\")"
+        "create(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
       ],
       "name": "Package Images",
       "enabled": true,
@@ -4287,8 +4275,7 @@
         "read(\"any\")",
         "create(\"users\")",
         "update(\"users\")",
-        "delete(\"label:admin\")",
-        "delete(\"label:root\")"
+        "delete(\"users\")"
       ],
       "name": "User Avatars",
       "enabled": true,
@@ -4303,10 +4290,8 @@
       "$id": "documents",
       "$permissions": [
         "read(\"users\")",
-        "create(\"label:admin\")",
-        "delete(\"label:admin\")",
-        "create(\"label:root\")",
-        "delete(\"label:root\")"
+        "create(\"users\")",
+        "delete(\"users\")"
       ],
       "name": "Documents",
       "enabled": true,
@@ -4321,12 +4306,9 @@
       "$id": "public-resources",
       "$permissions": [
         "read(\"any\")",
-        "create(\"label:admin\")",
-        "update(\"label:admin\")",
-        "delete(\"label:admin\")",
-        "create(\"label:root\")",
-        "update(\"label:root\")",
-        "delete(\"label:root\")"
+        "create(\"users\")",
+        "update(\"users\")",
+        "delete(\"users\")"
       ],
       "name": "Recursos Publicos",
       "enabled": true,

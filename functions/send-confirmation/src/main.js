@@ -46,9 +46,14 @@ import { Client, Databases, Query, Users } from "node-appwrite";
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function initClient(req) {
+  let endpoint = process.env.APPWRITE_FUNCTION_API_ENDPOINT;
+  if (endpoint && endpoint.startsWith("http://")) {
+    endpoint = endpoint.replace("http://", "https://");
+  }
   return new Client()
-    .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
+    .setEndpoint(endpoint)
     .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
+    .setSelfSigned(true)
     .setKey(req.headers["x-appwrite-key"]);
 }
 

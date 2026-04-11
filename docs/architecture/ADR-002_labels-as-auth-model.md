@@ -82,6 +82,39 @@ El usuario `root` es un **usuario fantasma**. No basta con no mostrar la palabra
 - **Escalabilidad de permisos:** Si surgen necesidades de permisos finos por módulo para operators, habrá que agregar capa complementaria. Mitigación: diseñar la tabla futura pero no implementarla ahora.
 - **Root expuesto:** Si la UI no oculta `root` correctamente, se expone un actor técnico. Mitigación: el frontend NUNCA muestra "root" como opción ni como label visible.
 
+## Limitaciones conocidas de `Role.label()` en Appwrite 1.9.0
+
+> **Descubierto:** 2026-04-11
+
+### Storage buckets NO soportan `label:` como scope
+
+Appwrite 1.9.0 self-hosted **acepta** `create("label:admin")` y `create("label:root")` al configurar permisos de un bucket de Storage, pero los **rechaza en runtime** al intentar subir un archivo:
+
+```
+Missing "create" permission for role "label:root". Only ["any","guests"] scopes are allowed
+and ["label:admin","label:root"] was given.
+```
+
+**Scopes válidos a nivel de bucket de Storage:** `any`, `guests`, `users`.
+
+**Impacto:** Los 7 buckets de OMZONE (`experience_media`, `publication_media`, `addon_images`, `package_images`, `user_avatars`, `documents`, `public-resources`) fueron corregidos para usar `users` en lugar de `label:admin`/`label:root`.
+
+**Mitigación:** La restricción de que solo admins/root puedan subir archivos de catálogo se implementa en dos capas:
+
+1. **Route guards de frontend:** Solo usuarios con label `admin` o `root` acceden al panel admin donde están los formularios de upload.
+2. **Contexto de UI:** Los componentes `ImageUpload` y `GalleryManager` solo se renderizan dentro de formularios admin protegidos.
+
+**Nota:** Esta limitación **NO aplica** a colecciones de base de datos. `Role.label("admin")` funciona correctamente para permisos de colecciones y documentos. Solo Storage buckets tienen esta restricción.
+
+### Donde SÍ funciona `Role.label()`
+
+| Recurso                                | `Role.label()` soportado              |
+| -------------------------------------- | ------------------------------------- |
+| Colecciones (databases)                | ✅ Sí                                 |
+| Documentos (rows)                      | ✅ Sí                                 |
+| Buckets de Storage                     | ❌ No — solo `any`, `guests`, `users` |
+| Archivos (file-level con fileSecurity) | ✅ Sí                                 |
+
 ---
 
 **ADR ID:** ADR-002

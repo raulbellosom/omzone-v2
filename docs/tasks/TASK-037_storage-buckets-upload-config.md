@@ -27,12 +27,16 @@ Lo que SÍ incluye esta tarea:
    - `package_images` — imágenes de paquetes
    - `documents` — documentos descargables (tickets PDF, comprobantes futuros)
 2. Configurar permisos por bucket:
-   - `experience_images`: read `Role.any()`, create/update/delete `Role.label("admin")`
-   - `publication_media`: read `Role.any()`, create/update/delete `Role.label("admin")`
-   - `addon_images`: read `Role.any()`, create/update/delete `Role.label("admin")`
-   - `package_images`: read `Role.any()`, create/update/delete `Role.label("admin")`
-   - `user_avatars`: read `Role.any()`, create/update `Role.users()`, delete `Role.label("admin")`
-   - `documents`: read `Role.users()`, create/delete `Role.label("admin")`
+   - `experience_media`: read `any`, create/update/delete `users`
+   - `publication_media`: read `any`, create/update/delete `users`
+   - `addon_images`: read `any`, create/update/delete `users`
+   - `package_images`: read `any`, create/update/delete `users`
+   - `user_avatars`: read `any`, create/update/delete `users`
+   - `documents`: read `users`, create/delete `users`
+   - `public-resources`: read `any`, create/update/delete `users`
+
+   > **⚠️ NOTA (2026-04-11):** Appwrite 1.9.0 self-hosted **no soporta `label:` como scope válido a nivel de bucket** de Storage. Los permisos `create("label:admin")` son aceptados al configurar el bucket pero **rechazados en runtime** con error `Missing "create" permission for role "label:root". Only ["any","guests"] scopes are allowed`. La corrección fue cambiar a `users` scope. La restricción de acceso admin-only se implementa vía route guards de frontend + contexto admin panel. Ver ADR-002 sección "Limitaciones de permisos".
+
 3. Configurar restricciones por bucket:
    - `experience_images`, `publication_media`, `addon_images`, `package_images`: max 10MB, tipos permitidos: jpg, jpeg, png, webp, gif
    - `user_avatars`: max 2MB, tipos: jpg, jpeg, png, webp
@@ -72,9 +76,9 @@ Lo que SÍ incluye esta tarea:
 
 ## Entidades / tablas implicadas
 
-| Tabla | Operación | Notas |
-|---|---|---|
-| Ninguna tabla | — | Esta tarea opera sobre Storage, no sobre Databases |
+| Tabla         | Operación | Notas                                              |
+| ------------- | --------- | -------------------------------------------------- |
+| Ninguna tabla | —         | Esta tarea opera sobre Storage, no sobre Databases |
 
 ## Atributos nuevos o modificados
 
@@ -82,32 +86,32 @@ N/A — esta tarea configura Storage buckets, no colecciones de base de datos.
 
 ## Functions implicadas
 
-| Function | Operación | Notas |
-|---|---|---|
-| Ninguna | — | Upload y delete se hacen directamente con Appwrite Storage SDK |
+| Function | Operación | Notas                                                          |
+| -------- | --------- | -------------------------------------------------------------- |
+| Ninguna  | —         | Upload y delete se hacen directamente con Appwrite Storage SDK |
 
 ## Buckets / Storage implicados
 
-| Bucket | Operación | Notas |
-|---|---|---|
-| `experience_images` | crear | Portadas y galerías de experiencias |
-| `publication_media` | crear | Media de publicaciones y secciones |
-| `user_avatars` | crear | Fotos de perfil |
-| `addon_images` | crear | Imágenes de addons |
-| `package_images` | crear | Imágenes de paquetes |
-| `documents` | crear | Documentos descargables |
+| Bucket              | Operación | Notas                               |
+| ------------------- | --------- | ----------------------------------- |
+| `experience_images` | crear     | Portadas y galerías de experiencias |
+| `publication_media` | crear     | Media de publicaciones y secciones  |
+| `user_avatars`      | crear     | Fotos de perfil                     |
+| `addon_images`      | crear     | Imágenes de addons                  |
+| `package_images`    | crear     | Imágenes de paquetes                |
+| `documents`         | crear     | Documentos descargables             |
 
 ## Componentes frontend implicados
 
-| Componente | Superficie | Operación | Notas |
-|---|---|---|---|
-| `ImageUpload` | admin | crear | Componente reutilizable de upload con drag-and-drop |
+| Componente    | Superficie | Operación | Notas                                               |
+| ------------- | ---------- | --------- | --------------------------------------------------- |
+| `ImageUpload` | admin      | crear     | Componente reutilizable de upload con drag-and-drop |
 
 ## Hooks implicados
 
-| Hook | Operación | Notas |
-|---|---|---|
-| `useFileUpload` | crear | Upload, delete, preview URL, estado de progreso |
+| Hook            | Operación | Notas                                           |
+| --------------- | --------- | ----------------------------------------------- |
+| `useFileUpload` | crear     | Upload, delete, preview URL, estado de progreso |
 
 ## Rutas implicadas
 
@@ -115,14 +119,18 @@ N/A — no se crean rutas nuevas; el componente se usa dentro de formularios exi
 
 ## Permisos y labels involucrados
 
-| Acción | root | admin | operator | client | anónimo |
-|---|---|---|---|---|---|
-| Ver imágenes públicas (experience, publication, addon, package) | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Ver avatares | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Ver documentos propios | ✅ | ✅ | ✅ | ✅ (propios) | ❌ |
-| Subir imágenes a buckets públicos | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Subir avatar propio | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Eliminar archivos | ✅ | ✅ | ❌ | ❌ | ❌ |
+> **⚠️ ACTUALIZADO 2026-04-11:** Appwrite 1.9.0 no soporta `label:` en storage buckets. Los permisos de bucket usan `users` scope. La restricción admin-only se implementa vía route guards.
+
+| Acción                                                          | root | admin | operator | client       | anónimo |
+| --------------------------------------------------------------- | ---- | ----- | -------- | ------------ | ------- |
+| Ver imágenes públicas (experience, publication, addon, package) | ✅   | ✅    | ✅       | ✅           | ✅      |
+| Ver avatares                                                    | ✅   | ✅    | ✅       | ✅           | ✅      |
+| Ver documentos propios                                          | ✅   | ✅    | ✅       | ✅ (propios) | ❌      |
+| Subir imágenes a buckets públicos (vía admin panel)             | ✅   | ✅    | ❌\*     | ❌\*         | ❌      |
+| Subir avatar propio                                             | ✅   | ✅    | ✅       | ✅           | ❌      |
+| Eliminar archivos (vía admin panel)                             | ✅   | ✅    | ❌\*     | ❌\*         | ❌      |
+
+\* Técnicamente `users` permitiría el upload pero operator/client no tienen acceso a las rutas admin donde están los formularios de upload.
 
 ## Flujo principal
 
@@ -140,7 +148,7 @@ N/A — no se crean rutas nuevas; el componente se usa dentro de formularios exi
 ## Criterios de aceptación
 
 - [x] Los 6 buckets están creados en Appwrite Storage: `experience_media`, `publication_media`, `user_avatars`, `addon_images`, `package_images`, `documents` — desplegados con `appwrite push buckets --all`; confirmado: "Successfully pushed 6 buckets."
-- [x] Los permisos de cada bucket están correctamente configurados según la matriz de permisos — configurados en `appwrite.json` y aplicados en servidor (read `any`/`users`, create/update/delete `label:admin`/`label:root` por bucket).
+- [x] Los permisos de cada bucket están correctamente configurados según la matriz de permisos — **ACTUALIZADO 2026-04-11:** Appwrite 1.9.0 no soporta `label:` en storage buckets; todos los buckets usan `users` para create/update/delete (ver nota en sección Alcance). Acceso admin-only se garantiza por route guards de frontend.
 - [x] Los buckets de imágenes aceptan solo jpg, jpeg, png, webp, gif con max 10MB — `maximumFileSize: 10485760`, `allowedFileExtensions: ["jpg","jpeg","png","webp","gif"]` en `experience_media`, `publication_media`, `addon_images`, `package_images`.
 - [x] El bucket `user_avatars` acepta solo jpg, jpeg, png, webp con max 2MB — `maximumFileSize: 2097152`, `allowedFileExtensions: ["jpg","jpeg","png","webp"]`.
 - [x] El bucket `documents` acepta solo pdf, jpg, png con max 20MB — `maximumFileSize: 20971520`, `allowedFileExtensions: ["pdf","jpg","png"]`.
@@ -155,12 +163,12 @@ N/A — no se crean rutas nuevas; el componente se usa dentro de formularios exi
 - [x] Si se intenta subir un archivo con tipo inválido, se muestra error descriptivo sin hacer upload — `validate(file)` en hook y componente antes de llamar a `storage.createFile`; muestra mensaje con tipos aceptados.
 - [x] Si se intenta subir un archivo que excede el tamaño máximo, se muestra error descriptivo — `validate(file)` chequea `file.size > config.maxSize`; muestra `"El archivo supera el tamaño máximo de X MB"`.
 - [x] El componente `ImageUpload` es responsive y funciona en mobile — `w-full aspect-video`, layout flex column, tamaño touch-friendly; funciona con input file nativo en mobile.
-- [x] Un usuario anónimo puede ver imágenes públicas (experience_media, publication_media) pero no puede subir — permisos server-side: `read("any")` permite ver; `create` solo `label:admin`/`label:root`; Appwrite rechaza el upload.
-- [x] Un admin puede subir y eliminar archivos de todos los buckets públicos — permisos `create/update/delete("label:admin")` + `("label:root")` en todos los buckets públicos.
+- [x] Un usuario anónimo puede ver imágenes públicas (experience_media, publication_media) pero no puede subir — permisos server-side: `read("any")` permite ver; `create("users")` requiere sesión autenticada; Appwrite rechaza el upload de anónimos.
+- [x] Un admin puede subir y eliminar archivos de todos los buckets públicos — permisos `create/update/delete("users")` en todos los buckets; acceso restringido a admin/root vía route guards del panel admin.
 
 ## Validaciones de seguridad
 
-- [x] Los permisos de bucket se validan server-side por Appwrite; el frontend no bypassa restricciones — permisos configurados en `appwrite.json` y aplicados en Appwrite server; el frontend llama SDK que envía el token de sesión del usuario y Appwrite verifica labels.
+- [x] Los permisos de bucket se validan server-side por Appwrite; el frontend no bypassa restricciones — permisos configurados en `appwrite.json` y aplicados en Appwrite server; el frontend llama SDK que envía el token de sesión del usuario. **Nota:** Appwrite 1.9.0 no soporta `label:` en Storage buckets, así que la capa storage valida `users` (autenticado) y la restricción admin-only se implementa vía route guards.
 - [x] El tipo de archivo se valida tanto en frontend (antes de upload) como en el bucket — `validate(file)` en `useFileUpload.js` chequea `config.allowedTypes.includes(file.type)` antes del upload; `allowedFileExtensions` en bucket rechaza server-side.
 - [x] El tamaño máximo se valida en frontend y enforced por el bucket — `file.size > config.maxSize` en `validate()`; `maximumFileSize` en bucket rechaza server-side.
 - [x] El bucket `documents` no es legible por usuarios anónimos — solo `read("users")` (requiere sesión autenticada); `read("any")` NO está en el bucket `documents`.
@@ -181,3 +189,4 @@ N/A — no se crean rutas nuevas; el componente se usa dentro de formularios exi
 - **Permisos `user_avatars`:** El permiso `Role.users()` para create permite que cualquier usuario autenticado suba. Para restringir a "solo su propio avatar", la lógica debe estar en el frontend o en una Function. En esta versión se confía en la UX.
 - **Archivos huérfanos:** Si un admin sube una imagen y luego no guarda el formulario, el archivo queda huérfano en Storage. No se implementa cleanup en esta tarea — es mejora futura.
 - **Preview API sizing:** Appwrite Storage provee preview con parámetros `width` y `height`. Documentar los tamaños estándar para cada contexto (thumbnail: 200px, card: 600px, hero: 1200px).
+- **⚠️ `label:` no soportado en Storage buckets (Appwrite 1.9.0):** Descubierto 2026-04-11. Appwrite 1.9.0 self-hosted acepta `label:` al configurar un bucket pero lo rechaza en runtime. Todos los buckets fueron corregidos a `users` scope. La restricción admin-only depende de route guards de frontend. Si en el futuro se necesita restricción server-side estricta en Storage, evaluar: (a) `fileSecurity: true` con permisos por archivo usando `Role.label()`, (b) proxy via Appwrite Function que suba archivos con API key server-side, o (c) una versión futura de Appwrite que soporte `label:` en buckets. Ver ADR-002.

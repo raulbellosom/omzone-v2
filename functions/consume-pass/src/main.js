@@ -48,7 +48,15 @@
  * @returns {Object} { ok: true, data: { ticket, booking, remainingCredits, userPassStatus } }
  */
 
-import { Client, Databases, Query, ID, Users, Permission, Role } from "node-appwrite";
+import {
+  Client,
+  Databases,
+  Query,
+  ID,
+  Users,
+  Permission,
+  Role,
+} from "node-appwrite";
 import { randomUUID } from "node:crypto";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -59,9 +67,14 @@ const SNAPSHOT_VERSION = 1;
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function initClient(req) {
+  let endpoint = process.env.APPWRITE_FUNCTION_API_ENDPOINT;
+  if (endpoint && endpoint.startsWith("http://")) {
+    endpoint = endpoint.replace("http://", "https://");
+  }
   return new Client()
-    .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
+    .setEndpoint(endpoint)
     .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
+    .setSelfSigned(true)
     .setKey(req.headers["x-appwrite-key"]);
 }
 
@@ -123,7 +136,10 @@ export default async ({ req, res, log, error }) => {
   // ── Method check ───────────────────────────────────────────────────────────
   if (req.method !== "POST") {
     return res.json(
-      { ok: false, error: { code: "ERR_METHOD_NOT_ALLOWED", message: "Only POST allowed" } },
+      {
+        ok: false,
+        error: { code: "ERR_METHOD_NOT_ALLOWED", message: "Only POST allowed" },
+      },
       405,
     );
   }
@@ -134,13 +150,16 @@ export default async ({ req, res, log, error }) => {
   const users = new Users(client);
 
   const DB = process.env.APPWRITE_DATABASE_ID || "omzone_db";
-  const COL_USER_PASSES = process.env.APPWRITE_COLLECTION_USER_PASSES || "user_passes";
+  const COL_USER_PASSES =
+    process.env.APPWRITE_COLLECTION_USER_PASSES || "user_passes";
   const COL_PASSES = process.env.APPWRITE_COLLECTION_PASSES || "passes";
-  const COL_CONSUMPTIONS = process.env.APPWRITE_COLLECTION_PASS_CONSUMPTIONS || "pass_consumptions";
+  const COL_CONSUMPTIONS =
+    process.env.APPWRITE_COLLECTION_PASS_CONSUMPTIONS || "pass_consumptions";
   const COL_TICKETS = process.env.APPWRITE_COLLECTION_TICKETS || "tickets";
   const COL_BOOKINGS = process.env.APPWRITE_COLLECTION_BOOKINGS || "bookings";
   const COL_SLOTS = process.env.APPWRITE_COLLECTION_SLOTS || "slots";
-  const COL_EXPERIENCES = process.env.APPWRITE_COLLECTION_EXPERIENCES || "experiences";
+  const COL_EXPERIENCES =
+    process.env.APPWRITE_COLLECTION_EXPERIENCES || "experiences";
 
   try {
     // ── Parse input ──────────────────────────────────────────────────────────
@@ -149,13 +168,25 @@ export default async ({ req, res, log, error }) => {
 
     if (!userPassId || typeof userPassId !== "string") {
       return res.json(
-        { ok: false, error: { code: "ERR_PASS_MISSING_USER_PASS", message: "userPassId is required" } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_PASS_MISSING_USER_PASS",
+            message: "userPassId is required",
+          },
+        },
         400,
       );
     }
     if (!slotId || typeof slotId !== "string") {
       return res.json(
-        { ok: false, error: { code: "ERR_PASS_MISSING_SLOT", message: "slotId is required" } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_PASS_MISSING_SLOT",
+            message: "slotId is required",
+          },
+        },
         400,
       );
     }
@@ -164,7 +195,13 @@ export default async ({ req, res, log, error }) => {
     const callerId = req.headers["x-appwrite-user-id"];
     if (!callerId) {
       return res.json(
-        { ok: false, error: { code: "ERR_UNAUTHENTICATED", message: "Authentication required" } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_UNAUTHENTICATED",
+            message: "Authentication required",
+          },
+        },
         401,
       );
     }
@@ -175,7 +212,10 @@ export default async ({ req, res, log, error }) => {
       userPass = await db.getDocument(DB, COL_USER_PASSES, userPassId);
     } catch {
       return res.json(
-        { ok: false, error: { code: "ERR_PASS_NOT_FOUND", message: "User pass not found" } },
+        {
+          ok: false,
+          error: { code: "ERR_PASS_NOT_FOUND", message: "User pass not found" },
+        },
         404,
       );
     }
@@ -183,12 +223,19 @@ export default async ({ req, res, log, error }) => {
     // ── Authorize: ownership or admin ────────────────────────────────────────
     const caller = await users.get(callerId);
     const callerLabels = caller.labels || [];
-    const isAdmin = callerLabels.includes("admin") || callerLabels.includes("root");
+    const isAdmin =
+      callerLabels.includes("admin") || callerLabels.includes("root");
     const isOwner = userPass.userId === callerId;
 
     if (!isOwner && !isAdmin) {
       return res.json(
-        { ok: false, error: { code: "ERR_UNAUTHORIZED", message: "Insufficient permissions" } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_UNAUTHORIZED",
+            message: "Insufficient permissions",
+          },
+        },
         403,
       );
     }
@@ -196,7 +243,13 @@ export default async ({ req, res, log, error }) => {
     // ── Validate user pass state ─────────────────────────────────────────────
     if (userPass.status !== "active") {
       return res.json(
-        { ok: false, error: { code: "ERR_PASS_NOT_ACTIVE", message: `Pass status is "${userPass.status}", must be "active"` } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_PASS_NOT_ACTIVE",
+            message: `Pass status is "${userPass.status}", must be "active"`,
+          },
+        },
         400,
       );
     }
@@ -204,12 +257,17 @@ export default async ({ req, res, log, error }) => {
     if (isExpired(userPass.expiresAt)) {
       // Also update pass status to expired
       try {
-        await db.updateDocument(DB, COL_USER_PASSES, userPassId, { status: "expired" });
+        await db.updateDocument(DB, COL_USER_PASSES, userPassId, {
+          status: "expired",
+        });
       } catch (e) {
         log(`Warning: failed to update expired pass status: ${e.message}`);
       }
       return res.json(
-        { ok: false, error: { code: "ERR_PASS_EXPIRED", message: "Pass expired" } },
+        {
+          ok: false,
+          error: { code: "ERR_PASS_EXPIRED", message: "Pass expired" },
+        },
         400,
       );
     }
@@ -217,7 +275,13 @@ export default async ({ req, res, log, error }) => {
     const remainingCredits = userPass.totalCredits - userPass.usedCredits;
     if (remainingCredits <= 0) {
       return res.json(
-        { ok: false, error: { code: "ERR_PASS_NO_CREDITS", message: "No credits remaining" } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_PASS_NO_CREDITS",
+            message: "No credits remaining",
+          },
+        },
         400,
       );
     }
@@ -228,7 +292,13 @@ export default async ({ req, res, log, error }) => {
       pass = await db.getDocument(DB, COL_PASSES, userPass.passId);
     } catch {
       return res.json(
-        { ok: false, error: { code: "ERR_PASS_TYPE_NOT_FOUND", message: "Pass type not found" } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_PASS_TYPE_NOT_FOUND",
+            message: "Pass type not found",
+          },
+        },
         404,
       );
     }
@@ -239,7 +309,10 @@ export default async ({ req, res, log, error }) => {
       slot = await db.getDocument(DB, COL_SLOTS, slotId);
     } catch {
       return res.json(
-        { ok: false, error: { code: "ERR_SLOT_NOT_FOUND", message: "Slot not found" } },
+        {
+          ok: false,
+          error: { code: "ERR_SLOT_NOT_FOUND", message: "Slot not found" },
+        },
         404,
       );
     }
@@ -248,7 +321,13 @@ export default async ({ req, res, log, error }) => {
     const validIds = safeParse(pass.validExperienceIds) || [];
     if (validIds.length > 0 && !validIds.includes(slot.experienceId)) {
       return res.json(
-        { ok: false, error: { code: "ERR_PASS_EXPERIENCE_NOT_VALID", message: "Experience not valid for this pass" } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_PASS_EXPERIENCE_NOT_VALID",
+            message: "Experience not valid for this pass",
+          },
+        },
         400,
       );
     }
@@ -256,21 +335,36 @@ export default async ({ req, res, log, error }) => {
     // ── Validate slot state ──────────────────────────────────────────────────
     if (slot.status !== "published") {
       return res.json(
-        { ok: false, error: { code: "ERR_SLOT_NOT_AVAILABLE", message: `Slot status is "${slot.status}", must be "published"` } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_SLOT_NOT_AVAILABLE",
+            message: `Slot status is "${slot.status}", must be "published"`,
+          },
+        },
         400,
       );
     }
 
     if (isInPast(slot.startDatetime)) {
       return res.json(
-        { ok: false, error: { code: "ERR_SLOT_ALREADY_STARTED", message: "Slot already started" } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_SLOT_ALREADY_STARTED",
+            message: "Slot already started",
+          },
+        },
         400,
       );
     }
 
     if (slot.bookedCount >= slot.capacity) {
       return res.json(
-        { ok: false, error: { code: "ERR_SLOT_FULL", message: "Slot is full" } },
+        {
+          ok: false,
+          error: { code: "ERR_SLOT_FULL", message: "Slot is full" },
+        },
         409,
       );
     }
@@ -291,7 +385,9 @@ export default async ({ req, res, log, error }) => {
     ]);
 
     if (existingConsumptions.total > 0) {
-      log(`Already consumed: userPass=${userPassId} slot=${slotId} — returning existing`);
+      log(
+        `Already consumed: userPass=${userPassId} slot=${slotId} — returning existing`,
+      );
 
       // Find the existing ticket for this slot + user
       const existingTickets = await db.listDocuments(DB, COL_TICKETS, [
@@ -317,36 +413,53 @@ export default async ({ req, res, log, error }) => {
 
     // 1. Generate ticket
     const ticketCode = generateTicketCode();
-    const ticketSnapshot = buildTicketSnapshot(experience, slot, pass, userPass);
+    const ticketSnapshot = buildTicketSnapshot(
+      experience,
+      slot,
+      pass,
+      userPass,
+    );
 
     const docPerms = buildDocPermissions(userPass.userId);
 
-    const ticket = await db.createDocument(DB, COL_TICKETS, ID.unique(), {
-      orderId: userPass.orderId,
-      orderItemId: userPass.orderItemId,
-      userId: userPass.userId,
-      experienceId: slot.experienceId,
-      slotId: slotId,
-      ticketCode,
-      participantName: caller.name || null,
-      participantEmail: caller.email || null,
-      status: "valid",
-      ticketSnapshot,
-    }, docPerms);
+    const ticket = await db.createDocument(
+      DB,
+      COL_TICKETS,
+      ID.unique(),
+      {
+        orderId: userPass.orderId,
+        orderItemId: userPass.orderItemId,
+        userId: userPass.userId,
+        experienceId: slot.experienceId,
+        slotId: slotId,
+        ticketCode,
+        participantName: caller.name || null,
+        participantEmail: caller.email || null,
+        status: "valid",
+        ticketSnapshot,
+      },
+      docPerms,
+    );
 
     log(`Ticket created: ${ticket.$id} code=${ticketCode}`);
 
     // 2. Create booking
     let booking = null;
     try {
-      booking = await db.createDocument(DB, COL_BOOKINGS, ID.unique(), {
-        orderId: userPass.orderId,
-        orderItemId: userPass.orderItemId,
-        slotId: slotId,
-        userId: userPass.userId,
-        participantCount: 1,
-        status: "confirmed",
-      }, docPerms);
+      booking = await db.createDocument(
+        DB,
+        COL_BOOKINGS,
+        ID.unique(),
+        {
+          orderId: userPass.orderId,
+          orderItemId: userPass.orderItemId,
+          slotId: slotId,
+          userId: userPass.userId,
+          participantCount: 1,
+          status: "confirmed",
+        },
+        docPerms,
+      );
       log(`Booking created: ${booking.$id}`);
     } catch (e) {
       log(`Warning: booking creation failed: ${e.message}`);
@@ -358,7 +471,9 @@ export default async ({ req, res, log, error }) => {
       const slotUpdate = { bookedCount: newBookedCount };
       if (slot.capacity > 0 && newBookedCount >= slot.capacity) {
         slotUpdate.status = "full";
-        log(`Slot ${slotId} will be marked as full (${newBookedCount}/${slot.capacity})`);
+        log(
+          `Slot ${slotId} will be marked as full (${newBookedCount}/${slot.capacity})`,
+        );
       }
       await db.updateDocument(DB, COL_SLOTS, slotId, slotUpdate);
     } catch (e) {
@@ -378,16 +493,24 @@ export default async ({ req, res, log, error }) => {
     log(`User pass updated: usedCredits=${newUsedCredits} status=${newStatus}`);
 
     // 5. Create consumption record
-    const consumption = await db.createDocument(DB, COL_CONSUMPTIONS, ID.unique(), {
-      userPassId,
-      slotId,
-      experienceId: slot.experienceId,
-      creditsUsed: 1,
-      consumedAt: new Date().toISOString(),
-      notes: `Ticket ${ticketCode}`,
-    }, docPerms);
+    const consumption = await db.createDocument(
+      DB,
+      COL_CONSUMPTIONS,
+      ID.unique(),
+      {
+        userPassId,
+        slotId,
+        experienceId: slot.experienceId,
+        creditsUsed: 1,
+        consumedAt: new Date().toISOString(),
+        notes: `Ticket ${ticketCode}`,
+      },
+      docPerms,
+    );
 
-    log(`Consumption recorded: ${consumption.$id} for userPass=${userPassId} slot=${slotId}`);
+    log(
+      `Consumption recorded: ${consumption.$id} for userPass=${userPassId} slot=${slotId}`,
+    );
 
     // ── Return ───────────────────────────────────────────────────────────────
     return res.json({

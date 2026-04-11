@@ -48,13 +48,20 @@ const COLLECTION_PROFILES =
 
 function logConfig(log) {
   log(`Config: DB=${DB}, COLLECTION_PROFILES=${COLLECTION_PROFILES}`);
-  log(`Env raw: DB=${process.env.APPWRITE_DATABASE_ID ?? '(undefined)'}, COL=${process.env.APPWRITE_COLLECTION_USER_PROFILES ?? '(undefined)'}`);
+  log(
+    `Env raw: DB=${process.env.APPWRITE_DATABASE_ID ?? "(undefined)"}, COL=${process.env.APPWRITE_COLLECTION_USER_PROFILES ?? "(undefined)"}`,
+  );
 }
 
 function initClient(req) {
+  let endpoint = process.env.APPWRITE_FUNCTION_API_ENDPOINT;
+  if (endpoint && endpoint.startsWith("http://")) {
+    endpoint = endpoint.replace("http://", "https://");
+  }
   return new Client()
-    .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
+    .setEndpoint(endpoint)
     .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
+    .setSelfSigned(true)
     .setKey(req.headers["x-appwrite-key"]);
 }
 
@@ -230,14 +237,18 @@ async function handleEnsureProfile({ req, res, log, error }) {
           `update("label:admin")`,
         ],
       );
-      log(`ensure-profile: created profile for ${userId} (docId=${created.$id}, db=${created.$databaseId}, col=${created.$collectionId})`);
+      log(
+        `ensure-profile: created profile for ${userId} (docId=${created.$id}, db=${created.$databaseId}, col=${created.$collectionId})`,
+      );
 
       // Verify the document actually persisted
       try {
         await db.getDocument(DB, COLLECTION_PROFILES, userId);
         log(`ensure-profile: verified profile exists for ${userId}`);
       } catch (verifyErr) {
-        error(`ensure-profile: CREATED but verification FAILED for ${userId}: ${verifyErr.message}`);
+        error(
+          `ensure-profile: CREATED but verification FAILED for ${userId}: ${verifyErr.message}`,
+        );
       }
     } catch (createErr) {
       // Handle race condition — another call may have created the profile

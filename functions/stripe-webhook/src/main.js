@@ -50,9 +50,14 @@ const HANDLED_EVENTS = [
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function initClient(req) {
+  let endpoint = process.env.APPWRITE_FUNCTION_API_ENDPOINT;
+  if (endpoint && endpoint.startsWith("http://")) {
+    endpoint = endpoint.replace("http://", "https://");
+  }
   return new Client()
-    .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
+    .setEndpoint(endpoint)
     .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
+    .setSelfSigned(true)
     .setKey(req.headers["x-appwrite-key"]);
 }
 
@@ -200,7 +205,9 @@ async function handleCheckoutCompleted(
     log(`Triggered generate-ticket for order ${orderId}`);
   } catch (err) {
     // Don't fail the webhook if ticket generation trigger fails
-    log(`WARN: Failed to trigger generate-ticket for ${orderId}: ${err.message}`);
+    log(
+      `WARN: Failed to trigger generate-ticket for ${orderId}: ${err.message}`,
+    );
   }
 }
 
@@ -333,7 +340,9 @@ async function handlePaymentIntentSucceeded(
     );
     log(`Triggered generate-ticket for order ${order.$id}`);
   } catch (err) {
-    log(`WARN: Failed to trigger generate-ticket for ${order.$id}: ${err.message}`);
+    log(
+      `WARN: Failed to trigger generate-ticket for ${order.$id}: ${err.message}`,
+    );
   }
 }
 
@@ -485,7 +494,8 @@ export default async ({ req, res, log, error }) => {
   const DB = process.env.APPWRITE_DATABASE_ID || "omzone_db";
   const COL_ORDERS = process.env.APPWRITE_COLLECTION_ORDERS || "orders";
   const COL_PAYMENTS = process.env.APPWRITE_COLLECTION_PAYMENTS || "payments";
-  const COL_ORDER_ITEMS = process.env.APPWRITE_COLLECTION_ORDER_ITEMS || "order_items";
+  const COL_ORDER_ITEMS =
+    process.env.APPWRITE_COLLECTION_ORDER_ITEMS || "order_items";
   const COL_SLOTS = process.env.APPWRITE_COLLECTION_SLOTS || "slots";
 
   try {

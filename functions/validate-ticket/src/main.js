@@ -53,9 +53,14 @@ const TICKET_CODE_PATTERN = /^[A-Za-z0-9-]+$/;
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function initClient(req) {
+  let endpoint = process.env.APPWRITE_FUNCTION_API_ENDPOINT;
+  if (endpoint && endpoint.startsWith("http://")) {
+    endpoint = endpoint.replace("http://", "https://");
+  }
   return new Client()
-    .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
+    .setEndpoint(endpoint)
     .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
+    .setSelfSigned(true)
     .setKey(req.headers["x-appwrite-key"]);
 }
 
@@ -93,7 +98,10 @@ export default async ({ req, res, log, error }) => {
   // ── Method check ───────────────────────────────────────────────────────────
   if (req.method !== "POST") {
     return res.json(
-      { ok: false, error: { code: "ERR_METHOD_NOT_ALLOWED", message: "Only POST allowed" } },
+      {
+        ok: false,
+        error: { code: "ERR_METHOD_NOT_ALLOWED", message: "Only POST allowed" },
+      },
       405,
     );
   }
@@ -104,7 +112,8 @@ export default async ({ req, res, log, error }) => {
 
   const DB = process.env.APPWRITE_DATABASE_ID || "omzone_db";
   const COL_TICKETS = process.env.APPWRITE_COLLECTION_TICKETS || "tickets";
-  const COL_REDEMPTIONS = process.env.APPWRITE_COLLECTION_TICKET_REDEMPTIONS || "ticket_redemptions";
+  const COL_REDEMPTIONS =
+    process.env.APPWRITE_COLLECTION_TICKET_REDEMPTIONS || "ticket_redemptions";
   const COL_BOOKINGS = process.env.APPWRITE_COLLECTION_BOOKINGS || "bookings";
 
   try {
@@ -115,7 +124,13 @@ export default async ({ req, res, log, error }) => {
     // ── Validate input ───────────────────────────────────────────────────────
     if (!ticketCode || typeof ticketCode !== "string") {
       return res.json(
-        { ok: false, error: { code: "ERR_VALIDATE_MISSING_CODE", message: "ticketCode is required" } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_VALIDATE_MISSING_CODE",
+            message: "ticketCode is required",
+          },
+        },
         400,
       );
     }
@@ -123,7 +138,13 @@ export default async ({ req, res, log, error }) => {
     const sanitizedCode = ticketCode.trim();
     if (!TICKET_CODE_PATTERN.test(sanitizedCode)) {
       return res.json(
-        { ok: false, error: { code: "ERR_VALIDATE_INVALID_CODE", message: "ticketCode contains invalid characters" } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_VALIDATE_INVALID_CODE",
+            message: "ticketCode contains invalid characters",
+          },
+        },
         400,
       );
     }
@@ -134,7 +155,13 @@ export default async ({ req, res, log, error }) => {
     const userId = req.headers["x-appwrite-user-id"];
     if (!userId) {
       return res.json(
-        { ok: false, error: { code: "ERR_UNAUTHENTICATED", message: "Authentication required" } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_UNAUTHENTICATED",
+            message: "Authentication required",
+          },
+        },
         401,
       );
     }
@@ -150,7 +177,13 @@ export default async ({ req, res, log, error }) => {
       !labels.includes("root")
     ) {
       return res.json(
-        { ok: false, error: { code: "ERR_UNAUTHORIZED", message: "Insufficient permissions" } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_UNAUTHORIZED",
+            message: "Insufficient permissions",
+          },
+        },
         403,
       );
     }
@@ -164,7 +197,13 @@ export default async ({ req, res, log, error }) => {
     if (ticketResult.total === 0) {
       log(`Ticket not found: ${sanitizedCode} (by ${userId})`);
       return res.json(
-        { ok: false, error: { code: "ERR_VALIDATE_NOT_FOUND", message: "Ticket not found" } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_VALIDATE_NOT_FOUND",
+            message: "Ticket not found",
+          },
+        },
         404,
       );
     }
@@ -193,7 +232,10 @@ export default async ({ req, res, log, error }) => {
       return res.json(
         {
           ok: false,
-          error: { code: "ERR_VALIDATE_CANCELLED", message: "Ticket cancelled" },
+          error: {
+            code: "ERR_VALIDATE_CANCELLED",
+            message: "Ticket cancelled",
+          },
           data: extractSnapshotDisplay(ticket),
         },
         410,
@@ -215,7 +257,13 @@ export default async ({ req, res, log, error }) => {
     if (ticket.status !== "valid") {
       log(`Ticket in unexpected status: ${sanitizedCode} (${ticket.status})`);
       return res.json(
-        { ok: false, error: { code: "ERR_VALIDATE_INVALID_STATUS", message: `Ticket status: ${ticket.status}` } },
+        {
+          ok: false,
+          error: {
+            code: "ERR_VALIDATE_INVALID_STATUS",
+            message: `Ticket status: ${ticket.status}`,
+          },
+        },
         400,
       );
     }
@@ -244,7 +292,9 @@ export default async ({ req, res, log, error }) => {
 
     await db.createDocument(DB, COL_REDEMPTIONS, ID.unique(), redemptionData);
 
-    log(`Redemption recorded: ticket=${ticket.$id}, by=${userId}, method=${redemptionMethod}`);
+    log(
+      `Redemption recorded: ticket=${ticket.$id}, by=${userId}, method=${redemptionMethod}`,
+    );
 
     // ── Update associated booking if exists ──────────────────────────────────
     if (ticket.orderId && ticket.slotId) {
@@ -265,12 +315,16 @@ export default async ({ req, res, log, error }) => {
             });
             log(`Booking ${booking.$id} updated to checked-in`);
           } else {
-            log(`Booking ${booking.$id} already in status: ${booking.status}, skipping`);
+            log(
+              `Booking ${booking.$id} already in status: ${booking.status}, skipping`,
+            );
           }
         }
       } catch (err) {
         // Booking update is best-effort — don't fail the ticket validation
-        log(`WARN: Failed to update booking for ticket ${ticket.$id}: ${err.message}`);
+        log(
+          `WARN: Failed to update booking for ticket ${ticket.$id}: ${err.message}`,
+        );
       }
     }
 
@@ -294,7 +348,10 @@ export default async ({ req, res, log, error }) => {
   } catch (err) {
     error(`validate-ticket failed: ${err.message}`);
     return res.json(
-      { ok: false, error: { code: "ERR_VALIDATE_INTERNAL", message: "Internal error" } },
+      {
+        ok: false,
+        error: { code: "ERR_VALIDATE_INTERNAL", message: "Internal error" },
+      },
       500,
     );
   }

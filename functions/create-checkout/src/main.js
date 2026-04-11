@@ -68,9 +68,17 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function initClient(req) {
+  // Appwrite built-in injects http:// for internal Docker communication,
+  // but if the server redirects HTTP→HTTPS the 301/302 converts POST→GET,
+  // causing createDocument to silently return a listDocuments response.
+  let endpoint = process.env.APPWRITE_FUNCTION_API_ENDPOINT;
+  if (endpoint && endpoint.startsWith("http://")) {
+    endpoint = endpoint.replace("http://", "https://");
+  }
   return new Client()
-    .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
+    .setEndpoint(endpoint)
     .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
+    .setSelfSigned(true)
     .setKey(req.headers["x-appwrite-key"]);
 }
 
@@ -147,8 +155,10 @@ export default async ({ req, res, log, error }) => {
   const db = new Databases(client);
   const users = new Users(client);
 
+  let _step = "init";
   try {
     // ── 1. Parse input ─────────────────────────────────────────────────────
+    _step = "parse-input";
     const rawBody = req.bodyText ?? req.body ?? "{}";
     const body = typeof rawBody === "string" ? JSON.parse(rawBody) : rawBody;
     const {
@@ -168,6 +178,7 @@ export default async ({ req, res, log, error }) => {
     } = body;
 
     // ── 2. Validate input ──────────────────────────────────────────────────
+    _step = "validate-input";
     const isConversionType = orderType === "request-conversion";
     if (!experienceId || typeof experienceId !== "string") {
       // experienceId is optional for request-conversion (comes from booking request)
@@ -287,6 +298,7 @@ export default async ({ req, res, log, error }) => {
     }
 
     // ── 3. Authenticate ────────────────────────────────────────────────────
+    _step = "authenticate";
     const callerUserId = req.headers["x-appwrite-user-id"];
     if (!callerUserId) {
       return res.json(
@@ -348,6 +360,7 @@ export default async ({ req, res, log, error }) => {
       isAssistedSale && targetUserId ? targetUserId : callerUserId;
 
     // ── 4. Environment ─────────────────────────────────────────────────────
+    _step = "environment";
     const DB = process.env.APPWRITE_DATABASE_ID || "omzone_db";
     const COL_EXPERIENCES =
       process.env.APPWRITE_COLLECTION_EXPERIENCES || "experiences";
@@ -669,6 +682,7 @@ export default async ({ req, res, log, error }) => {
     }
 
     // ── 5. Validate experience ─────────────────────────────────────────────
+    _step = "validate-experience";
     let experience;
     try {
       experience = await db.getDocument(DB, COL_EXPERIENCES, experienceId);
@@ -738,6 +752,7 @@ export default async ({ req, res, log, error }) => {
     }
 
     // ── 6. Validate pricing tier ───────────────────────────────────────────
+    _step = "validate-pricing-tier";
     let tier;
     try {
       tier = await db.getDocument(DB, COL_PRICING_TIERS, pricingTierId);
@@ -780,6 +795,7 @@ export default async ({ req, res, log, error }) => {
     }
 
     // ── 7. Validate slot (if required) ─────────────────────────────────────
+    _step = "validate-slot";
     let slot = null;
 
     if (experience.requiresSchedule && !slotId) {
@@ -863,6 +879,7 @@ export default async ({ req, res, log, error }) => {
     }
 
     // ── 8. Validate addons ─────────────────────────────────────────────────
+    _step = "validate-addons";
     const validatedAddons = [];
     for (const addonId of addonIds) {
       let addon;
@@ -917,6 +934,7 @@ export default async ({ req, res, log, error }) => {
     }
 
     // ── 9. Calculate prices (server-side only) ─────────────────────────────
+    _step = "calculate-prices";
     const currency = tier.currency || "MXN";
     const subtotal = tier.basePrice * quantity;
     const addonsTotal = validatedAddons.reduce(
@@ -927,6 +945,7 @@ export default async ({ req, res, log, error }) => {
     const totalAmount = subtotal + addonsTotal + taxAmount;
 
     // ── 10. Idempotency (direct only) ──────────────────────────────────────
+    _step = "idempotency-check";
     if (!isAssistedSale) {
       const pendingOrders = await db.listDocuments(DB, COL_ORDERS, [
         Query.equal("userId", orderUserId),
@@ -975,6 +994,7 @@ export default async ({ req, res, log, error }) => {
     }
 
     // ── 11. Build snapshot ─────────────────────────────────────────────────
+    _step = "build-snapshot";
     const snapshot = JSON.stringify({
       snapshotVersion: 1,
       experienceId: experience.$id,
@@ -1014,6 +1034,7 @@ export default async ({ req, res, log, error }) => {
     });
 
     // ── 12. Create order ───────────────────────────────────────────────────
+    _step = "create-order";
     const orderNumber = generateOrderNumber();
     const permissions = buildDocPermissions(orderUserId);
 
@@ -1048,11 +1069,19 @@ export default async ({ req, res, log, error }) => {
       orderData,
       permissions,
     );
+    // Guard: createDocument must return a valid document with $id
+    if (!order || !order.$id) {
+      error(
+        `createDocument returned unexpected shape: keys=${order ? Object.keys(order).join(",") : "null"}`,
+      );
+      throw new Error("Order creation failed — invalid response from database");
+    }
     log(
       `Order created: ${order.$id} (${orderNumber}) type=${orderType} status=${initialStatus}`,
     );
 
     // ── 13. Create order items ─────────────────────────────────────────────
+    _step = "create-order-items";
     const mainItemData = {
       orderId: order.$id,
       referenceId: experienceId,
@@ -1201,6 +1230,7 @@ export default async ({ req, res, log, error }) => {
     }
 
     // ── 17. Direct sale: create Stripe Checkout Session ───────────────────
+    _step = "create-stripe-session";
     const lineItems = buildLineItems(
       experience,
       tier,
@@ -1228,9 +1258,21 @@ export default async ({ req, res, log, error }) => {
       data: { sessionUrl: session.url, orderId: order.$id },
     });
   } catch (err) {
-    error("create-checkout failed: " + err.message);
+    error(`create-checkout failed at step [${_step}]: ${err.message}`);
     return res.json(
-      { ok: false, error: { code: "ERR_INTERNAL", message: "Internal error" } },
+      {
+        ok: false,
+        error: {
+          code: "ERR_INTERNAL",
+          message: "Internal error",
+          _debug: {
+            step: _step,
+            msg: err.message,
+            type: err.type || null,
+            code: err.code || null,
+          },
+        },
+      },
       500,
     );
   }
