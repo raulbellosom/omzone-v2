@@ -315,7 +315,10 @@ export function useCheckout() {
       const result = JSON.parse(execution.responseBody);
 
       if (!result.ok) {
-        setSubmitError(result.error?.message || "Checkout failed");
+        const errCode = result.error?.code || "ERR_UNKNOWN";
+        const errMsg = result.error?.message || "Checkout failed";
+        const debugMsg = result.error?._debug?.msg || null;
+        setSubmitError({ code: errCode, message: errMsg, debug: debugMsg });
         return null;
       }
 
@@ -326,7 +329,7 @@ export function useCheckout() {
 
       return result.data;
     } catch (err) {
-      setSubmitError("Something went wrong. Please try again.");
+      setSubmitError({ code: "ERR_NETWORK", message: err.message || "Network error" });
       return null;
     } finally {
       setSubmitting(false);
@@ -403,6 +406,7 @@ export function useCheckout() {
     // Submit / Payment
     submitting,
     submitError,
+    clearSubmitError: () => setSubmitError(null),
     createPaymentIntent,
     clientSecret,
     orderId,

@@ -3,7 +3,7 @@ import env from "@/config/env";
 
 const DEFAULT_DESCRIPTION =
   "Discover transformative wellness experiences in Puerto Vallarta — sessions, immersions, retreats and stays crafted for mind, body and soul.";
-const DEFAULT_OG_IMAGE = `${env.siteUrl}/og-default.jpg`;
+const DEFAULT_OG_IMAGE = `${env.siteUrl}/logo.png`;
 
 /**
  * Reusable SEO head component.

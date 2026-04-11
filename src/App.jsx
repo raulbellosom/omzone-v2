@@ -157,6 +157,9 @@ const BookingRequestDetailPage = lazy(
 
 // ─── Portal pages (chunked together) ───
 const PortalLayout = lazy(() => import("@/layouts/PortalLayout"));
+const PortalExplorePage = lazy(
+  () => import("@/pages/portal/PortalExplorePage"),
+);
 const PortalDashboardPage = lazy(
   () => import("@/pages/portal/PortalDashboardPage"),
 );
@@ -387,7 +390,8 @@ export default function App() {
             }
           >
             <Route path="/portal" element={<PortalLayout />}>
-              <Route index element={<PortalDashboardPage />} />
+              <Route index element={<PortalExplorePage />} />
+              <Route path="dashboard" element={<PortalDashboardPage />} />
               <Route path="tickets" element={<TicketListPage />} />
               <Route path="tickets/:ticketId" element={<TicketDetailPage />} />
               <Route path="orders" element={<PortalOrdersPage />} />

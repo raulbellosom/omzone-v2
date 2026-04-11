@@ -87,5 +87,21 @@
     "errorIncomplete": "Please complete the payment form.",
     "initializing": "Loading payment form…",
     "initError": "Could not initialize payment. Please try again."
+  },
+  "checkoutErrors": {
+    "title": "We couldn't process your order",
+    "amountTooSmall": "The total amount is below the minimum required for payment processing. Please adjust your selection.",
+    "invalidAmount": "The calculated amount is invalid. Please review your selection and try again.",
+    "missingExperience": "No experience was selected. Please go back and choose an experience.",
+    "missingTier": "No pricing option was selected. Please go back and choose a tier.",
+    "invalidQuantity": "The number of attendees is invalid. Please adjust and try again.",
+    "missingName": "Please provide your full name before proceeding.",
+    "invalidEmail": "The email address provided is not valid. Please check and try again.",
+    "noCapacity": "Sorry, there are not enough spots available for your selection. Please try a different date or reduce the number of attendees.",
+    "experienceNotFound": "This experience is no longer available. Please explore other options.",
+    "tierNotFound": "The selected pricing option is no longer available.",
+    "slotNotFound": "The selected time slot is no longer available. Please choose another.",
+    "network": "A connection error occurred. Please check your internet and try again.",
+    "internal": "Something went wrong on our end. Please try again in a few moments."
   }
 }

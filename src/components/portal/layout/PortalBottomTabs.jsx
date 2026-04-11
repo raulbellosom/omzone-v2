@@ -1,18 +1,18 @@
 import { NavLink } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 import {
+  Compass,
   LayoutDashboard,
   ShoppingBag,
   Ticket,
-  Sparkles,
   User,
 } from "lucide-react";
 
 const TABS = [
-  { name: "Inicio", path: ROUTES.PORTAL, icon: LayoutDashboard, end: true },
-  { name: "Órdenes", path: ROUTES.PORTAL_ORDERS, icon: ShoppingBag },
+  { name: "Explorar", path: ROUTES.PORTAL, icon: Compass, end: true },
+  { name: "Mi Portal", path: ROUTES.PORTAL_DASHBOARD, icon: LayoutDashboard },
   { name: "Tickets", path: ROUTES.PORTAL_TICKETS, icon: Ticket },
-  { name: "Pases", path: ROUTES.PORTAL_PASSES, icon: Sparkles },
+  { name: "Órdenes", path: ROUTES.PORTAL_ORDERS, icon: ShoppingBag },
   { name: "Perfil", path: ROUTES.PORTAL_PROFILE, icon: User },
 ];
 

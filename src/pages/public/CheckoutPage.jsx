@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, AlertTriangle } from "lucide-react";
 import { useCheckout } from "@/hooks/useCheckout";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
@@ -68,6 +68,57 @@ function CheckoutError({ type }) {
   );
 }
 
+// ─── Checkout error banner (inline, for API/submit errors) ────────────────
+
+function CheckoutErrorBanner({ error, t, onDismiss }) {
+  if (!error) return null;
+
+  // Map known error codes to i18n keys
+  const i18nMap = {
+    ERR_CHECKOUT_AMOUNT_TOO_SMALL: "checkoutErrors.amountTooSmall",
+    ERR_CHECKOUT_INVALID_AMOUNT: "checkoutErrors.invalidAmount",
+    ERR_CHECKOUT_MISSING_EXPERIENCE: "checkoutErrors.missingExperience",
+    ERR_CHECKOUT_MISSING_TIER: "checkoutErrors.missingTier",
+    ERR_CHECKOUT_INVALID_QUANTITY: "checkoutErrors.invalidQuantity",
+    ERR_CHECKOUT_MISSING_NAME: "checkoutErrors.missingName",
+    ERR_CHECKOUT_INVALID_EMAIL: "checkoutErrors.invalidEmail",
+    ERR_CHECKOUT_NO_CAPACITY: "checkoutErrors.noCapacity",
+    ERR_CHECKOUT_EXPERIENCE_NOT_FOUND: "checkoutErrors.experienceNotFound",
+    ERR_CHECKOUT_TIER_NOT_FOUND: "checkoutErrors.tierNotFound",
+    ERR_CHECKOUT_SLOT_NOT_FOUND: "checkoutErrors.slotNotFound",
+    ERR_NETWORK: "checkoutErrors.network",
+    ERR_INTERNAL: "checkoutErrors.internal",
+  };
+
+  const code = typeof error === "object" ? error.code : null;
+  const i18nKey = code && i18nMap[code];
+  const message = i18nKey
+    ? t(i18nKey)
+    : typeof error === "object"
+      ? error.message
+      : error;
+
+  return (
+    <div className="rounded-xl bg-red-50 border border-red-200 p-4 flex items-start gap-3 animate-in fade-in duration-300">
+      <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-red-800">
+          {t("checkoutErrors.title")}
+        </p>
+        <p className="text-sm text-red-700 mt-0.5">{message}</p>
+      </div>
+      {onDismiss && (
+        <button
+          onClick={onDismiss}
+          className="text-red-400 hover:text-red-600 text-xs font-medium transition-colors"
+        >
+          ✕
+        </button>
+      )}
+    </div>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function CheckoutPage() {
@@ -107,6 +158,7 @@ export default function CheckoutPage() {
     stepValidation,
     submitting,
     submitError,
+    clearSubmitError,
     createPaymentIntent,
     clientSecret,
     orderId,
@@ -198,7 +250,14 @@ export default function CheckoutPage() {
         {/* ── Two-column layout on lg+ ── */}
         <div className="lg:grid lg:grid-cols-[1fr_340px] lg:gap-10 lg:items-start">
           {/* Main column */}
-          <div className="min-w-0">
+          <div className="min-w-0 space-y-4">
+            {/* Error banner — visible on any step */}
+            <CheckoutErrorBanner
+              error={submitError}
+              t={t}
+              onDismiss={clearSubmitError}
+            />
+
             {/* Render current step */}
             <div className="bg-white rounded-2xl border border-warm-gray-dark/15 p-5 md:p-7">
               {steps[currentStep]}

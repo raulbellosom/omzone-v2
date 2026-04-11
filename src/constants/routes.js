@@ -29,6 +29,8 @@ export const ROUTES = {
 
   // Customer portal
   PORTAL: "/portal",
+  PORTAL_EXPLORE: "/portal",
+  PORTAL_DASHBOARD: "/portal/dashboard",
   PORTAL_ORDERS: "/portal/orders",
   PORTAL_ORDER: "/portal/orders/:id",
   PORTAL_TICKETS: "/portal/tickets",

@@ -35,12 +35,23 @@
     },
     "sidebar": {
       "myPortal": "Mi Portal",
+      "explore": "Explorar",
       "dashboard": "Dashboard",
       "orders": "Mis Órdenes",
       "tickets": "Mis Tickets",
       "passes": "Mis Pases",
       "profile": "Mi Perfil",
+      "backToSite": "Volver a OMZONE",
       "logout": "Cerrar sesión"
+    },
+    "explore": {
+      "heading": "Descubre tu próxima experiencia",
+      "subtitle": "Sesiones de bienestar, inmersiones, retiros, pases e historias curadas para ti.",
+      "experiences": "Experiencias",
+      "passes": "Pases",
+      "publications": "Historias y Artículos",
+      "viewAll": "Ver todos",
+      "noExperiences": "No hay experiencias disponibles ahora. Vuelve pronto."
     }
   }
 }

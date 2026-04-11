@@ -10,7 +10,7 @@ const ORGANIZATION_SCHEMA = {
   "@type": "Organization",
   name: "OMZONE",
   url: env.siteUrl,
-  logo: `${env.siteUrl}/images/logo.png`,
+  logo: `${env.siteUrl}/logo.png`,
   description:
     "Premium wellness experiences in Puerto Vallarta and Bahía de Banderas",
   address: {

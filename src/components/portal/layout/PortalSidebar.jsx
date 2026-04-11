@@ -5,17 +5,20 @@ import { useLanguage } from "@/hooks/useLanguage";
 import UserAvatar from "@/components/common/UserAvatar";
 import { ROUTES } from "@/constants/routes";
 import {
+  Compass,
   LayoutDashboard,
   ShoppingBag,
   Ticket,
   Sparkles,
   User,
   LogOut,
+  ArrowLeft,
   X,
 } from "lucide-react";
 
 const NAV_ITEMS = [
-  { key: "dashboard", path: ROUTES.PORTAL, icon: LayoutDashboard, end: true },
+  { key: "explore", path: ROUTES.PORTAL, icon: Compass, end: true },
+  { key: "dashboard", path: ROUTES.PORTAL_DASHBOARD, icon: LayoutDashboard },
   { key: "orders", path: ROUTES.PORTAL_ORDERS, icon: ShoppingBag },
   { key: "tickets", path: ROUTES.PORTAL_TICKETS, icon: Ticket },
   { key: "passes", path: ROUTES.PORTAL_PASSES, icon: Sparkles },
@@ -54,7 +57,7 @@ export default function PortalSidebar({ open, onClose }) {
           fixed top-0 left-0 h-full z-50 bg-white border-r border-warm-gray-dark/20
           w-72 max-w-[75vw] sm:max-w-[80vw] flex flex-col
           transition-transform duration-300 ease-out
-          lg:relative lg:translate-x-0 lg:z-auto
+          lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 lg:z-auto
           ${open ? "translate-x-0" : "-translate-x-full"}
         `}
       >
@@ -109,8 +112,16 @@ export default function PortalSidebar({ open, onClose }) {
           </ul>
         </nav>
 
-        {/* Logout */}
-        <div className="p-3 border-t border-warm-gray-dark/10">
+        {/* Back to landing + Logout */}
+        <div className="p-3 border-t border-warm-gray-dark/10 space-y-1">
+          <NavLink
+            to="/"
+            onClick={onClose}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-charcoal-muted hover:bg-warm-gray/20 hover:text-charcoal transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5 shrink-0" />
+            {t("portal.sidebar.backToSite")}
+          </NavLink>
           <button
             onClick={handleLogout}
             className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-charcoal-muted hover:bg-red-50 hover:text-red-600 transition-colors"

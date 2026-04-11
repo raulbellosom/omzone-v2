@@ -1227,8 +1227,27 @@ export default async ({ req, res, log, error }) => {
 
     // ── 17. Direct sale: create Stripe PaymentIntent (embedded Payment Element) ──
     _step = "create-stripe-payment-intent";
+
+    // Stripe enforces minimum amounts per currency
+    const STRIPE_MIN_AMOUNTS = { mxn: 1000, usd: 50, eur: 50 };
+    const amountInCents = Math.round(totalAmount * 100);
+    const minCents = STRIPE_MIN_AMOUNTS[currency.toLowerCase()] || 50;
+    if (amountInCents < minCents) {
+      const minDisplay = (minCents / 100).toFixed(2);
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_AMOUNT_TOO_SMALL",
+            message: `Minimum amount is $${minDisplay} ${currency.toUpperCase()}`,
+          },
+        },
+        400,
+      );
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(totalAmount * 100),
+      amount: amountInCents,
       currency: currency.toLowerCase(),
       automatic_payment_methods: { enabled: true },
       metadata: { orderId: order.$id, userId: orderUserId },

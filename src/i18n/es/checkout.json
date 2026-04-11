@@ -87,5 +87,21 @@
     "errorIncomplete": "Por favor completa el formulario de pago.",
     "initializing": "Cargando formulario de pago…",
     "initError": "No se pudo inicializar el pago. Por favor intenta de nuevo."
+  },
+  "checkoutErrors": {
+    "title": "No pudimos procesar tu orden",
+    "amountTooSmall": "El monto total está por debajo del mínimo requerido para procesar el pago. Por favor ajusta tu selección.",
+    "invalidAmount": "El monto calculado no es válido. Revisa tu selección e intenta de nuevo.",
+    "missingExperience": "No se seleccionó ninguna experiencia. Regresa y elige una.",
+    "missingTier": "No se seleccionó una opción de precio. Regresa y elige un nivel.",
+    "invalidQuantity": "El número de asistentes no es válido. Ajústalo e intenta de nuevo.",
+    "missingName": "Por favor proporciona tu nombre completo antes de continuar.",
+    "invalidEmail": "El correo electrónico proporcionado no es válido. Revísalo e intenta de nuevo.",
+    "noCapacity": "Lo sentimos, no hay suficientes lugares disponibles para tu selección. Prueba con otra fecha o reduce el número de asistentes.",
+    "experienceNotFound": "Esta experiencia ya no está disponible. Explora otras opciones.",
+    "tierNotFound": "La opción de precio seleccionada ya no está disponible.",
+    "slotNotFound": "El horario seleccionado ya no está disponible. Elige otro.",
+    "network": "Ocurrió un error de conexión. Verifica tu internet e intenta de nuevo.",
+    "internal": "Algo salió mal de nuestro lado. Intenta de nuevo en unos momentos."
   }
 }

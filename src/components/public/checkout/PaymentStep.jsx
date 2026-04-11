@@ -221,11 +221,17 @@ export default function PaymentStep({
   const stripePromise = useMemo(() => getStripe(), []);
 
   if (!clientSecret) {
+    const errorMessage = submitError
+      ? typeof submitError === "object"
+        ? submitError.message
+        : submitError
+      : null;
+
     return (
       <div className="flex flex-col items-center justify-center py-10 space-y-3">
-        {submitError ? (
+        {errorMessage ? (
           <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 w-full">
-            {submitError}
+            {errorMessage}
           </div>
         ) : (
           <>
