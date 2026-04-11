@@ -124,7 +124,12 @@ export default function AddonForm({
   const init = initialData
     ? {
         ...EMPTY,
-        ...initialData,
+        ...Object.fromEntries(
+          Object.entries(initialData).map(([k, v]) => [
+            k,
+            v === null && typeof EMPTY[k] === "string" ? "" : v,
+          ]),
+        ),
         basePrice: initialData.basePrice ?? "",
         maxQuantity: initialData.maxQuantity ?? "",
         sortOrder: initialData.sortOrder ?? "",

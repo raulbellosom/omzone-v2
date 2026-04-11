@@ -112,7 +112,12 @@ export default function PricingTierForm({
   const init = initialData
     ? {
         ...EMPTY,
-        ...initialData,
+        ...Object.fromEntries(
+          Object.entries(initialData).map(([k, v]) => [
+            k,
+            v === null && typeof EMPTY[k] === "string" ? "" : v,
+          ]),
+        ),
         basePrice: initialData.basePrice ?? "",
         minPersons: initialData.minPersons ?? "",
         maxPersons: initialData.maxPersons ?? "",

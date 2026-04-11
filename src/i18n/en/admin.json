@@ -1006,7 +1006,14 @@
         "continueNext": "Continue to the next step.",
         "full": "Full",
         "spotsAvailable": "{count} spot(s) available",
-        "noSlots": "No available slots for this experience."
+        "noSlots": "No available slots for this experience.",
+        "noSlotsHint": "This experience requires a scheduled slot. Create one from the Agenda, or continue without one.",
+        "goToAgenda": "Go to Agenda",
+        "skipSlot": "Continue without slot",
+        "skipped": "Slot skipped ✓",
+        "skipWarning": "The order will be created without an assigned slot. You can assign one later.",
+        "loadError": "Could not load available slots.",
+        "retry": "Retry"
       },
       "addons": {
         "title": "Addons",
@@ -1038,6 +1045,7 @@
         "pricingTier": "Pricing tier",
         "slotDate": "Slot / Date",
         "noSelection": "Not selected",
+        "slotSkippedWarning": "This order will be created without an assigned time slot. You can assign one later from the order detail.",
         "quantity": "Quantity",
         "addons": "Addons",
         "selectedCount": "{count} selected",

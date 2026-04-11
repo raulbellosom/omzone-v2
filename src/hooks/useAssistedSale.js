@@ -22,6 +22,7 @@ const EMPTY_WIZARD = {
 
   // Step 4 — Slot (conditional)
   slot: null,
+  slotSkipped: false,
 
   // Step 5 — Addons
   selectedAddonIds: [],
@@ -73,8 +74,8 @@ export function useAssistedSale() {
       ? (wizard.customer.email || wizard.customerEmail).trim().toLowerCase()
       : wizard.customerEmail.trim().toLowerCase();
     const customerPhone = wizard.customer
-      ? (wizard.customer.phone || wizard.customerPhone || "")
-      : (wizard.customerPhone || "");
+      ? wizard.customer.phone || wizard.customerPhone || ""
+      : wizard.customerPhone || "";
 
     const payload = {
       orderType: "assisted",
@@ -117,5 +118,13 @@ export function useAssistedSale() {
     }
   }
 
-  return { wizard, setWizardField, submitSale, submitting, result, submitError, resetWizard };
+  return {
+    wizard,
+    setWizardField,
+    submitSale,
+    submitting,
+    result,
+    submitError,
+    resetWizard,
+  };
 }

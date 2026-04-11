@@ -49,6 +49,11 @@ export function useCheckout() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
 
+  // ─── Payment state (Stripe Payment Element) ─────────────────────────────
+  const [clientSecret, setClientSecret] = useState(null);
+  const [orderId, setOrderId] = useState(null);
+  const [orderNumber, setOrderNumber] = useState(null);
+
   // ─── Load experience data ───────────────────────────────────────────────
   useEffect(() => {
     if (!experienceId) {
@@ -269,11 +274,16 @@ export function useCheckout() {
     return true;
   }, [customerName, customerEmail]);
 
-  const stepValidation = [isStep0Valid, isStep1Valid, isStep2Valid, true];
+  // step 3 (review) is always valid once you reach it
+  // step 4 (payment) is always valid (handled by Stripe + consent in component)
+  const stepValidation = [isStep0Valid, isStep1Valid, isStep2Valid, true, true];
 
-  // ─── Submit checkout ────────────────────────────────────────────────────
+  // ─── Create PaymentIntent (called on Review → Payment transition) ──────
 
-  const submitCheckout = useCallback(async () => {
+  const createPaymentIntent = useCallback(async () => {
+    // Skip if we already have a clientSecret for this checkout
+    if (clientSecret) return { clientSecret, orderId, orderNumber };
+
     setSubmitting(true);
     setSubmitError(null);
 
@@ -309,10 +319,10 @@ export function useCheckout() {
         return null;
       }
 
-      // Redirect to Stripe
-      if (result.data?.sessionUrl) {
-        window.location.href = result.data.sessionUrl;
-      }
+      const { clientSecret: secret, orderId: oid, orderNumber: onum } = result.data;
+      setClientSecret(secret);
+      setOrderId(oid);
+      setOrderNumber(onum);
 
       return result.data;
     } catch (err) {
@@ -322,6 +332,9 @@ export function useCheckout() {
       setSubmitting(false);
     }
   }, [
+    clientSecret,
+    orderId,
+    orderNumber,
     experienceId,
     selectedTierId,
     selectedSlotId,
@@ -335,7 +348,7 @@ export function useCheckout() {
   // ─── Navigation ─────────────────────────────────────────────────────────
 
   const nextStep = useCallback(() => {
-    setCurrentStep((s) => Math.min(s + 1, 3));
+    setCurrentStep((s) => Math.min(s + 1, 4));
   }, []);
 
   const prevStep = useCallback(() => {
@@ -387,9 +400,12 @@ export function useCheckout() {
     goToStep,
     stepValidation,
 
-    // Submit
+    // Submit / Payment
     submitting,
     submitError,
-    submitCheckout,
+    createPaymentIntent,
+    clientSecret,
+    orderId,
+    orderNumber,
   };
 }

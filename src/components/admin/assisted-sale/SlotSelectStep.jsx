@@ -1,7 +1,17 @@
-import { CheckCircle2, Clock, Users, AlertTriangle } from "lucide-react";
+import {
+  CheckCircle2,
+  Clock,
+  Users,
+  AlertTriangle,
+  CalendarPlus,
+  RefreshCw,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 import { useSlots } from "@/hooks/useSlots";
 import { useLanguage } from "@/hooks/useLanguage";
+import { ROUTES } from "@/constants/routes";
 import WizardStepWrapper from "./WizardStepWrapper";
+import { Button } from "@/components/common/Button";
 import { cn } from "@/lib/utils";
 
 function formatDateTime(iso) {
@@ -86,7 +96,12 @@ function SlotCard({ slot, selected, onSelect, t }) {
 export default function SlotSelectStep({ wizard, setWizardField }) {
   const { t } = useLanguage();
   const now = new Date().toISOString();
-  const { data: slots, loading } = useSlots(wizard.experience?.$id, {
+  const {
+    data: slots,
+    loading,
+    error,
+    refetch,
+  } = useSlots(wizard.experience?.$id, {
     status: "published",
     dateFrom: now,
   });
@@ -115,10 +130,59 @@ export default function SlotSelectStep({ wizard, setWizardField }) {
         </div>
       )}
 
-      {!loading && slots.length === 0 && (
-        <p className="text-sm text-charcoal-muted py-4">
-          {t("admin.assistedSale.slot.noSlots")}
-        </p>
+      {!loading && error && (
+        <div className="flex flex-col items-center gap-3 py-6 text-center">
+          <AlertTriangle className="h-8 w-8 text-amber-500" />
+          <p className="text-sm text-red-600">
+            {t("admin.assistedSale.slot.loadError")}
+          </p>
+          <Button type="button" variant="outline" size="sm" onClick={refetch}>
+            <RefreshCw className="h-4 w-4" />
+            {t("admin.assistedSale.slot.retry")}
+          </Button>
+        </div>
+      )}
+
+      {!loading && !error && slots.length === 0 && (
+        <div className="flex flex-col items-center gap-3 py-6 text-center">
+          <CalendarPlus className="h-8 w-8 text-charcoal-subtle" />
+          <p className="text-sm text-charcoal-muted">
+            {t("admin.assistedSale.slot.noSlots")}
+          </p>
+          <p className="text-xs text-charcoal-subtle max-w-sm">
+            {t("admin.assistedSale.slot.noSlotsHint")}
+          </p>
+          <div className="flex flex-col sm:flex-row items-center gap-2 mt-1">
+            <Link
+              to={ROUTES.ADMIN_SLOTS}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-sage hover:text-sage-dark underline underline-offset-2"
+            >
+              <CalendarPlus className="h-4 w-4" />
+              {t("admin.assistedSale.slot.goToAgenda")}
+            </Link>
+            <span className="text-xs text-charcoal-subtle hidden sm:inline">
+              {t("common.or")}
+            </span>
+            <Button
+              type="button"
+              variant={wizard.slotSkipped ? "primary" : "outline"}
+              size="sm"
+              onClick={() => {
+                setWizardField("slot", null);
+                setWizardField("slotSkipped", !wizard.slotSkipped);
+              }}
+            >
+              {wizard.slotSkipped
+                ? t("admin.assistedSale.slot.skipped")
+                : t("admin.assistedSale.slot.skipSlot")}
+            </Button>
+          </div>
+          {wizard.slotSkipped && (
+            <p className="text-xs text-amber-600 mt-1">
+              {t("admin.assistedSale.slot.skipWarning")}
+            </p>
+          )}
+        </div>
       )}
 
       <div className="space-y-2 max-h-[340px] overflow-y-auto pr-1">
@@ -127,7 +191,10 @@ export default function SlotSelectStep({ wizard, setWizardField }) {
             key={slot.$id}
             slot={slot}
             selected={wizard.slot?.$id === slot.$id}
-            onSelect={() => setWizardField("slot", slot)}
+            onSelect={() => {
+              setWizardField("slot", slot);
+              setWizardField("slotSkipped", false);
+            }}
             t={t}
           />
         ))}

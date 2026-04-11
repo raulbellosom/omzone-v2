@@ -139,6 +139,14 @@ export default function PublicLayout() {
                     {t("footer.terms")}
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    to={ROUTES.REFUND_POLICY}
+                    className="text-sm text-charcoal-muted hover:text-sage transition-colors"
+                  >
+                    {t("footer.refundPolicy")}
+                  </Link>
+                </li>
               </ul>
             </div>
 

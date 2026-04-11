@@ -96,7 +96,15 @@ export default function RoomForm({
     label: t(`admin.resourceForms.roomTypes.${o.key}`),
   }));
 
-  const [form, setForm] = useState({ ...EMPTY, ...initialData });
+  const [form, setForm] = useState({
+    ...EMPTY,
+    ...Object.fromEntries(
+      Object.entries(initialData ?? {}).map(([k, v]) => [
+        k,
+        v === null && typeof EMPTY[k] === "string" ? "" : v,
+      ]),
+    ),
+  });
   const [errors, setErrors] = useState({});
 
   // Only active locations for the select

@@ -81,7 +81,12 @@ export default function EditionForm({
   const init = initialData
     ? {
         ...EMPTY,
-        ...initialData,
+        ...Object.fromEntries(
+          Object.entries(initialData).map(([k, v]) => [
+            k,
+            v === null && typeof EMPTY[k] === "string" ? "" : v,
+          ]),
+        ),
         startDate: toDatetimeLocal(initialData.startDate),
         endDate: toDatetimeLocal(initialData.endDate),
         registrationOpens: toDatetimeLocal(initialData.registrationOpens),

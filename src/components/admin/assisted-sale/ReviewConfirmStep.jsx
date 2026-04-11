@@ -8,6 +8,7 @@ import {
   ShoppingBag,
   CheckCircle2,
   ExternalLink,
+  AlertTriangle,
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import WizardStepWrapper from "./WizardStepWrapper";
@@ -191,6 +192,7 @@ export default function ReviewConfirmStep({
     experience,
     pricingTier,
     slot,
+    slotSkipped,
     quantity,
     selectedAddonIds,
     paymentMethod,
@@ -238,15 +240,23 @@ export default function ReviewConfirmStep({
           }
         />
         {experience?.requiresSchedule && (
-          <ReviewRow
-            icon={Calendar}
-            label={t("admin.assistedSale.review.slotDate")}
-            value={
-              slot
-                ? formatDateTime(slot.startDatetime)
-                : t("admin.assistedSale.review.noSelection")
-            }
-          />
+          <>
+            <ReviewRow
+              icon={Calendar}
+              label={t("admin.assistedSale.review.slotDate")}
+              value={
+                slot
+                  ? formatDateTime(slot.startDatetime)
+                  : t("admin.assistedSale.review.noSelection")
+              }
+            />
+            {slotSkipped && (
+              <div className="flex items-start gap-2 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-xs text-amber-700">
+                <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
+                <span>{t("admin.assistedSale.review.slotSkippedWarning")}</span>
+              </div>
+            )}
+          </>
         )}
         <ReviewRow
           icon={Users}

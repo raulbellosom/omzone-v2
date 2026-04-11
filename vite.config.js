@@ -23,14 +23,17 @@ function versionPlugin() {
 }
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), ["APPWRITE_", "VITE_APP_"]);
+  const env = loadEnv(mode, process.cwd(), ["APPWRITE_", "VITE_"]);
 
   const mapped = {};
   for (const [key, val] of Object.entries(env)) {
     if (key.startsWith("APPWRITE_") && !key.startsWith("VITE_")) {
       mapped[`import.meta.env.VITE_${key}`] = JSON.stringify(val);
     }
-    mapped[`import.meta.env.${key}`] = JSON.stringify(val);
+    // Only expose APPWRITE_ and VITE_ prefixed vars to the frontend
+    if (key.startsWith("APPWRITE_") || key.startsWith("VITE_")) {
+      mapped[`import.meta.env.${key}`] = JSON.stringify(val);
+    }
   }
 
   return {

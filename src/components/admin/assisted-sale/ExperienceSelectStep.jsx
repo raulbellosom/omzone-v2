@@ -56,6 +56,7 @@ export default function ExperienceSelectStep({ wizard, setWizardField }) {
     // Reset downstream when experience changes
     setWizardField("pricingTier", null);
     setWizardField("slot", null);
+    setWizardField("slotSkipped", false);
     setWizardField("selectedAddonIds", []);
   }
 

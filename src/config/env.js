@@ -13,7 +13,7 @@ const env = {
   collectionExperiences:
     import.meta.env.VITE_APPWRITE_COLLECTION_EXPERIENCES || "experiences",
   collectionEditions:
-    import.meta.env.VITE_APPWRITE_COLLECTION_EDITIONS || "experience_editions",
+    import.meta.env.VITE_APPWRITE_COLLECTION_EDITIONS || "editions",
   collectionPricingTiers:
     import.meta.env.VITE_APPWRITE_COLLECTION_PRICING_TIERS || "pricing_tiers",
   collectionPricingOptions:
@@ -90,6 +90,10 @@ const env = {
     import.meta.env.VITE_APPWRITE_BUCKET_DOCUMENTS || "documents",
   bucketPublicResources:
     import.meta.env.VITE_APPWRITE_BUCKET_PUBLIC_RESOURCES || "public-resources",
+
+  // ─── Stripe ───
+  stripePublishableKey:
+    import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "",
 
   // ─── Functions ───
   functionCreateCheckout:

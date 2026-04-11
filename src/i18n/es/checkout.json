@@ -16,7 +16,8 @@
     "step1": "Selección",
     "step2": "Complementos",
     "step3": "Datos",
-    "step4": "Resumen"
+    "step4": "Resumen",
+    "step5": "Pago"
   },
   "checkoutSuccess": {
     "thankYou": "¡Gracias!",
@@ -73,5 +74,18 @@
     "disclaimer": "El monto final será verificado antes de procesar el pago.",
     "processing": "Procesando…",
     "confirmPay": "Confirmar y Pagar"
+  },
+  "paymentStep": {
+    "consent": "Acepto los <termsLink>Términos de Servicio</termsLink>, el <privacyLink>Aviso de Privacidad</privacyLink> y la <refundLink>Política de Reembolso</refundLink>",
+    "consentRequired": "Debes aceptar los términos para continuar.",
+    "payButton": "Pagar {{amount}}",
+    "processing": "Procesando pago…",
+    "stripeDisclosure": "Pagos procesados de forma segura por Stripe. Tu información de tarjeta nunca se almacena en nuestros servidores.",
+    "errorGeneric": "El pago falló. Por favor intenta de nuevo.",
+    "errorDeclined": "Tu tarjeta fue rechazada. Por favor intenta con otro método de pago.",
+    "errorExpired": "Tu tarjeta ha expirado. Por favor usa una tarjeta diferente.",
+    "errorIncomplete": "Por favor completa el formulario de pago.",
+    "initializing": "Cargando formulario de pago…",
+    "initError": "No se pudo inicializar el pago. Por favor intenta de nuevo."
   }
 }

@@ -1,7 +1,7 @@
 /**
  * @function create-checkout
  * @description Validates purchase intent, reads prices from DB, creates order with
- *   snapshot, generates order items, and creates a Stripe Checkout Session (direct)
+ *   snapshot, generates order items, and creates a Stripe PaymentIntent (direct)
  *   or marks order as paid (assisted + skipStripe).
  * @trigger HTTP POST
  *
@@ -44,7 +44,7 @@
  * - FRONTEND_URL
  *
  * @returns {Object}
- *   direct:   { ok: true, data: { sessionUrl, orderId } }
+ *   direct:   { ok: true, data: { clientSecret, orderId, orderNumber } }
  *   assisted + skipStripe: { ok: true, data: { orderId, orderNumber, paid: true } }
  *   assisted + Stripe:     { ok: true, data: { paymentLink, orderId } }
  */
@@ -798,7 +798,7 @@ export default async ({ req, res, log, error }) => {
     _step = "validate-slot";
     let slot = null;
 
-    if (experience.requiresSchedule && !slotId) {
+    if (experience.requiresSchedule && !slotId && !isAssistedSale) {
       return res.json(
         {
           ok: false,
@@ -962,29 +962,25 @@ export default async ({ req, res, log, error }) => {
             (!slotId && !snap.slotId) || snap.slotId === slotId;
           if (matchesExperience && matchesTier && matchesSlot) {
             log(`Reusing pending order ${pendingOrder.$id}`);
-            const session = await stripe.checkout.sessions.create({
-              mode: "payment",
-              success_url: `${FRONTEND_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-              cancel_url: `${FRONTEND_URL}/checkout/cancel`,
-              client_reference_id: pendingOrder.$id,
-              customer_email: customerEmail.trim().toLowerCase(),
+            // Direct sale: create PaymentIntent (embedded Payment Element)
+            const paymentIntent = await stripe.paymentIntents.create({
+              amount: Math.round(pendingOrder.totalAmount * 100),
+              currency: (snap.currency || "MXN").toLowerCase(),
+              automatic_payment_methods: { enabled: true },
               metadata: { orderId: pendingOrder.$id, userId: orderUserId },
-              line_items: buildLineItems(
-                experience,
-                tier,
-                validatedAddons,
-                quantity,
-                currency,
-              ),
             });
             await db.updateDocument(DB, COL_ORDERS, pendingOrder.$id, {
-              stripeSessionId: session.id,
+              stripePaymentIntentId: paymentIntent.id,
               customerName: customerName.trim(),
               customerEmail: customerEmail.trim().toLowerCase(),
             });
             return res.json({
               ok: true,
-              data: { sessionUrl: session.url, orderId: pendingOrder.$id },
+              data: {
+                clientSecret: paymentIntent.client_secret,
+                orderId: pendingOrder.$id,
+                orderNumber: pendingOrder.orderNumber,
+              },
             });
           }
         } catch {
@@ -1229,33 +1225,29 @@ export default async ({ req, res, log, error }) => {
       });
     }
 
-    // ── 17. Direct sale: create Stripe Checkout Session ───────────────────
-    _step = "create-stripe-session";
-    const lineItems = buildLineItems(
-      experience,
-      tier,
-      validatedAddons,
-      quantity,
-      currency,
-    );
-    const session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      success_url: `${FRONTEND_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${FRONTEND_URL}/checkout/cancel`,
-      client_reference_id: order.$id,
-      customer_email: customerEmail.trim().toLowerCase(),
+    // ── 17. Direct sale: create Stripe PaymentIntent (embedded Payment Element) ──
+    _step = "create-stripe-payment-intent";
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(totalAmount * 100),
+      currency: currency.toLowerCase(),
+      automatic_payment_methods: { enabled: true },
       metadata: { orderId: order.$id, userId: orderUserId },
-      line_items: lineItems,
     });
 
     await db.updateDocument(DB, COL_ORDERS, order.$id, {
-      stripeSessionId: session.id,
+      stripePaymentIntentId: paymentIntent.id,
     });
-    log(`Stripe session created: ${session.id} for order ${order.$id}`);
+    log(
+      `Stripe PaymentIntent created: ${paymentIntent.id} for order ${order.$id}`,
+    );
 
     return res.json({
       ok: true,
-      data: { sessionUrl: session.url, orderId: order.$id },
+      data: {
+        clientSecret: paymentIntent.client_secret,
+        orderId: order.$id,
+        orderNumber,
+      },
     });
   } catch (err) {
     error(`create-checkout failed at step [${_step}]: ${err.message}`);

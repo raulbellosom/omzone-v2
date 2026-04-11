@@ -25,6 +25,7 @@
     "contact": "Contact",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
+    "refundPolicy": "Refund Policy",
     "connect": "Connect",
     "instagram": "Instagram",
     "facebook": "Facebook",
@@ -235,19 +236,254 @@
   },
   "privacy": {
     "seoTitle": "Privacy Policy — OMZONE",
-    "seoDescription": "Learn how OMZONE collects, uses and protects your personal information.",
+    "seoDescription": "Learn how OMZONE collects, uses and protects your personal information in compliance with Mexican data protection law.",
     "title": "Privacy Policy",
-    "intro": "Your privacy matters to us.",
-    "body": "This privacy policy will be updated with full details about how OMZONE collects, uses and protects your personal information.",
-    "placeholder": "Full policy coming soon."
+    "intro": "Your privacy matters to us. This policy explains what information we collect, why, and how we protect it.",
+    "lastUpdated": "Last updated: April 2026",
+    "legalDisclaimer": "This is a courtesy translation. The Spanish version is the legally binding document.",
+    "sections": [
+      {
+        "heading": "1. Data Controller",
+        "paragraphs": [
+          "OMZONE, with operations in Puerto Vallarta, Jalisco, Mexico, is responsible for the collection, use and protection of your personal data in accordance with the Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) and its regulations.",
+          "For any questions or requests regarding your personal data, you may contact us at: privacy@omzone.com"
+        ]
+      },
+      {
+        "heading": "2. Information We Collect",
+        "paragraphs": [
+          "We collect the following personal data when you use our platform: full name, email address, phone number (optional), and information related to your purchases (order history, tickets, passes).",
+          "We do NOT collect or store credit card numbers, CVV codes or full card details. All payment processing is handled securely by Stripe, Inc., our payment processor. We only store the card brand (e.g. Visa, Mastercard) and the last four digits of your card for your reference.",
+          "We also collect non-personal technical data such as browser type, IP address, device information and usage patterns through cookies and similar technologies to improve your experience."
+        ]
+      },
+      {
+        "heading": "3. Purpose of Data Collection",
+        "paragraphs": [
+          "Your personal data is used for the following purposes: (a) processing purchases, generating tickets and managing bookings; (b) sending order confirmations, tickets and experience reminders; (c) providing customer support; (d) improving the platform experience; (e) complying with legal obligations.",
+          "We will not use your data for purposes other than those stated here without your prior consent."
+        ]
+      },
+      {
+        "heading": "4. Third-Party Services",
+        "paragraphs": [
+          "We share limited personal data with the following third-party service providers, solely for the purpose of operating the platform:",
+          "Stripe, Inc. — Payment processing. Stripe receives your payment information directly through their secure elements. Stripe's privacy policy: https://stripe.com/privacy",
+          "Appwrite — Backend infrastructure and data storage, hosted on our own servers. Your data is not shared with Appwrite's cloud services.",
+          "Email service providers — For transactional emails (confirmations, reminders). Only your name and email address are shared.",
+          "We do not sell, rent or trade your personal information to third parties for marketing purposes."
+        ]
+      },
+      {
+        "heading": "5. Data Retention",
+        "paragraphs": [
+          "We retain your personal data for as long as your account is active or as needed to provide you services. Transaction records (orders, tickets, payments) are retained for the period required by Mexican fiscal and commercial law.",
+          "You may request deletion of your account and personal data at any time by contacting us at privacy@omzone.com. Certain data may be retained as required by law."
+        ]
+      },
+      {
+        "heading": "6. Your Rights (ARCO Rights)",
+        "paragraphs": [
+          "Under Mexican law (LFPDPPP), you have the right to Access, Rectify, Cancel and Oppose (ARCO) the processing of your personal data. You may also revoke your consent at any time.",
+          "To exercise your ARCO rights, please send a request to privacy@omzone.com including your full name, a description of the rights you wish to exercise, and any documentation that supports your request. We will respond within 20 business days as required by law."
+        ]
+      },
+      {
+        "heading": "7. Cookies",
+        "paragraphs": [
+          "We use essential cookies to maintain your session and preferences. We may also use analytics cookies to understand how visitors interact with our platform. You can configure your browser to reject cookies, though some features may not function properly."
+        ]
+      },
+      {
+        "heading": "8. Security Measures",
+        "paragraphs": [
+          "We implement technical and organizational security measures to protect your personal data against unauthorized access, alteration, disclosure or destruction. All data is transmitted using TLS encryption. Payment data is handled by Stripe's PCI DSS Level 1 certified infrastructure."
+        ]
+      },
+      {
+        "heading": "9. Changes to This Policy",
+        "paragraphs": [
+          "We may update this privacy policy from time to time. Changes will be posted on this page with an updated revision date. Continued use of the platform after changes constitutes acceptance of the updated policy."
+        ]
+      },
+      {
+        "heading": "10. Contact",
+        "paragraphs": [
+          "For any privacy-related inquiries, please contact us at: privacy@omzone.com",
+          "OMZONE — Puerto Vallarta, Jalisco, Mexico"
+        ]
+      }
+    ]
   },
   "terms": {
     "seoTitle": "Terms of Service — OMZONE",
-    "seoDescription": "Review the terms and conditions for using the OMZONE platform.",
+    "seoDescription": "Review the terms and conditions for using the OMZONE wellness experience platform.",
     "title": "Terms of Service",
-    "intro": "Please review our terms before using the platform.",
-    "body": "These terms of service will be updated with full details about the conditions of use for the OMZONE platform.",
-    "placeholder": "Full terms coming soon."
+    "intro": "Please review these terms before using the platform or purchasing any experience.",
+    "lastUpdated": "Last updated: April 2026",
+    "legalDisclaimer": "This is a courtesy translation. The Spanish version is the legally binding document.",
+    "sections": [
+      {
+        "heading": "1. Acceptance of Terms",
+        "paragraphs": [
+          "By accessing or using the OMZONE platform (the \"Platform\"), you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you must not use the Platform.",
+          "These terms apply to all visitors, registered users and purchasers. Additional terms may apply to specific experiences or services."
+        ]
+      },
+      {
+        "heading": "2. About the Platform",
+        "paragraphs": [
+          "OMZONE is a platform for discovering, booking and managing premium wellness experiences including sessions, immersions, retreats, stays and private experiences in Puerto Vallarta and the Bahía de Banderas region, Mexico.",
+          "Experiences are operated by OMZONE and/or independent facilitators. The Platform facilitates the booking and payment process."
+        ]
+      },
+      {
+        "heading": "3. User Accounts",
+        "paragraphs": [
+          "To purchase experiences, you must create an account with a valid email address. You are responsible for maintaining the confidentiality of your account credentials and for all activity under your account.",
+          "You must provide accurate and complete information. OMZONE reserves the right to suspend or terminate accounts that violate these terms or provide false information."
+        ]
+      },
+      {
+        "heading": "4. Purchases and Payments",
+        "paragraphs": [
+          "All prices are displayed in Mexican Pesos (MXN) unless stated otherwise. Prices include applicable taxes where required.",
+          "Payment is processed securely through Stripe. OMZONE does not store your complete payment card information. By completing a purchase, you authorize the charge to your selected payment method.",
+          "A purchase is confirmed only after successful payment processing. You will receive an order confirmation and tickets via email.",
+          "Prices are subject to change. However, the price at the time of purchase is the price you pay — future price changes do not affect existing orders."
+        ]
+      },
+      {
+        "heading": "5. Tickets and Bookings",
+        "paragraphs": [
+          "Each confirmed purchase generates one or more digital tickets. Tickets are personal and non-transferable unless explicitly stated.",
+          "You must present a valid ticket (QR code) to access an experience. OMZONE is not responsible for lost or shared tickets.",
+          "Passes (multi-use credits) are subject to their specific terms regarding validity period and usage limits."
+        ]
+      },
+      {
+        "heading": "6. Cancellations and Refunds",
+        "paragraphs": [
+          "Cancellation and refund terms are detailed in our Refund Policy page. By purchasing, you acknowledge and accept the refund policy applicable at the time of purchase."
+        ]
+      },
+      {
+        "heading": "7. User Conduct",
+        "paragraphs": [
+          "You agree to use the Platform lawfully and respectfully. You must not: (a) use the Platform for fraudulent purposes; (b) attempt to gain unauthorized access to any part of the Platform; (c) interfere with the operation of the Platform; (d) harass other users or facilitators.",
+          "OMZONE reserves the right to refuse service and cancel bookings for users who violate these terms."
+        ]
+      },
+      {
+        "heading": "8. Intellectual Property",
+        "paragraphs": [
+          "All content on the Platform — including text, images, logos, designs and software — is the property of OMZONE or its licensors and is protected by applicable intellectual property laws.",
+          "You may not reproduce, distribute or create derivative works from Platform content without prior written consent."
+        ]
+      },
+      {
+        "heading": "9. Limitation of Liability",
+        "paragraphs": [
+          "OMZONE provides the Platform and experiences on an \"as is\" basis. While we strive for the highest quality, we do not guarantee that experiences will meet every individual expectation.",
+          "To the maximum extent permitted by law, OMZONE shall not be liable for indirect, incidental, special or consequential damages arising from the use of the Platform or participation in experiences.",
+          "OMZONE is not responsible for events beyond our reasonable control, including natural disasters, health emergencies, government actions or third-party service failures."
+        ]
+      },
+      {
+        "heading": "10. Governing Law and Jurisdiction",
+        "paragraphs": [
+          "These terms are governed by the laws of the United Mexican States. Any disputes arising from or related to these terms shall be resolved before the competent courts of Puerto Vallarta, Jalisco, Mexico."
+        ]
+      },
+      {
+        "heading": "11. Changes to These Terms",
+        "paragraphs": [
+          "We may modify these terms at any time. Changes take effect upon posting. Continued use of the Platform constitutes acceptance of the modified terms.",
+          "For material changes, we will make reasonable efforts to notify registered users via email."
+        ]
+      },
+      {
+        "heading": "12. Contact",
+        "paragraphs": [
+          "For questions about these terms, contact us at: hello@omzone.com",
+          "OMZONE — Puerto Vallarta, Jalisco, Mexico"
+        ]
+      }
+    ]
+  },
+  "refund": {
+    "seoTitle": "Refund Policy — OMZONE",
+    "seoDescription": "Review OMZONE's cancellation and refund policy for wellness experiences, tickets and passes.",
+    "title": "Refund Policy",
+    "intro": "We want you to feel confident when booking. Here is our cancellation and refund policy.",
+    "lastUpdated": "Last updated: April 2026",
+    "legalDisclaimer": "This is a courtesy translation. The Spanish version is the legally binding document.",
+    "sections": [
+      {
+        "heading": "1. General Policy",
+        "paragraphs": [
+          "We understand plans can change. Our refund policy is designed to be fair to both our guests and our facilitators who prepare personalized experiences for you.",
+          "All refund requests are processed in Mexican Pesos (MXN) to the original payment method via Stripe."
+        ]
+      },
+      {
+        "heading": "2. Cancellation Windows",
+        "paragraphs": [
+          "More than 72 hours before the experience: Full refund (100% of the purchase price).",
+          "Between 24 and 72 hours before the experience: Partial refund (50% of the purchase price).",
+          "Less than 24 hours before the experience or no-show: No refund.",
+          "Cancellation windows are calculated from the scheduled start time of the experience."
+        ]
+      },
+      {
+        "heading": "3. How to Request a Refund",
+        "paragraphs": [
+          "To request a cancellation and refund, please contact us at hello@omzone.com with your order number and the reason for cancellation. We will process eligible requests within 5 business days.",
+          "Refunds are returned to the original payment method. Depending on your bank or card issuer, it may take an additional 5–10 business days for the refund to appear on your statement."
+        ]
+      },
+      {
+        "heading": "4. Passes and Multi-Use Credits",
+        "paragraphs": [
+          "Passes (multi-experience credits) are non-refundable once any usage has been consumed. Unused passes may be refunded in full if requested before the first use and within the pass validity period.",
+          "Expired passes are not eligible for refund."
+        ]
+      },
+      {
+        "heading": "5. Packages",
+        "paragraphs": [
+          "Package purchases (bundled experiences) are treated as a single purchase. The cancellation window applies to the earliest scheduled experience in the package.",
+          "Partial refunds for individual items within a package are not available."
+        ]
+      },
+      {
+        "heading": "6. Add-ons",
+        "paragraphs": [
+          "Add-ons purchased with an experience follow the same cancellation policy as the main experience. They cannot be cancelled independently."
+        ]
+      },
+      {
+        "heading": "7. Experiences Cancelled by OMZONE",
+        "paragraphs": [
+          "If OMZONE cancels an experience for any reason (weather, facilitator unavailability, minimum attendance not met, etc.), you will receive a full refund or the option to reschedule at no additional cost.",
+          "We will notify you as soon as possible and process refunds within 5 business days."
+        ]
+      },
+      {
+        "heading": "8. Exceptions",
+        "paragraphs": [
+          "OMZONE reserves the right to make exceptions to this policy on a case-by-case basis at its sole discretion, particularly in cases of documented emergencies or extraordinary circumstances.",
+          "Promotional or discounted experiences may have different refund terms, which will be clearly stated at the time of purchase."
+        ]
+      },
+      {
+        "heading": "9. Contact",
+        "paragraphs": [
+          "For refund requests or questions about this policy: hello@omzone.com",
+          "OMZONE — Puerto Vallarta, Jalisco, Mexico"
+        ]
+      }
+    ]
   },
   "notFound": {
     "seoTitle": "Page Not Found — OMZONE",

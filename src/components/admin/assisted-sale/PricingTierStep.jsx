@@ -68,6 +68,7 @@ export default function PricingTierStep({ wizard, setWizardField }) {
     setWizardField("pricingTier", tier);
     // Reset slot when tier changes (price-sensitive)
     setWizardField("slot", null);
+    setWizardField("slotSkipped", false);
   }
 
   if (!wizard.experience) {

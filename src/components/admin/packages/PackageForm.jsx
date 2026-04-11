@@ -87,7 +87,12 @@ export default function PackageForm({
   const init = initialData
     ? {
         ...EMPTY,
-        ...initialData,
+        ...Object.fromEntries(
+          Object.entries(initialData).map(([k, v]) => [
+            k,
+            v === null && typeof EMPTY[k] === "string" ? "" : v,
+          ]),
+        ),
         totalPrice: initialData.totalPrice ?? "",
         durationDays: initialData.durationDays ?? "",
         capacity: initialData.capacity ?? "",

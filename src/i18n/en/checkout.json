@@ -16,7 +16,8 @@
     "step1": "Selection",
     "step2": "Addons",
     "step3": "Details",
-    "step4": "Summary"
+    "step4": "Review",
+    "step5": "Payment"
   },
   "checkoutSuccess": {
     "thankYou": "Thank you!",
@@ -73,5 +74,18 @@
     "disclaimer": "The final amount will be verified before payment is processed.",
     "processing": "Processing…",
     "confirmPay": "Confirm & Pay"
+  },
+  "paymentStep": {
+    "consent": "I accept the <termsLink>Terms of Service</termsLink>, <privacyLink>Privacy Policy</privacyLink> and <refundLink>Refund Policy</refundLink>",
+    "consentRequired": "You must accept the terms to proceed.",
+    "payButton": "Pay {{amount}}",
+    "processing": "Processing payment…",
+    "stripeDisclosure": "Payments processed securely by Stripe. Your card information is never stored on our servers.",
+    "errorGeneric": "Payment failed. Please try again.",
+    "errorDeclined": "Your card was declined. Please try another payment method.",
+    "errorExpired": "Your card has expired. Please use a different card.",
+    "errorIncomplete": "Please complete the payment form.",
+    "initializing": "Loading payment form…",
+    "initError": "Could not initialize payment. Please try again."
   }
 }

@@ -11,6 +11,7 @@ export const ROUTES = {
   CONTACT: "/contact",
   PRIVACY: "/privacy",
   TERMS: "/terms",
+  REFUND_POLICY: "/refund-policy",
   PUBLICATIONS: "/publications",
   PUBLICATION: "/p/:slug",
 

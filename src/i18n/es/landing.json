@@ -25,6 +25,7 @@
     "contact": "Contacto",
     "privacy": "Política de Privacidad",
     "terms": "Términos de Servicio",
+    "refundPolicy": "Política de Reembolso",
     "connect": "Conecta",
     "instagram": "Instagram",
     "facebook": "Facebook",
@@ -235,19 +236,254 @@
   },
   "privacy": {
     "seoTitle": "Política de Privacidad — OMZONE",
-    "seoDescription": "Conoce cómo OMZONE recopila, usa y protege tu información personal.",
+    "seoDescription": "Conoce cómo OMZONE recopila, usa y protege tu información personal conforme a la ley mexicana de protección de datos.",
     "title": "Política de Privacidad",
-    "intro": "Tu privacidad nos importa.",
-    "body": "Esta política de privacidad será actualizada con todos los detalles sobre cómo OMZONE recopila, usa y protege tu información personal.",
-    "placeholder": "Política completa próximamente."
+    "intro": "Tu privacidad nos importa. Esta política explica qué información recopilamos, por qué y cómo la protegemos.",
+    "lastUpdated": "Última actualización: abril 2026",
+    "legalDisclaimer": "",
+    "sections": [
+      {
+        "heading": "1. Responsable del Tratamiento de Datos",
+        "paragraphs": [
+          "OMZONE, con operaciones en Puerto Vallarta, Jalisco, México, es responsable de la recopilación, uso y protección de tus datos personales conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) y su reglamento.",
+          "Para cualquier consulta o solicitud relacionada con tus datos personales, puedes contactarnos en: privacy@omzone.com"
+        ]
+      },
+      {
+        "heading": "2. Información que Recopilamos",
+        "paragraphs": [
+          "Recopilamos los siguientes datos personales cuando usas nuestra plataforma: nombre completo, dirección de correo electrónico, número de teléfono (opcional) e información relacionada con tus compras (historial de pedidos, tickets, pases).",
+          "NO recopilamos ni almacenamos números de tarjetas de crédito, códigos CVV ni datos completos de tarjeta. Todo el procesamiento de pagos es manejado de forma segura por Stripe, Inc., nuestro procesador de pagos. Solo almacenamos la marca de la tarjeta (ej. Visa, Mastercard) y los últimos cuatro dígitos de tu tarjeta como referencia.",
+          "También recopilamos datos técnicos no personales como tipo de navegador, dirección IP, información del dispositivo y patrones de uso a través de cookies y tecnologías similares para mejorar tu experiencia."
+        ]
+      },
+      {
+        "heading": "3. Finalidad de la Recopilación de Datos",
+        "paragraphs": [
+          "Tus datos personales son utilizados para: (a) procesar compras, generar tickets y gestionar reservaciones; (b) enviar confirmaciones de pedidos, tickets y recordatorios de experiencias; (c) brindar soporte al cliente; (d) mejorar la experiencia de la plataforma; (e) cumplir con obligaciones legales.",
+          "No utilizaremos tus datos para fines distintos a los aquí establecidos sin tu consentimiento previo."
+        ]
+      },
+      {
+        "heading": "4. Servicios de Terceros",
+        "paragraphs": [
+          "Compartimos datos personales limitados con los siguientes proveedores de servicios, exclusivamente para operar la plataforma:",
+          "Stripe, Inc. — Procesamiento de pagos. Stripe recibe tu información de pago directamente a través de sus elementos seguros. Política de privacidad de Stripe: https://stripe.com/privacy",
+          "Appwrite — Infraestructura de backend y almacenamiento de datos, alojado en nuestros propios servidores. Tus datos no se comparten con los servicios en la nube de Appwrite.",
+          "Proveedores de correo electrónico — Para correos transaccionales (confirmaciones, recordatorios). Solo se comparten tu nombre y correo electrónico.",
+          "No vendemos, rentamos ni comerciamos tu información personal a terceros con fines de marketing."
+        ]
+      },
+      {
+        "heading": "5. Conservación de Datos",
+        "paragraphs": [
+          "Conservamos tus datos personales mientras tu cuenta esté activa o sea necesario para prestarte servicios. Los registros de transacciones (pedidos, tickets, pagos) se conservan por el periodo requerido por la legislación fiscal y comercial mexicana.",
+          "Puedes solicitar la eliminación de tu cuenta y datos personales en cualquier momento contactándonos en privacy@omzone.com. Ciertos datos podrán ser conservados según lo requiera la ley."
+        ]
+      },
+      {
+        "heading": "6. Tus Derechos (Derechos ARCO)",
+        "paragraphs": [
+          "Conforme a la legislación mexicana (LFPDPPP), tienes derecho a Acceder, Rectificar, Cancelar y Oponerte (ARCO) al tratamiento de tus datos personales. También puedes revocar tu consentimiento en cualquier momento.",
+          "Para ejercer tus derechos ARCO, envía una solicitud a privacy@omzone.com incluyendo tu nombre completo, una descripción de los derechos que deseas ejercer y cualquier documentación que respalde tu solicitud. Responderemos dentro de los 20 días hábiles conforme a la ley."
+        ]
+      },
+      {
+        "heading": "7. Cookies",
+        "paragraphs": [
+          "Utilizamos cookies esenciales para mantener tu sesión y preferencias. También podemos usar cookies de análisis para entender cómo los visitantes interactúan con nuestra plataforma. Puedes configurar tu navegador para rechazar cookies, aunque algunas funciones podrían no operar correctamente."
+        ]
+      },
+      {
+        "heading": "8. Medidas de Seguridad",
+        "paragraphs": [
+          "Implementamos medidas de seguridad técnicas y organizativas para proteger tus datos personales contra acceso no autorizado, alteración, divulgación o destrucción. Todos los datos se transmiten usando cifrado TLS. Los datos de pago son manejados por la infraestructura certificada PCI DSS Nivel 1 de Stripe."
+        ]
+      },
+      {
+        "heading": "9. Cambios a Esta Política",
+        "paragraphs": [
+          "Podemos actualizar esta política de privacidad periódicamente. Los cambios serán publicados en esta página con la fecha de revisión actualizada. El uso continuado de la plataforma después de los cambios constituye aceptación de la política actualizada."
+        ]
+      },
+      {
+        "heading": "10. Contacto",
+        "paragraphs": [
+          "Para consultas relacionadas con privacidad, contáctanos en: privacy@omzone.com",
+          "OMZONE — Puerto Vallarta, Jalisco, México"
+        ]
+      }
+    ]
   },
   "terms": {
     "seoTitle": "Términos de Servicio — OMZONE",
-    "seoDescription": "Revisa los términos y condiciones para usar la plataforma OMZONE.",
+    "seoDescription": "Revisa los términos y condiciones para usar la plataforma de experiencias wellness OMZONE.",
     "title": "Términos de Servicio",
-    "intro": "Por favor revisa nuestros términos antes de usar la plataforma.",
-    "body": "Estos términos de servicio serán actualizados con todos los detalles sobre las condiciones de uso de la plataforma OMZONE.",
-    "placeholder": "Términos completos próximamente."
+    "intro": "Por favor revisa estos términos antes de usar la plataforma o adquirir cualquier experiencia.",
+    "lastUpdated": "Última actualización: abril 2026",
+    "legalDisclaimer": "",
+    "sections": [
+      {
+        "heading": "1. Aceptación de los Términos",
+        "paragraphs": [
+          "Al acceder o utilizar la plataforma OMZONE (la \"Plataforma\"), aceptas quedar vinculado por estos Términos de Servicio. Si no estás de acuerdo con alguna parte de estos términos, no debes usar la Plataforma.",
+          "Estos términos aplican a todos los visitantes, usuarios registrados y compradores. Términos adicionales pueden aplicar a experiencias o servicios específicos."
+        ]
+      },
+      {
+        "heading": "2. Acerca de la Plataforma",
+        "paragraphs": [
+          "OMZONE es una plataforma para descubrir, reservar y gestionar experiencias de bienestar premium incluyendo sesiones, inmersiones, retiros, estancias y experiencias privadas en Puerto Vallarta y la región de Bahía de Banderas, México.",
+          "Las experiencias son operadas por OMZONE y/o facilitadores independientes. La Plataforma facilita el proceso de reservación y pago."
+        ]
+      },
+      {
+        "heading": "3. Cuentas de Usuario",
+        "paragraphs": [
+          "Para adquirir experiencias, debes crear una cuenta con un correo electrónico válido. Eres responsable de mantener la confidencialidad de tus credenciales de acceso y de toda la actividad bajo tu cuenta.",
+          "Debes proporcionar información precisa y completa. OMZONE se reserva el derecho de suspender o cancelar cuentas que violen estos términos o proporcionen información falsa."
+        ]
+      },
+      {
+        "heading": "4. Compras y Pagos",
+        "paragraphs": [
+          "Todos los precios se muestran en Pesos Mexicanos (MXN) salvo que se indique lo contrario. Los precios incluyen impuestos aplicables donde sea requerido.",
+          "El pago se procesa de forma segura a través de Stripe. OMZONE no almacena la información completa de tu tarjeta de pago. Al completar una compra, autorizas el cargo al método de pago seleccionado.",
+          "Una compra se confirma únicamente después del procesamiento exitoso del pago. Recibirás una confirmación de pedido y tickets por correo electrónico.",
+          "Los precios están sujetos a cambios. Sin embargo, el precio al momento de la compra es el precio que pagas — cambios futuros de precio no afectan pedidos existentes."
+        ]
+      },
+      {
+        "heading": "5. Tickets y Reservaciones",
+        "paragraphs": [
+          "Cada compra confirmada genera uno o más tickets digitales. Los tickets son personales e intransferibles salvo que se indique explícitamente.",
+          "Debes presentar un ticket válido (código QR) para acceder a una experiencia. OMZONE no es responsable por tickets perdidos o compartidos.",
+          "Los pases (créditos de uso múltiple) están sujetos a sus términos específicos respecto al periodo de validez y límites de uso."
+        ]
+      },
+      {
+        "heading": "6. Cancelaciones y Reembolsos",
+        "paragraphs": [
+          "Los términos de cancelación y reembolso se detallan en nuestra página de Política de Reembolso. Al comprar, reconoces y aceptas la política de reembolso aplicable al momento de la compra."
+        ]
+      },
+      {
+        "heading": "7. Conducta del Usuario",
+        "paragraphs": [
+          "Aceptas utilizar la Plataforma de manera legal y respetuosa. No debes: (a) usar la Plataforma con fines fraudulentos; (b) intentar acceder sin autorización a cualquier parte de la Plataforma; (c) interferir con la operación de la Plataforma; (d) acosar a otros usuarios o facilitadores.",
+          "OMZONE se reserva el derecho de negar el servicio y cancelar reservaciones de usuarios que violen estos términos."
+        ]
+      },
+      {
+        "heading": "8. Propiedad Intelectual",
+        "paragraphs": [
+          "Todo el contenido de la Plataforma — incluyendo textos, imágenes, logotipos, diseños y software — es propiedad de OMZONE o sus licenciantes y está protegido por las leyes de propiedad intelectual aplicables.",
+          "No puedes reproducir, distribuir ni crear obras derivadas del contenido de la Plataforma sin consentimiento previo por escrito."
+        ]
+      },
+      {
+        "heading": "9. Limitación de Responsabilidad",
+        "paragraphs": [
+          "OMZONE proporciona la Plataforma y las experiencias tal como están. Si bien nos esforzamos por ofrecer la más alta calidad, no garantizamos que las experiencias cumplirán con cada expectativa individual.",
+          "En la máxima medida permitida por la ley, OMZONE no será responsable por daños indirectos, incidentales, especiales o consecuentes derivados del uso de la Plataforma o la participación en experiencias.",
+          "OMZONE no es responsable por eventos fuera de nuestro control razonable, incluyendo desastres naturales, emergencias de salud, acciones gubernamentales o fallas de servicios de terceros."
+        ]
+      },
+      {
+        "heading": "10. Ley Aplicable y Jurisdicción",
+        "paragraphs": [
+          "Estos términos se rigen por las leyes de los Estados Unidos Mexicanos. Cualquier controversia derivada de o relacionada con estos términos será resuelta ante los tribunales competentes de Puerto Vallarta, Jalisco, México."
+        ]
+      },
+      {
+        "heading": "11. Cambios a Estos Términos",
+        "paragraphs": [
+          "Podemos modificar estos términos en cualquier momento. Los cambios entran en vigor al momento de su publicación. El uso continuado de la Plataforma constituye aceptación de los términos modificados.",
+          "Para cambios materiales, haremos esfuerzos razonables para notificar a los usuarios registrados por correo electrónico."
+        ]
+      },
+      {
+        "heading": "12. Contacto",
+        "paragraphs": [
+          "Para preguntas sobre estos términos, contáctanos en: hello@omzone.com",
+          "OMZONE — Puerto Vallarta, Jalisco, México"
+        ]
+      }
+    ]
+  },
+  "refund": {
+    "seoTitle": "Política de Reembolso — OMZONE",
+    "seoDescription": "Revisa la política de cancelación y reembolso de OMZONE para experiencias wellness, tickets y pases.",
+    "title": "Política de Reembolso",
+    "intro": "Queremos que te sientas seguro al reservar. Aquí está nuestra política de cancelación y reembolso.",
+    "lastUpdated": "Última actualización: abril 2026",
+    "legalDisclaimer": "",
+    "sections": [
+      {
+        "heading": "1. Política General",
+        "paragraphs": [
+          "Entendemos que los planes pueden cambiar. Nuestra política de reembolso está diseñada para ser justa tanto para nuestros huéspedes como para nuestros facilitadores que preparan experiencias personalizadas para ti.",
+          "Todas las solicitudes de reembolso se procesan en Pesos Mexicanos (MXN) al método de pago original a través de Stripe."
+        ]
+      },
+      {
+        "heading": "2. Ventanas de Cancelación",
+        "paragraphs": [
+          "Más de 72 horas antes de la experiencia: Reembolso completo (100% del precio de compra).",
+          "Entre 24 y 72 horas antes de la experiencia: Reembolso parcial (50% del precio de compra).",
+          "Menos de 24 horas antes de la experiencia o inasistencia: Sin reembolso.",
+          "Las ventanas de cancelación se calculan desde la hora programada de inicio de la experiencia."
+        ]
+      },
+      {
+        "heading": "3. Cómo Solicitar un Reembolso",
+        "paragraphs": [
+          "Para solicitar una cancelación y reembolso, contáctanos en hello@omzone.com con tu número de pedido y el motivo de la cancelación. Procesaremos las solicitudes elegibles dentro de 5 días hábiles.",
+          "Los reembolsos se devuelven al método de pago original. Dependiendo de tu banco o emisor de tarjeta, puede tomar de 5 a 10 días hábiles adicionales para que el reembolso aparezca en tu estado de cuenta."
+        ]
+      },
+      {
+        "heading": "4. Pases y Créditos de Uso Múltiple",
+        "paragraphs": [
+          "Los pases (créditos para múltiples experiencias) no son reembolsables una vez que se haya consumido cualquier uso. Los pases no utilizados pueden ser reembolsados en su totalidad si se solicita antes del primer uso y dentro del periodo de validez del pase.",
+          "Los pases expirados no son elegibles para reembolso."
+        ]
+      },
+      {
+        "heading": "5. Paquetes",
+        "paragraphs": [
+          "Las compras de paquetes (experiencias agrupadas) se tratan como una compra única. La ventana de cancelación aplica a la experiencia programada más temprana del paquete.",
+          "No se ofrecen reembolsos parciales por artículos individuales dentro de un paquete."
+        ]
+      },
+      {
+        "heading": "6. Complementos (Add-ons)",
+        "paragraphs": [
+          "Los complementos adquiridos con una experiencia siguen la misma política de cancelación que la experiencia principal. No pueden cancelarse de forma independiente."
+        ]
+      },
+      {
+        "heading": "7. Experiencias Canceladas por OMZONE",
+        "paragraphs": [
+          "Si OMZONE cancela una experiencia por cualquier motivo (clima, indisponibilidad del facilitador, mínimo de asistentes no alcanzado, etc.), recibirás un reembolso completo o la opción de reprogramar sin costo adicional.",
+          "Te notificaremos lo antes posible y procesaremos los reembolsos dentro de 5 días hábiles."
+        ]
+      },
+      {
+        "heading": "8. Excepciones",
+        "paragraphs": [
+          "OMZONE se reserva el derecho de hacer excepciones a esta política caso por caso a su entera discreción, particularmente en casos de emergencias documentadas o circunstancias extraordinarias.",
+          "Las experiencias promocionales o con descuento pueden tener términos de reembolso diferentes, los cuales serán indicados claramente al momento de la compra."
+        ]
+      },
+      {
+        "heading": "9. Contacto",
+        "paragraphs": [
+          "Para solicitudes de reembolso o preguntas sobre esta política: hello@omzone.com",
+          "OMZONE — Puerto Vallarta, Jalisco, México"
+        ]
+      }
+    ]
   },
   "notFound": {
     "seoTitle": "Página no encontrada — OMZONE",

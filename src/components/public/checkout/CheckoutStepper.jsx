@@ -2,7 +2,7 @@ import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 
-const STEP_KEYS = ["checkout.step1", "checkout.step2", "checkout.step3", "checkout.step4"];
+const STEP_KEYS = ["checkout.step1", "checkout.step2", "checkout.step3", "checkout.step4", "checkout.step5"];
 
 export default function CheckoutStepper({ currentStep, stepValidation, goToStep }) {
   const { t } = useLanguage();

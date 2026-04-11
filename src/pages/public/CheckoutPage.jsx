@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { useCheckout } from "@/hooks/useCheckout";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
@@ -11,6 +11,7 @@ import SelectionStep from "@/components/public/checkout/SelectionStep";
 import AddonsStep from "@/components/public/checkout/AddonsStep";
 import CustomerInfoStep from "@/components/public/checkout/CustomerInfoStep";
 import OrderSummaryStep from "@/components/public/checkout/OrderSummaryStep";
+import PaymentStep from "@/components/public/checkout/PaymentStep";
 import OrderSummary from "@/components/public/checkout/OrderSummary";
 
 // ─── Loading skeleton ─────────────────────────────────────────────────────────
@@ -21,7 +22,7 @@ function CheckoutSkeleton() {
       <div className="container-shell py-10 max-w-4xl animate-pulse space-y-8">
         <div className="h-6 w-48 bg-warm-gray rounded-lg" />
         <div className="flex gap-4">
-          {[1, 2, 3, 4].map((i) => (
+          {[1, 2, 3, 4, 5].map((i) => (
             <div key={i} className="flex-1 h-2 bg-warm-gray rounded-full" />
           ))}
         </div>
@@ -106,7 +107,10 @@ export default function CheckoutPage() {
     stepValidation,
     submitting,
     submitError,
-    submitCheckout,
+    createPaymentIntent,
+    clientSecret,
+    orderId,
+    orderNumber,
   } = checkout;
 
   if (loading) return <CheckoutSkeleton />;
@@ -150,9 +154,15 @@ export default function CheckoutPage() {
       quantity={quantity}
       indicativeTotal={indicativeTotal}
       currency={currency}
+    />,
+    <PaymentStep
+      key="payment"
+      clientSecret={clientSecret}
+      indicativeTotal={indicativeTotal}
+      currency={currency}
+      orderId={orderId}
       submitting={submitting}
       submitError={submitError}
-      onSubmit={submitCheckout}
     />,
   ];
 
@@ -194,8 +204,8 @@ export default function CheckoutPage() {
               {steps[currentStep]}
             </div>
 
-            {/* Navigation (not on final step — it has its own submit) */}
-            {currentStep < 3 && (
+            {/* Navigation (not on payment step — it has its own submit) */}
+            {currentStep < 4 && (
               <div className="flex justify-between mt-6">
                 <Button
                   variant="ghost"
@@ -209,12 +219,29 @@ export default function CheckoutPage() {
                 </Button>
                 <Button
                   size="md"
-                  onClick={nextStep}
-                  disabled={!stepValidation[currentStep]}
+                  onClick={async () => {
+                    // On Review → Payment: create PaymentIntent first
+                    if (currentStep === 3) {
+                      const result = await createPaymentIntent();
+                      if (result) nextStep();
+                    } else {
+                      nextStep();
+                    }
+                  }}
+                  disabled={!stepValidation[currentStep] || (currentStep === 3 && submitting)}
                   className="gap-1.5"
                 >
-                  {t("checkout.next")}
-                  <ArrowRight className="w-4 h-4" />
+                  {currentStep === 3 && submitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {t("checkout.processing")}
+                    </>
+                  ) : (
+                    <>
+                      {t("checkout.next")}
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
                 </Button>
               </div>
             )}
@@ -253,21 +280,33 @@ export default function CheckoutPage() {
                 </span>
               </p>
             </div>
-            {currentStep < 3 ? (
+            {currentStep < 4 ? (
               <Button
                 size="md"
-                onClick={nextStep}
-                disabled={!stepValidation[currentStep]}
+                onClick={async () => {
+                  if (currentStep === 3) {
+                    const result = await createPaymentIntent();
+                    if (result) nextStep();
+                  } else {
+                    nextStep();
+                  }
+                }}
+                disabled={!stepValidation[currentStep] || (currentStep === 3 && submitting)}
                 className="gap-1.5"
               >
-                {t("checkout.next")}
-                <ArrowRight className="w-4 h-4" />
+                {currentStep === 3 && submitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    {t("checkout.processing")}
+                  </>
+                ) : (
+                  <>
+                    {t("checkout.next")}
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
               </Button>
-            ) : (
-              <Button size="md" disabled={submitting} onClick={submitCheckout}>
-                {submitting ? t("checkout.processing") : t("checkout.pay")}
-              </Button>
-            )}
+            ) : null}
           </div>
         </div>
 

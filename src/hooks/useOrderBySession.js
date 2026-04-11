@@ -8,10 +8,10 @@ const COL_ORDER_ITEMS = env.collectionOrderItems;
 const COL_TICKETS = env.collectionTickets;
 
 /**
- * Fetches an order by Stripe session ID, including its items and tickets.
+ * Fetches an order by Stripe session ID or direct order ID, including its items and tickets.
  * Handles the timing issue where Stripe redirects before webhook completes.
  */
-export function useOrderBySession(sessionId) {
+export function useOrderBySession(sessionId, orderId) {
   const [order, setOrder] = useState(null);
   const [items, setItems] = useState([]);
   const [tickets, setTickets] = useState([]);
@@ -19,7 +19,7 @@ export function useOrderBySession(sessionId) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!sessionId) {
+    if (!sessionId && !orderId) {
       setLoading(false);
       return;
     }
@@ -30,14 +30,29 @@ export function useOrderBySession(sessionId) {
       setLoading(true);
       setError(null);
       try {
-        const res = await databases.listDocuments(DB, COL_ORDERS, [
-          Query.equal("stripeSessionId", sessionId),
-          Query.limit(1),
-        ]);
+        let orderDoc = null;
+
+        if (orderId) {
+          // Direct lookup by order ID (Payment Element flow)
+          try {
+            orderDoc = await databases.getDocument(DB, COL_ORDERS, orderId);
+          } catch {
+            // Order not found
+          }
+        } else if (sessionId) {
+          // Legacy lookup by Stripe session ID (Checkout redirect flow)
+          const res = await databases.listDocuments(DB, COL_ORDERS, [
+            Query.equal("stripeSessionId", sessionId),
+            Query.limit(1),
+          ]);
+          if (res.documents.length > 0) {
+            orderDoc = res.documents[0];
+          }
+        }
 
         if (cancelled) return;
 
-        if (res.documents.length === 0) {
+        if (!orderDoc) {
           setOrder(null);
           setItems([]);
           setTickets([]);
@@ -45,7 +60,6 @@ export function useOrderBySession(sessionId) {
           return;
         }
 
-        const orderDoc = res.documents[0];
         setOrder(orderDoc);
 
         // Fetch items and tickets in parallel
@@ -76,7 +90,7 @@ export function useOrderBySession(sessionId) {
     return () => {
       cancelled = true;
     };
-  }, [sessionId]);
+  }, [sessionId, orderId]);
 
   return { order, items, tickets, loading, error };
 }

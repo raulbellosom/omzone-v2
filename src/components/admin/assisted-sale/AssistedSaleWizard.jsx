@@ -88,7 +88,7 @@ function canProceed(stepId, wizard) {
     case "tier":
       return !!wizard.pricingTier;
     case "slot":
-      return !!wizard.slot;
+      return !!wizard.slot || wizard.slotSkipped;
     case "addons":
       return true; // addons are optional
     case "quantity":

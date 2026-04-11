@@ -88,7 +88,12 @@ export default function PassForm({
   const init = initialData
     ? {
         ...EMPTY,
-        ...initialData,
+        ...Object.fromEntries(
+          Object.entries(initialData).map(([k, v]) => [
+            k,
+            v === null && typeof EMPTY[k] === "string" ? "" : v,
+          ]),
+        ),
         totalCredits: initialData.totalCredits ?? "",
         basePrice: initialData.basePrice ?? "",
         validityDays: initialData.validityDays ?? "",

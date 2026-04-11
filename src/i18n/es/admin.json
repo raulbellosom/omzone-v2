@@ -1006,7 +1006,14 @@
         "continueNext": "Continúa al siguiente paso.",
         "full": "Cupo lleno",
         "spotsAvailable": "{count} lugar(es) disponible(s)",
-        "noSlots": "No hay slots disponibles para esta experiencia."
+        "noSlots": "No hay slots disponibles para esta experiencia.",
+        "noSlotsHint": "Esta experiencia requiere un slot agendado. Crea uno desde la Agenda o continúa sin uno.",
+        "goToAgenda": "Ir a la Agenda",
+        "skipSlot": "Continuar sin slot",
+        "skipped": "Slot omitido ✓",
+        "skipWarning": "La orden se creará sin un slot asignado. Podrás asignar uno después.",
+        "loadError": "No se pudieron cargar los slots disponibles.",
+        "retry": "Reintentar"
       },
       "addons": {
         "title": "Complementos (Addons)",
@@ -1038,6 +1045,7 @@
         "pricingTier": "Tier de precio",
         "slotDate": "Slot / Fecha",
         "noSelection": "Sin seleccionar",
+        "slotSkippedWarning": "Esta orden se crear\u00e1 sin un slot de horario asignado. Podr\u00e1s asignar uno despu\u00e9s desde el detalle de la orden.",
         "quantity": "Cantidad",
         "addons": "Complementos",
         "selectedCount": "{count} seleccionado(s)",

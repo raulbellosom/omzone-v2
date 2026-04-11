@@ -85,9 +85,10 @@ function ProcessingState() {
 export default function CheckoutSuccessPage() {
   const [params] = useSearchParams();
   const sessionId = params.get("session_id");
+  const orderId = params.get("order_id");
   const { language, t } = useLanguage();
 
-  const { order, items, tickets, loading } = useOrderBySession(sessionId);
+  const { order, items, tickets, loading } = useOrderBySession(sessionId, orderId);
 
   // Loading
   if (loading) return <LoadingSkeleton />;

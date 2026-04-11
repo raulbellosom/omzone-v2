@@ -1,6 +1,4 @@
 import { formatPrice } from "@/components/public/checkout/utils";
-import { Loader2 } from "lucide-react";
-import { Button } from "@/components/common/Button";
 import { useLanguage } from "@/hooks/useLanguage";
 
 export default function OrderSummaryStep({
@@ -11,9 +9,6 @@ export default function OrderSummaryStep({
   quantity,
   indicativeTotal,
   currency,
-  submitting,
-  submitError,
-  onSubmit,
 }) {
   const { t } = useLanguage();
 
@@ -88,31 +83,6 @@ export default function OrderSummaryStep({
       <p className="text-xs text-charcoal-subtle text-center">
         {t("reviewStep.disclaimer")}
       </p>
-
-      {/* Error */}
-      {submitError && (
-        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
-          {submitError}
-        </div>
-      )}
-
-      {/* Submit */}
-      <Button
-        type="button"
-        size="lg"
-        className="w-full"
-        disabled={submitting}
-        onClick={onSubmit}
-      >
-        {submitting ? (
-          <span className="flex items-center justify-center gap-2">
-            <Loader2 className="w-4 h-4 animate-spin" />
-            {t("reviewStep.processing")}
-          </span>
-        ) : (
-          t("reviewStep.confirmPay")
-        )}
-      </Button>
     </div>
   );
 }

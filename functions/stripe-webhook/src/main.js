@@ -162,7 +162,7 @@ async function handleCheckoutCompleted(
 
   // Create payment record (idempotent check)
   if (piId && !(await paymentExists(db, DB, COL_PAYMENTS, piId))) {
-    await db.createDocument(DB, COL_PAYMENTS, ID.unique(), {
+    const paymentData = {
       orderId,
       stripePaymentIntentId: piId,
       amount: (session.amount_total || 0) / 100,
@@ -179,7 +179,8 @@ async function handleCheckoutCompleted(
         amountTotal: session.amount_total,
         currency: session.currency,
       }),
-    });
+    };
+    await db.createDocument(DB, COL_PAYMENTS, ID.unique(), paymentData);
     log(`Payment record created for order ${orderId} (PI: ${piId})`);
   }
 
@@ -300,7 +301,23 @@ async function handlePaymentIntentSucceeded(
 
   // Create payment record
   if (!(await paymentExists(db, DB, COL_PAYMENTS, piId))) {
-    await db.createDocument(DB, COL_PAYMENTS, ID.unique(), {
+    // Extract card details from charges (safe PCI data: brand + last4 only)
+    let cardBrand = null;
+    let cardLast4 = null;
+    try {
+      const charge =
+        paymentIntent.charges &&
+        paymentIntent.charges.data &&
+        paymentIntent.charges.data[0];
+      if (charge && charge.payment_method_details && charge.payment_method_details.card) {
+        cardBrand = charge.payment_method_details.card.brand || null;
+        cardLast4 = charge.payment_method_details.card.last4 || null;
+      }
+    } catch {
+      // Non-fatal: card details not available
+    }
+
+    const paymentData = {
       orderId: order.$id,
       stripePaymentIntentId: piId,
       amount: (paymentIntent.amount || 0) / 100,
@@ -315,8 +332,12 @@ async function handlePaymentIntentSucceeded(
         amount: paymentIntent.amount,
         currency: paymentIntent.currency,
       }),
-    });
-    log(`Payment record created for order ${order.$id} (PI: ${piId})`);
+    };
+    if (cardBrand) paymentData.cardBrand = cardBrand;
+    if (cardLast4) paymentData.cardLast4 = cardLast4;
+
+    await db.createDocument(DB, COL_PAYMENTS, ID.unique(), paymentData);
+    log(`Payment record created for order ${order.$id} (PI: ${piId}, card: ${cardBrand || "n/a"} ****${cardLast4 || "n/a"})`);
   }
 
   // Reconcile slot bookedCount

@@ -21,6 +21,7 @@ const AboutPage = lazy(() => import("@/pages/public/AboutPage"));
 const ContactPage = lazy(() => import("@/pages/public/ContactPage"));
 const PrivacyPage = lazy(() => import("@/pages/public/PrivacyPage"));
 const TermsPage = lazy(() => import("@/pages/public/TermsPage"));
+const RefundPolicyPage = lazy(() => import("@/pages/public/RefundPolicyPage"));
 const ExperiencesListPage = lazy(
   () => import("@/pages/public/ExperiencesListPage"),
 );
@@ -205,6 +206,7 @@ export default function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
+            <Route path="/refund-policy" element={<RefundPolicyPage />} />
             <Route path="/experiences" element={<ExperiencesListPage />} />
             <Route
               path="/experiences/:slug"
@@ -328,9 +330,13 @@ export default function App() {
               <Route path="locations/:id/edit" element={<LocationEditPage />} />
               <Route path="rooms/new" element={<RoomCreatePage />} />
               <Route path="rooms/:id/edit" element={<RoomEditPage />} />
-              {/* Assisted sale — admin/root only */}
+              {/* Assisted sale — admin/root/operator */}
               <Route
-                element={<RequireLabel labels={[ROLES.ADMIN, ROLES.ROOT]} />}
+                element={
+                  <RequireLabel
+                    labels={[ROLES.ADMIN, ROLES.ROOT, ROLES.OPERATOR]}
+                  />
+                }
               >
                 <Route path="sales/new" element={<AssistedSalePage />} />
               </Route>

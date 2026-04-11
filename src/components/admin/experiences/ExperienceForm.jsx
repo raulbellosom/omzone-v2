@@ -149,7 +149,12 @@ export default function ExperienceForm({
   const { t } = useLanguage();
   const [form, setForm] = useState(() => ({
     ...EMPTY,
-    ...initialData,
+    ...Object.fromEntries(
+      Object.entries(initialData ?? {}).map(([k, v]) => [
+        k,
+        v === null && typeof EMPTY[k] === "string" ? "" : v,
+      ]),
+    ),
     galleryImageIds: parseJsonArray(initialData?.galleryImageIds),
   }));
   const [errors, setErrors] = useState({});
