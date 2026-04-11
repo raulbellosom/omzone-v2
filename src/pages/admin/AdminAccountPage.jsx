@@ -319,7 +319,8 @@ export default function AdminAccountPage() {
                     className="bg-warm-gray/50 text-charcoal-muted"
                   />
                   <p className="text-[11px] text-charcoal-subtle mt-1">
-                    {t("portal.profile.phoneHelper") || "Phone is managed in your account settings"}
+                    {t("portal.profile.phoneHelper") ||
+                      "Phone is managed in your account settings"}
                   </p>
                 </div>
 

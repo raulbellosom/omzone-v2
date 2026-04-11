@@ -327,7 +327,8 @@ export default function PortalProfilePage() {
                       className="bg-warm-gray/50 text-charcoal-muted"
                     />
                     <p className="text-[11px] text-charcoal-subtle mt-1">
-                      {t("portal.profile.phoneHelper") || "Phone is managed through your account settings."}
+                      {t("portal.profile.phoneHelper") ||
+                        "Phone is managed through your account settings."}
                     </p>
                   </div>
 
