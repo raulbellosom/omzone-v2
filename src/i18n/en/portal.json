@@ -51,7 +51,10 @@
       "passes": "Passes",
       "publications": "Stories & Articles",
       "viewAll": "View all",
-      "noExperiences": "No experiences available right now. Check back soon."
+      "allTypes": "All",
+      "allCategories": "All",
+      "noExperiences": "No experiences available right now. Check back soon.",
+      "noFilterResults": "No results match your filter."
     }
   }
 }

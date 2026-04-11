@@ -51,7 +51,10 @@
       "passes": "Pases",
       "publications": "Historias y Artículos",
       "viewAll": "Ver todos",
-      "noExperiences": "No hay experiencias disponibles ahora. Vuelve pronto."
+      "allTypes": "Todas",
+      "allCategories": "Todas",
+      "noExperiences": "No hay experiencias disponibles ahora. Vuelve pronto.",
+      "noFilterResults": "No hay resultados para este filtro."
     }
   }
 }
