@@ -127,12 +127,11 @@ export default function PublicationPage() {
   const { t } = useLanguage();
   const { publication, sections, experience, loading, error } =
     usePublicationBySlug(slug);
+  const seo = usePublicationSEO(publication);
 
   if (loading) return <LoadingSkeleton />;
   if (error === "not_found" || (!loading && !publication))
     return <NotFoundPage />;
-
-  const seo = usePublicationSEO(publication);
 
   const hasHeroSection = sections.some((s) => s.sectionType === "hero");
   const hasCtaSection = sections.some((s) => s.sectionType === "cta");
