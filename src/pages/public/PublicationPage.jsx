@@ -17,14 +17,14 @@ import { useLanguage, localizedField } from "@/hooks/useLanguage";
 function LoadingSkeleton() {
   return (
     <div className="animate-pulse">
-      <div className="w-full aspect-[16/9] md:aspect-[21/9] bg-warm-gray" />
+      <div className="w-full aspect-[16/9] md:aspect-[21/9] bg-sand/80" />
       <div className="container-shell pt-4 pb-12 space-y-6 max-w-3xl">
-        <div className="h-4 w-32 rounded-full bg-warm-gray" />
-        <div className="h-10 w-2/3 rounded-xl bg-warm-gray" />
-        <div className="h-5 w-full rounded bg-warm-gray" />
-        <div className="h-5 w-5/6 rounded bg-warm-gray" />
-        <div className="h-5 w-4/6 rounded bg-warm-gray" />
-        <div className="h-5 w-3/6 rounded bg-warm-gray" />
+        <div className="h-4 w-32 rounded-full bg-sand" />
+        <div className="h-10 w-2/3 rounded-xl bg-sand" />
+        <div className="h-5 w-full rounded bg-sand/70" />
+        <div className="h-5 w-5/6 rounded bg-sand/70" />
+        <div className="h-5 w-4/6 rounded bg-sand/70" />
+        <div className="h-5 w-3/6 rounded bg-sand/70" />
       </div>
     </div>
   );

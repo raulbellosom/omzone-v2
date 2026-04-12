@@ -944,6 +944,7 @@
       "confirm": "Confirm",
       "loading": "Loading…",
       "saving": "Saving…",
+      "unsavedChanges": "Unsaved changes",
       "noResults": "No results",
       "previous": "Previous",
       "next": "Next",

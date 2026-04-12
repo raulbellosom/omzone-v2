@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Input } from "@/components/common/Input";
-import { Button } from "@/components/common/Button";
+import AdminFormLayout from "@/components/admin/AdminFormLayout";
 import { Card } from "@/components/common/Card";
 import SlugInput from "./SlugInput";
 import ImageUpload from "./ImageUpload";
@@ -254,7 +254,7 @@ export default function ExperienceForm({
   const isDisabled = submitting;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={isDisabled} submitLabel={submitLabel}>
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
@@ -569,19 +569,6 @@ export default function ExperienceForm({
         </div>
       </Card>
 
-      {/* Actions */}
-      <div className="flex items-center gap-3 pb-6">
-        <Button type="submit" disabled={isDisabled} size="md">
-          {submitting ? (
-            <span className="flex items-center gap-2">
-              <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-              {t("admin.common.saving")}
-            </span>
-          ) : (
-            submitLabel
-          )}
-        </Button>
-      </div>
-    </form>
+    </AdminFormLayout>
   );
 }

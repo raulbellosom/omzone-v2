@@ -20,12 +20,12 @@ import { cn } from "@/lib/utils";
 function LoadingSkeleton() {
   return (
     <div className="animate-pulse">
-      <div className="w-full aspect-3/4 sm:aspect-video md:aspect-21/9 bg-warm-gray" />
+      <div className="w-full h-[50vh] min-h-[360px] max-h-[540px] bg-sand/80" />
       <div className="container-shell py-12 space-y-6 max-w-3xl">
-        <div className="h-6 w-24 rounded-full bg-warm-gray" />
-        <div className="h-10 w-2/3 rounded-xl bg-warm-gray" />
-        <div className="h-4 w-full rounded bg-warm-gray" />
-        <div className="h-4 w-5/6 rounded bg-warm-gray" />
+        <div className="h-6 w-24 rounded-full bg-sand" />
+        <div className="h-10 w-2/3 rounded-xl bg-sand" />
+        <div className="h-4 w-full rounded bg-sand/70" />
+        <div className="h-4 w-5/6 rounded bg-sand/70" />
       </div>
     </div>
   );
@@ -48,8 +48,8 @@ function PackageHero({ pkg }) {
   const { t, language } = useLanguage();
 
   return (
-    <div className="relative w-full -mt-20">
-      <div className="relative w-full aspect-3/4 sm:aspect-video md:aspect-21/9 overflow-hidden bg-warm-gray">
+    <div className="relative w-full">
+      <div className="relative w-full h-[50vh] min-h-[360px] max-h-[540px] overflow-hidden bg-charcoal">
         <OptimizedImage
           fileId={pkg.heroImageId}
           bucketId={env.bucketPackageImages}

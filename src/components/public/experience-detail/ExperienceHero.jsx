@@ -26,9 +26,9 @@ export default function ExperienceHero({ experience }) {
   const { t, language } = useLanguage();
 
   return (
-    <div className="relative w-full -mt-20">
+    <div className="relative w-full">
       {/* Image */}
-      <div className="relative w-full aspect-3/4 sm:aspect-video md:aspect-21/9 overflow-hidden bg-warm-gray">
+      <div className="relative w-full h-[60vh] min-h-[420px] max-h-[640px] overflow-hidden bg-warm-gray">
         <OptimizedImage
           fileId={experience.heroImageId}
           widths={[800, 1200, 1600]}

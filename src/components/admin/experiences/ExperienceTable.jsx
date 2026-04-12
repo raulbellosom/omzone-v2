@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import StatusBadge from "./StatusBadge";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
 
@@ -181,7 +181,7 @@ export default function ExperienceTable({
   onStatusChange,
   canAdmin,
 }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <div className="overflow-x-auto rounded-xl border border-sand-dark">
@@ -229,10 +229,10 @@ export default function ExperienceTable({
                 <td className="px-4 py-3">
                   <div>
                     <p className="font-medium text-charcoal truncate max-w-xs">
-                      {exp.publicName}
+                      {localizedField(exp, "publicName", language)}
                     </p>
                     <p className="text-xs text-charcoal-subtle truncate max-w-xs">
-                      {exp.name}
+                      {localizedField(exp, "name", language)}
                     </p>
                   </div>
                 </td>

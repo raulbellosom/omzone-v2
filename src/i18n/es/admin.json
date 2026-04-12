@@ -944,6 +944,7 @@
       "confirm": "Confirmar",
       "loading": "Cargando…",
       "saving": "Guardando…",
+      "unsavedChanges": "Cambios sin guardar",
       "noResults": "Sin resultados",
       "previous": "Anterior",
       "next": "Siguiente",

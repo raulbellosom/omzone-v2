@@ -37,6 +37,11 @@ export default function AdminLayout() {
         <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
           <Outlet />
         </main>
+
+        {/* Footer — outside <main> so it never breaks sticky bars inside */}
+        <div className="shrink-0 px-4 py-1.5 text-center text-[11px] text-charcoal-muted/50 select-none border-t border-warm-gray-dark/10">
+          &copy; {new Date().getFullYear()} OMZONE &middot; Admin
+        </div>
       </div>
     </div>
   );

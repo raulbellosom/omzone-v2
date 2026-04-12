@@ -4,6 +4,7 @@ import StructuredData from "@/components/common/StructuredData";
 import { useLanguage } from "@/hooks/useLanguage";
 import env from "@/config/env";
 import { ROUTES } from "@/constants/routes";
+import isHeroRoute from "@/lib/heroRoutes";
 
 const ORGANIZATION_SCHEMA = {
   "@context": "https://schema.org",
@@ -33,14 +34,14 @@ const ORGANIZATION_SCHEMA = {
 export default function PublicLayout() {
   const location = useLocation();
   const { t } = useLanguage();
-  const isHome = location.pathname === "/";
+  const heroPage = isHeroRoute(location.pathname);
 
   return (
     <div className="min-h-screen flex flex-col bg-cream">
       <StructuredData data={ORGANIZATION_SCHEMA} />
       <Navbar />
 
-      <main className={isHome ? "flex-1" : "flex-1 pt-20"}>
+      <main className={heroPage ? "flex-1" : "flex-1 pt-20"}>
         <Outlet />
       </main>
 
@@ -76,7 +77,7 @@ export default function PublicLayout() {
                 </li>
                 <li>
                   <Link
-                    to={ROUTES.EXPERIENCES}
+                    to={`${ROUTES.EXPERIENCES}?type=session`}
                     className="text-sm text-charcoal-muted hover:text-sage transition-colors"
                   >
                     {t("footer.sessions")}
@@ -84,7 +85,7 @@ export default function PublicLayout() {
                 </li>
                 <li>
                   <Link
-                    to={ROUTES.EXPERIENCES}
+                    to={`${ROUTES.EXPERIENCES}?type=immersion`}
                     className="text-sm text-charcoal-muted hover:text-sage transition-colors"
                   >
                     {t("footer.immersions")}
@@ -92,7 +93,7 @@ export default function PublicLayout() {
                 </li>
                 <li>
                   <Link
-                    to={ROUTES.EXPERIENCES}
+                    to={`${ROUTES.EXPERIENCES}?type=retreat`}
                     className="text-sm text-charcoal-muted hover:text-sage transition-colors"
                   >
                     {t("footer.retreats")}

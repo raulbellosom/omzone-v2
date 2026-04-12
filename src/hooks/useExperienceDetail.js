@@ -96,7 +96,14 @@ export function useExperienceDetail(slug) {
                 Query.equal("status", "active"),
                 Query.limit(50),
               ]);
-              addons = addonsRes.documents;
+              // Enrich addons with assignment flags (isRequired)
+              const assignmentByAddon = Object.fromEntries(
+                assignments.map((a) => [a.addonId, a]),
+              );
+              addons = addonsRes.documents.map((addon) => ({
+                ...addon,
+                isRequired: assignmentByAddon[addon.$id]?.isRequired || false,
+              }));
             } catch {
               // non-fatal
             }

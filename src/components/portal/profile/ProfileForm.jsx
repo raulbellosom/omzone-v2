@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { User, Globe, FileText, Check } from "lucide-react";
 import { Input } from "@/components/common/Input";
 import { Textarea } from "@/components/common/Textarea";
-import { Button } from "@/components/common/Button";
+import StickyFormBar from "@/components/common/StickyFormBar";
 import { useLanguage } from "@/hooks/useLanguage";
 
 const BIO_MAX = 1000;
@@ -186,18 +186,19 @@ export default function ProfileForm({ profile, email, onSave, saving }) {
         </div>
       </div>
 
-      {/* Submit */}
-      <div className="flex items-center gap-3">
-        <Button type="submit" disabled={saving}>
-          {saving ? "Guardando…" : "Guardar cambios"}
-        </Button>
+      <StickyFormBar
+        submitting={saving}
+        disabled={saving}
+        submitLabel="Guardar cambios"
+        variant="portal"
+      >
         {success && (
           <span className="inline-flex items-center gap-1 text-sm text-sage font-medium animate-in fade-in">
             <Check className="w-4 h-4" />
             Perfil actualizado
           </span>
         )}
-      </div>
+      </StickyFormBar>
     </form>
   );
 }

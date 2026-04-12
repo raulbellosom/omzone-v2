@@ -522,6 +522,7 @@
   "addonsSection": {
     "title": "Add-ons",
     "subtitle": "Enhance your experience with these optional extras.",
+    "recommended": "Suggested",
     "typeService": "Service",
     "typeProduct": "Product",
     "typeTransport": "Transport",

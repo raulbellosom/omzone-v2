@@ -38,7 +38,6 @@ const CTA_CONFIG = {
 
 export default function ExperienceCTA({
   experience,
-  selectedAddonIds = [],
   className,
 }) {
   const navigate = useNavigate();
@@ -48,12 +47,8 @@ export default function ExperienceCTA({
 
   function handleClick() {
     if (config.action === "checkout") {
-      const addonParam =
-        selectedAddonIds.length > 0
-          ? `&addonIds=${selectedAddonIds.join(",")}`
-          : "";
       navigate(
-        `${ROUTES.CHECKOUT}?experienceId=${experience.$id}&slug=${experience.slug}${addonParam}`,
+        `${ROUTES.CHECKOUT}?experienceId=${experience.$id}&slug=${experience.slug}`,
       );
     } else if (config.action === "passes") {
       navigate(`${ROUTES.PASSES}?experience=${experience.$id}`);

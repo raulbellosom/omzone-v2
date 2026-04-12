@@ -1,6 +1,4 @@
-import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Calendar, Clock, Users } from "lucide-react";
 import { useExperienceDetail } from "@/hooks/useExperienceDetail";
 import { useExperienceSEO } from "@/hooks/useSEO";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -25,23 +23,23 @@ function LoadingSkeleton() {
   return (
     <div className="animate-pulse">
       {/* Hero skeleton */}
-      <div className="w-full aspect-3/4 sm:aspect-video md:aspect-21/9 bg-warm-gray" />
+      <div className="w-full h-[60vh] min-h-[420px] max-h-[640px] bg-sand/80" />
 
       {/* Content skeleton */}
       <div className="container-shell py-12 space-y-6 max-w-3xl">
-        <div className="h-6 w-24 rounded-full bg-warm-gray" />
-        <div className="h-10 w-2/3 rounded-xl bg-warm-gray" />
-        <div className="h-4 w-full rounded bg-warm-gray" />
-        <div className="h-4 w-5/6 rounded bg-warm-gray" />
-        <div className="h-4 w-4/6 rounded bg-warm-gray" />
+        <div className="h-6 w-24 rounded-full bg-sand" />
+        <div className="h-10 w-2/3 rounded-xl bg-sand" />
+        <div className="h-4 w-full rounded bg-sand/70" />
+        <div className="h-4 w-5/6 rounded bg-sand/70" />
+        <div className="h-4 w-4/6 rounded bg-sand/70" />
       </div>
 
       {/* Pricing skeleton */}
       <div className="container-shell py-12">
-        <div className="h-8 w-32 rounded-xl bg-warm-gray mb-6" />
+        <div className="h-8 w-32 rounded-xl bg-sand mb-6" />
         <div className="grid sm:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-40 rounded-2xl bg-warm-gray" />
+            <div key={i} className="h-40 rounded-2xl bg-sand/60" />
           ))}
         </div>
       </div>
@@ -55,7 +53,7 @@ function LongDescriptionBlock({ experience }) {
   const text = experience.longDescription || experience.longDescriptionEs;
   if (!text) return null;
   return (
-    <div className="py-10 md:py-14">
+    <div className="pb-10 md:pb-14">
       <div className="text-charcoal-muted leading-relaxed whitespace-pre-wrap text-base">
         {text}
       </div>
@@ -74,7 +72,7 @@ function formatPrice(amount, currency = "MXN") {
   }).format(amount);
 }
 
-function PricingSidebar({ tiers, experience, selectedAddonIds = [] }) {
+function PricingSidebar({ tiers, experience }) {
   const navigate = useNavigate();
   const { t } = useLanguage();
 
@@ -102,7 +100,7 @@ function PricingSidebar({ tiers, experience, selectedAddonIds = [] }) {
 
   return (
     <aside className="w-full">
-      <div className="sticky top-6 rounded-2xl border border-warm-gray-dark/30 bg-white shadow-lg p-6 space-y-5">
+      <div className="rounded-2xl border border-warm-gray-dark/30 bg-white shadow-lg p-6 space-y-5">
         {/* Request mode: show form instead of pricing */}
         {experience.saleMode === "request" ? (
           <BookingRequestForm experience={experience} />
@@ -130,19 +128,14 @@ function PricingSidebar({ tiers, experience, selectedAddonIds = [] }) {
                     className={cn(
                       "flex items-center justify-between rounded-xl px-3 py-2.5 text-sm",
                       tier.isHighlighted
-                        ? "bg-sage/10 border border-sage/30"
+                        ? "border border-charcoal/20 bg-white"
                         : "bg-warm-gray/50",
                     )}
                   >
-                    <span
-                      className={cn(
-                        "font-medium",
-                        tier.isHighlighted ? "text-sage-dark" : "text-charcoal",
-                      )}
-                    >
+                    <span className="font-medium text-charcoal">
                       {tier.name}
                       {tier.badge && (
-                        <span className="ml-2 text-xs bg-sage text-white rounded-full px-2 py-0.5">
+                        <span className="ml-2 text-[11px] font-medium text-charcoal-subtle border border-charcoal/20 rounded-full px-2 py-0.5">
                           {tier.badge}
                         </span>
                       )}
@@ -162,12 +155,8 @@ function PricingSidebar({ tiers, experience, selectedAddonIds = [] }) {
               className="w-full"
               onClick={() => {
                 if (experience.saleMode === "direct") {
-                  const addonParam =
-                    selectedAddonIds.length > 0
-                      ? `&addonIds=${selectedAddonIds.join(",")}`
-                      : "";
                   navigate(
-                    `${ROUTES.CHECKOUT}?experienceId=${experience.$id}&slug=${experience.slug}${addonParam}`,
+                    `${ROUTES.CHECKOUT}?experienceId=${experience.$id}&slug=${experience.slug}`,
                   );
                 }
               }}
@@ -195,16 +184,6 @@ export default function ExperienceDetailPage() {
     useExperienceDetail(slug);
   const { t } = useLanguage();
   const seo = useExperienceSEO(experience, { slots, pricingTiers });
-
-  // ─── Addon selection state ────────────────────────────────────────────
-  const [selectedAddonIds, setSelectedAddonIds] = useState([]);
-  const toggleAddon = useCallback((addonId) => {
-    setSelectedAddonIds((prev) =>
-      prev.includes(addonId)
-        ? prev.filter((id) => id !== addonId)
-        : [...prev, addonId],
-    );
-  }, []);
 
   if (loading) return <LoadingSkeleton />;
   if (error === "not_found" || !experience) return <NotFoundPage />;
@@ -247,8 +226,8 @@ export default function ExperienceDetailPage() {
       <ExperienceHero experience={experience} />
 
       {/* ── Two-column layout on lg+: main content | pricing sidebar ── */}
-      <div className="container-shell py-10 md:py-14">
-        <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-12 lg:items-start">
+      <div className="container-shell pt-8 pb-10 md:pt-10 md:pb-14">
+        <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-12">
           {/* ── Main column ── */}
           <div className="min-w-0">
             {/* Editorial sections */}
@@ -272,12 +251,8 @@ export default function ExperienceDetailPage() {
               </div>
             )}
 
-            {/* Addons — inside main column, selectable */}
-            <AddonsSection
-              addons={addons}
-              selectedAddonIds={selectedAddonIds}
-              onToggleAddon={toggleAddon}
-            />
+            {/* Addons — inside main column, informational */}
+            <AddonsSection addons={addons} />
 
             {/* Pricing full-width on mobile (hidden on lg where sidebar shows) */}
             <div className="lg:hidden mt-10">
@@ -292,21 +267,16 @@ export default function ExperienceDetailPage() {
           </div>
 
           {/* ── Sidebar: pricing (lg+) ── */}
-          <div className="hidden lg:block mt-2">
-            <PricingSidebar
-              tiers={pricingTiers}
-              experience={experience}
-              selectedAddonIds={selectedAddonIds}
-            />
+          <div className="hidden lg:block">
+            <div className="sticky top-20">
+              <PricingSidebar tiers={pricingTiers} experience={experience} />
+            </div>
           </div>
         </div>
       </div>
 
       {/* CTA full-width */}
-      <ExperienceCTA
-        experience={experience}
-        selectedAddonIds={selectedAddonIds}
-      />
+      <ExperienceCTA experience={experience} />
     </div>
   );
 }

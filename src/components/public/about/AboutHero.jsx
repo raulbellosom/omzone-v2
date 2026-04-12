@@ -10,7 +10,7 @@ export default function AboutHero() {
   const { t } = useLanguage();
 
   return (
-    <section className="relative h-[55vh] min-h-[400px] max-h-[600px] flex items-center justify-center overflow-hidden -mt-20">
+    <section className="relative h-[55vh] min-h-[400px] max-h-[600px] flex items-center justify-center overflow-hidden bg-charcoal">
       {/* Background */}
       <div className="absolute inset-0">
         {(() => {

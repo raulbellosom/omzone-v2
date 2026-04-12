@@ -1,6 +1,13 @@
 import { formatPrice } from "@/components/public/checkout/utils";
 import { cn } from "@/lib/utils";
 import { useLanguage, localizedField } from "@/hooks/useLanguage";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/common/select";
 
 export default function SelectionStep({
   experience,
@@ -89,40 +96,48 @@ export default function SelectionStep({
           <legend className="text-sm font-semibold text-charcoal mb-2">
             {t("selection.chooseDateTime")}
           </legend>
-          <select
-            value={selectedSlotId}
-            onChange={(e) => setSelectedSlotId(e.target.value)}
-            className="w-full rounded-xl border border-warm-gray-dark/20 bg-white px-4 py-3 text-sm text-charcoal focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage"
+          <Select
+            value={selectedSlotId || "__empty__"}
+            onValueChange={(v) => setSelectedSlotId(v === "__empty__" ? "" : v)}
           >
-            <option value="">{t("selection.selectTimeSlot")}</option>
-            {slots.map((slot) => {
-              const start = new Date(slot.startDatetime);
-              const end = new Date(slot.endDatetime);
-              const available = slot.capacity - slot.bookedCount;
-              return (
-                <option key={slot.$id} value={slot.$id}>
-                  {start.toLocaleDateString("en-US", {
-                    weekday: "short",
-                    month: "short",
-                    day: "numeric",
-                  })}{" "}
-                  ·{" "}
-                  {start.toLocaleTimeString("en-US", {
-                    hour: "numeric",
-                    minute: "2-digit",
-                  })}
-                  {" – "}
-                  {end.toLocaleTimeString("en-US", {
-                    hour: "numeric",
-                    minute: "2-digit",
-                  })}{" "}
-                  ({available}{" "}
-                  {available === 1 ? t("selection.spot") : t("selection.spots")}{" "}
-                  left)
-                </option>
-              );
-            })}
-          </select>
+            <SelectTrigger className="w-full h-12 cursor-pointer">
+              <SelectValue placeholder={t("selection.selectTimeSlot")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__empty__">
+                {t("selection.selectTimeSlot")}
+              </SelectItem>
+              {slots.map((slot) => {
+                const start = new Date(slot.startDatetime);
+                const end = new Date(slot.endDatetime);
+                const available = slot.capacity - slot.bookedCount;
+                return (
+                  <SelectItem key={slot.$id} value={slot.$id}>
+                    {start.toLocaleDateString("en-US", {
+                      weekday: "short",
+                      month: "short",
+                      day: "numeric",
+                    })}{" "}
+                    ·{" "}
+                    {start.toLocaleTimeString("en-US", {
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                    {" – "}
+                    {end.toLocaleTimeString("en-US", {
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}{" "}
+                    ({available}{" "}
+                    {available === 1
+                      ? t("selection.spot")
+                      : t("selection.spots")}{" "}
+                    left)
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
         </fieldset>
       )}
 

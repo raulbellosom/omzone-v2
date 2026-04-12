@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { usePublicExperiences } from "@/hooks/usePublicExperiences";
 import { useLanguage } from "@/hooks/useLanguage";
 import SEOHead from "@/components/common/SEOHead";
@@ -12,20 +13,20 @@ import { Skeleton } from "@/components/common/Skeleton";
 import Button from "@/components/common/Button";
 import { Compass } from "lucide-react";
 
+const VALID_TYPES = ["session", "immersion", "retreat", "stay"];
+
 export default function ExperiencesListPage() {
-  const {
-    experiences,
-    tags,
-    experienceTagMap,
-    loading,
-    error,
-    refetch,
-  } = usePublicExperiences();
+  const { experiences, tags, experienceTagMap, loading, error, refetch } =
+    usePublicExperiences();
 
   const { t } = useLanguage();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [selectedTags, setSelectedTags] = useState([]);
-  const [selectedType, setSelectedType] = useState("");
+  const [selectedType, setSelectedType] = useState(() => {
+    const urlType = searchParams.get("type");
+    return VALID_TYPES.includes(urlType) ? urlType : "";
+  });
 
   function handleToggleTag(tagId) {
     setSelectedTags((prev) =>
@@ -39,6 +40,22 @@ export default function ExperiencesListPage() {
     setSelectedTags([]);
     setSelectedType("");
   }
+
+  // Sync URL query param with selected type
+  useEffect(() => {
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (selectedType) {
+          next.set("type", selectedType);
+        } else {
+          next.delete("type");
+        }
+        return next;
+      },
+      { replace: true },
+    );
+  }, [selectedType, setSearchParams]);
 
   // Enrich experiences with tag names for display in articles
   const enriched = useMemo(() => {
@@ -148,11 +165,7 @@ export default function ExperiencesListPage() {
         {!loading && !error && filtered.length > 0 && (
           <div className="flex flex-col">
             {filtered.map((exp, i) => (
-              <ExperienceArticle
-                key={exp.$id}
-                experience={exp}
-                index={i}
-              />
+              <ExperienceArticle key={exp.$id} experience={exp} index={i} />
             ))}
           </div>
         )}
@@ -165,28 +178,28 @@ function ArticlesSkeleton() {
   return (
     <div className="flex flex-col gap-12">
       {/* Cinematic skeleton */}
-      <Skeleton className="w-full h-[50vh] min-h-[400px] rounded-none" />
+      <Skeleton className="w-full h-[50vh] min-h-[400px] rounded-none bg-sand/80" />
       {/* Split skeleton */}
       <div className="flex flex-col lg:flex-row gap-0">
-        <Skeleton className="w-full lg:w-[55%] aspect-[16/10] lg:aspect-auto lg:min-h-[480px] rounded-none" />
+        <Skeleton className="w-full lg:w-[55%] aspect-[16/10] lg:aspect-auto lg:min-h-[480px] rounded-none bg-sand/70" />
         <div className="w-full lg:w-[45%] p-10 space-y-4">
-          <Skeleton className="h-8 w-3/4" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-5/6" />
-          <Skeleton className="h-4 w-2/3" />
+          <Skeleton className="h-8 w-3/4 bg-sand" />
+          <Skeleton className="h-4 w-full bg-sand/70" />
+          <Skeleton className="h-4 w-5/6 bg-sand/70" />
+          <Skeleton className="h-4 w-2/3 bg-sand/70" />
           <div className="flex gap-2 pt-4">
-            <Skeleton className="h-6 w-16 rounded-full" />
-            <Skeleton className="h-6 w-20 rounded-full" />
+            <Skeleton className="h-6 w-16 rounded-full bg-sand" />
+            <Skeleton className="h-6 w-20 rounded-full bg-sand" />
           </div>
         </div>
       </div>
       {/* Split reverse skeleton */}
       <div className="flex flex-col lg:flex-row-reverse gap-0">
-        <Skeleton className="w-full lg:w-[55%] aspect-[16/10] lg:aspect-auto lg:min-h-[480px] rounded-none" />
+        <Skeleton className="w-full lg:w-[55%] aspect-[16/10] lg:aspect-auto lg:min-h-[480px] rounded-none bg-sand/70" />
         <div className="w-full lg:w-[45%] p-10 space-y-4">
-          <Skeleton className="h-8 w-3/4" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-5/6" />
+          <Skeleton className="h-8 w-3/4 bg-sand" />
+          <Skeleton className="h-4 w-full bg-sand/70" />
+          <Skeleton className="h-4 w-5/6 bg-sand/70" />
         </div>
       </div>
     </div>

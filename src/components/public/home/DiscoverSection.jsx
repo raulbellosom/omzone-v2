@@ -5,21 +5,25 @@ import Container from "@/components/common/Container";
 const TYPES = [
   {
     key: "sessions",
+    type: "session",
     image:
       "https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=800&q=80",
   },
   {
     key: "immersions",
+    type: "immersion",
     image:
       "https://images.unsplash.com/photo-1510797215324-95aa89f43c33?auto=format&fit=crop&w=800&q=80",
   },
   {
     key: "retreats",
+    type: "retreat",
     image:
       "https://images.unsplash.com/photo-1600618528240-fb9fc964b853?auto=format&fit=crop&w=800&q=80",
   },
   {
     key: "stays",
+    type: "stay",
     image:
       "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=800&q=80",
   },
@@ -46,10 +50,10 @@ export default function DiscoverSection() {
 
         {/* Cards grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          {TYPES.map(({ key, image }) => (
+          {TYPES.map(({ key, type, image }) => (
             <Link
               key={key}
-              to="/experiences"
+              to={`/experiences?type=${type}`}
               className="group relative flex flex-col overflow-hidden rounded-card bg-white shadow-card hover:shadow-hover transition-all duration-300 hover:-translate-y-1"
             >
               {/* Image */}

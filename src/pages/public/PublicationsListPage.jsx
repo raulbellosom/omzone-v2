@@ -36,7 +36,7 @@ export default function PublicationsListPage() {
       />
 
       {/* Hero section */}
-      <section className="bg-charcoal text-cream py-16 md:py-24">
+      <section className="bg-charcoal text-cream pt-28 pb-16 md:pt-36 md:pb-24">
         <div className="container-shell text-center">
           <BookOpen className="mx-auto h-10 w-10 text-sage mb-4" />
           <h1 className="font-display text-3xl md:text-5xl font-bold mb-4">

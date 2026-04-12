@@ -1,4 +1,4 @@
-import { Plus, Check } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 
@@ -19,36 +19,24 @@ const ADDON_TYPE_KEYS = {
   upgrade: "addonsSection.typeUpgrade",
 };
 
-function AddonCard({ addon, t, selected, onToggle }) {
+function AddonCard({ addon, t }) {
   return (
-    <button
-      type="button"
-      onClick={() => onToggle?.(addon.$id)}
-      className={cn(
-        "flex items-start gap-4 rounded-xl border p-4 md:p-5 text-left transition-all w-full",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage/50",
-        selected
-          ? "border-sage bg-sage/5 shadow-sm"
-          : "border-warm-gray-dark/30 bg-white hover:border-sage/40 hover:shadow-sm",
-      )}
+    <div
+      className="flex items-start gap-4 rounded-xl border border-warm-gray-dark/30 bg-white p-4 md:p-5 w-full"
     >
-      <div
-        className={cn(
-          "flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-colors",
-          selected ? "bg-sage text-white" : "bg-sage/10 text-sage",
-        )}
-      >
-        {selected ? (
-          <Check className="h-4 w-4" />
-        ) : (
-          <Plus className="h-4 w-4" />
-        )}
+      <div className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center bg-sage/10 text-sage">
+        <Sparkles className="h-4 w-4" />
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div>
             <h4 className="text-sm font-semibold text-charcoal">
               {addon.name}
+              {addon.isRequired && (
+                <span className="ml-2 inline-flex items-center text-[11px] font-medium text-amber-700 bg-amber-50 border border-amber-200/60 rounded-full px-2 py-0.5">
+                  {t("addonsSection.recommended")}
+                </span>
+              )}
             </h4>
             {addon.addonType && (
               <span className="text-xs text-charcoal-subtle">
@@ -68,15 +56,11 @@ function AddonCard({ addon, t, selected, onToggle }) {
           </p>
         )}
       </div>
-    </button>
+    </div>
   );
 }
 
-export default function AddonsSection({
-  addons,
-  selectedAddonIds = [],
-  onToggleAddon,
-}) {
+export default function AddonsSection({ addons }) {
   const { t } = useLanguage();
   if (!addons || addons.length === 0) return null;
 
@@ -92,13 +76,7 @@ export default function AddonsSection({
 
         <div className="grid gap-3 sm:grid-cols-2 max-w-4xl">
           {addons.map((addon) => (
-            <AddonCard
-              key={addon.$id}
-              addon={addon}
-              t={t}
-              selected={selectedAddonIds.includes(addon.$id)}
-              onToggle={onToggleAddon}
-            />
+            <AddonCard key={addon.$id} addon={addon} t={t} />
           ))}
         </div>
       </div>

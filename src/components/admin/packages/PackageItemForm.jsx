@@ -92,27 +92,25 @@ function ReferencePicker({ type, value, onChange, disabled }) {
       }
       hint={t("admin.packageItemForm.referenceHint")}
     >
-      <select
+      <AdminSelect
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={onChange}
         disabled={disabled || loading}
-        className={cn(
-          "flex h-11 w-full rounded-xl border border-sand-dark bg-white px-4 py-2 text-sm text-charcoal",
-          "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20",
-          "disabled:opacity-50 disabled:bg-warm-gray cursor-pointer",
-        )}
-      >
-        <option value="">
-          {loading
+        placeholder={
+          loading
             ? t("admin.packageItemForm.loadingOptions")
-            : t("admin.packageItemForm.noReference")}
-        </option>
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
+            : t("admin.packageItemForm.noReference")
+        }
+        options={[
+          {
+            value: "",
+            label: loading
+              ? t("admin.packageItemForm.loadingOptions")
+              : t("admin.packageItemForm.noReference"),
+          },
+          ...options.map((o) => ({ value: o.value, label: o.label })),
+        ]}
+      />
     </Field>
   );
 }

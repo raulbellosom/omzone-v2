@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Input } from "@/components/common/Input";
-import { Button } from "@/components/common/Button";
+import AdminFormLayout from "@/components/admin/AdminFormLayout";
 import { Card } from "@/components/common/Card";
 import { Textarea } from "@/components/common/Textarea";
 import { useLocations } from "@/hooks/useLocations";
@@ -169,7 +169,7 @@ export default function SlotForm({
   const editionOptions = editions.map((e) => ({ value: e.$id, label: e.name }));
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={submitting} submitLabel={submitLabel}>
       {/* Basic info */}
       <Card className="p-5 space-y-4">
         <h2 className="text-base font-semibold text-charcoal">
@@ -339,12 +339,6 @@ export default function SlotForm({
         </Field>
       </Card>
 
-      {/* Submit */}
-      <div className="flex justify-end gap-3">
-        <Button type="submit" disabled={submitting}>
-          {submitting ? t("admin.common.saving") : submitLabel}
-        </Button>
-      </div>
-    </form>
+    </AdminFormLayout>
   );
 }

@@ -14,6 +14,7 @@ import {
   SheetTitle,
 } from "@/components/common/sheet";
 import { Menu, ArrowRight } from "lucide-react";
+import isHeroRoute from "@/lib/heroRoutes";
 
 const NAV_LINKS = [
   { to: ROUTES.HOME, key: "nav.home", end: true },
@@ -30,8 +31,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const isHome = location.pathname === "/";
-  const isTransparent = isHome && !scrolled;
+  const isTransparent = isHeroRoute(location.pathname) && !scrolled;
 
   useEffect(() => {
     function onScroll() {

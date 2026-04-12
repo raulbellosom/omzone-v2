@@ -427,7 +427,7 @@ export default function SectionRenderer({ sections }) {
   if (!sections || sections.length === 0) return null;
 
   return (
-    <div>
+    <div className="[&>section:first-child]:pt-0">
       {sections.map((section) => {
         const Component = SECTION_MAP[section.sectionType];
         if (!Component) return null; // unknown type — ignore silently

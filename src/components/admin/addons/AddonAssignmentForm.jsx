@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Input } from "@/components/common/Input";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
+import AdminSelect from "@/components/common/AdminSelect";
 import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 
@@ -132,24 +133,20 @@ export default function AddonAssignmentForm({
           required
           error={errors.addonId}
         >
-          <select
+          <AdminSelect
             value={form.addonId}
-            onChange={(e) => set("addonId", e.target.value)}
+            onChange={(v) => set("addonId", v)}
             disabled={submitting || isEdit}
-            className={cn(
-              "flex h-11 w-full rounded-xl border border-sand-dark bg-white px-4 py-2 text-sm text-charcoal",
-              "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20",
-              "disabled:opacity-50 disabled:bg-warm-gray cursor-pointer",
-              errors.addonId && "border-red-400",
-            )}
-          >
-            <option value="">{t("admin.addonAssignment.selectAddon")}</option>
-            {selectableAddons.map((addon) => (
-              <option key={addon.$id} value={addon.$id}>
-                {addon.name} — ${addon.basePrice} {addon.currency}
-              </option>
-            ))}
-          </select>
+            error={!!errors.addonId}
+            placeholder={t("admin.addonAssignment.selectAddon")}
+            options={[
+              { value: "", label: t("admin.addonAssignment.selectAddon") },
+              ...selectableAddons.map((addon) => ({
+                value: addon.$id,
+                label: `${addon.name} — $${addon.basePrice} ${addon.currency}`,
+              })),
+            ]}
+          />
         </Field>
 
         <div className="space-y-3">
