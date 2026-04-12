@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useUserOrders } from "@/hooks/useUserOrders";
 import { Badge } from "@/components/common/Badge";
-import { ShoppingBag, Compass, ChevronRight } from "lucide-react";
+import { ShoppingBag, Compass, ChevronRight, CreditCard } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const STATUS_FILTERS = [
@@ -90,9 +90,11 @@ function OrderCard({ order }) {
           <p className="text-lg font-bold text-charcoal">
             {formatCurrency(order.totalAmount, order.currency)}
           </p>
-          <Badge variant={ps.variant} className="mt-1">
-            {ps.label}
-          </Badge>
+          <div className="flex items-center gap-1.5 mt-1">
+            <CreditCard className="w-3 h-3 text-charcoal-muted" />
+            <span className="text-[11px] text-charcoal-muted">Pago:</span>
+            <Badge variant={ps.variant}>{ps.label}</Badge>
+          </div>
         </div>
         <ChevronRight className="w-4 h-4 text-charcoal-muted opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
       </div>

@@ -169,8 +169,7 @@ function TicketRow({ ticket }) {
 export default function PortalOrderDetailPage() {
   const { orderId } = useParams();
   const navigate = useNavigate();
-  const { order, items, tickets, loading, error } =
-    useUserOrderDetail(orderId);
+  const { order, items, tickets, loading, error } = useUserOrderDetail(orderId);
 
   if (loading) return <LoadingSkeleton />;
 
@@ -216,9 +215,15 @@ export default function PortalOrderDetailPage() {
               {formatDate(order.$createdAt)}
             </p>
           </div>
-          <div className="flex gap-2">
-            <Badge variant={os.variant}>{os.label}</Badge>
-            <Badge variant={ps.variant}>{ps.label}</Badge>
+          <div className="flex flex-wrap gap-3">
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs text-charcoal-muted">Orden:</span>
+              <Badge variant={os.variant}>{os.label}</Badge>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs text-charcoal-muted">Pago:</span>
+              <Badge variant={ps.variant}>{ps.label}</Badge>
+            </div>
           </div>
         </div>
 
@@ -226,9 +231,7 @@ export default function PortalOrderDetailPage() {
         {(order.customerName || order.customerEmail) && (
           <div className="text-sm text-charcoal-muted border-t border-warm-gray-dark/10 pt-3 mb-4">
             {order.customerName && (
-              <p className="font-medium text-charcoal">
-                {order.customerName}
-              </p>
+              <p className="font-medium text-charcoal">{order.customerName}</p>
             )}
             {order.customerEmail && <p>{order.customerEmail}</p>}
           </div>
