@@ -595,5 +595,12 @@
       "institutional": "About",
       "faq": "FAQ"
     }
+  },
+  "packageDetail": {
+    "whatsIncluded": "What's Included",
+    "packagePrice": "Package price",
+    "day": "day",
+    "days": "days",
+    "bookPackage": "Book Package"
   }
 }

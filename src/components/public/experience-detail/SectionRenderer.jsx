@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import OptimizedImage from "@/components/common/OptimizedImage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -20,15 +21,15 @@ function parseMediaIds(str) {
 
 // ─── Section type components ─────────────────────────────────────────────────
 
-function TextSection({ section }) {
-  const content = section.content || section.contentEs;
+function TextSection({ section, language }) {
+  const content = localizedField(section, "content", language);
   if (!content) return null;
   return (
     <section className="py-10 md:py-14">
       <div className="container-shell max-w-3xl">
-        {section.title && (
+        {localizedField(section, "title", language) && (
           <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-6">
-            {section.title}
+            {localizedField(section, "title", language)}
           </h2>
         )}
         <div className="prose prose-charcoal max-w-none text-charcoal-muted leading-relaxed whitespace-pre-wrap">
@@ -39,16 +40,16 @@ function TextSection({ section }) {
   );
 }
 
-function GallerySection({ section }) {
+function GallerySection({ section, language }) {
   const ids = parseMediaIds(section.mediaIds);
   if (ids.length === 0) return null;
 
   return (
     <section className="py-10 md:py-14">
       <div className="container-shell">
-        {section.title && (
+        {localizedField(section, "title", language) && (
           <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-6">
-            {section.title}
+            {localizedField(section, "title", language)}
           </h2>
         )}
         <div
@@ -79,7 +80,7 @@ function GallerySection({ section }) {
   );
 }
 
-function HighlightsSection({ section }) {
+function HighlightsSection({ section, language }) {
   const items =
     parseJsonSafe(section.metadata)?.items ||
     parseJsonSafe(section.content, []);
@@ -91,9 +92,9 @@ function HighlightsSection({ section }) {
   return (
     <section className="py-10 md:py-14 bg-sage/5">
       <div className="container-shell">
-        {section.title && (
+        {localizedField(section, "title", language) && (
           <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-8">
-            {section.title}
+            {localizedField(section, "title", language)}
           </h2>
         )}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl">
@@ -127,7 +128,7 @@ function HighlightsSection({ section }) {
   );
 }
 
-function FaqSection({ section }) {
+function FaqSection({ section, language }) {
   const items =
     parseJsonSafe(section.metadata)?.faqs || parseJsonSafe(section.content, []);
   const faqs = Array.isArray(items) ? items : [];
@@ -137,9 +138,9 @@ function FaqSection({ section }) {
   return (
     <section className="py-10 md:py-14">
       <div className="container-shell max-w-3xl">
-        {section.title && (
+        {localizedField(section, "title", language) && (
           <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-8">
-            {section.title}
+            {localizedField(section, "title", language)}
           </h2>
         )}
         <div className="divide-y divide-warm-gray-dark/20">
@@ -179,7 +180,7 @@ function FaqSection({ section }) {
   );
 }
 
-function ItinerarySection({ section }) {
+function ItinerarySection({ section, language }) {
   const items =
     parseJsonSafe(section.metadata)?.days || parseJsonSafe(section.content, []);
   const days = Array.isArray(items) ? items : [];
@@ -188,9 +189,9 @@ function ItinerarySection({ section }) {
   return (
     <section className="py-10 md:py-14">
       <div className="container-shell max-w-3xl">
-        {section.title && (
+        {localizedField(section, "title", language) && (
           <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-8">
-            {section.title}
+            {localizedField(section, "title", language)}
           </h2>
         )}
         <div className="relative space-y-6 pl-8 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-px before:bg-sage/30">
@@ -221,7 +222,7 @@ function ItinerarySection({ section }) {
   );
 }
 
-function InclusionsSection({ section }) {
+function InclusionsSection({ section, language }) {
   const items = parseJsonSafe(
     section.content,
     (section.content || "").split("\n").filter(Boolean),
@@ -232,9 +233,9 @@ function InclusionsSection({ section }) {
   return (
     <section className="py-10 md:py-14 bg-cream/60">
       <div className="container-shell max-w-3xl">
-        {section.title && (
+        {localizedField(section, "title", language) && (
           <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-6">
-            {section.title}
+            {localizedField(section, "title", language)}
           </h2>
         )}
         <ul className="grid sm:grid-cols-2 gap-2">
@@ -267,7 +268,7 @@ function InclusionsSection({ section }) {
   );
 }
 
-function RestrictionsSection({ section }) {
+function RestrictionsSection({ section, language }) {
   const items = parseJsonSafe(
     section.content,
     (section.content || "").split("\n").filter(Boolean),
@@ -278,9 +279,9 @@ function RestrictionsSection({ section }) {
   return (
     <section className="py-10 md:py-14">
       <div className="container-shell max-w-3xl">
-        {section.title && (
+        {localizedField(section, "title", language) && (
           <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-6">
-            {section.title}
+            {localizedField(section, "title", language)}
           </h2>
         )}
         <ul className="grid sm:grid-cols-2 gap-2">
@@ -313,7 +314,7 @@ function RestrictionsSection({ section }) {
   );
 }
 
-function TestimonialsSection({ section }) {
+function TestimonialsSection({ section, language }) {
   const items =
     parseJsonSafe(section.metadata)?.testimonials ||
     parseJsonSafe(section.content, []);
@@ -323,9 +324,9 @@ function TestimonialsSection({ section }) {
   return (
     <section className="py-10 md:py-14 bg-sand/30">
       <div className="container-shell">
-        {section.title && (
+        {localizedField(section, "title", language) && (
           <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-8 text-center">
-            {section.title}
+            {localizedField(section, "title", language)}
           </h2>
         )}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -355,14 +356,14 @@ function TestimonialsSection({ section }) {
   );
 }
 
-function CtaSection({ section }) {
-  const content = section.content || "";
+function CtaSection({ section, language }) {
+  const content = localizedField(section, "content", language);
   return (
     <section className="py-10 md:py-14 bg-sage/10">
       <div className="container-shell text-center max-w-2xl">
-        {section.title && (
+        {localizedField(section, "title", language) && (
           <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-3">
-            {section.title}
+            {localizedField(section, "title", language)}
           </h2>
         )}
         {content && (
@@ -373,7 +374,7 @@ function CtaSection({ section }) {
   );
 }
 
-function VideoSection({ section }) {
+function VideoSection({ section, language }) {
   const meta = parseJsonSafe(section.metadata);
   const url = meta?.url || section.content || "";
   if (!url) return null;
@@ -387,15 +388,15 @@ function VideoSection({ section }) {
   return (
     <section className="py-10 md:py-14">
       <div className="container-shell max-w-4xl">
-        {section.title && (
+        {localizedField(section, "title", language) && (
           <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-6">
-            {section.title}
+            {localizedField(section, "title", language)}
           </h2>
         )}
         <div className="aspect-video rounded-2xl overflow-hidden bg-warm-gray">
           <iframe
             src={embedUrl}
-            title={section.title || "Video"}
+            title={localizedField(section, "title", language) || "Video"}
             className="w-full h-full"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
@@ -422,6 +423,7 @@ const SECTION_MAP = {
 };
 
 export default function SectionRenderer({ sections }) {
+  const { language } = useLanguage();
   if (!sections || sections.length === 0) return null;
 
   return (
@@ -429,7 +431,7 @@ export default function SectionRenderer({ sections }) {
       {sections.map((section) => {
         const Component = SECTION_MAP[section.sectionType];
         if (!Component) return null; // unknown type — ignore silently
-        return <Component key={section.$id} section={section} />;
+        return <Component key={section.$id} section={section} language={language} />;
       })}
     </div>
   );

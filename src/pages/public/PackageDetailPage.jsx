@@ -4,7 +4,7 @@ import {
   usePackageDetail,
   getPackagePreviewUrl,
 } from "@/hooks/usePackageDetail";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 import SEOHead from "@/components/common/SEOHead";
 import OptimizedImage from "@/components/common/OptimizedImage";
 import ExperienceGallery from "@/components/public/experience-detail/ExperienceGallery";
@@ -45,7 +45,7 @@ function formatPrice(amount, currency = "MXN") {
 // ─── Package hero (same pattern as ExperienceHero) ────────────────────────────
 
 function PackageHero({ pkg }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <div className="relative w-full -mt-20">
@@ -55,7 +55,7 @@ function PackageHero({ pkg }) {
           bucketId={env.bucketPackageImages}
           widths={[800, 1200, 1600]}
           quality={85}
-          alt={pkg.name}
+          alt={localizedField(pkg, "name", language)}
           className="w-full h-full"
           eager
         />
@@ -84,11 +84,11 @@ function PackageHero({ pkg }) {
               </Badge>
             </div>
             <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight max-w-3xl">
-              {pkg.name}
+              {localizedField(pkg, "name", language)}
             </h1>
-            {pkg.description && (
+            {localizedField(pkg, "description", language) && (
               <p className="mt-3 text-white/80 text-base md:text-lg max-w-2xl leading-relaxed">
-                {pkg.description}
+                {localizedField(pkg, "description", language)}
               </p>
             )}
           </div>
@@ -101,14 +101,14 @@ function PackageHero({ pkg }) {
 // ─── Package items list ───────────────────────────────────────────────────────
 
 function PackageItemsList({ items, experiences }) {
-  const { t, lang } = useLanguage();
+  const { t, language } = useLanguage();
 
   const expMap = new Map(experiences.map((e) => [e.$id, e]));
 
   return (
     <section className="py-8 md:py-12">
       <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-6">
-        {lang === "es" ? "Qué incluye" : "What's Included"}
+        {t("packageDetail.whatsIncluded")}
       </h2>
       <div className="space-y-3">
         {items.map((item) => {
@@ -117,9 +117,9 @@ function PackageItemsList({ items, experiences }) {
               ? expMap.get(item.referenceId)
               : null;
           const name =
-            item.name || (exp && (exp.publicName || exp.name)) || "Item";
+            item.name || (exp && localizedField(exp, "publicName", language)) || "Item";
           const description =
-            item.description || (exp && exp.shortDescription) || null;
+            item.description || (exp && localizedField(exp, "shortDescription", language)) || null;
 
           return (
             <div
@@ -158,14 +158,14 @@ function PackageItemsList({ items, experiences }) {
 
 function PricingSidebar({ pkg }) {
   const navigate = useNavigate();
-  const { lang } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <aside className="w-full">
       <div className="sticky top-6 rounded-2xl border border-warm-gray-dark/30 bg-white shadow-lg p-6 space-y-5">
         <div>
           <p className="text-xs text-charcoal-subtle uppercase tracking-wider mb-1">
-            {lang === "es" ? "Precio del paquete" : "Package price"}
+            {t("packageDetail.packagePrice")}
           </p>
           <p className="text-3xl font-bold text-charcoal">
             {formatPrice(pkg.totalPrice, pkg.currency)}
@@ -179,13 +179,13 @@ function PricingSidebar({ pkg }) {
           {pkg.durationDays && (
             <span className="flex items-center gap-1.5">
               <Calendar className="h-4 w-4" />
-              {pkg.durationDays} {pkg.durationDays === 1 ? "day" : "days"}
+              {pkg.durationDays} {pkg.durationDays === 1 ? t("packageDetail.day") : t("packageDetail.days")}
             </span>
           )}
           {pkg.capacity && (
             <span className="flex items-center gap-1.5">
               <Users className="h-4 w-4" />
-              {lang === "es" ? `Máx. ${pkg.capacity}` : `Max ${pkg.capacity}`}
+              {language === "es" ? `Máx. ${pkg.capacity}` : `Max ${pkg.capacity}`}
             </span>
           )}
         </div>
@@ -198,7 +198,7 @@ function PricingSidebar({ pkg }) {
             navigate(`${ROUTES.CHECKOUT}?packageId=${pkg.$id}&slug=${pkg.slug}`)
           }
         >
-          {lang === "es" ? "Reservar paquete" : "Book Package"}
+          {t("packageDetail.bookPackage")}
         </Button>
       </div>
     </aside>
@@ -211,7 +211,7 @@ export default function PackageDetailPage() {
   const { slug } = useParams();
   const { pkg, items, experiences, galleryImageIds, loading, error } =
     usePackageDetail(slug);
-  const { t, lang } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (loading) return <LoadingSkeleton />;
   if (error === "not_found" || !pkg) return <NotFoundPage />;
@@ -225,9 +225,9 @@ export default function PackageDetailPage() {
     );
   }
 
-  const seoTitle = `${pkg.name} — OMZONE`;
+  const seoTitle = `${localizedField(pkg, "name", language)} — OMZONE`;
   const seoDescription =
-    pkg.description || pkg.descriptionEs || `${pkg.name} wellness package`;
+    localizedField(pkg, "description", language) || `${localizedField(pkg, "name", language)} wellness package`;
   const seoImage = getPackagePreviewUrl(pkg.heroImageId, {
     width: 1200,
     height: 630,
@@ -252,12 +252,10 @@ export default function PackageDetailPage() {
           {/* Main column */}
           <div className="min-w-0">
             {/* Description (ES fallback) */}
-            {(pkg.description || pkg.descriptionEs) && (
+            {localizedField(pkg, "description", language) && (
               <div className="py-6 md:py-8">
                 <p className="text-charcoal-muted leading-relaxed whitespace-pre-wrap text-base">
-                  {(lang === "es" && pkg.descriptionEs) ||
-                    pkg.description ||
-                    pkg.descriptionEs}
+                  {localizedField(pkg, "description", language)}
                 </p>
               </div>
             )}
@@ -266,7 +264,7 @@ export default function PackageDetailPage() {
             {galleryImageIds.length > 0 && (
               <ExperienceGallery
                 imageIds={galleryImageIds}
-                alt={pkg.name}
+                alt={localizedField(pkg, "name", language)}
                 bucketId={env.bucketPackageImages}
               />
             )}

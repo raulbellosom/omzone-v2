@@ -595,5 +595,12 @@
       "institutional": "Institucional",
       "faq": "FAQ"
     }
+  },
+  "packageDetail": {
+    "whatsIncluded": "Qué incluye",
+    "packagePrice": "Precio del paquete",
+    "day": "día",
+    "days": "días",
+    "bookPackage": "Reservar paquete"
   }
 }

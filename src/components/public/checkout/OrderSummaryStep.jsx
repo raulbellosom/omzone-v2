@@ -1,5 +1,5 @@
 import { formatPrice } from "@/components/public/checkout/utils";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 
 export default function OrderSummaryStep({
   experience,
@@ -10,7 +10,7 @@ export default function OrderSummaryStep({
   indicativeTotal,
   currency,
 }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <div className="space-y-6">
@@ -20,7 +20,7 @@ export default function OrderSummaryStep({
         <div className="px-4 py-3 flex justify-between items-start">
           <div className="min-w-0">
             <p className="text-sm font-medium text-charcoal">
-              {experience.publicName}
+              {localizedField(experience, "publicName", language)}
             </p>
             {selectedTier && (
               <p className="text-xs text-charcoal-subtle mt-0.5">

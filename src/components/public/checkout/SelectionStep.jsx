@@ -1,6 +1,6 @@
 import { formatPrice } from "@/components/public/checkout/utils";
 import { cn } from "@/lib/utils";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 
 export default function SelectionStep({
   experience,
@@ -13,7 +13,7 @@ export default function SelectionStep({
   quantity,
   setQuantity,
 }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const minQty = experience.minQuantity || 1;
   const maxQty = experience.maxQuantity || 20;
 
@@ -29,7 +29,7 @@ export default function SelectionStep({
             {experience.type}
           </p>
           <h3 className="text-base font-semibold text-charcoal truncate">
-            {experience.publicName}
+            {localizedField(experience, "publicName", language)}
           </h3>
         </div>
       </div>

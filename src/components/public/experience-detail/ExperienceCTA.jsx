@@ -3,7 +3,7 @@ import { ArrowRight, MessageCircle, Calendar, Ticket } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 
 const CTA_CONFIG = {
   direct: {
@@ -42,7 +42,7 @@ export default function ExperienceCTA({
   className,
 }) {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const config = CTA_CONFIG[experience.saleMode] ?? CTA_CONFIG.direct;
   const Icon = config.icon;
 
@@ -70,7 +70,7 @@ export default function ExperienceCTA({
     >
       <div className="container-shell text-center">
         <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-2">
-          {t("experienceCTA.readyTo").replace("{name}", experience.publicName)}
+          {t("experienceCTA.readyTo").replace("{name}", localizedField(experience, "publicName", language))}
         </h2>
         <p className="text-charcoal-muted mb-8 max-w-xl mx-auto">
           {t(config.sublabelKey)}

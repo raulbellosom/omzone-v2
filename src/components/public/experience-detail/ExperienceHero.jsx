@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import Badge from "@/components/common/Badge";
 import OptimizedImage from "@/components/common/OptimizedImage";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 
 const TYPE_LABELS = {
@@ -23,7 +23,7 @@ const TYPE_BADGE = {
 };
 
 export default function ExperienceHero({ experience }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <div className="relative w-full -mt-20">
@@ -33,7 +33,7 @@ export default function ExperienceHero({ experience }) {
           fileId={experience.heroImageId}
           widths={[800, 1200, 1600]}
           quality={85}
-          alt={experience.publicName}
+          alt={localizedField(experience, "publicName", language)}
           className="w-full h-full"
           eager
         />
@@ -62,11 +62,11 @@ export default function ExperienceHero({ experience }) {
               </Badge>
             </div>
             <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight max-w-3xl">
-              {experience.publicName}
+              {localizedField(experience, "publicName", language)}
             </h1>
-            {experience.shortDescription && (
+            {localizedField(experience, "shortDescription", language) && (
               <p className="mt-3 text-white/80 text-base md:text-lg max-w-2xl leading-relaxed">
-                {experience.shortDescription}
+                {localizedField(experience, "shortDescription", language)}
               </p>
             )}
           </div>

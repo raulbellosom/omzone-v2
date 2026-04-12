@@ -10,7 +10,7 @@ import PublicationSectionRenderer from "@/components/public/publications/Publica
 import NotFoundPage from "@/pages/NotFoundPage";
 import { Button } from "@/components/common/Button";
 import { ROUTES } from "@/constants/routes";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 
 // ─── Loading skeleton ─────────────────────────────────────────────────────────
 
@@ -33,6 +33,7 @@ function LoadingSkeleton() {
 // ─── Publication header (when no hero section) ────────────────────────────────
 
 function PublicationHeader({ publication }) {
+  const { language } = useLanguage();
   const heroUrl = publication.heroImageId
     ? getPublicationPreviewUrl(publication.heroImageId, {
         width: 1600,
@@ -46,7 +47,7 @@ function PublicationHeader({ publication }) {
         <div className="relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden bg-warm-gray">
           <img
             src={heroUrl}
-            alt={publication.title || ""}
+            alt={localizedField(publication, "title", language) || ""}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
@@ -58,11 +59,11 @@ function PublicationHeader({ publication }) {
                 </span>
               )}
               <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight max-w-3xl">
-                {publication.title}
+                {localizedField(publication, "title", language)}
               </h1>
-              {(publication.subtitle || publication.subtitleEs) && (
+              {localizedField(publication, "subtitle", language) && (
                 <p className="mt-3 text-white/80 text-base md:text-lg max-w-2xl leading-relaxed">
-                  {publication.subtitle || publication.subtitleEs}
+                  {localizedField(publication, "subtitle", language)}
                 </p>
               )}
             </div>
@@ -76,11 +77,11 @@ function PublicationHeader({ publication }) {
             </span>
           )}
           <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-charcoal leading-tight max-w-3xl">
-            {publication.title}
+            {localizedField(publication, "title", language)}
           </h1>
-          {(publication.subtitle || publication.subtitleEs) && (
+          {localizedField(publication, "subtitle", language) && (
             <p className="mt-3 text-charcoal-muted text-base md:text-lg max-w-2xl leading-relaxed">
-              {publication.subtitle || publication.subtitleEs}
+              {localizedField(publication, "subtitle", language)}
             </p>
           )}
         </div>
@@ -92,7 +93,7 @@ function PublicationHeader({ publication }) {
 // ─── Experience CTA banner ───────────────────────────────────────────────────
 
 function ExperienceBanner({ experience }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   if (!experience) return null;
 
   return (
@@ -102,11 +103,11 @@ function ExperienceBanner({ experience }) {
           {t("publication.relatedExperience")}
         </p>
         <h3 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-3">
-          {experience.title}
+          {localizedField(experience, "publicName", language)}
         </h3>
-        {(experience.shortDescription || experience.shortDescriptionEs) && (
+        {localizedField(experience, "shortDescription", language) && (
           <p className="text-charcoal-muted leading-relaxed mb-6">
-            {experience.shortDescription || experience.shortDescriptionEs}
+            {localizedField(experience, "shortDescription", language)}
           </p>
         )}
         <Button asChild size="lg">
@@ -124,7 +125,7 @@ function ExperienceBanner({ experience }) {
 
 export default function PublicationPage() {
   const { slug } = useParams();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { publication, sections, experience, loading, error } =
     usePublicationBySlug(slug);
   const seo = usePublicationSEO(publication);
@@ -161,10 +162,10 @@ export default function PublicationPage() {
       {!hasHeroSection && <PublicationHeader publication={publication} />}
 
       {/* Excerpt (if no hero and there's an excerpt) */}
-      {!hasHeroSection && (publication.excerpt || publication.excerptEs) && (
+      {!hasHeroSection && localizedField(publication, "excerpt", language) && (
         <div className="container-shell max-w-3xl pb-4">
           <p className="text-lg text-charcoal-muted leading-relaxed italic">
-            {publication.excerpt || publication.excerptEs}
+            {localizedField(publication, "excerpt", language)}
           </p>
         </div>
       )}
