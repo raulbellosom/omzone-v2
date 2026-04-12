@@ -116,7 +116,9 @@ export default function SelectionStep({
                     hour: "numeric",
                     minute: "2-digit",
                   })}{" "}
-                  ({available} {available === 1 ? t("selection.spot") : t("selection.spots")} left)
+                  ({available}{" "}
+                  {available === 1 ? t("selection.spot") : t("selection.spots")}{" "}
+                  left)
                 </option>
               );
             })}

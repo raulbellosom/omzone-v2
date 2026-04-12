@@ -117,9 +117,13 @@ function PackageItemsList({ items, experiences }) {
               ? expMap.get(item.referenceId)
               : null;
           const name =
-            item.name || (exp && localizedField(exp, "publicName", language)) || "Item";
+            item.name ||
+            (exp && localizedField(exp, "publicName", language)) ||
+            "Item";
           const description =
-            item.description || (exp && localizedField(exp, "shortDescription", language)) || null;
+            item.description ||
+            (exp && localizedField(exp, "shortDescription", language)) ||
+            null;
 
           return (
             <div
@@ -179,13 +183,18 @@ function PricingSidebar({ pkg }) {
           {pkg.durationDays && (
             <span className="flex items-center gap-1.5">
               <Calendar className="h-4 w-4" />
-              {pkg.durationDays} {pkg.durationDays === 1 ? t("packageDetail.day") : t("packageDetail.days")}
+              {pkg.durationDays}{" "}
+              {pkg.durationDays === 1
+                ? t("packageDetail.day")
+                : t("packageDetail.days")}
             </span>
           )}
           {pkg.capacity && (
             <span className="flex items-center gap-1.5">
               <Users className="h-4 w-4" />
-              {language === "es" ? `Máx. ${pkg.capacity}` : `Max ${pkg.capacity}`}
+              {language === "es"
+                ? `Máx. ${pkg.capacity}`
+                : `Max ${pkg.capacity}`}
             </span>
           )}
         </div>
@@ -227,7 +236,8 @@ export default function PackageDetailPage() {
 
   const seoTitle = `${localizedField(pkg, "name", language)} — OMZONE`;
   const seoDescription =
-    localizedField(pkg, "description", language) || `${localizedField(pkg, "name", language)} wellness package`;
+    localizedField(pkg, "description", language) ||
+    `${localizedField(pkg, "name", language)} wellness package`;
   const seoImage = getPackagePreviewUrl(pkg.heroImageId, {
     width: 1200,
     height: 630,

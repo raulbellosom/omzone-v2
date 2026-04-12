@@ -431,7 +431,9 @@ export default function SectionRenderer({ sections }) {
       {sections.map((section) => {
         const Component = SECTION_MAP[section.sectionType];
         if (!Component) return null; // unknown type — ignore silently
-        return <Component key={section.$id} section={section} language={language} />;
+        return (
+          <Component key={section.$id} section={section} language={language} />
+        );
       })}
     </div>
   );

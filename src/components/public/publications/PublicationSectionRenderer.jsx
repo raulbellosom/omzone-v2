@@ -23,7 +23,13 @@ function parseMediaIds(str) {
   return parseJsonSafe(str, []).filter(Boolean);
 }
 
-const ALLOWED_VIDEO_HOSTS = ["youtube.com", "www.youtube.com", "youtu.be", "vimeo.com", "player.vimeo.com"];
+const ALLOWED_VIDEO_HOSTS = [
+  "youtube.com",
+  "www.youtube.com",
+  "youtu.be",
+  "vimeo.com",
+  "player.vimeo.com",
+];
 
 function isAllowedVideoUrl(url) {
   try {
@@ -39,7 +45,10 @@ function isAllowedVideoUrl(url) {
 function HeroSection({ section, language }) {
   const ids = parseMediaIds(section.mediaIds);
   const imageId = ids[0];
-  const imageUrl = getPublicationPreviewUrl(imageId, { width: 1600, height: 900 });
+  const imageUrl = getPublicationPreviewUrl(imageId, {
+    width: 1600,
+    height: 900,
+  });
 
   return (
     <section className="relative w-full">
@@ -114,7 +123,10 @@ function GallerySection({ section, language }) {
           )}
         >
           {ids.map((fileId, idx) => {
-            const url = getPublicationPreviewUrl(fileId, { width: 800, height: 600 });
+            const url = getPublicationPreviewUrl(fileId, {
+              width: 800,
+              height: 600,
+            });
             return (
               <div
                 key={fileId || idx}
@@ -187,8 +199,7 @@ function HighlightsSection({ section, language }) {
 
 function FaqSection({ section, language }) {
   const items =
-    parseJsonSafe(section.metadata)?.faqs ||
-    parseJsonSafe(section.content, []);
+    parseJsonSafe(section.metadata)?.faqs || parseJsonSafe(section.content, []);
   const faqs = Array.isArray(items) ? items : [];
   const [openIndex, setOpenIndex] = useState(null);
   if (faqs.length === 0) return null;
@@ -205,8 +216,7 @@ function FaqSection({ section, language }) {
           {faqs.map((faq, i) => {
             const q =
               typeof faq === "string" ? faq : faq.question || faq.q || "";
-            const a =
-              typeof faq === "string" ? "" : faq.answer || faq.a || "";
+            const a = typeof faq === "string" ? "" : faq.answer || faq.a || "";
             const open = openIndex === i;
             return (
               <div key={i}>
@@ -241,8 +251,7 @@ function FaqSection({ section, language }) {
 
 function ItinerarySection({ section, language }) {
   const items =
-    parseJsonSafe(section.metadata)?.days ||
-    parseJsonSafe(section.content, []);
+    parseJsonSafe(section.metadata)?.days || parseJsonSafe(section.content, []);
   const days = Array.isArray(items) ? items : [];
   if (days.length === 0) return null;
 
@@ -301,8 +310,7 @@ function TestimonialsSection({ section, language }) {
         )}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {list.map((t, i) => {
-            const quote =
-              typeof t === "string" ? t : t.quote || t.text || "";
+            const quote = typeof t === "string" ? t : t.quote || t.text || "";
             const author =
               typeof t === "string" ? "" : t.author || t.name || "";
             return (
@@ -345,7 +353,10 @@ function InclusionsSection({ section, language }) {
         )}
         <ul className="grid sm:grid-cols-2 gap-2">
           {list.map((item, i) => (
-            <li key={i} className="flex items-center gap-2.5 text-sm text-charcoal">
+            <li
+              key={i}
+              className="flex items-center gap-2.5 text-sm text-charcoal"
+            >
               <svg
                 className="w-4 h-4 text-sage flex-shrink-0"
                 fill="none"
@@ -419,8 +430,11 @@ function RestrictionsSection({ section, language }) {
 function CtaSection({ section, experience, language }) {
   const content = localizedField(section, "content", language);
   const meta = parseJsonSafe(section.metadata);
-  const linkTo = experience ? `/experiences/${experience.slug}` : meta?.link || null;
-  const buttonLabel = meta?.buttonLabel || (experience ? "Explore Experience" : null);
+  const linkTo = experience
+    ? `/experiences/${experience.slug}`
+    : meta?.link || null;
+  const buttonLabel =
+    meta?.buttonLabel || (experience ? "Explore Experience" : null);
 
   return (
     <section className="py-12 md:py-16 bg-sage/10">

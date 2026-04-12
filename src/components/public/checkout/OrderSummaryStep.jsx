@@ -30,16 +30,22 @@ export default function OrderSummaryStep({
             )}
             {selectedSlot && (
               <p className="text-xs text-charcoal-subtle mt-0.5">
-                {new Date(selectedSlot.startDatetime).toLocaleDateString("en-US", {
-                  weekday: "short",
-                  month: "short",
-                  day: "numeric",
-                })}{" "}
+                {new Date(selectedSlot.startDatetime).toLocaleDateString(
+                  "en-US",
+                  {
+                    weekday: "short",
+                    month: "short",
+                    day: "numeric",
+                  },
+                )}{" "}
                 ·{" "}
-                {new Date(selectedSlot.startDatetime).toLocaleTimeString("en-US", {
-                  hour: "numeric",
-                  minute: "2-digit",
-                })}
+                {new Date(selectedSlot.startDatetime).toLocaleTimeString(
+                  "en-US",
+                  {
+                    hour: "numeric",
+                    minute: "2-digit",
+                  },
+                )}
               </p>
             )}
           </div>

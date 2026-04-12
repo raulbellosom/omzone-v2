@@ -70,7 +70,10 @@ export default function ExperienceCTA({
     >
       <div className="container-shell text-center">
         <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-2">
-          {t("experienceCTA.readyTo").replace("{name}", localizedField(experience, "publicName", language))}
+          {t("experienceCTA.readyTo").replace(
+            "{name}",
+            localizedField(experience, "publicName", language),
+          )}
         </h2>
         <p className="text-charcoal-muted mb-8 max-w-xl mx-auto">
           {t(config.sublabelKey)}
