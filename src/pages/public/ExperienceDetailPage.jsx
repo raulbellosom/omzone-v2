@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useExperienceDetail } from "@/hooks/useExperienceDetail";
 import { useExperienceSEO } from "@/hooks/useSEO";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 import SEOHead from "@/components/common/SEOHead";
 import StructuredData from "@/components/common/StructuredData";
 import ExperienceHero from "@/components/public/experience-detail/ExperienceHero";
@@ -50,7 +50,8 @@ function LoadingSkeleton() {
 // ─── Long description block (no publication) ─────────────────────────────────
 
 function LongDescriptionBlock({ experience }) {
-  const text = experience.longDescription || experience.longDescriptionEs;
+  const { language } = useLanguage();
+  const text = localizedField(experience, "longDescription", language);
   if (!text) return null;
   return (
     <div className="pb-10 md:pb-14">
