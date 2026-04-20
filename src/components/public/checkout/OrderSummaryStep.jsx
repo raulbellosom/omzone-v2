@@ -24,14 +24,14 @@ export default function OrderSummaryStep({
             </p>
             {selectedTier && (
               <p className="text-xs text-charcoal-subtle mt-0.5">
-                {selectedTier.name}
+                {localizedField(selectedTier, "name", language)}
                 {quantity > 1 && ` × ${quantity}`}
               </p>
             )}
             {selectedSlot && (
               <p className="text-xs text-charcoal-subtle mt-0.5">
                 {new Date(selectedSlot.startDatetime).toLocaleDateString(
-                  "en-US",
+                  language === "es" ? "es-MX" : "en-US",
                   {
                     weekday: "short",
                     month: "short",
@@ -40,7 +40,7 @@ export default function OrderSummaryStep({
                 )}{" "}
                 ·{" "}
                 {new Date(selectedSlot.startDatetime).toLocaleTimeString(
-                  "en-US",
+                  language === "es" ? "es-MX" : "en-US",
                   {
                     hour: "numeric",
                     minute: "2-digit",
@@ -63,7 +63,9 @@ export default function OrderSummaryStep({
             className="px-4 py-3 flex justify-between items-center"
           >
             <div>
-              <p className="text-sm text-charcoal">{addon.name}</p>
+              <p className="text-sm text-charcoal">
+                {localizedField(addon, "name", language)}
+              </p>
               {quantity > 1 && (
                 <p className="text-xs text-charcoal-subtle">× {quantity}</p>
               )}

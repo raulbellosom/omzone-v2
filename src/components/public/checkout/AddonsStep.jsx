@@ -1,6 +1,6 @@
 import { formatPrice } from "@/components/public/checkout/utils";
 import { cn } from "@/lib/utils";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 
 export default function AddonsStep({
   enrichedAddons,
@@ -8,13 +8,11 @@ export default function AddonsStep({
   toggleAddon,
   quantity,
 }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   if (enrichedAddons.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-charcoal-subtle">
-          {t("addonsStep.noAddons")}
-        </p>
+        <p className="text-charcoal-subtle">{t("addonsStep.noAddons")}</p>
         <p className="text-xs text-charcoal-subtle/60 mt-1">
           {t("addonsStep.canContinue")}
         </p>
@@ -24,9 +22,7 @@ export default function AddonsStep({
 
   return (
     <div className="space-y-3">
-      <p className="text-sm text-charcoal-subtle">
-        {t("addonsStep.enhance")}
-      </p>
+      <p className="text-sm text-charcoal-subtle">{t("addonsStep.enhance")}</p>
 
       <div className="grid gap-2">
         {enrichedAddons.map((addon) => {
@@ -56,7 +52,11 @@ export default function AddonsStep({
                 )}
               >
                 {isSelected && (
-                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <svg
+                    className="w-3 h-3"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
                     <path
                       fillRule="evenodd"
                       d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -69,7 +69,7 @@ export default function AddonsStep({
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-charcoal">
-                    {addon.name}
+                    {localizedField(addon, "name", language)}
                   </span>
                   {addon.isRequired && (
                     <span className="text-[10px] uppercase tracking-wider text-sage-dark bg-sage/10 px-1.5 py-0.5 rounded-full font-medium">
@@ -77,9 +77,9 @@ export default function AddonsStep({
                     </span>
                   )}
                 </div>
-                {addon.description && (
+                {localizedField(addon, "description", language) && (
                   <p className="text-xs text-charcoal-subtle mt-0.5 line-clamp-2">
-                    {addon.description}
+                    {localizedField(addon, "description", language)}
                   </p>
                 )}
               </div>

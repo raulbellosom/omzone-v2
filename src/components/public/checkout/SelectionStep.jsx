@@ -68,16 +68,16 @@ export default function SelectionStep({
                 />
                 <div>
                   <span className="text-sm font-medium text-charcoal">
-                    {tier.name}
+                    {localizedField(tier, "name", language)}
                   </span>
                   {tier.badge && (
                     <span className="ml-2 text-xs bg-sage text-white rounded-full px-2 py-0.5">
                       {tier.badge}
                     </span>
                   )}
-                  {tier.description && (
+                  {localizedField(tier, "description", language) && (
                     <p className="text-xs text-charcoal-subtle mt-0.5">
-                      {tier.description}
+                      {localizedField(tier, "description", language)}
                     </p>
                   )}
                 </div>
@@ -113,21 +113,30 @@ export default function SelectionStep({
                 const available = slot.capacity - slot.bookedCount;
                 return (
                   <SelectItem key={slot.$id} value={slot.$id}>
-                    {start.toLocaleDateString("en-US", {
-                      weekday: "short",
-                      month: "short",
-                      day: "numeric",
-                    })}{" "}
+                    {start.toLocaleDateString(
+                      language === "es" ? "es-MX" : "en-US",
+                      {
+                        weekday: "short",
+                        month: "short",
+                        day: "numeric",
+                      },
+                    )}{" "}
                     ·{" "}
-                    {start.toLocaleTimeString("en-US", {
-                      hour: "numeric",
-                      minute: "2-digit",
-                    })}
+                    {start.toLocaleTimeString(
+                      language === "es" ? "es-MX" : "en-US",
+                      {
+                        hour: "numeric",
+                        minute: "2-digit",
+                      },
+                    )}
                     {" – "}
-                    {end.toLocaleTimeString("en-US", {
-                      hour: "numeric",
-                      minute: "2-digit",
-                    })}{" "}
+                    {end.toLocaleTimeString(
+                      language === "es" ? "es-MX" : "en-US",
+                      {
+                        hour: "numeric",
+                        minute: "2-digit",
+                      },
+                    )}{" "}
                     ({available}{" "}
                     {available === 1
                       ? t("selection.spot")

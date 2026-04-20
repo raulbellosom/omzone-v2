@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { usePublicExperiences } from "@/hooks/usePublicExperiences";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 import SEOHead from "@/components/common/SEOHead";
 import env from "@/config/env";
 import CatalogHero from "@/components/public/experiences/CatalogHero";
@@ -19,7 +19,7 @@ export default function ExperiencesListPage() {
   const { experiences, tags, experienceTagMap, loading, error, refetch } =
     usePublicExperiences();
 
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [selectedTags, setSelectedTags] = useState([]);
@@ -57,16 +57,16 @@ export default function ExperiencesListPage() {
     );
   }, [selectedType, setSearchParams]);
 
-  // Enrich experiences with tag names for display in articles
+  // Enrich experiences with localized tag names for display in articles
   const enriched = useMemo(() => {
     return experiences.map((exp) => {
       const tagIds = experienceTagMap[exp.$id] || [];
       const tagNames = tags
-        .filter((t) => tagIds.includes(t.$id))
-        .map((t) => t.name);
+        .filter((tag) => tagIds.includes(tag.$id))
+        .map((tag) => localizedField(tag, "name", language));
       return { ...exp, tagNames };
     });
-  }, [experiences, experienceTagMap, tags]);
+  }, [experiences, experienceTagMap, tags, language]);
 
   const filtered = useMemo(() => {
     return enriched.filter((exp) => {

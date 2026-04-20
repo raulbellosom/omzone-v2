@@ -1,5 +1,5 @@
 import { X, ChevronDown, Check } from "lucide-react";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -24,7 +24,7 @@ export default function ExperienceFilters({
   onSelectType,
   onClear,
 }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const hasFilters = selectedTags.length > 0 || selectedType !== "";
   const activeLabel = selectedType
     ? t(TYPE_OPTIONS.find((o) => o.value === selectedType)?.labelKey ?? "")
@@ -92,7 +92,7 @@ export default function ExperienceFilters({
                   : "bg-white border-warm-gray-dark/25 text-charcoal-subtle hover:border-sage/40 hover:text-charcoal-muted",
               )}
             >
-              {tag.name}
+              {localizedField(tag, "name", language)}
             </button>
           ))}
         </div>
