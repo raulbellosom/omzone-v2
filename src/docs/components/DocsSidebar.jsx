@@ -3,7 +3,7 @@ import { docsNavigation, getLocalizedTitle } from '@/docs/config/navigation';
 
 export default function DocsSidebar({ currentPage, lang = 'en' }) {
   return (
-    <nav className="p-4 sm:p-6 h-full" aria-label="Documentation navigation">
+    <nav className="p-4 sm:p-6 h-full overflow-y-auto" aria-label="Documentation navigation">
       {/* Logo/Home Link */}
       <div className="mb-6">
         <Link 

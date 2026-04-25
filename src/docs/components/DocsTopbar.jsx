@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, Globe } from 'lucide-react';
+import { Menu, Globe, List } from 'lucide-react';
 import DocsSearch from './DocsSearch';
 
-export default function DocsTopbar({ onMenuClick, lang = 'en' }) {
+export default function DocsTopbar({ onMenuClick, onTOCClick, lang = 'en' }) {
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,14 +44,14 @@ export default function DocsTopbar({ onMenuClick, lang = 'en' }) {
 
   return (
     <header 
-      className="h-16 border-b border-stone-200 bg-white sticky top-0 z-20 overflow-x-hidden"
+      className="h-14 sm:h-16 border-b border-stone-200 bg-white sticky top-0 z-20 overflow-x-hidden"
       style={{ paddingTop: 'env(safe-area-inset-top)' }}
     >
-      <div className="h-full px-4 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="h-full px-2 sm:px-4 flex items-center justify-between gap-1 sm:gap-4 min-w-0">
         {/* Mobile Menu Button */}
         <button
           onClick={onMenuClick}
-          className="md:hidden p-2 text-stone-600 hover:text-stone-900 touch-manipulation rounded-lg hover:bg-stone-100 shrink-0"
+          className="md:hidden p-1.5 sm:p-2 text-stone-600 hover:text-stone-900 touch-manipulation rounded-lg hover:bg-stone-100 shrink-0"
           aria-label="Open navigation menu"
         >
           <Menu className="w-5 h-5" />
@@ -66,21 +66,21 @@ export default function DocsTopbar({ onMenuClick, lang = 'en' }) {
         </a>
 
         {/* Center: Search */}
-        <div className="flex-1 flex justify-center min-w-0 max-w-xl mx-2 sm:mx-4">
+        <div className="flex-1 flex justify-center min-w-0 max-w-xl mx-1 sm:mx-4">
           <DocsSearch lang={lang} />
         </div>
 
         {/* Right: Language Selector + Back to Admin */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div className="flex items-center gap-1 sm:gap-3 shrink-0">
           {/* Language Selector */}
           <div className="relative">
             <button
               onClick={() => setLangMenuOpen(!langMenuOpen)}
-              className="flex items-center gap-1.5 px-2 py-1.5 text-sm text-stone-600 hover:text-stone-900 rounded-lg hover:bg-stone-100 touch-manipulation"
+              className="flex items-center gap-1 px-1.5 sm:px-2 py-1.5 text-sm text-stone-600 hover:text-stone-900 rounded-lg hover:bg-stone-100 touch-manipulation"
               aria-label="Select language"
             >
-              <Globe className="w-4 h-4" />
-              <span className="uppercase">{lang}</span>
+              <Globe className="w-4 h-4 shrink-0" />
+              <span className="uppercase text-xs sm:text-sm">{lang}</span>
             </button>
             
             {langMenuOpen && (
@@ -105,12 +105,24 @@ export default function DocsTopbar({ onMenuClick, lang = 'en' }) {
             )}
           </div>
 
+          {/* TOC Toggle - visible on mobile/tablet, hidden on large screens */}
+          <button
+            onClick={onTOCClick}
+            className="lg:hidden p-1.5 sm:p-2 text-stone-600 hover:text-stone-900 touch-manipulation rounded-lg hover:bg-stone-100 shrink-0"
+            aria-label="Open table of contents"
+          >
+            <List className="w-5 h-5" />
+          </button>
+
           {/* Back to Admin */}
           <a
             href="/admin"
-            className="hidden md:block text-sm text-stone-600 hover:text-stone-900 whitespace-nowrap"
+            className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-stone-600 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors whitespace-nowrap"
           >
-            ← Back to Admin
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Admin
           </a>
         </div>
       </div>

@@ -1,23 +1,31 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import DocsSidebar from './DocsSidebar';
 import DocsTopbar from './DocsTopbar';
 import DocsBreadcrumbs from './DocsBreadcrumbs';
 import DocsMobileDrawer from './DocsMobileDrawer';
+import DocsMobileTOC from './DocsMobileTOC';
 import DocsBackToTop from './DocsBackToTop';
 import DocsTableOfContents from './DocsTableOfContents';
 
 export default function DocsLayout({ children, currentPage, lang = 'en' }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileTOCOpen, setMobileTOCOpen] = useState(false);
+  const mainContentRef = useRef(null);
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
+    <div className="h-screen flex flex-col overflow-hidden min-w-0">
       {/* Top Bar - sticky within the layout */}
-      <DocsTopbar onMenuClick={() => setMobileOpen(true)} lang={lang} className="shrink-0" />
+      <DocsTopbar 
+        onMenuClick={() => setMobileOpen(true)} 
+        onTOCClick={() => setMobileTOCOpen(true)}
+        lang={lang} 
+        className="shrink-0" 
+      />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden min-w-0">
         {/* Left Sidebar - sticky within the layout */}
-        <aside className="hidden md:block w-64 lg:w-72 border-r border-stone-200 bg-white shrink-0 overflow-y-auto">
+        <aside className="hidden md:block w-64 lg:w-72 border-r border-stone-200 bg-white shrink-0 overflow-y-auto min-w-0">
           <DocsSidebar currentPage={currentPage} lang={lang} />
         </aside>
 
@@ -29,9 +37,15 @@ export default function DocsLayout({ children, currentPage, lang = 'en' }) {
           lang={lang}
         />
 
+        {/* Mobile TOC Drawer */}
+        <DocsMobileTOC 
+          open={mobileTOCOpen} 
+          onClose={() => setMobileTOCOpen(false)}
+        />
+
         {/* Main Content - scrollable */}
-        <main className="flex-1 min-w-0 overflow-y-auto">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <main ref={mainContentRef} className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-20 sm:pt-10 pb-12">
             <DocsBreadcrumbs currentPage={currentPage} lang={lang} />
             <article className="max-w-none text-stone-700 
               text-base leading-relaxed
@@ -59,7 +73,7 @@ export default function DocsLayout({ children, currentPage, lang = 'en' }) {
         </main>
 
         {/* Right Sidebar - sticky within the layout */}
-        <aside className="hidden lg:block w-56 xl:w-64 border-l border-stone-200 bg-white shrink-0 overflow-y-auto">
+        <aside className="hidden lg:block w-56 xl:w-64 border-l border-stone-200 bg-white shrink-0 overflow-y-auto min-w-0">
           <div className="px-4 py-4">
             <DocsTableOfContents />
           </div>
@@ -67,7 +81,7 @@ export default function DocsLayout({ children, currentPage, lang = 'en' }) {
       </div>
 
       {/* Back to Top Button */}
-      <DocsBackToTop />
+      <DocsBackToTop containerRef={mainContentRef} />
 
       {/* Print styles - injected via style tag for scoped styles */}
       <style>{`
@@ -90,8 +104,11 @@ export default function DocsLayout({ children, currentPage, lang = 'en' }) {
         html {
           scroll-padding-top: 4rem;
         }
+        main {
+          scroll-margin-top: 0;
+        }
         article {
-          scroll-margin-top: 4rem;
+          scroll-margin-top: 5rem;
         }
       `}</style>
     </div>

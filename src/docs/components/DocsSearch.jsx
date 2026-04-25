@@ -113,12 +113,12 @@ export default function DocsSearch({ lang = 'en' }) {
       {/* Search Trigger Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-4 py-2.5 text-sm text-stone-500 bg-stone-100 border-none rounded-lg hover:bg-stone-200 w-full max-w-md touch-manipulation"
+        className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-sm text-stone-500 bg-stone-100 border-none rounded-lg hover:bg-stone-200 w-full max-w-md touch-manipulation overflow-hidden"
         aria-label="Search documentation"
       >
-        <Search className="w-4 h-4" />
-        <span>Search documentation...</span>
-        <kbd className="ml-auto hidden sm:inline-flex text-xs bg-stone-200 px-1.5 py-0.5 rounded">
+        <Search className="w-4 h-4 shrink-0" />
+        <span className="truncate">Search...</span>
+        <kbd className="ml-auto hidden sm:inline-flex text-xs bg-stone-200 px-1.5 py-0.5 rounded shrink-0">
           ⌘K
         </kbd>
       </button>
