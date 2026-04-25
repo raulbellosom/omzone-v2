@@ -11,13 +11,13 @@ export default function DocsLayout({ children, currentPage, lang = 'en' }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-stone-50 overflow-x-hidden">
-      {/* Top Bar */}
-      <DocsTopbar onMenuClick={() => setMobileOpen(true)} lang={lang} />
+    <div className="h-screen flex flex-col overflow-hidden">
+      {/* Top Bar - sticky within the layout */}
+      <DocsTopbar onMenuClick={() => setMobileOpen(true)} lang={lang} className="shrink-0" />
 
-      <div className="flex flex-nowrap">
-        {/* Left Sidebar */}
-        <aside className="hidden md:block w-64 lg:w-72 border-r border-stone-200 bg-white sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto shrink-0">
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left Sidebar - sticky within the layout */}
+        <aside className="hidden md:block w-64 lg:w-72 border-r border-stone-200 bg-white shrink-0 overflow-y-auto">
           <DocsSidebar currentPage={currentPage} lang={lang} />
         </aside>
 
@@ -29,9 +29,9 @@ export default function DocsLayout({ children, currentPage, lang = 'en' }) {
           lang={lang}
         />
 
-        {/* Main Content - scroll-mt-16 accounts for sticky navbar height */}
-        <main className="flex-1 min-h-screen min-w-0">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 scroll-mt-16">
+        {/* Main Content - scrollable */}
+        <main className="flex-1 min-w-0 overflow-y-auto">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
             <DocsBreadcrumbs currentPage={currentPage} lang={lang} />
             <article className="max-w-none text-stone-700 
               text-base leading-relaxed
@@ -58,8 +58,8 @@ export default function DocsLayout({ children, currentPage, lang = 'en' }) {
           </div>
         </main>
 
-        {/* Right Sidebar - TOC with independent scroll */}
-        <aside className="hidden lg:block w-56 xl:w-64 border-l border-stone-200 bg-white sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto shrink-0">
+        {/* Right Sidebar - sticky within the layout */}
+        <aside className="hidden lg:block w-56 xl:w-64 border-l border-stone-200 bg-white shrink-0 overflow-y-auto">
           <div className="px-4 py-4">
             <DocsTableOfContents />
           </div>
