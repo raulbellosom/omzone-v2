@@ -1,0 +1,122 @@
+<error_handling>
+  <common_errors>
+    <error type="navigation">
+      <problem>User gets lost in deep navigation hierarchy</problem>
+      <causes>
+        <cause>Too many nesting levels (4+ deep)</cause>
+        <cause>No breadcrumbs to show current location</cause>
+        <cause>Active page not visually highlighted</cause>
+      </causes>
+      <solution>
+        <step>Audit navigation depth; flatten if exceeding 3 levels</step>
+        <step>Implement breadcrumb trail in top navigation</step>
+        <step>Add clear active state indicators to nav links</step>
+        <step>Consider a "quick nav" feature for power users</step>
+      </solution>
+    </error>
+
+    <error type="search">
+      <problem>Search returns no results for valid queries</problem>
+      <causes>
+        <cause>Search index not updated after content changes</cause>
+        <cause>Query parser doesn't understand natural language</cause>
+        <cause>Minimum query length too high</cause>
+      </causes>
+      <solution>
+        <step>Implement automatic search index rebuild on content changes</step>
+        <step>Add query suggestions for typos and similar terms</step>
+        <step>Lower minimum query length to 2 characters</step>
+        <step>Add "did you mean" suggestions</step>
+      </solution>
+    </error>
+
+    <error type="mobile">
+      <problem>Sidebar doesn't work on mobile devices</problem>
+      <causes>
+        <cause>Touch events not handled properly</cause>
+        <cause>Drawer animation causes layout issues</cause>
+        <cause>Z-index conflicts with other elements</cause>
+      </causes>
+      <solution>
+        <step>Use transform: translateX() instead of left/right positioning</step>
+        <step>Prevent body scroll when drawer is open</step>
+        <step>Raise drawer z-index above all content</step>
+        <step>Test on actual iOS and Android devices</step>
+      </solution>
+    </error>
+
+    <error type="theme">
+      <problem>Theme doesn't persist across page navigation</problem>
+      <causes>
+        <cause>Theme state not stored in localStorage</cause>
+        <cause>SSR rehydration overwrites client state</cause>
+        <cause>Multiple theme providers conflicting</cause>
+      </causes>
+      <solution>
+        <step>Initialize theme from localStorage before render</step>
+        <step>Add theme script to HTML head to prevent flash</step>
+        <step>Ensure only one ThemeProvider exists</step>
+        <step>Use context for theme distribution, not prop drilling</step>
+      </solution>
+    </error>
+
+    <error type="code_blocks">
+      <problem>Code blocks display incorrectly or lack highlighting</problem>
+      <causes>
+        <cause>Wrong language specified in code fence</cause>
+        <cause>Syntax highlighter not loaded for language</cause>
+        <cause>CSS not matching highlighter theme</cause>
+      </causes>
+      <solution>
+        <step>Verify all code blocks have correct language tags</step>
+        <step>Check that syntax highlighter supports required languages</step>
+        <step>Ensure highlighter CSS is included in build</step>
+        <step>Add fallback plain text view for unsupported languages</step>
+      </solution>
+    </error>
+
+    <error type="performance">
+      <problem>Documentation site loads slowly or has layout shift</problem>
+      <causes>
+        <cause>Large markdown files without lazy loading</cause>
+        <cause>Images not optimized or lazy loaded</cause>
+        <cause>Blocking scripts in head</cause>
+      </causes>
+      <solution>
+        <step>Implement code splitting for markdown content</step>
+        <step>Add lazy loading for images below fold</step>
+        <step>Defer non-critical scripts</step>
+        <step>Preload critical fonts and CSS</step>
+      </solution>
+    </error>
+  </common_errors>
+
+  <recovery_strategies>
+    <strategy name="graceful_degradation">
+      <description>When advanced features fail, fall back to simpler alternatives</description>
+      <examples>
+        <example>
+          <scenario>Minimax API unavailable</scenario>
+          <fallback>Use basic text search with keyword matching</fallback>
+        </example>
+        <example>
+          <scenario>Code playground fails to load</scenario>
+          <fallback>Show static code block with copy functionality</fallback>
+        </example>
+        <example>
+          <scenario>Dark mode CSS fails to load</scenario>
+          <fallback>Always use light mode, hide theme toggle</fallback>
+        </example>
+      </examples>
+    </strategy>
+
+    <strategy name="user_feedback">
+      <description>Clearly communicate errors and recovery options to users</description>
+      <guidelines>
+        <guideline>Show toast notifications for recoverable errors</guideline>
+        <guideline>Provide clear error messages with suggested actions</guideline>
+        <guideline>Log errors silently for debugging without bothering users</guideline>
+      </guidelines>
+    </strategy>
+  </recovery_strategies>
+</error_handling>

@@ -1,0 +1,440 @@
+<common_patterns>
+  <pattern name="sidebar_navigation">
+    <description>Persistent sidebar with collapsible tree structure for hierarchical categories</description>
+    <implementation>
+      <components>
+        <component name="SidebarNav">
+          <props>categories, onNavigate, activePath, isCollapsed, onToggle</props>
+          <behavior>
+            - Renders hierarchical category tree
+            - Supports expand/collapse for each section
+            - Highlights active page with visual indicator
+            - Persists expansion state in localStorage
+          </behavior>
+        </component>
+
+        <component name="NavCategory">
+          <props>title, icon, children, isExpanded, onToggle</props>
+          <behavior>
+            - Grouped navigation items under a category header
+            - Chevron icon rotates on expand/collapse
+            - Smooth height animation for children
+          </behavior>
+        </component>
+
+        <component name="NavLink">
+          <props>href, title, isActive, badge</props>
+          <behavior>
+            - Displays topic link with optional badge (NEW, UPDATED)
+            - Hover state with subtle background
+            - Active state with accent color border
+          </behavior>
+        </component>
+      </components>
+
+      <example language="jsx"><![CDATA[
+import { useState, useEffect } from 'react';
+import { ChevronRight, FileText, Code, Book } from 'lucide-react';
+
+function SidebarNav({ categories, activePath, isCollapsed, onToggle }) {
+  const [expandedSections, setExpandedSections] = useState(() => {
+    const saved = localStorage.getItem('docs-nav-expanded');
+    return saved ? JSON.parse(saved) : categories.map(c => c.id);
+  });
+
+  useEffect(() => {
+    localStorage.setItem('docs-nav-expanded', JSON.stringify(expandedSections));
+  }, [expandedSections]);
+
+  const toggleSection = (id) => {
+    setExpandedSections(prev => 
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    );
+  };
+
+  if (isCollapsed) return null;
+
+  return (
+    <nav className="docs-sidebar">
+      {categories.map(category => (
+        <NavCategory
+          key={category.id}
+          title={category.title}
+          icon={getIcon(category.icon)}
+          isExpanded={expandedSections.includes(category.id)}
+          onToggle={() => toggleSection(category.id)}
+        >
+          {category.children.map(item => (
+            <NavLink
+              key={item.path}
+              href={item.path}
+              title={item.title}
+              isActive={activePath === item.path}
+              badge={item.badge}
+            />
+          ))}
+        </NavCategory>
+      ))}
+    </nav>
+  );
+}
+]]></example>
+    </implementation>
+  </pattern>
+
+  <pattern name="contextual_panel">
+    <description>Right-side panel showing table of contents, related topics, and code references</description>
+    <implementation>
+      <components>
+        <component name="ContextualPanel">
+          <props>headings, relatedTopics, codeRefs, onNavigate</props>
+          <behavior>
+            - Sticky positioning that follows scroll
+            - Collapses to floating button on mobile
+            - Smooth transition when scrolling past content
+          </behavior>
+        </component>
+
+        <component name="TableOfContents">
+          <props>headings, activeId</props>
+          <behavior>
+            - Parses H2/H3 headings from content
+            - Highlights active section on scroll
+            - Smooth scroll to section on click
+          </behavior>
+        </component>
+
+        <component name="RelatedTopics">
+          <props>topics, currentPath</props>
+          <behavior>
+            - Shows 3-5 related topic cards
+            - Excludes current topic from list
+            - Includes category context in link
+          </behavior>
+        </component>
+
+        <component name="CodeReferences">
+          <props>references</props>
+          <behavior>
+            - Lists code examples on current page
+            - Shows file paths with copy button
+            - Displays inline preview on hover
+          </behavior>
+        </component>
+      </components>
+
+      <example language="jsx"><![CDATA[
+function ContextualPanel({ headings, relatedTopics, codeRefs }) {
+  const [activeId, setActiveId] = useState('');
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '-100px 0px -70% 0px' }
+    );
+
+    headings.forEach(heading => {
+      const el = document.getElementById(heading.id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [headings]);
+
+  return (
+    <aside className="contextual-panel">
+      <TableOfContents headings={headings} activeId={activeId} />
+      <RelatedTopics topics={relatedTopics} />
+      {codeRefs.length > 0 && <CodeReferences references={codeRefs} />}
+    </aside>
+  );
+}
+]]></example>
+    </implementation>
+  </pattern>
+
+  <pattern name="ai_search">
+    <description>AI-powered search system with Minimax API integration</description>
+    <implementation>
+      <components>
+        <component name="SearchModal">
+          <props>isOpen, onClose, onSelect</props>
+          <behavior>
+            - Opens with Cmd+K / Ctrl+K
+            - Displays recent searches
+            - Shows search suggestions as typing
+            - Modal overlay with backdrop blur
+          </behavior>
+        </component>
+
+        <component name="SearchInput">
+          <props>value, onChange, onSubmit, suggestions</props>
+          <behavior>
+            - Debounced search (300ms)
+            - Shows loading spinner during search
+            - Clear button when has value
+            - Keyboard navigation for results
+          </behavior>
+        </component>
+
+        <component name="SearchResults">
+          <props>results, isLoading</props>
+          <behavior>
+            - Groups results by category
+            - Shows relevance score indicator
+            - Displays snippet with highlighted matches
+            - Includes breadcrumb path for navigation
+          </behavior>
+        </component>
+      </components>
+
+      <search_features>
+        <feature>Natural language query parsing ("how do I configure X")</feature>
+        <feature>Semantic search with content understanding</feature>
+        <feature>Code snippet search within examples</feature>
+        <feature>Context-aware results with proper citations</feature>
+        <feature>Search history with recent queries</feature>
+        <feature>Filtering by category and content type</feature>
+      </search_features>
+
+      <example language="jsx">
+async function performSearch(query) {
+  const searchRequest = {
+    query,
+    context: {
+      currentPath: window.location.pathname,
+      recentSearches: getRecentSearches(),
+      userPreferences: getUserPreferences()
+    },
+    filters: {
+      categories: selectedCategories,
+      contentTypes: ['guide', 'api', 'tutorial'],
+      includeCode: true
+    }
+  };
+
+  if (minimaxApiKey) {
+    // AI-powered semantic search via Minimax
+    const response = await minimaxSearch(searchRequest);
+    return parseSemanticResults(response);
+  } else {
+    // Fallback to simple text search
+    return basicSearch(searchRequest);
+  }
+}
+
+async function minimaxSearch(request) {
+  const response = await fetch('https://api.minimax.chat/v1/search', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${minimaxApiKey}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: 'minimax-search',
+      query: request.query,
+      documents: getIndexedDocuments(),
+      options: {
+        semantic: true,
+        highlight: true,
+        max_results: 10
+      }
+    })
+  });
+  return response.json();
+}
+      </example>
+    </implementation>
+  </pattern>
+
+  <pattern name="theme_system">
+    <description>Dark/light theme support with persistent user preferences</description>
+    <implementation>
+      <storage_key>docs-theme-preference</storage_key>
+      <default_theme>system (follows OS preference)</default_theme>
+      <transition_duration>200ms</transition_duration>
+
+      <example language="jsx"><![CDATA[
+function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('docs-theme-preference');
+    return saved || 'system';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('docs-theme-preference', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => {
+      if (prev === 'light') return 'dark';
+      if (prev === 'dark') return 'system';
+      return 'light';
+    });
+  };
+
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+]]></example>
+    </implementation>
+  </pattern>
+
+  <pattern name="keyboard_shortcuts">
+    <description>Keyboard navigation shortcuts for power users</description>
+    <implementation>
+      <shortcuts>
+        <shortcut key="Cmd/Ctrl + K" action="Open search modal" />
+        <shortcut key="Cmd/Ctrl + P" action="Quick page navigation" />
+        <shortcut key="Cmd/Ctrl + [" action="Previous topic" />
+        <shortcut key="Cmd/Ctrl + ]" action="Next topic" />
+        <shortcut key="Escape" action="Close modal / Go back" />
+        <shortcut key="T" action="Toggle theme" />
+        <shortcut key="?" action="Show keyboard shortcuts help" />
+      </shortcuts>
+
+      <example language="jsx"><![CDATA[
+function useKeyboardShortcuts(isModalOpen) {
+  useEffect(() => {
+    if (isModalOpen) return;
+
+    const handler = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        openSearchModal();
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === '[') {
+        e.preventDefault();
+        navigateToPreviousTopic();
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === ']') {
+        e.preventDefault();
+        navigateToNextTopic();
+      }
+      if (e.key === 't' && !isInputFocused()) {
+        e.preventDefault();
+        toggleTheme();
+      }
+    };
+
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [isModalOpen]);
+}
+]]></example>
+    </implementation>
+  </pattern>
+
+  <pattern name="code_playground">
+    <description>Interactive code playgrounds for trying examples</description>
+    <implementation>
+      <features>
+        <feature>Live code editing with syntax highlighting</feature>
+        <feature>Run/reset buttons with instant preview</feature>
+        <feature>Sandboxed execution environment</feature>
+        <feature>Share playground state via URL</feature>
+      </features>
+
+      <example language="jsx"><![CDATA[
+function CodePlayground({ initialCode, language, dependencies }) {
+  const [code, setCode] = useState(initialCode);
+  const [output, setOutput] = useState('');
+  const [isRunning, setIsRunning] = useState(false);
+
+  const runCode = async () => {
+    setIsRunning(true);
+    try {
+      const result = await executeInSandbox(code, language, dependencies);
+      setOutput(result);
+    } catch (error) {
+      setOutput('Error: ' + error.message);
+    }
+    setIsRunning(false);
+  };
+
+  return (
+    <div className="code-playground">
+      <div className="playground-editor">
+        <SyntaxHighlighter language={language}>
+          {code}
+        </SyntaxHighlighter>
+        <textarea
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          className="playground-input"
+        />
+      </div>
+      <div className="playground-toolbar">
+        <button onClick={runCode} disabled={isRunning}>
+          {isRunning ? 'Running...' : 'Run'}
+        </button>
+        <button onClick={() => setCode(initialCode)}>Reset</button>
+        <button onClick={copyToClipboard}>Copy</button>
+      </div>
+      {output && <pre className="playground-output">{output}</pre>}
+    </div>
+  );
+}
+]]></example>
+    </implementation>
+  </pattern>
+
+  <pattern name="topic_navigation">
+    <description>Previous/next topic navigation at bottom of each page</description>
+    <implementation>
+      <logic>
+        - Calculate previous and next topics based on navigation hierarchy
+        - Use flat list ordered by position/order in hierarchy
+        - Include category context in navigation display
+        - Show keyboard shortcuts in tooltip
+      </logic>
+
+      <example language="jsx"><![CDATA[
+function TopicNavigation({ currentPath, navigationTree }) {
+  const flatNav = flattenNavigation(navigationTree);
+  const currentIndex = flatNav.findIndex(item => item.path === currentPath);
+  
+  const previous = currentIndex > 0 ? flatNav[currentIndex - 1] : null;
+  const next = currentIndex < flatNav.length - 1 ? flatNav[currentIndex + 1] : null;
+
+  return (
+    <nav className="topic-navigation">
+      <div className="nav-prev">
+        {previous && (
+          <Link to={previous.path} className="nav-link">
+            <span className="nav-label">Previous</span>
+            <span className="nav-title">
+              <ChevronLeft size={16} />
+              {previous.title}
+            </span>
+          </Link>
+        )}
+      </div>
+      <div className="nav-next">
+        {next && (
+          <Link to={next.path} className="nav-link">
+            <span className="nav-label">Next</span>
+            <span className="nav-title">
+              {next.title}
+              <ChevronRight size={16} />
+            </span>
+          </Link>
+        )}
+      </div>
+    </nav>
+  );
+}
+]]></example>
+    </implementation>
+  </pattern>
+</common_patterns>

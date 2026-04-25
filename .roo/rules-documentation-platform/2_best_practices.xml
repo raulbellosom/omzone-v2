@@ -1,0 +1,140 @@
+<best_practices>
+  <general_principles>
+    <principle priority="high">
+      <name>Navigation Hierarchy Clarity</name>
+      <description>Documentation navigation must be intuitive and self-explanatory. Users should never feel lost or wonder where they are in the documentation structure.</description>
+      <rationale>Clear navigation reduces frustration and increases productivity. Professional docs like Appwrite and Tailwind excel at making complex structures feel simple.</rationale>
+      <example>
+        <scenario>When organizing API reference documentation</scenario>
+        <good>Categories: Authentication, Database, Storage, Functions, Teams — each with clear icons and expandable subsections</good>
+        <bad>Flat list of 50+ links with no grouping or visual hierarchy</bad>
+      </example>
+    </principle>
+
+    <principle priority="high">
+      <name>Content Discoverability</name>
+      <description>Every piece of content should be findable within 3 clicks. Use consistent linking patterns and cross-reference related topics.</description>
+      <rationale>Users often arrive via search directly to specific pages. They need clear paths to discover related content.</rationale>
+      <example>
+        <scenario>When a user lands on an API endpoint page</scenario>
+        <good>Show related endpoints, common use cases, error references, and "next topic" navigation</good>
+        <bad>Isolated page with no connections to broader context</bad>
+      </example>
+    </principle>
+
+    <principle priority="high">
+      <name>Code Example Quality</name>
+      <description>All code examples must be copy-paste ready, well-commented, and include usage context. Examples should work without modification.</description>
+      <rationale>Developers use documentation primarily for code examples. Poor examples waste user time and erode trust.</rationale>
+      <example>
+        <scenario>Documenting an authentication function</scenario>
+        <good>Complete working example with import statements, error handling, and comments explaining each step</good>
+        <bad>Snippets that require users to fill in placeholder variables</bad>
+      </example>
+    </principle>
+
+    <principle priority="medium">
+      <name>Visual Consistency</name>
+      <description>Maintain consistent typography, spacing, and visual patterns across all documentation pages.</description>
+      <rationale>Visual consistency reduces cognitive load and makes content easier to scan and digest.</rationale>
+      <example>
+        <scenario>When displaying code blocks</scenario>
+        <good>Syntax highlighting with consistent theme, line numbers for long examples, copy button in same position</good>
+        <bad>Inconsistent code block styles across different pages</bad>
+      </example>
+    </principle>
+
+    <principle priority="medium">
+      <name>Search as First-Class Feature</name>
+      <description>Search must understand natural language queries and documentation structure. Results should include context and citations.</description>
+      <rationale>Professional documentation platforms like Algolia-powered docs show that search quality directly impacts user satisfaction.</rationale>
+      <example>
+        <scenario>User queries "how do I configure authentication"</scenario>
+        <good>Returns configuration steps, code examples, related options, and links with proper section citations</good>
+        <bad>Returns only exact keyword matches with no context</bad>
+      </example>
+    </principle>
+  </general_principles>
+
+  <code_conventions>
+    <convention category="naming">
+      <rule>File and directory names should be lowercase with hyphens</rule>
+      <examples>
+        <good>getting-started, authentication-guide, api-reference</good>
+        <bad>GettingStarted, AuthenticationGuide, APIReference</bad>
+      </examples>
+    </convention>
+
+    <convention category="structure">
+      <rule>Documentation directory structure should separate content types</rule>
+      <template>
+        docs/
+          getting-started/
+          guides/
+          api-reference/
+          tutorials/
+          components/
+      </template>
+    </convention>
+
+    <convention category="frontmatter">
+      <rule>All markdown files should include YAML frontmatter</rule>
+      <template>
+        ---
+        title: Page Title
+        description: Brief description for SEO and search
+        category: Category Name
+        tags: [tag1, tag2]
+        order: 1
+        ---
+      </template>
+    </convention>
+  </code_conventions>
+
+  <common_pitfalls>
+    <pitfall>
+      <description>Overcomplicating the navigation structure</description>
+      <why_problematic>Deep nesting and complex hierarchies make content hard to find</why_problematic>
+      <correct_approach>Follow the "three click rule" — any content should be reachable within 3 navigation actions</correct_approach>
+    </pitfall>
+
+    <pitfall>
+      <description>Inconsistent code example styles</description>
+      <why_problematic>Mixed formatting, missing imports, or non-working examples erode user trust</why_problematic>
+      <correct_approach>Create a code example template and enforce linting for documentation code blocks</correct_approach>
+    </pitfall>
+
+    <pitfall>
+      <description>Ignoring mobile experience</description>
+      <why_problematic>Many users access documentation from mobile devices; broken mobile experience reflects poorly on the product</why_problematic>
+      <correct_approach>Design mobile-first with collapsible sidebars and touch-friendly interactions</correct_approach>
+    </pitfall>
+
+    <pitfall>
+      <description>Generic search without context awareness</description>
+      <why_problematic>Search results that don't understand documentation structure return irrelevant matches</why_problematic>
+      <correct_approach>Build search that indexes content structure (headings, code blocks, examples) separately for targeted results</correct_approach>
+    </pitfall>
+  </common_pitfalls>
+
+  <quality_checklist>
+    <category name="before_starting">
+      <item>Understand the target audience and their primary use cases</item>
+      <item>Define the documentation hierarchy and content categories</item>
+      <item>Review existing documentation for consistency patterns</item>
+      <item>Identify AI search integration requirements</item>
+    </category>
+    <category name="during_implementation">
+      <item>Follow consistent naming and structure conventions</item>
+      <item>Include proper frontmatter for all markdown files</item>
+      <item>Add cross-links between related topics</item>
+      <item>Test code examples in clean environments</item>
+    </category>
+    <category name="before_completion">
+      <item>Verify navigation hierarchy is intuitive</item>
+      <item>Test search with natural language queries</item>
+      <item>Validate responsive design on mobile viewports</item>
+      <item>Check keyboard shortcuts and accessibility</item>
+    </category>
+  </quality_checklist>
+</best_practices>

@@ -1,0 +1,822 @@
+---
+title: Flujos
+description: Árboles de decisión y diagramas de flujo para operaciones de OMZONE admin
+section: reference
+order: 1
+lastUpdated: 2026-04-25
+relatedRoutes:
+  - /admin/experiences
+  - /admin/experiences/new
+  - /portal/checkout
+  - /admin/publications
+relatedCollections:
+  - experiences
+  - orders
+  - publications
+  - slots
+keywords:
+  - flujo
+  - árbol de decisión
+  - flujo de trabajo
+  - checkout
+  - creación
+---
+
+# Flujos
+
+Árboles de decisión visuales y diagramas de flujo para operaciones de OMZONE admin.
+
+---
+
+## Flujo de Creación de Experiencia
+
+### Flujo de Trabajo de Creación Paso a Paso
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      FLUJO DE CREACIÓN DE EXPERIENCIA                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+INICIO: Navegar a Catálogo → Experiencias → Nueva experiencia
+           │
+           ▼
+┌─────────────────┐
+│ 1. IDENTIDAD     │
+│ ─────────────── │
+│ • name (interno) │
+│ • publicName    │  ──► Auto-genera slug desde publicName
+│ • publicNameEs  │
+│ • slug          │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ 2. CLASIFICACIÓN │
+│ ────────────────│
+│ • type          │  ──► session, immersion, retreat, stay, private, package
+│ • saleMode      │  ──► direct, request, assisted, pass
+│ • fulfillmentType│ ──► ticket, booking, pass, package
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ 3. DESCRIPCIÓN  │
+│ ────────────────│
+│ • shortDesc (EN)│  ──► Máx 500 caracteres
+│ • shortDesc (ES)│
+│ • longDesc (EN) │  ──► Máx 5000 caracteres
+│ • longDesc (ES) │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ 4. IMÁGENES     │
+│ ────────────────│
+│ • heroImageId   │  ──► Imagen de portada única
+│ • galleryImageIds│ ──► Hasta 10 imágenes de galería
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ 5. COMPORTAMIENTO│
+│ ────────────────│
+│ • requiresSchedule│ ──► ¿El cliente selecciona slot?
+│ • requiresDate  │
+│ • allowQuantity │
+│ • generatesTickets│
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ 6. PUBLICACIÓN  │
+│ ────────────────│
+│ • status        │  ──► draft (por defecto)
+│ • sortOrder     │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ 7. SEO          │
+│ ────────────────│
+│ • seoTitle      │  ──► Máx 255 caracteres (opcional)
+│ • seoDescription│  ──► Máx 500 caracteres (opcional)
+└────────┬────────┘
+         │
+         ▼
+    ┌────┴────┐
+    │ VALIDAR │
+    └────┬────┘
+         │
+    ┌────┴────┐
+    │ ¿Errores?│
+    └────┬────┘
+    SÍ/  \NO
+   ┌────┘  └────┐
+   ▼            ▼
+┌──────┐   ┌────────┐
+│ ARREGLAR│   │ CREAR │
+│ERRORES│   │ EXPERIENCIA
+└──────┘   └───┬────┘
+               │
+               ▼
+    ┌─────────────────┐
+    │ Pasos Post-Creación│
+    │ (Opcional)       │
+    └────────┬────────┘
+             │
+    ┌─────────┼─────────┬────────────┐
+    ▼         ▼         ▼            ▼
+┌────────┐ ┌───────┐ ┌────────┐ ┌────────┐
+│ Agregar│ │ Agregar│ │ Asignar│ │ Crear │
+│Ediciones│ │Precios│ │Addons │ │ Slots │
+└────────┘ └───────┘ └────────┘ └────────┘
+```
+
+### Árbol de Decisión de Selección de Clasificación
+
+```
+¿Qué tipo de experiencia es esta?
+│
+├── session ─────► Immersion ─────► Intensiva de varias horas
+│                     │
+                     ▼
+              RETREAT ──────► Programa extendido (días)
+              │
+              ▼
+           STAY ──────► Basado en alojamiento
+           │
+           ▼
+        PRIVATE ──────► Uno a uno o grupo exclusivo
+        │
+        ▼
+     PACKAGE ──────► Experiencias combinadas en paquete
+```
+
+---
+
+## Variaciones del Flujo de Checkout
+
+El experiencia de checkout varía significativamente basado en el `saleMode` de la experiencia.
+
+### saleMode = "direct" (Stripe Checkout)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     FLUJO DE CHECKOUT DIRECTO                    │
+└─────────────────────────────────────────────────────────────────┘
+
+Cliente en página de detalle de experiencia
+           │
+           ▼
+┌─────────────────┐
+│ Botón "Reservar│
+│ Ahora"         │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐     ┌─────────────────┐
+│ Seleccionar nivel│────►│ Seleccionar slot│ (si requiresSchedule=true)
+│ (si existen     │     │ (muestra capacidad)│
+│  niveles de    │     └────────┬────────┘
+│  precio)      │              │
+└────────┬────────┘              │
+         │                        ▼
+         │              ┌─────────────────┐
+         │              │ Seleccionar addons│ (opcional)
+         │              │ (si disponibles)│
+         │              └────────┬────────┘
+         │                        │
+         └────────────┬───────────┘
+                      ▼
+           ┌─────────────────┐
+           │ Cantidad        │ (si allowQuantity=true)
+           │ (aplicación min/max)
+           └────────┬────────┘
+                    │
+                    ▼
+           ┌─────────────────┐
+           │ Ingresar datos  │
+           │ del invitado     │
+           └────────┬────────┘
+                    │
+                    ▼
+           ┌─────────────────┐
+           │ Stripe Checkout  │◄─── Pago capturado
+           │ (redirect)       │
+           └────────┬────────┘
+                    │
+                    ▼
+           ┌─────────────────┐
+           │ generate-ticket │◄─── Crea ticket(s)
+           │ function        │
+           └────────┬────────┘
+                    │
+                    ▼
+           ┌─────────────────┐
+           │ Email de        │
+           │ confirmación enviado│
+           └─────────────────┘
+```
+
+### saleMode = "request" (Solicitud de Reserva)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    FLUJO DE CHECKOUT POR SOLICITUD               │
+└─────────────────────────────────────────────────────────────────┘
+
+Cliente en página de detalle de experiencia
+           │
+           ▼
+┌─────────────────┐
+│ Botón "Solicitar│
+│ Reserva"        │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Seleccionar nivel│ (si existen niveles de precio)
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Seleccionar slot│ (si requiresSchedule=true)
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Ingresar info   │
+│ de contacto +   │
+│ mensaje         │
+└────────┬────────┘
+         │
+         ▼
+    ┌────┴────┐
+    │ ENVIAR  │
+    └────┬────┘
+         │
+         ▼
+┌─────────────────┐
+│ Crear registro  │
+│ de solicitud de│
+│ reserva         │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Admin recibe    │
+│ notificación    │
+└────────┬────────┘
+         │
+         ▼
+    ┌────┴────┐
+    │ Admin    │
+    │ revisa   │
+    └────┬────┘
+         │
+    ┌────┴────┐
+    │ APROBAR │   ┌───────┐
+    │ & COTIZAR│──►│ Enviar│
+    │          │   │ cotiz.│
+    └────┬────┘   └───────┘
+         │
+    ┌────┴────┐
+    │ RECHAZAR│
+    └─────────┘
+```
+
+### saleMode = "assisted" (Asistente de Admin)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    FLUJO DE VENTA ASISTIDA                       │
+│                    (Iniciada por admin)                          │
+└─────────────────────────────────────────────────────────────────┘
+
+Admin navega a Ventas → Nueva venta asistida
+           │
+           ▼
+┌─────────────────┐
+│ Paso 1: Cliente│
+│ ────────────────│
+│ Buscar existente│
+│ o crear nuevo   │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Paso 2: Experiencia│
+│ ─────────────────│
+│ Seleccionar      │
+│ experiencia      │
+│ publicada        │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Paso 3: Precio │
+│ ───────────────│
+│ Seleccionar nivel│
+│ (muestra precios)│
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Paso 4: Slot    │
+│ ───────────────│
+│ Seleccionar fecha/hora│
+│ (si es requerido)│
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Paso 5: Addons  │
+│ ───────────────│
+│ Seleccionar     │
+│ addons opcionales│
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Paso 6: Cantidad│
+│ ───────────────│
+│ Establecer      │
+│ cantidad de     │
+│ participantes   │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Paso 7: Revisión│
+│ ───────────────│
+│ Verificar todos │
+│ los detalles    │
+└────────┬────────┘
+         │
+         ▼
+    ┌────┴────┐
+    │ Confirmar│
+    │ Venta   │
+    └────┬────┘
+         │
+    ┌────┴────┐
+    │ Crear   │
+    │ pedido  │
+    └────┬────┘
+         │
+    ┌────┴────┐
+    │ Método  │
+    │ de pago │
+    └────┬────┘
+         │
+   ┌─────┴─────┐
+   ▼           ▼
+┌──────┐  ┌────────────┐
+│ Marcar│  │ Generar    │
+│ pagado│  │ link Stripe│
+│      │  └────────────┘
+└──────┘
+         │
+         ▼
+┌─────────────────┐
+│ Tickets auto    │
+│ generados (si   │
+│ aplica)         │
+└─────────────────┘
+```
+
+### saleMode = "pass" (Canje de Pase)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     FLUJO DE CANJE DE PASE                       │
+└─────────────────────────────────────────────────────────────────┘
+
+Cliente en página de detalle de experiencia
+           │
+           ▼
+┌─────────────────┐
+│ Botón "Canjear │
+│ Pase"          │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Ingresar código │
+│ de pase O       │
+│ seleccionar de  │
+│ pases propios   │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Seleccionar nivel│ (si existen niveles de precio)
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Seleccionar slot│ (si requiresSchedule=true)
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ función         │
+│ consume-pass    │◄─── Deduce crédito del pase
+└────────┬────────┘
+         │
+         ▼
+    ┌────┴────┐
+    │ ¿Créditos│
+    │ disponibles?│
+    └────┬────┘
+   NO/   \SÍ
+  ┌────┐   │
+  ▼    │   ▼
+┌──────┐ │ ┌─────────────────┐
+│Error │ │ │ Generar ticket │
+│"No   │ │ │ (si aplica)    │
+│ enough│ │ └────────┬────────┘
+│ credits"│ │         │
+└──────┘ │         ▼
+         │ ┌─────────────────┐
+         │ │ Email de        │
+         │ │ confirmación enviado│
+         │ └─────────────────┘
+         │
+         └──────────────────────► FIN
+```
+
+---
+
+## Flujo de Publicación de Contenido
+
+### Flujo de Trabajo de Creación de Publicación
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                 FLUJO DE CREACIÓN DE PUBLICACIÓN                 │
+└─────────────────────────────────────────────────────────────────┘
+
+Navegar a Contenido → Publicaciones → Nueva publicación
+           │
+           ▼
+┌─────────────────┐
+│ 1. IDENTIDAD     │
+│ ─────────────── │
+│ • title (EN)    │
+│ • title (ES)    │
+│ • slug          │  ──► Debe ser único también entre experiencias
+│ • category      │  ──► landing, blog, highlight, institutional, faq
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ 2. SUBTÍTULO    │
+│ & EXTRACTO      │
+│ ────────────────│
+│ • subtitle (EN) │
+│ • subtitle (ES) │
+│ • excerpt (EN)  │  ──► Resumen corto para listados (máx 500)
+│ • excerpt (ES)  │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ 3. EXPERIENCIA  │
+│ VINCULADA       │
+│ ────────────────│
+│ • experienceId  │  ──► Opcional: conecta a reserva
+│                  │       Muestra botón "Reservar Ahora" si está vinculado
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ 4. IMAGEN DE    │
+│ PORTADA         │
+│ ────────────────│
+│ • coverImageId  │  ──► Usada para OG/compartir social
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ 5. PUBLICACIÓN  │
+│ ────────────────│
+│ • status        │  ──► draft (por defecto)
+│ • publishDate   │  ──► Opcional, auto-asignado si vacío
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ 6. SEO          │
+│ ────────────────│
+│ • seoTitle      │
+│ • seoDescription│
+│ • ogImage       │  ──► Imagen para compartir social
+└────────┬────────┘
+         │
+         ▼
+    ┌────┴────┐
+    │ CREAR   │
+    │ PUBLICACIÓN
+    └────┬────┘
+         │
+         ▼
+┌─────────────────┐
+│ Agregar Secciones│
+│ (Bloques de contenido)│
+└────────┬────────┘
+         │
+         ▼
+    ┌────┴────┐
+    │ Publicar│
+    │ cuando  │
+    │ esté    │
+    │ listo   │
+    └────┬────┘
+         │
+         ▼
+    publishedAt
+    auto-establecido
+```
+
+### Tipos de Secciones y Uso
+
+```
+TIPO DE SECCIÓN      PROPÓSITO                    CAMPOS DE CONTENIDO
+──────────────       ─────────────────────────     ─────────────────────
+┌─────────────┐
+│    hero     │   Banner de ancho completo        title, mediaIds
+└─────────────┘
+┌─────────────┐
+│    text     │   Contenido de texto rico          title, content (markdown)
+└─────────────┘
+┌─────────────┐
+│   gallery   │   Galería de imágenes             title, mediaIds
+└─────────────┘
+┌─────────────┐
+│  highlights │   Lista de elementos destacados   title, metadata (JSON)
+└─────────────┘
+┌─────────────┐
+│     faq     │   Pares Q&A                        title, content
+└─────────────┘
+┌─────────────┐
+│  itinerary  │   Programa/cronograma              title, content, metadata
+└─────────────┘
+┌─────────────┐
+│ testimonials│   Citas de clientes                title, content, mediaIds
+└─────────────┘
+┌─────────────┐
+│  inclusions │   Lista de qué está incluido      title, content
+└─────────────┘
+┌─────────────┐
+│ restrictions│   Qué no está incluido            title, content
+└─────────────┘
+┌─────────────┐
+│     cta     │   Botón de llamada a la acción    title, metadata (link)
+└─────────────┘
+┌─────────────┐
+│    video    │   Video embebido                   title, mediaIds (URL)
+└─────────────┘
+```
+
+### Cuándo Vincular Experiencia a Publicación
+
+```
+¿Debo vincular esta publicación a una experiencia?
+│
+├── ¿Es esta una página de destino de marketing para una experiencia específica?
+│         │
+│         ├── SÍ → Vincularla. Muestra botón "Reservar Ahora" con precios.
+│         │
+│         └── NO
+│               │
+│               ▼
+├── ¿Es este un artículo informativo que menciona experiencias?
+│         │
+│         ├── SÍ → Opcional. Puede vincular para reserva contextual.
+│         │
+│         └── NO
+│               │
+│               ▼
+├── ¿Es esto una publicación de blog?
+│         │
+│         ├── SÍ → Opcional. Vincular si hay un camino de reserva claro.
+│         │
+│         └── NO
+│               │
+│               ▼
+├── ¿Es esto una página institucional (Acerca de, Contacto, Términos)?
+│         │
+│         └── SÍ → NO VINCULAR. No hay camino de compra.
+│
+└── ¿Es esto un FAQ?
+          │
+          └── SÍ → NO VINCULAR. No hay camino de compra.
+```
+
+---
+
+## Flujo de Estado del Pedido
+
+### Diagrama de Ciclo de Vida del Pedido
+
+```
+                                      ┌─────────────────────────────────────┐
+                                      │                                     │
+                                      ▼                                     │
+┌─────────┐    pago exitoso         ┌─────┐    cumplimiento disparado    ┌───────────┐    todo consumido    ┌───────────┐
+│ PENDING │ ──────────────────────► │ PAID │ ───────────────────────────► │ CONFIRMED │ ──────────────────► │ COMPLETED │
+└─────────┘                         └─────┘                              └───────────┘                     └───────────┘
+     │                                     │                                     │
+     │ cancelar                             │ cancelar                             │
+     ▼                                     ▼                                     ▼
+┌───────────┐                         ┌───────────┐                         ┌───────────┐
+│ CANCELLED │ ◄────────────────────── │ CANCELLED │                         │ CANCELLED │
+└───────────┘                         └───────────┘                         └───────────┘
+     │                                     │                                     │
+     │ reembolso (si pagó)                  │ reembolso (si pagó)                  │
+     ▼                                     ▼                                     │
+┌──────────┐                         ┌──────────┐                              │
+│ REFUNDED │                         │ REFUNDED │ ──────────────────────────────┘
+└──────────┘                         └──────────┘
+```
+
+### Transiciones de Estado del Pedido
+
+| Estado Actual | Acción | Nuevo Estado | Efectos Secundarios |
+|---------------|--------|--------------|---------------------|
+| `pending` | Pago confirmado | `paid` | Webhook de Stripe actualiza paymentStatus |
+| `pending` | Admin cancela | `cancelled` | — |
+| `paid` | Admin cancela | `cancelled` | Puede disparar reembolso |
+| `paid` | Cumplimiento disparado | `confirmed` | Tickets generados, pase activado |
+| `confirmed` | Admin cancela | `cancelled` | Reembolsa si aplica |
+| `confirmed` | Todo consumido | `completed` | — |
+| `cancelled` | Reembolso emitido | `refunded` | — |
+| `completed` | Reembolso emitido | `refunded` | Fuera del flujo de pedido |
+
+### Matriz de Estado de Pago vs Estado de Pedido
+
+**Combinaciones Válidas:**
+
+| Estado del Pedido | Estados de Pago Válidos | Notas |
+|-------------------|-------------------------|-------|
+| `pending` | `pending`, `processing`, `failed` | Pago aún no confirmado |
+| `paid` | `succeeded` | Pago capturado |
+| `confirmed` | `succeeded` | Pago completo, cumpliendo |
+| `completed` | `succeeded` | Totalmente consumido |
+| `cancelled` | `succeeded`, `refunded` | Puede tener pago que reembolsar |
+| `refunded` | `refunded` | Pago devuelto |
+
+**Combinaciones Inválidas (Nunca Deben Ocurrir):**
+
+| Combinación Inválida | Razón |
+|---------------------|-------|
+| `orderStatus="pending"` + `paymentStatus="succeeded"` | Pago exitoso debería mover el pedido a "paid" |
+| `orderStatus="paid"` + `paymentStatus="pending"` | El pedido no debería estar "paid" sin pago exitoso |
+| `orderStatus="cancelled"` + `paymentStatus="processing"` | No se puede cancelar mientras el pago aún se procesa |
+
+### Acciones de Admin por Estado
+
+```
+Estado Actual: PENDING
+├── Botón "Cancelar" visible
+│   └── Efecto: orderStatus → cancelled
+│
+└── (auto) Pago confirmado
+    └── Efecto: orderStatus → paid, paymentStatus → succeeded
+
+Estado Actual: PAID
+├── Botón "Cancelar" visible
+│   └── Efecto: orderStatus → cancelled, puede disparar reembolso
+│
+└── (auto) Cumplimiento disparado
+    └── Efecto: orderStatus → confirmed
+
+Estado Actual: CONFIRMED
+├── (auto) Todo consumido
+│   └── Efecto: orderStatus → completed
+│
+└── Botón "Cancelar" visible (override de admin)
+    └── Efecto: orderStatus → cancelled, reembolsos si aplica
+
+Estado Actual: COMPLETED
+└── Botón "Emitir Reembolso" visible (fuera del flujo de pedido)
+    └── Efecto: paymentStatus → refunded
+
+Estado Actual: CANCELLED
+└── Botón "Emitir Reembolso" visible
+    └── Efecto: paymentStatus → refunded
+
+Estado Actual: REFUNDED
+└── Sin acciones disponibles (estado terminal)
+```
+
+---
+
+## Flujo de Publicación de Experiencia
+
+```
+¿La experiencia está lista para公开?
+│
+├── ¿Todos los campos requeridos están llenos?
+│   ├── name ──► Requerido
+│   ├── publicName ──► Requerido
+│   ├── slug ──► Requerido, único
+│   ├── type ──► Requerido
+│   ├── saleMode ──► Requerido
+│   └── fulfillmentType ──► Requerido
+│
+└── SÍ ──► Continuar
+    │
+    ▼
+├── ¿La experiencia tiene al menos un nivel de precio?
+│   └── NO ──► Agregar nivel de precio antes de publicar
+│
+└── SÍ ──► Continuar
+    │
+    ▼
+    ┌─────────┐
+    │ Publicar│
+    └────┬────┘
+         │
+         ▼
+┌─────────────────┐
+│ status →        │
+│ published       │
+└────────┬────────┘
+         │
+         ▼
+    ┌────┴────┐
+    │ Visible │
+    │ en catálogo│
+    └────┬────┘
+         │
+    ┌────┴────┐
+    │ ¿Reservable?│
+    └────┬────┘
+         │
+    SÍ/  \NO
+   ┌────┘  └────┐
+   │           │
+   ▼           ▼
+ Disponible  Sin niveles de
+ para        precio o
+ reserva     sin slots
+             (si se requiere)
+```
+
+---
+
+## Flujo de Creación de Slot
+
+```
+Navegar a Experiencia → Pestaña Slots
+           │
+           ▼
+┌─────────────────┐
+│ Crear Slot      │
+│ ─────────────── │
+│ • slotType       │  ──► single, multi-day, retreat-day, private
+│ • edition        │  ──► Enlace opcional a edición
+│ • startDate/time │
+│ • endDate/time   │
+│ • timezone       │
+│ • capacity       │  ──► Debe ser > 0
+│ • location       │
+│ • room           │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Asignar Recursos │
+│ (Opcional)       │
+│ ─────────────── │
+│ • instructor    │
+│ • equipment      │
+│ • facilitator    │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Establecer Estado │
+│ ─────────────── │
+│ • status         │  ──► open, closed, full, cancelled
+│ • internalNotes   │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Slot Disponible  │
+│ para Reserva     │
+└─────────────────┘
+```
+
+---
+
+## Páginas Relacionadas
+
+- [Experiencias](../catalog/experiences.md) - Documentación completa de campos
+- [Pedidos](../sales/orders.md) - Gestión de pedidos
+- [Publicaciones](../content/publications.md) - Contenido editorial
+- [Horarios y Agenda](../operations/slots.md) - Gestión de slots
+- [Limitaciones Conocidas](./known-limitations.md) - Restricciones intencionales y casos límite

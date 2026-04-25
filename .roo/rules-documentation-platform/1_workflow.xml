@@ -1,0 +1,101 @@
+<workflow_instructions>
+  <mode_overview>
+    The Documentation Platform mode enables creation and maintenance of professional-grade documentation
+    systems similar to Appwrite Docs, Tailwind CSS Docs, or Stripe Docs. It provides comprehensive guidance
+    for building documentation platforms with AI-powered search, responsive layouts, and intelligent navigation.
+  </mode_overview>
+
+  <initialization_steps>
+    <step number="1">
+      <action>Understand the documentation project scope</action>
+      <details>
+        Identify the documentation goals:
+        - Target audience and their needs
+        - Documentation structure and hierarchy
+        - Content types (tutorials, API references, guides)
+        - Platform requirements (hosting, deployment, integrations)
+      </details>
+    </step>
+
+    <step number="2">
+      <action>Gather existing documentation and codebase context</action>
+      <details>
+        Review the minimal set of materials needed:
+        - Existing documentation files (markdown, MDX)
+        - UI component library for documentation components
+        - Design system tokens and theme configuration
+        - Navigation structure and content relationships
+      </details>
+    </step>
+
+    <step number="3">
+      <action>Assess AI search integration requirements</action>
+      <details>
+        Determine Minimax API integration needs:
+        - API availability and configuration
+        - Search indexing requirements
+        - Natural language query handling
+        - Semantic search capabilities
+      </details>
+    </step>
+  </initialization_steps>
+
+  <main_workflow>
+    <phase name="architecture_design">
+      <description>Design the documentation platform architecture</description>
+      <steps>
+        <step>Define navigation hierarchy and category structure</step>
+        <step>Plan sidebar layout with collapsible sections</step>
+        <step>Design content area with proper typography scale</step>
+        <step>Define right-side contextual panel components</step>
+        <step>Plan top navigation with breadcrumbs and version selector</step>
+      </steps>
+    </phase>
+
+    <phase name="component_implementation">
+      <description>Implement core UI components</description>
+      <steps>
+        <step>Build sidebar navigation with collapsible tree structure</step>
+        <step>Implement main content area with markdown rendering</step>
+        <step>Create right-side panel with TOC, related topics, code refs</step>
+        <step>Add top navigation bar with breadcrumbs and theme toggle</step>
+        <step>Implement previous/next topic navigation</step>
+      </steps>
+    </phase>
+
+    <phase name="search_integration">
+      <description>Integrate AI-powered search system</description>
+      <steps>
+        <step>Set up Minimax API client and configuration</step>
+        <step>Implement search indexing pipeline</step>
+        <step>Build natural language query parser</step>
+        <step>Create semantic search with context awareness</step>
+        <step>Add search suggestions, history, and filters</step>
+      </steps>
+    </phase>
+
+    <phase name="responsive_optimization">
+      <description>Ensure mobile-friendly responsive design</description>
+      <steps>
+        <step>Implement collapsible mobile sidebar</step>
+        <step>Add smooth page transitions</step>
+        <step>Configure theme persistence (dark/light)</step>
+        <step>Add keyboard shortcuts for navigation</step>
+        <step>Implement syntax highlighting for code blocks</step>
+      </steps>
+    </phase>
+  </main_workflow>
+
+  <completion_criteria>
+    <criterion>Sidebar navigation with collapsible sections and hierarchical categories</criterion>
+    <criterion>Main content area with proper typography and markdown rendering</criterion>
+    <criterion>Right-side contextual panel with TOC, related topics, and code references</criterion>
+    <criterion>Top navigation with breadcrumbs, version selector, and theme toggle</criterion>
+    <criterion>Previous/next topic navigation at bottom of each page</criterion>
+    <criterion>AI-powered search with natural language query support</criterion>
+    <criterion>Search suggestions, keyboard shortcuts, and filtering options</criterion>
+    <criterion>Responsive design with mobile-friendly collapsible sidebars</criterion>
+    <criterion>Dark/light theme support with persistent user preferences</criterion>
+    <criterion>Syntax highlighting and interactive code playgrounds</criterion>
+  </completion_criteria>
+</workflow_instructions>

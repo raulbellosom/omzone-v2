@@ -1,0 +1,220 @@
+<complete_examples>
+  <example name="basic_docs_site_structure">
+    <scenario>Creating a new documentation site with standard navigation hierarchy</scenario>
+
+    <user_request>"I want to create a documentation site for my React component library with getting started, guides, and API reference sections"</user_request>
+
+    <workflow>
+      <step number="1">
+        <description>Define navigation hierarchy and content categories</description>
+        <approach>
+          Analyze the component library structure and identify logical groupings.
+          Group related components together, separate guides from API reference.
+          Outcome: Navigation tree with 3 main categories.
+        </approach>
+      </step>
+
+      <step number="2">
+        <description>Create sidebar navigation component with collapsible sections</description>
+        <approach>
+          Implement SidebarNav with sections for Getting Started, Guides, and API Reference.
+          Each section contains expandable child links.
+          Add persistence for expanded state.
+        </approach>
+      </step>
+
+      <step number="3">
+        <description>Build main content area with markdown rendering</description>
+        <approach>
+          Set up markdown renderer with syntax highlighting (using Prism or Shiki).
+          Configure typography scale for headings, body, and code.
+          Add proper spacing and content container styles.
+        </approach>
+      </step>
+
+      <step number="4">
+        <description>Implement contextual panel with TOC and related topics</description>
+        <approach>
+          Create right-side panel that parses H2/H3 headings for table of contents.
+          Show related topics based on frontmatter category/tags.
+          Implement scroll-based active section highlighting.
+        </approach>
+      </step>
+
+      <step number="5">
+        <description>Add top navigation with breadcrumbs and theme toggle</description>
+        <approach>
+          Build navbar with breadcrumb trail showing current location.
+          Add version selector dropdown.
+          Include theme toggle with sun/moon icons.
+        </approach>
+      </step>
+    </workflow>
+
+    <completion>
+      Created a professional documentation site structure with persistent sidebar navigation,
+      hierarchical categories, main content area with proper typography, and contextual panel.
+      The site is responsive and supports dark/light themes.
+    </completion>
+
+    <key_takeaways>
+      <takeaway>Start with navigation hierarchy before implementing components</takeaway>
+      <takeaway>Use consistent naming conventions for files and directories</takeaway>
+      <takeaway>Include frontmatter in all markdown files for search indexing</takeaway>
+    </key_takeaways>
+  </example>
+
+  <example name="ai_search_integration">
+    <scenario>Adding AI-powered search to existing documentation site</scenario>
+
+    <user_request>"I want to add intelligent search to my docs that understands natural language queries like 'how do I configure X'"</user_request>
+
+    <workflow>
+      <step number="1">
+        <description>Set up Minimax API client and search indexing</description>
+        <approach>
+          Create search client module with Minimax API configuration.
+          Build document indexing pipeline that processes markdown files.
+          Index headings, code blocks, and content separately for targeted search.
+        </approach>
+      </step>
+
+      <step number="2">
+        <description>Implement natural language query parser</description>
+        <approach>
+          Create query understanding module that parses queries like:
+          - "how do I configure X" → intent: tutorial, topic: configuration
+          - "show me examples of Y" → intent: examples, topic: Y
+          - "X API reference" → intent: reference, topic: X
+        </approach>
+      </step>
+
+      <step number="3">
+        <description>Build search modal with suggestions and history</description>
+        <approach>
+          Create SearchModal component triggered by Cmd+K.
+          Implement debounced search with suggestion dropdown.
+          Add recent searches stored in localStorage.
+          Include filtering options by category/content type.
+        </approach>
+      </step>
+
+      <step number="4">
+        <description>Display context-aware results with citations</description>
+        <approach>
+          Format search results to show:
+          - Matched content with highlighted query terms
+          - Breadcrumb path for navigation
+          - Section/heading context
+          - Relevance ranking indicator
+        </approach>
+      </step>
+    </workflow>
+
+    <completion>
+      Integrated AI-powered search with natural language query understanding.
+      Users can now search using phrases like "how do I configure authentication" and receive
+      relevant sections, code examples, and navigation paths with proper citations.
+    </completion>
+
+    <key_takeaways>
+      <takeaway>Index content structure (headings, code) separately for targeted results</takeaway>
+      <takeaway>Parse query intent to improve relevance ranking</takeaway>
+      <takeaway>Show breadcrumb paths in results to help users understand location</takeaway>
+    </key_takeaways>
+  </example>
+
+  <example name="responsive_mobile_sidebar">
+    <scenario>Implementing mobile-friendly collapsible sidebar</scenario>
+
+    <user_request>"The docs site works great on desktop but needs mobile-friendly navigation"</user_request>
+
+    <workflow>
+      <step number="1">
+        <description>Create mobile sidebar with slide-out drawer</description>
+        <approach>
+          Implement SidebarDrawer component that slides in from left on mobile.
+          Use backdrop overlay to close when tapping outside.
+          Add hamburger menu button that appears only on mobile.
+        </approach>
+      </step>
+
+      <step number="2">
+        <description>Add smooth transitions between pages</description>
+        <approach>
+          Configure page transitions using CSS or animation library.
+          Fade out current content, fade in new content with slight slide.
+          Keep sidebar state persistent during transitions.
+        </approach>
+      </step>
+
+      <step number="3">
+        <description>Implement touch-friendly interactions</description>
+        <approach>
+          Ensure tap targets are at least 44px.
+          Add swipe gesture support for opening/closing drawer.
+          Verify pinch-zoom works correctly in code blocks.
+        </approach>
+      </step>
+    </workflow>
+
+    <completion>
+      Added mobile-friendly sidebar with slide-out drawer, smooth page transitions,
+      and touch-friendly interactions. The mobile experience is now on par with desktop.
+    </completion>
+
+    <key_takeaways>
+      <takeaway>Use CSS transforms for smooth drawer animation (no layout thrashing)</takeaway>
+      <takeaway>Test on actual mobile devices, not just responsive mode</takeaway>
+      <takeaway>Keep sidebar state synchronized between desktop and mobile views</takeaway>
+    </key_takeaways>
+  </example>
+
+  <example name="syntax_highlighting_playgrounds">
+    <scenario>Adding syntax highlighting and interactive code playgrounds</scenario>
+
+    <user_request>"I want professional code blocks with syntax highlighting and the ability to run code examples"</user_request>
+
+    <workflow>
+      <step number="1">
+        <description>Configure syntax highlighting for code blocks</description>
+        <approach>
+          Integrate Prism.js or Shiki for syntax highlighting.
+          Support common languages: JavaScript, TypeScript, Python, Bash, JSON.
+          Theme should match documentation light/dark mode.
+        </approach>
+      </step>
+
+      <step number="2">
+        <description>Implement code block enhancements</description>
+        <approach>
+          Add copy-to-clipboard button to all code blocks.
+          Show language label in top-right corner.
+          Support line numbers for longer examples.
+          Add collapsible code view for very long examples.
+        </approach>
+      </step>
+
+      <step number="3">
+        <description>Build interactive code playground</description>
+        <approach>
+          Create sandboxed code execution environment using Web Workers or iframe.
+          Implement live code editor with syntax highlighting.
+          Add run, reset, and share buttons.
+          Display output console below editor.
+        </approach>
+      </step>
+    </workflow>
+
+    <completion>
+      Implemented professional syntax highlighting with theme support and interactive
+      code playgrounds. Users can now run code examples directly in the documentation.
+    </completion>
+
+    <key_takeaways>
+      <takeaway>Use Web Workers or sandboxed iframes for secure code execution</takeaway>
+      <takeaway>Keep playground isolated from main page context</takeaway>
+      <takeaway>Provide clear error messages when code fails to execute</takeaway>
+    </key_takeaways>
+  </example>
+</complete_examples>

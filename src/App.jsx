@@ -180,6 +180,9 @@ const PortalProfilePage = lazy(
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const ForbiddenPage = lazy(() => import("@/pages/ForbiddenPage"));
 
+// ─── Help/Docs pages (standalone, no layout) ───
+const HelpDocsPage = lazy(() => import("@/pages/help/HelpDocsPage"));
+
 function PageLoader() {
   return (
     <div className="flex items-center justify-center min-h-screen">
@@ -380,6 +383,11 @@ export default function App() {
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Route>
+
+          {/* Help/Docs routes — standalone, no layout wrapper */}
+          <Route path="/help/docs" element={<HelpDocsPage />} />
+          <Route path="/help/docs/:lang/:slug" element={<HelpDocsPage />} />
+          <Route path="/help/docs/:slug" element={<HelpDocsPage />} />
 
           {/* Portal routes — require auth + client/admin/root label */}
           <Route

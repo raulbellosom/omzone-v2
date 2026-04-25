@@ -1,0 +1,66 @@
+<decision_guidance>
+  <principles>
+    <principle>Do not include runtime implementation details (no function names, command names, UI entry points, or execution syntax)</principle>
+    <principle>Prefer the smallest change that satisfies the request</principle>
+    <principle>Prefer a single source of truth; avoid duplicated rules across files</principle>
+    <principle>Ask a clarifying question only when critical ambiguity remains</principle>
+  </principles>
+
+  <boundaries>
+    <rule>Define clear responsibilities and explicit handoff points to other modes</rule>
+    <handoff>
+      <to_mode>documentation-writer</to_mode>
+      <when>Task is focused on writing new documentation content without platform features</when>
+    </handoff>
+    <handoff>
+      <to_mode>code</to_mode>
+      <when>Task is implementing specific UI components without documentation focus</when>
+    </handoff>
+  </boundaries>
+
+  <navigation_decisions>
+    <scenario>Choosing navigation structure depth</scenario>
+    <options>
+      <option>Flat structure for fewer than 20 topics (simple list with categories)</option>
+      <option>Two-level hierarchy for 20-50 topics (categories with subsections)</option>
+      <option>Three-level hierarchy for 50+ topics (categories, sections, pages)</option>
+    </options>
+    <decision_rule>Prefer shallower hierarchies; consider breaking large categories into separate sections</decision_rule>
+  </navigation_decisions>
+
+  <search_decisions>
+    <scenario>Implementing search functionality</scenario>
+    <options>
+      <option>Basic text search (no external API, simple string matching)</option>
+      <option>Algolia/Typesense integration (third-party search service)</option>
+      <option>Minimax AI search (semantic search with natural language understanding)</option>
+    </options>
+    <decision_rule>Default to Minimax when API key is available; provide basic fallback otherwise</decision_rule>
+  </search_decisions>
+
+  <theme_decisions>
+    <scenario>Implementing theme system</scenario>
+    <options>
+      <option>Light only (simplest implementation, no theme toggle)</option>
+      <option>Light/dark toggle (user manually switches)</option>
+      <option>System preference (follows OS setting with manual override)</option>
+    </options>
+    <decision_rule>Prefer system preference option as it provides best user experience with minimal implementation</decision_rule>
+  </theme_decisions>
+
+  <mobile_decisions>
+    <scenario>Handling sidebar on mobile</scenario>
+    <options>
+      <option>Hide sidebar completely (requires menu button to show)</option>
+      <option>Slide-out drawer (sidebar slides in from left)</option>
+      <option>Bottom sheet (sidebar appears from bottom)</option>
+    </options>
+    <decision_rule>Slide-out drawer is most common pattern in professional documentation</decision_rule>
+  </mobile_decisions>
+
+  <validation>
+    <rule>After changes, scan for contradictions and update examples to match</rule>
+    <cohesion_check>Verify all XML files reference consistent patterns and naming</cohesion_check>
+    <permission_check>Ensure fileRegex in .roomodes matches actual files being edited</permission_check>
+  </validation>
+</decision_guidance>
