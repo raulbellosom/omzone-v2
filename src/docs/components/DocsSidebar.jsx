@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { Home } from 'lucide-react';
 import { docsNavigation, getLocalizedTitle } from '@/docs/config/navigation';
 
 export default function DocsSidebar({ currentPage, lang = 'en' }) {
@@ -12,7 +11,8 @@ export default function DocsSidebar({ currentPage, lang = 'en' }) {
           className="flex items-center gap-2 text-stone-600 hover:text-stone-900"
           title={lang === 'es' ? 'Inicio' : 'Home'}
         >
-          <Home className="w-5 h-5" />
+          <span className="font-semibold text-stone-800">OMZONE</span>
+          <span className="text-stone-400">Docs</span>
         </Link>
       </div>
 

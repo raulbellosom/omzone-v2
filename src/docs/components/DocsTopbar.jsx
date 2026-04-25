@@ -57,10 +57,10 @@ export default function DocsTopbar({ onMenuClick, lang = 'en' }) {
           <Menu className="w-5 h-5" />
         </button>
 
-        {/* Left: Branding */}
+        {/* Left: Branding - hidden on mobile, shown in sidebar */}
         <a 
           href={`/help/docs/${lang}`} 
-          className="text-lg font-semibold text-stone-800 whitespace-nowrap"
+          className="hidden md:block text-lg font-semibold text-stone-800 whitespace-nowrap"
         >
           OMZONE Docs
         </a>

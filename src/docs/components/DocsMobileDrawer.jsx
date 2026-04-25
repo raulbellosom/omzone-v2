@@ -35,14 +35,13 @@ export default function DocsMobileDrawer({ open, onClose, currentPage, lang = 'e
     }
   }, [open]);
 
-  if (!open) return null;
-
   return (
     <div 
-      className="fixed inset-0 z-30 md:hidden"
+      className={`fixed inset-0 z-30 md:hidden transition-opacity duration-300 ease-in-out ${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       role="dialog"
       aria-modal="true"
       aria-label="Documentation navigation"
+      aria-hidden={!open}
     >
       {/* Backdrop */}
       <div 
@@ -53,7 +52,7 @@ export default function DocsMobileDrawer({ open, onClose, currentPage, lang = 'e
       {/* Drawer */}
       <aside 
         ref={drawerRef}
-        className="fixed left-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white overflow-y-auto"
+        className={`fixed left-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white overflow-y-auto transition-transform duration-300 ease-in-out ${open ? 'translate-x-0' : '-translate-x-full'}`}
         style={{
           paddingTop: 'env(safe-area-inset-top)',
           paddingLeft: 'env(safe-area-inset-left)',

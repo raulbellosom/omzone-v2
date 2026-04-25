@@ -126,7 +126,7 @@ export default function DocsSearch({ lang = 'en' }) {
       {/* Search Modal */}
       {isOpen && (
         <div 
-          className="fixed inset-0 z-50 md:pt-[env(safe-area-inset-top)] md:pb-[env(safe-area-inset-bottom)]"
+          className="fixed inset-0 z-50 md:pt-[env(safe-area-inset-top)] md:pb-[env(safe-area-inset-bottom)] transition-opacity duration-200 ease-out"
           ref={modalRef}
           role="dialog"
           aria-modal="true"
@@ -140,7 +140,7 @@ export default function DocsSearch({ lang = 'en' }) {
           
           {/* Modal - mobile-friendly sizing */}
           <div 
-            className="fixed inset-x-4 top-20 bottom-20 md:inset-auto md:top-[15vh] md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-2xl md:rounded-xl bg-white shadow-2xl overflow-hidden flex flex-col"
+            className="fixed inset-x-4 top-20 bottom-20 md:inset-auto md:top-[15vh] md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-2xl md:rounded-xl bg-white shadow-2xl overflow-hidden flex flex-col transition-all duration-200 ease-out"
             style={{ maxHeight: 'calc(100vh - 10rem)' }}
           >
             {/* Input */}
