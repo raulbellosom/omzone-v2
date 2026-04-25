@@ -9,6 +9,7 @@ import {
   Users,
   Globe,
   LogOut,
+  BookOpen,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { displayRoleName } from "@/constants/roles";
@@ -129,6 +130,12 @@ export default function UserMenuDropdown({ transparent = false }) {
                 <Users className="h-4 w-4 text-charcoal-muted" />
                 Gestión de usuarios
               </DropdownMenuItem>
+              {isRoot && (
+                <DropdownMenuItem onClick={go("/help/docs/en")}>
+                  <BookOpen className="h-4 w-4 text-charcoal-muted" />
+                  Documentación
+                </DropdownMenuItem>
+              )}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
           </>

@@ -7,6 +7,7 @@
       "sales": "Sales",
       "content": "Content",
       "system": "System",
+      "documentation": "Documentation",
       "dashboard": "Dashboard",
       "experiences": "Experiences",
       "addons": "Addons",
@@ -22,6 +23,7 @@
       "media": "Media",
       "settings": "Settings",
       "account": "My Account",
+      "docs": "Docs",
       "admin": "Admin"
     },
     "breadcrumbs": {

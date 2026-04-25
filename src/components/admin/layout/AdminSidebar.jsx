@@ -1,7 +1,9 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
+import { ROLES } from "@/constants/roles";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useAuth } from "@/hooks/useAuth";
 import {
   LayoutDashboard,
   Sparkles,
@@ -18,6 +20,7 @@ import {
   Image,
   Settings,
   UserCog,
+  BookOpen,
 } from "lucide-react";
 
 const NAV_SECTIONS = [
@@ -123,10 +126,24 @@ const NAV_SECTIONS = [
       },
     ],
   },
+  {
+    labelKey: "admin.sidebar.documentation",
+    items: [
+      {
+        nameKey: "admin.sidebar.docs",
+        path: "/help/docs/en",
+        icon: BookOpen,
+        rootOnly: true,
+      },
+    ],
+  },
 ];
 
 function SidebarNav({ onNavigate }) {
   const { t } = useLanguage();
+  const { labels } = useAuth();
+  const isRoot = labels.includes(ROLES.ROOT);
+  
   return (
     <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
       {NAV_SECTIONS.map((section) => (
@@ -135,26 +152,31 @@ function SidebarNav({ onNavigate }) {
             {t(section.labelKey)}
           </p>
           <ul className="space-y-0.5">
-            {section.items.map((item) => (
-              <li key={item.path}>
-                <NavLink
-                  to={item.path}
-                  end={item.end}
-                  onClick={onNavigate}
-                  className={({ isActive }) =>
-                    cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors min-h-11",
-                      isActive
-                        ? "bg-sage/10 text-sage-dark"
-                        : "text-charcoal-muted hover:bg-warm-gray hover:text-charcoal",
-                    )
-                  }
-                >
-                  <item.icon className="h-4 w-4 shrink-0" />
-                  <span>{t(item.nameKey)}</span>
-                </NavLink>
-              </li>
-            ))}
+            {section.items.map((item) => {
+              // Skip root-only items for non-root users
+              if (item.rootOnly && !isRoot) return null;
+              
+              return (
+                <li key={item.path}>
+                  <NavLink
+                    to={item.path}
+                    end={item.end}
+                    onClick={onNavigate}
+                    className={({ isActive }) =>
+                      cn(
+                        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors min-h-11",
+                        isActive
+                          ? "bg-sage/10 text-sage-dark"
+                          : "text-charcoal-muted hover:bg-warm-gray hover:text-charcoal",
+                      )
+                    }
+                  >
+                    <item.icon className="h-4 w-4 shrink-0" />
+                    <span>{t(item.nameKey)}</span>
+                  </NavLink>
+                </li>
+              );
+            })}
           </ul>
         </div>
       ))}

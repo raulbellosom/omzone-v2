@@ -167,7 +167,7 @@ export default function DocsSearch({ lang = 'en' }) {
             </div>
 
             {/* Results - scrollable with touch */}
-            <div className="flex-1 overflow-y-auto oversccontain">
+            <div className="flex-1 overflow-y-auto overscroll-contain touch-action-y">
               {loading ? (
                 <SearchSkeleton />
               ) : showSuggestions ? (
@@ -191,7 +191,7 @@ export default function DocsSearch({ lang = 'en' }) {
                       <li key={result.item.slug}>
                         <button
                           onClick={() => handleResultClick(result)}
-                          className={`w-full text-left flex flex-col gap-1 px-4 py-4 sm:py-3 touch-manipulation transition-colors ${
+                          className={`w-full text-left flex flex-col gap-1 px-4 py-4 sm:py-3 touch-manipulation transition-colors cursor-pointer ${
                             index === selectedIndex ? 'bg-stone-100' : 'hover:bg-stone-50 active:bg-stone-100'
                           }`}
                         >

@@ -1,16 +1,18 @@
 import { Link } from 'react-router-dom';
-import { docsNavigation } from '@/docs/config/navigation';
+import { Home } from 'lucide-react';
+import { docsNavigation, getLocalizedTitle } from '@/docs/config/navigation';
 
 export default function DocsSidebar({ currentPage, lang = 'en' }) {
   return (
     <nav className="p-4 sm:p-6 h-full" aria-label="Documentation navigation">
-      {/* Logo/Brand */}
+      {/* Logo/Home Link */}
       <div className="mb-6">
         <Link 
           to={`/help/docs/${lang}`}
-          className="text-base sm:text-lg font-semibold text-stone-800 hover:text-stone-900"
+          className="flex items-center gap-2 text-stone-600 hover:text-stone-900"
+          title={lang === 'es' ? 'Inicio' : 'Home'}
         >
-          OMZONE Docs
+          <Home className="w-5 h-5" />
         </Link>
       </div>
 
@@ -20,7 +22,7 @@ export default function DocsSidebar({ currentPage, lang = 'en' }) {
         .map(([sectionKey, section]) => (
           <div key={sectionKey} className="mb-6">
             <h3 className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-2">
-              {section.title}
+              {getLocalizedTitle(section.title, lang)}
             </h3>
             <ul className="space-y-1">
               {section.pages
@@ -36,7 +38,7 @@ export default function DocsSidebar({ currentPage, lang = 'en' }) {
                       }`}
                       aria-current={currentPage?.slug === page.slug ? 'page' : undefined}
                     >
-                      {page.title}
+                      {getLocalizedTitle(page.title, lang)}
                     </Link>
                   </li>
                 ))

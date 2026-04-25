@@ -9,7 +9,7 @@ import DocsPrevNext from './DocsPrevNext';
 import DocsCopyPageButton from './DocsCopyPageButton';
 import DocsNotFound from './DocsNotFound';
 import CodeBlock from './CodeBlock';
-import { getAllPages } from '@/docs/config/navigation';
+import { getAllPages, getLocalizedTitle } from '@/docs/config/navigation';
 import { useDocsTOC } from './DocsTOCContext';
 
 // Normalize text for URL-safe IDs (remove accents, convert to ASCII)
@@ -61,8 +61,9 @@ function rehypeNormalizeIds() {
   };
 }
 
-export default function DocsPageContent({ lang = 'en' }) {
-  const { slug } = useParams();
+export default function DocsPageContent({ lang = 'en', slug: propSlug }) {
+  const { slug: routeSlug } = useParams();
+  const slug = propSlug ?? routeSlug;
   const location = useLocation();
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(true);
@@ -156,7 +157,7 @@ export default function DocsPageContent({ lang = 'en' }) {
   }
 
   // Get localized title from search index, fallback to nav title
-  const localizedTitle = pageInfo?.title?.[lang] || currentPage.title;
+  const localizedTitle = pageInfo?.title?.[lang] || getLocalizedTitle(currentPage.title, lang);
 
   if (loading) {
     return (

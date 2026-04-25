@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "analyze": "vite build --mode analyze",
+    "test:docs-search": "node src/hooks/docsSearchCore.test.mjs",
     "docs:build-index": "node scripts/build-docs-search-index.js"
   },
   "dependencies": {

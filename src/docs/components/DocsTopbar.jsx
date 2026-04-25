@@ -13,6 +13,7 @@ export default function DocsTopbar({ onMenuClick, lang = 'en' }) {
     
     // Get current path parts
     const pathParts = location.pathname.split('/').filter(Boolean);
+    const VALID_LANGS = ['en', 'es'];
     
     // Check if we're on a docs page with lang prefix
     if (pathParts[0] === 'help' && pathParts[1] === 'docs') {
@@ -21,9 +22,16 @@ export default function DocsTopbar({ onMenuClick, lang = 'en' }) {
         const slug = pathParts[3];
         navigate(`/help/docs/${newLang}/${slug}`);
       } else if (pathParts.length === 3) {
-        // Has slug but no lang: /help/docs/slug -> /help/docs/en/slug
-        const slug = pathParts[2];
-        navigate(`/help/docs/${newLang}/${slug}`);
+        // Could be /help/docs/slug (legacy) or /help/docs/lang (root docs page)
+        // Check if the 3rd part is a language code
+        if (VALID_LANGS.includes(pathParts[2])) {
+          // It's the root docs page with language prefix: /help/docs/es -> /help/docs/en
+          navigate(`/help/docs/${newLang}`);
+        } else {
+          // It's a slug without lang prefix: /help/docs/slug -> /help/docs/en/slug
+          const slug = pathParts[2];
+          navigate(`/help/docs/${newLang}/${slug}`);
+        }
       } else {
         // Just /help/docs -> /help/docs/en
         navigate(`/help/docs/${newLang}`);

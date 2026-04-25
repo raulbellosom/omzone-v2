@@ -391,6 +391,7 @@ export default function App() {
             }
           >
             <Route path="/help/docs" element={<HelpDocsPage />} />
+            <Route path="/help/docs/:lang" element={<HelpDocsPage />} />
             <Route path="/help/docs/:lang/:slug" element={<HelpDocsPage />} />
             <Route path="/help/docs/:slug" element={<HelpDocsPage />} />
           </Route>
