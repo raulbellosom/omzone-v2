@@ -44,14 +44,14 @@ export default function DocsTopbar({ onMenuClick, lang = 'en' }) {
 
   return (
     <header 
-      className="h-16 border-b border-stone-200 bg-white sticky top-0 z-20"
+      className="h-16 border-b border-stone-200 bg-white sticky top-0 z-20 overflow-x-hidden"
       style={{ paddingTop: 'env(safe-area-inset-top)' }}
     >
-      <div className="h-full px-4 flex items-center justify-between gap-4">
+      <div className="h-full px-4 flex items-center justify-between gap-2 sm:gap-4">
         {/* Mobile Menu Button */}
         <button
           onClick={onMenuClick}
-          className="md:hidden p-2 text-stone-600 hover:text-stone-900 touch-manipulation rounded-lg hover:bg-stone-100"
+          className="md:hidden p-2 text-stone-600 hover:text-stone-900 touch-manipulation rounded-lg hover:bg-stone-100 shrink-0"
           aria-label="Open navigation menu"
         >
           <Menu className="w-5 h-5" />
@@ -60,18 +60,18 @@ export default function DocsTopbar({ onMenuClick, lang = 'en' }) {
         {/* Left: Branding - hidden on mobile, shown in sidebar */}
         <a 
           href={`/help/docs/${lang}`} 
-          className="hidden md:block text-lg font-semibold text-stone-800 whitespace-nowrap"
+          className="hidden md:block text-lg font-semibold text-stone-800 whitespace-nowrap shrink-0"
         >
           OMZONE Docs
         </a>
 
         {/* Center: Search */}
-        <div className="flex-1 flex justify-center max-w-xl mx-4">
+        <div className="flex-1 flex justify-center min-w-0 max-w-xl mx-2 sm:mx-4">
           <DocsSearch lang={lang} />
         </div>
 
         {/* Right: Language Selector + Back to Admin */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {/* Language Selector */}
           <div className="relative">
             <button

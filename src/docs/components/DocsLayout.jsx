@@ -11,13 +11,13 @@ export default function DocsLayout({ children, currentPage, lang = 'en' }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-stone-50 overflow-x-hidden">
       {/* Top Bar */}
       <DocsTopbar onMenuClick={() => setMobileOpen(true)} lang={lang} />
 
-      <div className="flex">
+      <div className="flex flex-nowrap">
         {/* Left Sidebar */}
-        <aside className="hidden md:block w-64 lg:w-72 border-r border-stone-200 bg-white sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
+        <aside className="hidden md:block w-64 lg:w-72 border-r border-stone-200 bg-white sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto shrink-0">
           <DocsSidebar currentPage={currentPage} lang={lang} />
         </aside>
 
@@ -30,7 +30,7 @@ export default function DocsLayout({ children, currentPage, lang = 'en' }) {
         />
 
         {/* Main Content - scroll-mt-16 accounts for sticky navbar height */}
-        <main className="flex-1 min-h-screen">
+        <main className="flex-1 min-h-screen min-w-0">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 scroll-mt-16">
             <DocsBreadcrumbs currentPage={currentPage} lang={lang} />
             <article className="max-w-none text-stone-700 
@@ -59,7 +59,7 @@ export default function DocsLayout({ children, currentPage, lang = 'en' }) {
         </main>
 
         {/* Right Sidebar - TOC with independent scroll */}
-        <aside className="hidden lg:block w-56 xl:w-64 border-l border-stone-200 bg-white sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
+        <aside className="hidden lg:block w-56 xl:w-64 border-l border-stone-200 bg-white sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto shrink-0">
           <div className="px-4 py-4">
             <DocsTableOfContents />
           </div>
@@ -78,8 +78,12 @@ export default function DocsLayout({ children, currentPage, lang = 'en' }) {
         }
         
         /* Prevent horizontal overflow on all screens */
-        @media (max-width: 640px) {
-          * { overflow-wrap: break-word; word-wrap: break-word; }
+        * { 
+          overflow-wrap: break-word; 
+          word-wrap: break-word;
+        }
+        html, body {
+          overflow-x: hidden;
         }
         
         /* Ensure all hash anchors respect sticky navbar height */
