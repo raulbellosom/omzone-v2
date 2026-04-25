@@ -9,8 +9,16 @@ const DocsPageContent = lazy(
 export default function HelpDocsPage() {
   const { lang, slug } = useParams();
   
-  // Default to 'en' if no language specified
-  const currentLang = lang || 'en';
+  // Determine current language from URL structure
+  // /help/docs/en → lang='en', slug=undefined → show introduction
+  // /help/docs/es → lang='es', slug=undefined → show introduction  
+  // /help/docs/en/slug → lang='en', slug='slug'
+  // /help/docs/slug → slug='slug', no lang → default to 'en'
+  let currentLang = lang;
+  let currentSlug = slug;
+  
+  // Fallback language to 'en' if not determined
+  currentLang = currentLang || 'en';
   
   return (
     <DocsTOCProvider>

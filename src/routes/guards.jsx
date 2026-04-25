@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES } from "@/constants/routes";
+import { ROLES } from "@/constants/roles";
 
 function AuthSpinner() {
   return (
@@ -53,6 +54,25 @@ export function ProtectedRoute({ labels: requiredLabels = [] }) {
 
   const hasRequired = requiredLabels.some((l) => labels.includes(l));
   if (!hasRequired) return <Navigate to={ROUTES.FORBIDDEN} replace />;
+
+  return <Outlet />;
+}
+
+/**
+ * Requires user to have the root label for system-level access.
+ * Used for sensitive areas like internal documentation.
+ */
+export function RequireRoot() {
+  const { user, labels, loading } = useAuth();
+  const location = useLocation();
+
+  if (loading) return <AuthSpinner />;
+  if (!user)
+    return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
+
+  if (!labels.includes(ROLES.ROOT)) {
+    return <Navigate to={ROUTES.FORBIDDEN} replace />;
+  }
 
   return <Outlet />;
 }

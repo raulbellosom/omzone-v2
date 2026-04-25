@@ -197,12 +197,12 @@ export default function DocsSearch({ lang = 'en' }) {
                         >
                           <div className="flex items-center gap-2">
                             <span className="font-medium text-stone-900">
-                              {result.item.title}
+                              {result.item.title?.[lang] || result.item.title?.en || result.item.title}
                             </span>
                             {result.targetHeading && (
                               <span className="inline-flex items-center gap-1 text-xs bg-stone-200 text-stone-600 px-2 py-0.5 rounded">
                                 <TypeIcon className="w-3 h-3" />
-                                {result.targetHeading.text}
+                                {result.targetHeading.text?.[lang] || result.targetHeading.text?.en || result.targetHeading.text}
                               </span>
                             )}
                           </div>
@@ -211,7 +211,7 @@ export default function DocsSearch({ lang = 'en' }) {
                               <TypeIcon className="w-3 h-3" />
                               {RESULT_TYPE_LABELS[result.resultType]}
                             </span>
-                            <span>{result.item.description}</span>
+                            <span>{result.item.description?.[lang] || result.item.description?.en || result.item.description}</span>
                           </div>
                           {result.relatedConcepts && result.relatedConcepts.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-1">

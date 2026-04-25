@@ -384,10 +384,16 @@ export default function App() {
             </Route>
           </Route>
 
-          {/* Help/Docs routes — standalone, no layout wrapper */}
-          <Route path="/help/docs" element={<HelpDocsPage />} />
-          <Route path="/help/docs/:lang/:slug" element={<HelpDocsPage />} />
-          <Route path="/help/docs/:slug" element={<HelpDocsPage />} />
+          {/* Help/Docs routes — require root authentication */}
+          <Route
+            element={
+              <ProtectedRoute labels={[ROLES.ROOT]} />
+            }
+          >
+            <Route path="/help/docs" element={<HelpDocsPage />} />
+            <Route path="/help/docs/:lang/:slug" element={<HelpDocsPage />} />
+            <Route path="/help/docs/:slug" element={<HelpDocsPage />} />
+          </Route>
 
           {/* Portal routes — require auth + client/admin/root label */}
           <Route
