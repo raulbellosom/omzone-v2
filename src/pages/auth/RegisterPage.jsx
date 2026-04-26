@@ -96,7 +96,11 @@ export default function RegisterPage() {
       onClick={() => setShowPassword((v) => !v)}
       disabled={submitting}
       className="text-charcoal-subtle hover:text-charcoal transition-colors disabled:opacity-40 disabled:pointer-events-none"
-      aria-label={showPassword ? t("auth.register.hidePassword") : t("auth.register.showPassword")}
+      aria-label={
+        showPassword
+          ? t("auth.register.hidePassword")
+          : t("auth.register.showPassword")
+      }
     >
       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
     </button>
@@ -266,7 +270,9 @@ export default function RegisterPage() {
               size="lg"
               loading={submitting}
             >
-              {submitting ? t("auth.register.submitting") : t("auth.register.submit")}
+              {submitting
+                ? t("auth.register.submitting")
+                : t("auth.register.submit")}
             </Button>
           </form>
 
