@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Input } from "@/components/common/Input";
+import PhoneInput from "@/components/common/PhoneInput";
 import { useLanguage } from "@/hooks/useLanguage";
 import { isValidPhone } from "@/lib/utils";
 
@@ -77,16 +78,14 @@ export default function CustomerInfoStep({
               {t("customerInfo.phoneOptional")}
             </span>
           </label>
-          <Input
+          <PhoneInput
             id="checkout-phone"
-            type="tel"
             value={customerPhone}
-            onChange={(e) => {
-              setCustomerPhone(e.target.value);
-              if (!e.target.value.trim()) setPhoneTouched(false);
+            onChange={(val) => {
+              setCustomerPhone(val);
+              if (!val.trim()) setPhoneTouched(false);
             }}
             onBlur={handlePhoneBlur}
-            placeholder={t("customerInfo.phonePlaceholder")}
           />
           {phoneTouched && !phoneValid && (
             <p className="text-xs text-red-500 mt-1">

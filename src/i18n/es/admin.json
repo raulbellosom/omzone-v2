@@ -975,11 +975,11 @@
       "newSale": "Nueva venta",
       "customer": {
         "title": "Cliente",
-        "description": "Busca un cliente existente por email o crea uno nuevo.",
-        "searchPlaceholder": "Buscar por email…",
+        "description": "Busca un cliente existente por nombre o email, o crea uno nuevo.",
+        "searchPlaceholder": "Buscar por nombre o email…",
         "foundResults": "Clientes encontrados",
         "noName": "Sin nombre",
-        "notFound": "No se encontró ningún cliente con ese email.",
+        "notFound": "No se encontró ningún cliente con ese nombre.",
         "createNew": "Crear cliente nuevo",
         "newCustomer": "Nuevo cliente",
         "fullName": "Nombre completo",
@@ -1057,7 +1057,8 @@
         "markAsPaid": "Marcar como pagado",
         "markAsPaidDesc": "La orden se crea inmediatamente con status pagado y se generan los tickets.",
         "stripeLink": "Generar link de pago Stripe",
-        "stripeLinkDesc": "Se crea un link que puedes enviar al cliente para que pague en línea."
+        "stripeLinkDesc": "Se crea un link que puedes enviar al cliente para que pague en línea.",
+        "emailRequired": "El perfil del cliente no tiene email. Ingresa uno para continuar."
       }
     },
     "experienceSaleModes": {

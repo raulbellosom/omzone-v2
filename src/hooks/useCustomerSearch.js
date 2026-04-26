@@ -15,8 +15,8 @@ export function useCustomerSearch() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const search = useCallback(async (email) => {
-    const q = (email || "").trim().toLowerCase();
+  const search = useCallback(async (query) => {
+    const q = (query || "").trim();
     if (!q) {
       setResults([]);
       return;
@@ -24,8 +24,15 @@ export function useCustomerSearch() {
     setLoading(true);
     setError(null);
     try {
+      // Route search based on input type
+      let searchQuery;
+      if (q.includes("@")) {
+        searchQuery = Query.search("email", q);
+      } else {
+        searchQuery = Query.search("displayName", q);
+      }
       const res = await databases.listDocuments(DB, COL, [
-        Query.search("email", q),
+        searchQuery,
         Query.limit(10),
       ]);
       setResults(res.documents);

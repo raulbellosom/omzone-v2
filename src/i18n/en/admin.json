@@ -975,11 +975,11 @@
       "newSale": "New sale",
       "customer": {
         "title": "Customer",
-        "description": "Search for an existing customer by email or create a new one.",
-        "searchPlaceholder": "Search by email…",
+        "description": "Search for an existing customer by name or email, or create a new one.",
+        "searchPlaceholder": "Search by name or email…",
         "foundResults": "Customers found",
         "noName": "No name",
-        "notFound": "No customer found with that email.",
+        "notFound": "No customer found with that name.",
         "createNew": "Create new customer",
         "newCustomer": "New customer",
         "fullName": "Full name",
@@ -1057,7 +1057,8 @@
         "markAsPaid": "Mark as paid",
         "markAsPaidDesc": "The order is created immediately with paid status and tickets are generated.",
         "stripeLink": "Generate Stripe payment link",
-        "stripeLinkDesc": "A link is created that you can send to the customer for online payment."
+        "stripeLinkDesc": "A link is created that you can send to the customer for online payment.",
+        "emailRequired": "This customer profile has no email. Enter one to continue."
       }
     },
     "experienceSaleModes": {

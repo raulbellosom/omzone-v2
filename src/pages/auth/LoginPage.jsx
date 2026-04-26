@@ -54,7 +54,8 @@ export default function LoginPage() {
       type="button"
       tabIndex={-1}
       onClick={() => setShowPassword((v) => !v)}
-      className="text-charcoal-subtle hover:text-charcoal transition-colors"
+      disabled={submitting}
+      className="text-charcoal-subtle hover:text-charcoal transition-colors disabled:opacity-40 disabled:pointer-events-none"
       aria-label={
         showPassword
           ? t("auth.login.hidePassword")
@@ -128,6 +129,7 @@ export default function LoginPage() {
                 onChange={handleChange}
                 required
                 autoComplete="email"
+                disabled={submitting}
               />
             </div>
 
@@ -149,6 +151,7 @@ export default function LoginPage() {
                 onChange={handleChange}
                 required
                 autoComplete="current-password"
+                disabled={submitting}
               />
               <div className="text-right">
                 <Link
@@ -170,7 +173,7 @@ export default function LoginPage() {
               type="submit"
               className="w-full"
               size="lg"
-              disabled={submitting}
+              loading={submitting}
             >
               {submitting ? t("auth.login.submitting") : t("auth.login.submit")}
             </Button>

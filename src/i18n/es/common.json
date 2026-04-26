@@ -15,7 +15,9 @@
     "readMore": "Leer más",
     "viewAll": "Ver todo",
     "noResults": "No se encontraron resultados",
-    "phoneError": "El teléfono debe incluir código de país (ej. +52 55 1234 5678)",
+    "phoneError": "Por favor ingresa un número de teléfono válido",
+    "phoneSearchPlaceholder": "Buscar país…",
+    "phoneNoCountries": "Sin resultados",
     "updateAvailable": "Hay una nueva versión de OMZONE disponible. Recarga la página para obtener la última experiencia.",
     "reload": "Recargar",
     "dismiss": "Después"

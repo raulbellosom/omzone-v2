@@ -125,6 +125,127 @@ async function seed() {
       console.error("Error:", e.message);
     }
   }
+
+  // ── payment-link template ──────────────────────────────────────────────────
+  const plSubjectEN = "Your OMZONE Payment Link — {{orderNumber}}";
+  const plSubjectES = "Tu link de pago OMZONE — {{orderNumber}}";
+
+  const plBodyEN = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f7f5f2;font-family:Georgia,'Times New Roman',serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f5f2;padding:32px 16px;">
+<tr><td align="center">
+<table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
+  <tr><td style="background:#4a6741;padding:32px 40px;text-align:center;">
+    <h1 style="color:#ffffff;margin:0;font-size:24px;font-weight:600;letter-spacing:0.5px;">OMZONE</h1>
+    <p style="color:#c5d5b8;margin:8px 0 0;font-size:14px;">Your Payment Link</p>
+  </td></tr>
+  <tr><td style="padding:40px;">
+    <p style="color:#2c2c2c;font-size:16px;line-height:1.6;margin:0 0 24px;">
+      Hi {{customerName}},
+    </p>
+    <p style="color:#2c2c2c;font-size:16px;line-height:1.6;margin:0 0 24px;">
+      Your reservation for <strong>{{experienceName}}</strong> is ready. Complete your payment securely using the button below.
+    </p>
+    <table width="100%" cellpadding="12" cellspacing="0" style="background:#f7f5f2;border-radius:8px;margin:0 0 28px;">
+      <tr><td style="color:#6b6b6b;font-size:13px;border-bottom:1px solid #e8e4df;">Order</td>
+          <td style="color:#2c2c2c;font-size:14px;font-weight:600;border-bottom:1px solid #e8e4df;text-align:right;">{{orderNumber}}</td></tr>
+      <tr><td style="color:#6b6b6b;font-size:13px;border-bottom:1px solid #e8e4df;">Experience</td>
+          <td style="color:#2c2c2c;font-size:14px;border-bottom:1px solid #e8e4df;text-align:right;">{{experienceName}}</td></tr>
+      <tr><td style="color:#6b6b6b;font-size:13px;">Total</td>
+          <td style="color:#2c2c2c;font-size:16px;font-weight:700;text-align:right;">{{totalAmount}}</td></tr>
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 32px;">
+      <tr><td align="center">
+        <a href="{{paymentLinkUrl}}"
+           style="display:inline-block;background:#4a6741;color:#ffffff;font-size:16px;font-weight:600;text-decoration:none;padding:14px 36px;border-radius:8px;letter-spacing:0.3px;">
+          Complete Payment
+        </a>
+      </td></tr>
+    </table>
+    <p style="color:#9b9b9b;font-size:13px;line-height:1.5;margin:0 0 24px;">
+      If the button doesn't work, copy and paste this link into your browser:<br>
+      <a href="{{paymentLinkUrl}}" style="color:#4a6741;word-break:break-all;">{{paymentLinkUrl}}</a>
+    </p>
+    <p style="color:#2c2c2c;font-size:16px;line-height:1.6;margin:0;">
+      See you soon,<br>The OMZONE Team
+    </p>
+  </td></tr>
+  <tr><td style="background:#f7f5f2;padding:24px 40px;text-align:center;">
+    <p style="color:#9b9b9b;font-size:12px;margin:0;">&copy; 2026 OMZONE. All rights reserved.</p>
+  </td></tr>
+</table>
+</td></tr></table>
+</body></html>`;
+
+  const plBodyES = `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f7f5f2;font-family:Georgia,'Times New Roman',serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f5f2;padding:32px 16px;">
+<tr><td align="center">
+<table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
+  <tr><td style="background:#4a6741;padding:32px 40px;text-align:center;">
+    <h1 style="color:#ffffff;margin:0;font-size:24px;font-weight:600;letter-spacing:0.5px;">OMZONE</h1>
+    <p style="color:#c5d5b8;margin:8px 0 0;font-size:14px;">Tu Link de Pago</p>
+  </td></tr>
+  <tr><td style="padding:40px;">
+    <p style="color:#2c2c2c;font-size:16px;line-height:1.6;margin:0 0 24px;">
+      Hola {{customerName}},
+    </p>
+    <p style="color:#2c2c2c;font-size:16px;line-height:1.6;margin:0 0 24px;">
+      Tu reservación para <strong>{{experienceName}}</strong> está lista. Completa tu pago de forma segura usando el botón de abajo.
+    </p>
+    <table width="100%" cellpadding="12" cellspacing="0" style="background:#f7f5f2;border-radius:8px;margin:0 0 28px;">
+      <tr><td style="color:#6b6b6b;font-size:13px;border-bottom:1px solid #e8e4df;">Orden</td>
+          <td style="color:#2c2c2c;font-size:14px;font-weight:600;border-bottom:1px solid #e8e4df;text-align:right;">{{orderNumber}}</td></tr>
+      <tr><td style="color:#6b6b6b;font-size:13px;border-bottom:1px solid #e8e4df;">Experiencia</td>
+          <td style="color:#2c2c2c;font-size:14px;border-bottom:1px solid #e8e4df;text-align:right;">{{experienceName}}</td></tr>
+      <tr><td style="color:#6b6b6b;font-size:13px;">Total</td>
+          <td style="color:#2c2c2c;font-size:16px;font-weight:700;text-align:right;">{{totalAmount}}</td></tr>
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 32px;">
+      <tr><td align="center">
+        <a href="{{paymentLinkUrl}}"
+           style="display:inline-block;background:#4a6741;color:#ffffff;font-size:16px;font-weight:600;text-decoration:none;padding:14px 36px;border-radius:8px;letter-spacing:0.3px;">
+          Completar Pago
+        </a>
+      </td></tr>
+    </table>
+    <p style="color:#9b9b9b;font-size:13px;line-height:1.5;margin:0 0 24px;">
+      Si el botón no funciona, copia y pega este enlace en tu navegador:<br>
+      <a href="{{paymentLinkUrl}}" style="color:#4a6741;word-break:break-all;">{{paymentLinkUrl}}</a>
+    </p>
+    <p style="color:#2c2c2c;font-size:16px;line-height:1.6;margin:0;">
+      Te esperamos,<br>El equipo OMZONE
+    </p>
+  </td></tr>
+  <tr><td style="background:#f7f5f2;padding:24px 40px;text-align:center;">
+    <p style="color:#9b9b9b;font-size:12px;margin:0;">&copy; 2026 OMZONE. Todos los derechos reservados.</p>
+  </td></tr>
+</table>
+</td></tr></table>
+</body></html>`;
+
+  try {
+    await db.createDocument(DB, "notification_templates", "tpl-payment-link", {
+      key: "payment-link",
+      type: "email",
+      subject: plSubjectEN,
+      subjectEs: plSubjectES,
+      body: plBodyEN,
+      bodyEs: plBodyES,
+      isActive: true,
+    });
+    console.log("Created notification template: payment-link");
+  } catch (e) {
+    if (e.code === 409) {
+      console.log("Template payment-link already exists — skipping");
+    } else {
+      console.error("Error seeding payment-link template:", e.message);
+    }
+  }
 }
 
 seed();

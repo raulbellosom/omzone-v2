@@ -15,7 +15,9 @@
     "readMore": "Read more",
     "viewAll": "View all",
     "noResults": "No results found",
-    "phoneError": "Phone must include country code (e.g. +52 55 1234 5678)",
+    "phoneError": "Please enter a valid phone number",
+    "phoneSearchPlaceholder": "Search country…",
+    "phoneNoCountries": "No results",
     "updateAvailable": "A new version of OMZONE is available. Reload the page to get the latest experience.",
     "reload": "Reload",
     "dismiss": "Later"

@@ -129,6 +129,7 @@ async function handleSignupEvent({ req, res, log, error }) {
           firstName,
           lastName,
           language: "es",
+          email: userEmail || null,
         },
         [
           `read("user:${userId}")`,
@@ -229,7 +230,13 @@ async function handleEnsureProfile({ req, res, log, error }) {
         DB,
         COLLECTION_PROFILES,
         userId,
-        { displayName, firstName, lastName, language: "es" },
+        {
+          displayName,
+          firstName,
+          lastName,
+          language: "es",
+          email: userEmail || null,
+        },
         [
           `read("user:${userId}")`,
           `update("user:${userId}")`,

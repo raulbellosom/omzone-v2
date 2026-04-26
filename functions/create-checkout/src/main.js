@@ -40,8 +40,13 @@
  * - APPWRITE_COLLECTION_ORDERS
  * - APPWRITE_COLLECTION_ORDER_ITEMS
  * - APPWRITE_COLLECTION_ADMIN_ACTIVITY_LOGS
+ * - APPWRITE_COLLECTION_NOTIFICATION_TEMPLATES
+ * - APPWRITE_COLLECTION_USER_PROFILES
  * - STRIPE_SECRET_KEY
  * - FRONTEND_URL
+ * - EMAIL_PROVIDER   (resend | smtp — for payment link email)
+ * - EMAIL_FROM       (From address for payment link email)
+ * - RESEND_API_KEY   (required when EMAIL_PROVIDER=resend)
  *
  * @returns {Object}
  *   direct:   { ok: true, data: { clientSecret, orderId, orderNumber } }
@@ -135,6 +140,145 @@ async function triggerGenerateTicket(client, orderId, log, error) {
     log(`Triggered generate-ticket for order ${orderId}`);
   } catch (err) {
     error(`generate-ticket trigger failed (non-blocking): ${err.message}`);
+  }
+}
+
+/** Escape HTML to prevent injection in email templates. */
+function escapeHtml(str) {
+  if (typeof str !== "string") return String(str ?? "");
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+/** Replace {{placeholder}} tokens in a template string. */
+function renderTemplate(template, vars) {
+  return template.replace(/\{\{(\w+)\}\}/g, (_, key) => {
+    const val = vars[key];
+    return val !== undefined ? escapeHtml(val) : `{{${key}}}`;
+  });
+}
+
+function formatCurrency(amount, currency) {
+  try {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency,
+    }).format(amount);
+  } catch {
+    return `${currency} ${amount}`;
+  }
+}
+
+/**
+ * Send the Stripe payment link to the customer via email.
+ * Fire-and-forget: logs failures but never throws.
+ */
+async function sendPaymentLinkEmail({
+  db,
+  customerEmail,
+  customerName,
+  orderNumber,
+  experienceName,
+  totalAmount,
+  currency,
+  paymentLinkUrl,
+  targetUserId,
+  log,
+  error,
+}) {
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!customerEmail || !EMAIL_RE.test(customerEmail)) {
+    log(
+      `sendPaymentLinkEmail: no valid email for order ${orderNumber} — skipping`,
+    );
+    return;
+  }
+  try {
+    const DB = process.env.APPWRITE_DATABASE_ID || "omzone_db";
+    const COL_TEMPLATES =
+      process.env.APPWRITE_COLLECTION_NOTIFICATION_TEMPLATES ||
+      "notification_templates";
+    const COL_PROFILES =
+      process.env.APPWRITE_COLLECTION_USER_PROFILES || "user_profiles";
+
+    // Determine customer language
+    let useSpanish = false;
+    if (targetUserId) {
+      try {
+        const profile = await db.getDocument(DB, COL_PROFILES, targetUserId);
+        useSpanish = (profile.language || "en").startsWith("es");
+      } catch {
+        // No profile — default EN
+      }
+    }
+
+    // Fetch template
+    const tplRes = await db.listDocuments(DB, COL_TEMPLATES, [
+      Query.equal("key", "payment-link"),
+      Query.equal("type", "email"),
+      Query.equal("isActive", true),
+      Query.limit(1),
+    ]);
+    if (tplRes.documents.length === 0) {
+      log(`sendPaymentLinkEmail: no active payment-link template — skipping`);
+      return;
+    }
+    const tpl = tplRes.documents[0];
+    const subject = useSpanish && tpl.subjectEs ? tpl.subjectEs : tpl.subject;
+    const bodyTpl = useSpanish && tpl.bodyEs ? tpl.bodyEs : tpl.body;
+    if (!subject || !bodyTpl) {
+      log(`sendPaymentLinkEmail: template has empty subject/body — skipping`);
+      return;
+    }
+
+    const vars = {
+      customerName: customerName || "",
+      orderNumber: orderNumber || "",
+      experienceName: experienceName || "",
+      totalAmount: formatCurrency(totalAmount, currency),
+      paymentLinkUrl: paymentLinkUrl || "",
+    };
+    const renderedSubject = renderTemplate(subject, vars);
+    const renderedBody = renderTemplate(bodyTpl, vars);
+
+    const emailFrom = process.env.EMAIL_FROM || "OMZONE <noreply@omzone.com>";
+    const provider = (process.env.EMAIL_PROVIDER || "resend").toLowerCase();
+
+    if (provider === "resend") {
+      const apiKey = process.env.RESEND_API_KEY;
+      if (!apiKey) throw new Error("RESEND_API_KEY not configured");
+      const response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: emailFrom,
+          to: [customerEmail],
+          subject: renderedSubject,
+          html: renderedBody,
+        }),
+      });
+      if (!response.ok) {
+        const errBody = await response.text();
+        throw new Error(`Resend ${response.status}: ${errBody}`);
+      }
+      const data = await response.json();
+      log(
+        `Payment link email sent via Resend id=${data.id} to ${customerEmail} for order ${orderNumber}`,
+      );
+    } else {
+      throw new Error(
+        `EMAIL_PROVIDER="${provider}" not supported in create-checkout`,
+      );
+    }
+  } catch (err) {
+    // Non-blocking — email failure must not break checkout
+    error(`sendPaymentLinkEmail failed (non-blocking): ${err.message}`);
   }
 }
 
@@ -670,6 +814,31 @@ export default async ({ req, res, log, error }) => {
       log(
         `Stripe Payment Link for request-conversion: ${rcPaymentLink.id} for order ${rcOrder.$id}`,
       );
+
+      // Fire-and-forget: email the payment link to the customer
+      {
+        const rcCustomerEmail = (customerEmail || bookingReq.contactEmail || "")
+          .trim()
+          .toLowerCase();
+        const rcCustomerName = (
+          customerName ||
+          bookingReq.contactName ||
+          ""
+        ).trim();
+        await sendPaymentLinkEmail({
+          db,
+          customerEmail: rcCustomerEmail,
+          customerName: rcCustomerName,
+          orderNumber: rcOrderNumber,
+          experienceName: rcExperience.publicName,
+          totalAmount: quotedAmount,
+          currency: rcCurrency,
+          paymentLinkUrl: rcPaymentLink.url,
+          targetUserId: bookingReq.userId || null,
+          log,
+          error,
+        });
+      }
 
       return res.json({
         ok: true,
@@ -1219,6 +1388,22 @@ export default async ({ req, res, log, error }) => {
       log(
         `Stripe Payment Link created: ${paymentLink.id} for order ${order.$id}`,
       );
+
+      // Fire-and-forget: email the payment link to the customer
+      await sendPaymentLinkEmail({
+        db,
+        customerEmail: customerEmail.trim().toLowerCase(),
+        customerName: customerName.trim(),
+        orderNumber,
+        experienceName: experience.publicName,
+        totalAmount,
+        currency,
+        paymentLinkUrl: paymentLink.url,
+        targetUserId: targetUserId || null,
+        log,
+        error,
+      });
+
       return res.json({
         ok: true,
         data: { paymentLink: paymentLink.url, orderId: order.$id, orderNumber },

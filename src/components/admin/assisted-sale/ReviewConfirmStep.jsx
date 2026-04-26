@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   ExternalLink,
   AlertTriangle,
+  Mail,
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import WizardStepWrapper from "./WizardStepWrapper";
@@ -212,6 +213,7 @@ export default function ReviewConfirmStep({
     ? wizard.customer.displayName || wizard.customerName
     : wizard.customerName;
   const customerEmail = wizard.customer?.email || wizard.customerEmail;
+  const emailMissing = !customerEmail?.trim();
 
   return (
     <WizardStepWrapper
@@ -223,7 +225,9 @@ export default function ReviewConfirmStep({
         <ReviewRow
           icon={User}
           label={t("admin.assistedSale.review.customer")}
-          value={`${customerName} — ${customerEmail}`}
+          value={
+            customerEmail ? `${customerName} — ${customerEmail}` : customerName
+          }
         />
         <ReviewRow
           icon={ShoppingBag}
@@ -280,6 +284,25 @@ export default function ReviewConfirmStep({
           <span>{formatPrice(baseTotal, currency)}</span>
         </div>
       </div>
+
+      {/* Inline email input — shown when the selected profile has no email */}
+      {emailMissing && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 mb-5">
+          <div className="flex items-center gap-2 mb-2">
+            <Mail className="h-4 w-4 text-amber-600 shrink-0" />
+            <p className="text-sm font-medium text-amber-800">
+              {t("admin.assistedSale.review.emailRequired")}
+            </p>
+          </div>
+          <input
+            type="email"
+            value={wizard.customerEmail}
+            onChange={(e) => setWizardField("customerEmail", e.target.value)}
+            placeholder={t("admin.placeholders.customerEmail")}
+            className="h-10 w-full rounded-lg border border-amber-300 bg-white px-3 text-sm text-charcoal placeholder:text-charcoal-subtle focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20"
+          />
+        </div>
+      )}
 
       {/* Payment method */}
       <p className="text-sm font-medium text-charcoal mb-3">

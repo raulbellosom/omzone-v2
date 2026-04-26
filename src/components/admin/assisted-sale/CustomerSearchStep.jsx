@@ -7,7 +7,11 @@ import WizardStepWrapper from "./WizardStepWrapper";
 import { cn, isValidPhone } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 
-function CustomerCard({ profile, selected, onSelect }) {
+function CustomerCard({ profile, selected, onSelect, t }) {
+  const name =
+    profile.displayName ||
+    `${profile.firstName ?? ""} ${profile.lastName ?? ""}`.trim() ||
+    "";
   return (
     <button
       type="button"
@@ -22,11 +26,8 @@ function CustomerCard({ profile, selected, onSelect }) {
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-sm font-medium text-charcoal">
-            {profile.displayName ||
-              `${profile.firstName ?? ""} ${profile.lastName ?? ""}`.trim() ||
-              t("admin.assistedSale.customer.noName")}
+            {name || t("admin.assistedSale.customer.noName")}
           </p>
-          <p className="text-xs text-charcoal-muted">{profile.email}</p>
         </div>
         {selected && <CheckCircle2 className="h-5 w-5 text-sage shrink-0" />}
       </div>
@@ -36,7 +37,7 @@ function CustomerCard({ profile, selected, onSelect }) {
 
 export default function CustomerSearchStep({ wizard, setWizardField }) {
   const { t } = useLanguage();
-  const [emailQuery, setEmailQuery] = useState(wizard.customerEmail || "");
+  const [nameQuery, setNameQuery] = useState("");
   const [showNewForm, setShowNewForm] = useState(wizard.isNewCustomer || false);
   const [phoneTouched, setPhoneTouched] = useState(false);
   const { results, loading, search } = useCustomerSearch();
@@ -45,9 +46,9 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
   useEffect(() => {
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      if (emailQuery.trim().length >= 3) search(emailQuery);
+      if (nameQuery.trim().length >= 3) search(nameQuery);
     }, 350);
-  }, [emailQuery, search]);
+  }, [nameQuery, search]);
 
   function handleSelectExisting(profile) {
     setWizardField("customer", profile);
@@ -57,6 +58,7 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
         `${profile.firstName ?? ""} ${profile.lastName ?? ""}`.trim(),
     );
     setWizardField("customerEmail", profile.email || "");
+    setWizardField("customerPhone", profile.phone || "");
     setWizardField("isNewCustomer", false);
     setShowNewForm(false);
   }
@@ -65,8 +67,6 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
     setWizardField("customer", null);
     setWizardField("isNewCustomer", true);
     setShowNewForm(true);
-    // Pre-fill email from search query
-    if (emailQuery.trim()) setWizardField("customerEmail", emailQuery.trim());
   }
 
   const hasSelection = !!(
@@ -83,11 +83,10 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
       <div className="relative mb-4">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal-subtle pointer-events-none" />
         <input
-          type="email"
-          value={emailQuery}
+          type="text"
+          value={nameQuery}
           onChange={(e) => {
-            setEmailQuery(e.target.value);
-            setWizardField("customerEmail", e.target.value);
+            setNameQuery(e.target.value);
             if (wizard.customer) {
               setWizardField("customer", null);
               setWizardField("isNewCustomer", false);
@@ -116,14 +115,15 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
               profile={profile}
               selected={wizard.customer?.$id === profile.$id}
               onSelect={() => handleSelectExisting(profile)}
+              t={t}
             />
           ))}
         </div>
       )}
 
-      {/* No results + email looks valid */}
+      {/* No results + name typed */}
       {results.length === 0 &&
-        emailQuery.trim().length >= 5 &&
+        nameQuery.trim().length >= 3 &&
         !loading &&
         !showNewForm && (
           <p className="text-sm text-charcoal-muted mb-4">

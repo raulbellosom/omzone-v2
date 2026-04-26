@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   CheckCircle2,
   Clock,
@@ -95,7 +96,7 @@ function SlotCard({ slot, selected, onSelect, t }) {
 
 export default function SlotSelectStep({ wizard, setWizardField }) {
   const { t } = useLanguage();
-  const now = new Date().toISOString();
+  const [now] = useState(() => new Date().toISOString());
   const {
     data: slots,
     loading,

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { createBookingRequest } from "@/hooks/useBookingRequests";
 import Input from "@/components/common/Input";
+import PhoneInput from "@/components/common/PhoneInput";
 import { Button } from "@/components/common/Button";
 import { Send, CheckCircle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -144,12 +145,10 @@ export default function BookingRequestForm({ experience }) {
         <label className="block text-sm font-medium text-charcoal mb-1">
           {t("bookingRequest.phoneLabel")}
         </label>
-        <Input
-          type="tel"
+        <PhoneInput
           value={form.contactPhone}
-          onChange={(e) => handleChange("contactPhone", e.target.value)}
+          onChange={(val) => handleChange("contactPhone", val)}
           onBlur={handlePhoneBlur}
-          placeholder="+52 55 1234 5678"
         />
         {errors.contactPhone && (
           <p className="text-xs text-red-500 mt-1">{errors.contactPhone}</p>

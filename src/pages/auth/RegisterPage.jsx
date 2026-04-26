@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { User, Mail, Lock, Phone, Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { User, Mail, Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { isValidPhone, sanitizePhone } from "@/lib/utils";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
+import PhoneInput from "@/components/common/PhoneInput";
 import PasswordStrengthMeter from "@/components/common/PasswordStrengthMeter";
 import { ROUTES } from "@/constants/routes";
 
@@ -93,7 +94,8 @@ export default function RegisterPage() {
       type="button"
       tabIndex={-1}
       onClick={() => setShowPassword((v) => !v)}
-      className="text-charcoal-subtle hover:text-charcoal transition-colors"
+      disabled={submitting}
+      className="text-charcoal-subtle hover:text-charcoal transition-colors disabled:opacity-40 disabled:pointer-events-none"
       aria-label={showPassword ? t("auth.register.hidePassword") : t("auth.register.showPassword")}
     >
       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -159,6 +161,7 @@ export default function RegisterPage() {
                   onChange={handleChange}
                   required
                   autoComplete="given-name"
+                  disabled={submitting}
                 />
               </div>
               <div className="space-y-1.5">
@@ -176,6 +179,7 @@ export default function RegisterPage() {
                   value={form.lastName}
                   onChange={handleChange}
                   autoComplete="family-name"
+                  disabled={submitting}
                 />
               </div>
             </div>
@@ -197,6 +201,7 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 required
                 autoComplete="email"
+                disabled={submitting}
               />
             </div>
 
@@ -210,16 +215,15 @@ export default function RegisterPage() {
                   {t("auth.register.phoneOptional")}
                 </span>
               </label>
-              <Input
+              <PhoneInput
                 id="register-phone"
-                name="phone"
-                type="tel"
-                placeholder={t("auth.register.phonePlaceholder")}
-                icon={Phone}
                 value={form.phone}
-                onChange={handleChange}
+                onChange={(val) => {
+                  setForm((prev) => ({ ...prev, phone: val }));
+                  setPhoneError("");
+                }}
                 onBlur={handlePhoneBlur}
-                autoComplete="tel"
+                disabled={submitting}
               />
               {phoneError && (
                 <p className="text-xs text-red-500 mt-1">{phoneError}</p>
@@ -245,6 +249,7 @@ export default function RegisterPage() {
                 required
                 minLength={8}
                 autoComplete="new-password"
+                disabled={submitting}
               />
               <PasswordStrengthMeter password={form.password} />
             </div>
@@ -259,7 +264,7 @@ export default function RegisterPage() {
               type="submit"
               className="w-full"
               size="lg"
-              disabled={submitting}
+              loading={submitting}
             >
               {submitting ? t("auth.register.submitting") : t("auth.register.submit")}
             </Button>
