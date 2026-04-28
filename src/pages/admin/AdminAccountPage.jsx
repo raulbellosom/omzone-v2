@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   User,
   Shield,
@@ -26,7 +26,7 @@ const BIO_MAX = 1000;
 
 export default function AdminAccountPage() {
   const { user, hydrateUser } = useAuth();
-  const { t } = useLanguage();
+  const { t, setLanguage } = useLanguage();
   const { profile, loading, error, updateProfile } = useUserProfile();
 
   // ─── Personal info form ──────────────────────────────────────────────────
@@ -56,6 +56,8 @@ export default function AdminAccountPage() {
         language: profile.language || "es",
         bio: profile.bio || "",
       });
+      // Sync app language to what's saved in the profile
+      if (profile.language) setLanguage(profile.language);
     }
   }, [profile]);
 
@@ -69,6 +71,17 @@ export default function AdminAccountPage() {
     setForm((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: undefined }));
     setSuccess(false);
+  }
+
+  const langSaveTimer = useRef(null);
+  function handleLanguageSwitch(lang) {
+    handleChange("language", lang);
+    setLanguage(lang);
+    // Persist to profile in the background after a short debounce
+    clearTimeout(langSaveTimer.current);
+    langSaveTimer.current = setTimeout(() => {
+      updateProfile({ language: lang }).catch(() => {});
+    }, 600);
   }
 
   async function handleAvatarUploaded(fileId) {
@@ -105,6 +118,8 @@ export default function AdminAccountPage() {
     setSaveError(null);
     try {
       await updateProfile(trimmed);
+      // Sync language to app immediately
+      setLanguage(trimmed.language);
       // Sync full name to Auth so UserMenuDropdown + other Auth-based views refresh
       const fullName = [trimmed.firstName, trimmed.lastName]
         .filter(Boolean)
@@ -277,7 +292,7 @@ export default function AdminAccountPage() {
                   <button
                     key={opt.value}
                     type="button"
-                    onClick={() => handleChange("language", opt.value)}
+                    onClick={() => handleLanguageSwitch(opt.value)}
                     className={`flex-1 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
                       form.language === opt.value
                         ? "bg-sage text-white shadow-sm"
