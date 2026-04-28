@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ResourceForm from "@/components/admin/resources/ResourceForm";
 import { createResource } from "@/hooks/useResources";
-import { ROUTES } from "@/constants/routes";
 import { useLanguage } from "@/hooks/useLanguage";
+import { toast } from "sonner";
 
 export default function ResourceCreatePage() {
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
@@ -16,9 +14,10 @@ export default function ResourceCreatePage() {
     setServerError(null);
     try {
       await createResource(payload);
-      navigate(`${ROUTES.ADMIN_RESOURCES}?tab=resources`);
+      toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
       setServerError(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }

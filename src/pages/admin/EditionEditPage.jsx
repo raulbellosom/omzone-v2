@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import EditionForm from "@/components/admin/experiences/EditionForm";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
 import { useExperience } from "@/hooks/useExperiences";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useEdition, updateEdition } from "@/hooks/useEditions";
 import { Card } from "@/components/common/Card";
+import { toast } from "sonner";
 
 function LoadingSkeleton() {
   return (
@@ -25,7 +26,6 @@ function LoadingSkeleton() {
 
 export default function EditionEditPage() {
   const { id, editionId } = useParams();
-  const navigate = useNavigate();
   const { data: experience } = useExperience(id);
   const { data: edition, loading, error: loadError } = useEdition(editionId);
   const { t } = useLanguage();
@@ -37,9 +37,10 @@ export default function EditionEditPage() {
     setServerError(null);
     try {
       await updateEdition(editionId, payload);
-      navigate(`/admin/experiences/${id}/editions`);
+      toast.success(t("admin.common.savedSuccess"));
     } catch (err) {
       setServerError(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }

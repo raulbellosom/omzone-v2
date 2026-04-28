@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import AddonForm from "@/components/admin/addons/AddonForm";
 import { createAddon } from "@/hooks/useAddons";
 import { useLanguage } from "@/hooks/useLanguage";
-import { ROUTES } from "@/constants/routes";
+import { toast } from "sonner";
 
 export default function AddonCreatePage() {
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
@@ -16,9 +14,10 @@ export default function AddonCreatePage() {
     setServerError(null);
     try {
       await createAddon(payload);
-      navigate(ROUTES.ADMIN_ADDONS);
+      toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
       setServerError(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }

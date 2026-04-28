@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import PublicationForm from "@/components/admin/publications/PublicationForm";
 import { usePublication, updatePublication } from "@/hooks/usePublications";
-import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/common/Card";
 import { useLanguage } from "@/hooks/useLanguage";
+import { toast } from "sonner";
 
 function LoadingSkeleton() {
   return (
@@ -24,7 +24,6 @@ function LoadingSkeleton() {
 
 export default function PublicationEditPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const { data: publication, loading, error: loadError } = usePublication(id);
   const [submitting, setSubmitting] = useState(false);
@@ -35,9 +34,10 @@ export default function PublicationEditPage() {
     setServerError(null);
     try {
       await updatePublication(id, payload);
-      navigate(ROUTES.ADMIN_PUBLICATIONS);
+      toast.success(t("admin.common.savedSuccess"));
     } catch (err) {
       setServerError(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }

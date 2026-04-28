@@ -12,6 +12,7 @@ import { useRooms } from "@/hooks/useRooms";
 import { createSlot } from "@/hooks/useSlots";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
+import { toast } from "sonner";
 
 const DAYS_OF_WEEK = [
   { value: 1, i18nKey: "admin.slotQuickCreate.mon" },
@@ -163,9 +164,15 @@ export default function SlotQuickCreatePage() {
         });
         setProgress({ done: i + 1, total: generatedSlots.length });
       }
-      navigate(`/admin/experiences/${id}/slots`);
+      toast.success(
+        t("admin.common.slotsCreatedSuccess").replace(
+          "{count}",
+          generatedSlots.length,
+        ),
+      );
     } catch (err) {
       setServerError(err.message);
+      toast.error(err.message);
     } finally {
       setCreating(false);
     }

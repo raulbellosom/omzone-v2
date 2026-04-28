@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import PackageForm from "@/components/admin/packages/PackageForm";
 import PackagePreview from "@/components/admin/packages/PackagePreview";
 import { usePackage, updatePackage } from "@/hooks/usePackages";
@@ -11,7 +11,7 @@ import {
 } from "@/hooks/usePackageItems";
 import { Card } from "@/components/common/Card";
 import { useLanguage } from "@/hooks/useLanguage";
-import { ROUTES } from "@/constants/routes";
+import { toast } from "sonner";
 
 function LoadingSkeleton() {
   return (
@@ -31,7 +31,6 @@ function LoadingSkeleton() {
 
 export default function PackageEditPage() {
   const { packageId } = useParams();
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const {
     data: pkg,
@@ -79,9 +78,10 @@ export default function PackageEditPage() {
         }
       }
 
-      navigate(ROUTES.ADMIN_PACKAGES);
+      toast.success(t("admin.common.savedSuccess"));
     } catch (err) {
       setServerError(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }

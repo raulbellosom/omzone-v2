@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import RoomForm from "@/components/admin/resources/RoomForm";
 import { createRoom } from "@/hooks/useRooms";
-import { ROUTES } from "@/constants/routes";
 import { useLanguage } from "@/hooks/useLanguage";
+import { toast } from "sonner";
 
 export default function RoomCreatePage() {
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
@@ -16,9 +14,10 @@ export default function RoomCreatePage() {
     setServerError(null);
     try {
       await createRoom(payload);
-      navigate(`${ROUTES.ADMIN_RESOURCES}?tab=rooms`);
+      toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
       setServerError(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }

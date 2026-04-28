@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import PassForm from "@/components/admin/passes/PassForm";
 import { createPass } from "@/hooks/usePasses";
 import { useLanguage } from "@/hooks/useLanguage";
-import { ROUTES } from "@/constants/routes";
+import { toast } from "sonner";
 
 export default function PassCreatePage() {
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
@@ -16,9 +14,10 @@ export default function PassCreatePage() {
     setServerError(null);
     try {
       await createPass(payload);
-      navigate(ROUTES.ADMIN_PASSES);
+      toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
       setServerError(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }

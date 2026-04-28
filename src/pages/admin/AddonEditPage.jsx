@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import AddonForm from "@/components/admin/addons/AddonForm";
 import { useAddon, updateAddon } from "@/hooks/useAddons";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Card } from "@/components/common/Card";
-import { ROUTES } from "@/constants/routes";
+import { toast } from "sonner";
 
 function LoadingSkeleton() {
   return (
@@ -24,7 +24,6 @@ function LoadingSkeleton() {
 
 export default function AddonEditPage() {
   const { addonId } = useParams();
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const { data: addon, loading, error: loadError } = useAddon(addonId);
   const [submitting, setSubmitting] = useState(false);
@@ -35,9 +34,10 @@ export default function AddonEditPage() {
     setServerError(null);
     try {
       await updateAddon(addonId, payload);
-      navigate(ROUTES.ADMIN_ADDONS);
+      toast.success(t("admin.common.savedSuccess"));
     } catch (err) {
       setServerError(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }

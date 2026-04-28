@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import EditionForm from "@/components/admin/experiences/EditionForm";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
 import { useExperience } from "@/hooks/useExperiences";
 import { useLanguage } from "@/hooks/useLanguage";
 import { createEdition } from "@/hooks/useEditions";
+import { toast } from "sonner";
 
 export default function EditionCreatePage() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { data: experience } = useExperience(id);
   const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
@@ -19,9 +19,10 @@ export default function EditionCreatePage() {
     setServerError(null);
     try {
       await createEdition({ ...payload, experienceId: id });
-      navigate(`/admin/experiences/${id}/editions`);
+      toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
       setServerError(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }

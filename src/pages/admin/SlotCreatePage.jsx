@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import SlotForm from "@/components/admin/slots/SlotForm";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
 import { createSlot } from "@/hooks/useSlots";
 import { useExperience } from "@/hooks/useExperiences";
 import { useLanguage } from "@/hooks/useLanguage";
+import { toast } from "sonner";
 
 export default function SlotCreatePage() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const { data: experience } = useExperience(id);
   const [submitting, setSubmitting] = useState(false);
@@ -19,9 +19,10 @@ export default function SlotCreatePage() {
     setServerError(null);
     try {
       await createSlot(payload);
-      navigate(`/admin/experiences/${id}/slots`);
+      toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
       setServerError(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }

@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import LocationForm from "@/components/admin/resources/LocationForm";
 import { useLocation, updateLocation } from "@/hooks/useLocations";
-import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/common/Card";
 import { useLanguage } from "@/hooks/useLanguage";
+import { toast } from "sonner";
 
 function LoadingSkeleton() {
   return (
@@ -24,7 +24,6 @@ function LoadingSkeleton() {
 
 export default function LocationEditPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const { data: location, loading, error: loadError } = useLocation(id);
   const [submitting, setSubmitting] = useState(false);
@@ -35,9 +34,10 @@ export default function LocationEditPage() {
     setServerError(null);
     try {
       await updateLocation(id, payload);
-      navigate(`${ROUTES.ADMIN_RESOURCES}?tab=locations`);
+      toast.success(t("admin.common.savedSuccess"));
     } catch (err) {
       setServerError(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }

@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Suspense, lazy, useEffect } from "react";
+import { Toaster } from "sonner";
 
 import PublicLayout from "@/layouts/PublicLayout";
 import AuthLayout from "@/layouts/AuthLayout";
@@ -385,11 +386,7 @@ export default function App() {
           </Route>
 
           {/* Help/Docs routes — require root authentication */}
-          <Route
-            element={
-              <ProtectedRoute labels={[ROLES.ROOT]} />
-            }
-          >
+          <Route element={<ProtectedRoute labels={[ROLES.ROOT]} />}>
             <Route path="/help/docs" element={<HelpDocsPage />} />
             <Route path="/help/docs/:lang" element={<HelpDocsPage />} />
             <Route path="/help/docs/:lang/:slug" element={<HelpDocsPage />} />
@@ -422,6 +419,7 @@ export default function App() {
           </Route>
         </Routes>
       </Suspense>
+      <Toaster richColors position="bottom-right" />
     </>
   );
 }

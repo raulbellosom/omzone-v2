@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ExperienceForm from "@/components/admin/experiences/ExperienceForm";
 import { createExperience } from "@/hooks/useExperiences";
 import { useLanguage } from "@/hooks/useLanguage";
-import { ROUTES } from "@/constants/routes";
+import { toast } from "sonner";
 
 export default function ExperienceCreatePage() {
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
@@ -16,9 +14,10 @@ export default function ExperienceCreatePage() {
     setServerError(null);
     try {
       await createExperience(payload);
-      navigate(ROUTES.ADMIN_EXPERIENCES);
+      toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
       setServerError(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }

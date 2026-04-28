@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import PackageForm from "@/components/admin/packages/PackageForm";
 import { createPackage } from "@/hooks/usePackages";
 import { useLanguage } from "@/hooks/useLanguage";
 import { createPackageItem } from "@/hooks/usePackageItems";
-import { ROUTES } from "@/constants/routes";
+import { toast } from "sonner";
 
 export default function PackageCreatePage() {
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
@@ -27,9 +25,10 @@ export default function PackageCreatePage() {
         });
       }
 
-      navigate(ROUTES.ADMIN_PACKAGES);
+      toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
       setServerError(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }

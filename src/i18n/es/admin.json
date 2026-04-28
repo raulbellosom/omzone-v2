@@ -914,7 +914,7 @@
       "deleteConfirm": "¿Estás seguro de eliminar este archivo? Podría estar en uso por experiencias o publicaciones.",
       "bucketExperiences": "Experiencias",
       "bucketPublications": "Publicaciones",
-      "bucketAddons": "Addons",
+      "bucketAddons": "Complementos",
       "bucketPackages": "Paquetes",
       "bucketAvatars": "Avatares",
       "bucketDocuments": "Documentos",
@@ -946,6 +946,9 @@
       "confirm": "Confirmar",
       "loading": "Cargando…",
       "saving": "Guardando…",
+      "savedSuccess": "Cambios guardados",
+      "createdSuccess": "Creado exitosamente",
+      "slotsCreatedSuccess": "{count} slots creados",
       "unsavedChanges": "Cambios sin guardar",
       "noResults": "Sin resultados",
       "previous": "Anterior",
@@ -966,7 +969,7 @@
         "experience": "Experiencia",
         "tier": "Precio",
         "slot": "Slot",
-        "addons": "Addons",
+        "addons": "Complementos",
         "quantity": "Cantidad",
         "review": "Revisión"
       },
@@ -1021,9 +1024,9 @@
         "retry": "Reintentar"
       },
       "addons": {
-        "title": "Complementos (Addons)",
-        "description": "Selecciona los addons opcionales para esta venta. Puedes omitir todos.",
-        "noAddons": "No hay addons disponibles para esta experiencia."
+        "title": "Complementos",
+        "description": "Selecciona los complementos opcionales para esta venta. Puedes omitir todos.",
+        "noAddons": "No hay complementos disponibles para esta experiencia."
       },
       "quantity": {
         "title": "Cantidad",
@@ -1241,8 +1244,8 @@
       "creditsMinOne": "Los créditos deben ser al menos 1",
       "endDateAfterStart": "La fecha de fin debe ser posterior a la de inicio",
       "registrationCloseBeforeStart": "El cierre de registro debe ser anterior al inicio",
-      "selectAddon": "Selecciona un addon",
-      "addonAlreadyAssigned": "Este addon ya está asignado a esta experiencia",
+      "selectAddon": "Selecciona un complemento",
+      "addonAlreadyAssigned": "Este complemento ya está asignado a esta experiencia",
       "priceZeroOrMore": "El precio debe ser 0 o mayor",
       "itemTypeRequired": "El tipo es requerido",
       "descriptionRequired": "La descripción es requerida",
@@ -1262,20 +1265,20 @@
     },
     "addonAssignment": {
       "editTitle": "Editar asignación",
-      "assignTitle": "Asignar addon",
-      "addonLabel": "Addon",
-      "selectAddon": "Seleccionar addon…",
+      "assignTitle": "Asignar complemento",
+      "addonLabel": "Complemento",
+      "selectAddon": "Seleccionar complemento…",
       "requiredToggle": "Requerido (se incluye obligatoriamente)",
       "defaultToggle": "Seleccionado por defecto en checkout",
       "overridePrice": "Precio override",
-      "overridePriceHint": "Dejar vacío para usar precio base del addon",
+      "overridePriceHint": "Dejar vacío para usar precio base del complemento",
       "order": "Orden",
       "orderHint": "Orden de aparición",
       "saving": "Guardando…",
       "save": "Guardar",
       "assign": "Asignar",
       "cancel": "Cancelar",
-      "tableAddon": "Addon",
+      "tableAddon": "Complemento",
       "tableRequired": "Requerido",
       "tableDefault": "Por defecto",
       "tableOverridePrice": "Precio override",
@@ -1328,19 +1331,19 @@
       "add": "Agregar",
       "itemTypes": {
         "experience": "Experiencia",
-        "addon": "Addon",
+        "addon": "Complemento",
         "benefit": "Beneficio",
         "accommodation": "Hospedaje",
         "meal": "Alimentación"
       },
       "referenceExperience": "Experiencia",
-      "referenceAddon": "Addon",
+      "referenceAddon": "Complemento",
       "referenceHint": "Vincula a un registro existente (opcional)",
       "loadingOptions": "Cargando…",
       "noReference": "Sin referencia específica"
     },
     "packageItemsEditor": {
-      "emptyState": "Aún no hay elementos en este paquete. Agrega experiencias, addons, beneficios, hospedaje o alimentación.",
+      "emptyState": "Aún no hay elementos en este paquete. Agrega experiencias, complementos, beneficios, hospedaje o alimentación.",
       "dragToReorder": "Arrastrar para reordenar",
       "addItem": "Agregar elemento",
       "addMore": "más"
@@ -1462,7 +1465,7 @@
     },
     "itemType": {
       "experience": "Experiencia",
-      "addon": "Addon",
+      "addon": "Complemento",
       "benefit": "Beneficio",
       "accommodation": "Hospedaje",
       "meal": "Alimentación"
@@ -1525,7 +1528,7 @@
       "buckets": {
         "experienceMedia": "Media de experiencias",
         "publicationMedia": "Media de publicaciones",
-        "addonImages": "Imágenes de addons",
+        "addonImages": "Imágenes de complementos",
         "packageImages": "Imágenes de paquetes",
         "userAvatars": "Avatares de usuarios",
         "documents": "Documentos",

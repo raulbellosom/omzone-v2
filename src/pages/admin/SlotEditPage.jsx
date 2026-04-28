@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import SlotForm from "@/components/admin/slots/SlotForm";
 import SlotResourceSection from "@/components/admin/slots/SlotResourceSection";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
@@ -8,6 +8,7 @@ import { useExperience } from "@/hooks/useExperiences";
 import { Card } from "@/components/common/Card";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
+import { toast } from "sonner";
 
 function LoadingSkeleton() {
   return (
@@ -27,7 +28,6 @@ function LoadingSkeleton() {
 
 export default function SlotEditPage() {
   const { id, slotId } = useParams();
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const { data: experience } = useExperience(id);
   const { data: slot, loading, error: loadError } = useSlot(slotId);
@@ -44,9 +44,10 @@ export default function SlotEditPage() {
       // Don't send bookedCount or experienceId in update
       const { bookedCount, experienceId, ...rest } = payload;
       await updateSlot(slotId, rest);
-      navigate(`/admin/experiences/${id}/slots`);
+      toast.success(t("admin.common.savedSuccess"));
     } catch (err) {
       setServerError(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }

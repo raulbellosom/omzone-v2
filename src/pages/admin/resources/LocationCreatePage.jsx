@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import LocationForm from "@/components/admin/resources/LocationForm";
 import { createLocation } from "@/hooks/useLocations";
-import { ROUTES } from "@/constants/routes";
 import { useLanguage } from "@/hooks/useLanguage";
+import { toast } from "sonner";
 
 export default function LocationCreatePage() {
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
@@ -16,9 +14,10 @@ export default function LocationCreatePage() {
     setServerError(null);
     try {
       await createLocation(payload);
-      navigate(`${ROUTES.ADMIN_RESOURCES}?tab=locations`);
+      toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
       setServerError(err.message);
+      toast.error(err.message);
     } finally {
       setSubmitting(false);
     }
