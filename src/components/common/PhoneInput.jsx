@@ -1,17 +1,40 @@
-import { useState } from "react";
-import { defaultCountries, parseCountry, FlagImage } from "react-international-phone";
+import { useState, useEffect, useRef } from "react";
+import {
+  defaultCountries,
+  parseCountry,
+  FlagImage,
+} from "react-international-phone";
 import * as Popover from "@radix-ui/react-popover";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 
-// ── Full country list — MX first, rest alphabetical ─────────────────────────
+// ── Full country list — MX first, US second, rest alphabetical ─────────────
 const ALL_COUNTRIES = (() => {
   const parsed = defaultCountries.map(parseCountry);
   const mx = parsed.find((c) => c.iso2 === "mx");
-  const rest = parsed.filter((c) => c.iso2 !== "mx");
-  return mx ? [mx, ...rest] : rest;
+  const us = parsed.find((c) => c.iso2 === "us");
+  const rest = parsed.filter((c) => c.iso2 !== "mx" && c.iso2 !== "us");
+  return [...[mx, us].filter(Boolean), ...rest];
 })();
+
+// Country display names via Intl.DisplayNames — browser-native, covers all countries
+const displayNames = {
+  es: new Intl.DisplayNames(["es"], { type: "region" }),
+  en: new Intl.DisplayNames(["en"], { type: "region" }),
+};
+
+// Returns name in the given locale, falling back to the other locale then iso2
+function getCountryName(iso2, locale = "es") {
+  const code = iso2.toUpperCase();
+  const primary = displayNames[locale] ?? displayNames.es;
+  const fallback = locale === "es" ? displayNames.en : displayNames.es;
+  try {
+    return primary.of(code) || fallback.of(code) || iso2;
+  } catch {
+    return iso2;
+  }
+}
 
 // Sorted by dialCode length DESC to avoid prefix collisions on detection
 const BY_DIAL_LEN = [...ALL_COUNTRIES].sort(
@@ -55,7 +78,7 @@ export default function PhoneInput({
   error = false,
   className,
 }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -64,6 +87,17 @@ export default function PhoneInput({
   const [localNumber, setLocalNumber] = useState(() =>
     extractLocal(value, detectCountry(value).dialCode),
   );
+
+  // Sync internal state when the controlled `value` is set externally
+  // (e.g., after profile loads asynchronously on first visit).
+  // Only overwrite if the user hasn't started typing (localNumber still empty).
+  const userTyping = useRef(false);
+  useEffect(() => {
+    if (!value || userTyping.current) return;
+    const detected = detectCountry(value);
+    setCountryState(detected);
+    setLocalNumber(extractLocal(value, detected.dialCode));
+  }, [value]);
 
   // ── Emit combined value ──────────────────────────────────────────────────
   function emit(dialCode, local) {
@@ -81,6 +115,7 @@ export default function PhoneInput({
   function handleLocalChange(e) {
     // Allow digits and spaces only
     const raw = e.target.value.replace(/[^\d\s]/g, "");
+    userTyping.current = true;
     setLocalNumber(raw);
     emit(country.dialCode, raw);
   }
@@ -88,8 +123,17 @@ export default function PhoneInput({
   // ── Filter countries by search ───────────────────────────────────────────
   const filtered = search
     ? ALL_COUNTRIES.filter((c) => {
-        const q = search.toLowerCase();
-        return c.name.toLowerCase().includes(q) || c.dialCode.includes(q);
+        const raw = search.toLowerCase();
+        // Strip leading + so "+1", "+52" etc. match dial codes
+        const q = raw.replace(/^\+/, "");
+        // Search in current locale name + English fallback for robustness
+        const localeName = getCountryName(c.iso2, language).toLowerCase();
+        const enName = getCountryName(c.iso2, "en").toLowerCase();
+        return (
+          localeName.includes(raw) ||
+          enName.includes(raw) ||
+          c.dialCode.includes(q)
+        );
       })
     : ALL_COUNTRIES;
 
@@ -188,7 +232,7 @@ export default function PhoneInput({
                           : "text-charcoal",
                       )}
                     >
-                      {c.name}
+                      {getCountryName(c.iso2, language)}
                     </span>
                     <span className="text-charcoal-subtle text-xs tabular-nums shrink-0">
                       +{c.dialCode}
