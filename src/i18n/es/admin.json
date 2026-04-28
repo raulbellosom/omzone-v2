@@ -956,7 +956,9 @@
       "heading": "Mi Cuenta",
       "subtitle": "Administra tu perfil y seguridad",
       "sectionProfile": "Perfil",
-      "sectionSecurity": "Seguridad"
+      "sectionSecurity": "Seguridad",
+      "sectionPhone": "Teléfono",
+      "sectionPhoneDesc": "Actualiza tu número de contacto. Se requiere tu contraseña actual."
     },
     "assistedSale": {
       "steps": {

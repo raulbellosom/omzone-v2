@@ -42,6 +42,7 @@ export const SheetContent = React.forwardRef(function SheetContent(
       <SheetOverlay />
       <DialogPrimitive.Content
         ref={ref}
+        aria-describedby={undefined}
         className={cn(
           "fixed z-50 bg-white shadow-modal overflow-y-auto",
           sides[side],

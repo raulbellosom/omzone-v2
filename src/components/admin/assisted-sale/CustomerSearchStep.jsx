@@ -9,9 +9,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 
 function CustomerCard({ profile, selected, onSelect, t }) {
   const name =
-    profile.displayName ||
-    `${profile.firstName ?? ""} ${profile.lastName ?? ""}`.trim() ||
-    "";
+    `${profile.firstName ?? ""} ${profile.lastName ?? ""}`.trim() || "";
   return (
     <button
       type="button"
@@ -54,8 +52,7 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
     setWizardField("customer", profile);
     setWizardField(
       "customerName",
-      profile.displayName ||
-        `${profile.firstName ?? ""} ${profile.lastName ?? ""}`.trim(),
+      `${profile.firstName ?? ""} ${profile.lastName ?? ""}`.trim(),
     );
     setWizardField("customerEmail", profile.email || "");
     setWizardField("customerPhone", profile.phone || "");
@@ -219,7 +216,9 @@ export default function CustomerSearchStep({ wizard, setWizardField }) {
           <CheckCircle2 className="h-4 w-4 text-sage shrink-0" />
           <span className="text-sm text-charcoal">
             <strong>
-              {wizard.customer.displayName || wizard.customerName}
+              {wizard.customer.firstName
+                ? `${wizard.customer.firstName} ${wizard.customer.lastName ?? ""}`.trim()
+                : wizard.customerName}
             </strong>
             {" — "}
             {wizard.customer.email || wizard.customerEmail}

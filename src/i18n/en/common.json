@@ -149,7 +149,12 @@
       "errorPasswordShort": "New password must be at least 8 characters.",
       "errorMismatch": "Passwords do not match.",
       "errorWrongPassword": "Current password is incorrect.",
-      "errorGeneric": "Something went wrong. Please try again."
+      "errorGeneric": "Something went wrong. Please try again.",
+      "sendRecoveryHelper": "Forgot your current password? We\u2019ll send a reset link to your email.",
+      "sendRecoveryButton": "Send link via email",
+      "sendRecoverySending": "Sending\u2026",
+      "sendRecoverySent": "Link sent. Check your inbox.",
+      "sendRecoveryError": "Couldn\u2019t send the link. Please try again."
     },
     "forgotPasswordLink": "Forgot your password?"
   }

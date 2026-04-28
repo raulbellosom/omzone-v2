@@ -8,6 +8,7 @@ import {
   FileText,
   Check,
   AlertCircle,
+  Lock,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserProfile } from "@/hooks/useUserProfile";
@@ -18,16 +19,19 @@ import Input from "@/components/common/Input";
 import { Textarea } from "@/components/common/Textarea";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
+import PhoneInput from "@/components/common/PhoneInput";
+import { account } from "@/lib/appwrite";
+import { isValidPhone, sanitizePhone } from "@/lib/utils";
 
 const BIO_MAX = 1000;
 
 export default function PortalProfilePage() {
-  const { user } = useAuth();
+  const { user, hydrateUser } = useAuth();
   const { t } = useLanguage();
   const { profile, loading, error, updateProfile } = useUserProfile();
 
+  // ─── Personal info form ──────────────────────────────────────────────────
   const [form, setForm] = useState({
-    displayName: "",
     firstName: "",
     lastName: "",
     language: "es",
@@ -38,10 +42,16 @@ export default function PortalProfilePage() {
   const [saveError, setSaveError] = useState(null);
   const [success, setSuccess] = useState(false);
 
+  // ─── Phone form ──────────────────────────────────────────────────────────
+  const [phoneForm, setPhoneForm] = useState({ phone: "", phonePassword: "" });
+  const [phoneErrors, setPhoneErrors] = useState({});
+  const [phoneSaving, setPhoneSaving] = useState(false);
+  const [phoneError, setPhoneError] = useState(null);
+  const [phoneSaved, setPhoneSaved] = useState(false);
+
   useEffect(() => {
     if (profile) {
       setForm({
-        displayName: profile.displayName || "",
         firstName: profile.firstName || "",
         lastName: profile.lastName || "",
         language: profile.language || "es",
@@ -49,6 +59,12 @@ export default function PortalProfilePage() {
       });
     }
   }, [profile]);
+
+  useEffect(() => {
+    if (user?.phone) {
+      setPhoneForm((prev) => ({ ...prev, phone: user.phone }));
+    }
+  }, [user?.phone]);
 
   function handleChange(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -68,7 +84,6 @@ export default function PortalProfilePage() {
   async function handleSubmit(e) {
     e.preventDefault();
     const trimmed = {
-      displayName: form.displayName.trim(),
       firstName: form.firstName.trim(),
       lastName: form.lastName.trim(),
       language: form.language,
@@ -76,8 +91,8 @@ export default function PortalProfilePage() {
     };
 
     const errs = {};
-    if (!trimmed.displayName && !trimmed.firstName) {
-      errs.displayName = t("portal.profile.errorDisplayName");
+    if (!trimmed.firstName) {
+      errs.firstName = t("portal.profile.errorFirstName");
     }
     if (trimmed.bio && trimmed.bio.length > BIO_MAX) {
       errs.bio = `Max ${BIO_MAX}`;
@@ -91,12 +106,60 @@ export default function PortalProfilePage() {
     setSaveError(null);
     try {
       await updateProfile(trimmed);
+      // Sync full name to Auth so UserMenuDropdown + other Auth-based views refresh
+      const fullName = [trimmed.firstName, trimmed.lastName]
+        .filter(Boolean)
+        .join(" ");
+      await account.updateName(fullName);
+      await hydrateUser();
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
       setSaveError(err.message);
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handlePhoneSubmit(e) {
+    e.preventDefault();
+    const errs = {};
+    if (!phoneForm.phone || !isValidPhone(phoneForm.phone)) {
+      errs.phone = t("common.phoneError");
+    }
+    if (!phoneForm.phonePassword) {
+      errs.phonePassword = t("portal.profile.phonePasswordRequired");
+    }
+    if (Object.keys(errs).length > 0) {
+      setPhoneErrors(errs);
+      return;
+    }
+
+    setPhoneSaving(true);
+    setPhoneError(null);
+    try {
+      const sanitized = sanitizePhone(phoneForm.phone);
+      await account.updatePhone(sanitized, phoneForm.phonePassword);
+      await updateProfile({ phone: sanitized });
+      await hydrateUser();
+      setPhoneForm((prev) => ({ ...prev, phonePassword: "" }));
+      setPhoneSaved(true);
+      setTimeout(() => setPhoneSaved(false), 3000);
+    } catch (err) {
+      const msg = err.message || "";
+      if (err.code === 409 || msg.toLowerCase().includes("same phone")) {
+        setPhoneError(t("portal.profile.phoneErrorDuplicate"));
+      } else if (
+        err.code === 401 ||
+        msg.toLowerCase().includes("invalid credentials") ||
+        msg.toLowerCase().includes("wrong password")
+      ) {
+        setPhoneError(t("portal.profile.phoneErrorWrongPassword"));
+      } else {
+        setPhoneError(msg);
+      }
+    } finally {
+      setPhoneSaving(false);
     }
   }
 
@@ -183,7 +246,7 @@ export default function PortalProfilePage() {
             <Card className="p-6">
               <div className="flex flex-col items-center">
                 <AvatarUpload
-                  name={profile?.displayName || user?.name}
+                  name={user?.name}
                   photoId={profile?.photoId}
                   onUploaded={handleAvatarUploaded}
                 />
@@ -251,26 +314,6 @@ export default function PortalProfilePage() {
                 </p>
 
                 <div className="space-y-4">
-                  {/* Display name */}
-                  <div>
-                    <label className="block text-xs font-medium text-charcoal-muted mb-1.5">
-                      {t("portal.profile.displayNameLabel")}
-                    </label>
-                    <Input
-                      icon={User}
-                      value={form.displayName}
-                      onChange={(e) =>
-                        handleChange("displayName", e.target.value)
-                      }
-                      placeholder={t("portal.profile.displayNamePlaceholder")}
-                    />
-                    {errors.displayName && (
-                      <p className="text-xs text-red-600 mt-1">
-                        {errors.displayName}
-                      </p>
-                    )}
-                  </div>
-
                   {/* First / Last name */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -284,6 +327,11 @@ export default function PortalProfilePage() {
                         }
                         placeholder={t("portal.profile.firstNamePlaceholder")}
                       />
+                      {errors.firstName && (
+                        <p className="text-xs text-red-600 mt-1">
+                          {errors.firstName}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-charcoal-muted mb-1.5">
@@ -314,24 +362,6 @@ export default function PortalProfilePage() {
                 </p>
 
                 <div className="space-y-4">
-                  {/* Phone (read-only from Auth) */}
-                  <div>
-                    <label className="block text-xs font-medium text-charcoal-muted mb-1.5">
-                      {t("portal.profile.phoneLabel")}
-                    </label>
-                    <Input
-                      icon={Phone}
-                      type="tel"
-                      value={user?.phone || ""}
-                      disabled
-                      className="bg-warm-gray/50 text-charcoal-muted"
-                    />
-                    <p className="text-[11px] text-charcoal-subtle mt-1">
-                      {t("portal.profile.phoneHelper") ||
-                        "Phone is managed through your account settings."}
-                    </p>
-                  </div>
-
                   {/* Bio */}
                   <div>
                     <label className="block text-xs font-medium text-charcoal-muted mb-1.5">
@@ -380,7 +410,88 @@ export default function PortalProfilePage() {
                 )}
               </div>
             </form>
-            {/* Security card */}{" "}
+
+            {/* ─── Phone card ─── */}
+            <Card className="p-6">
+              <div className="flex items-center gap-2 mb-1">
+                <Phone className="w-4 h-4 text-sage" />
+                <h2 className="text-sm font-semibold text-charcoal uppercase tracking-wider">
+                  {t("portal.profile.sectionContact")}
+                </h2>
+              </div>
+              <p className="text-xs text-charcoal-muted mb-5">
+                {t("portal.profile.sectionContactDesc")}
+              </p>
+              {phoneError && (
+                <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700 mb-4">
+                  {phoneError}
+                </div>
+              )}
+              <form onSubmit={handlePhoneSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-medium text-charcoal-muted mb-1.5">
+                    {t("portal.profile.phoneLabel")}
+                  </label>
+                  <PhoneInput
+                    value={phoneForm.phone}
+                    onChange={(val) => {
+                      setPhoneForm((prev) => ({ ...prev, phone: val }));
+                      setPhoneErrors((prev) => ({ ...prev, phone: undefined }));
+                    }}
+                    error={!!phoneErrors.phone}
+                  />
+                  {phoneErrors.phone && (
+                    <p className="text-xs text-red-600 mt-1">
+                      {phoneErrors.phone}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-charcoal-muted mb-1.5">
+                    <Lock className="inline w-3.5 h-3.5 mr-1 -mt-0.5" />
+                    {t("portal.profile.phonePasswordLabel")}
+                  </label>
+                  <Input
+                    type="password"
+                    value={phoneForm.phonePassword}
+                    onChange={(e) => {
+                      setPhoneForm((prev) => ({
+                        ...prev,
+                        phonePassword: e.target.value,
+                      }));
+                      setPhoneErrors((prev) => ({
+                        ...prev,
+                        phonePassword: undefined,
+                      }));
+                    }}
+                    placeholder="••••••••"
+                  />
+                  {phoneErrors.phonePassword && (
+                    <p className="text-xs text-red-600 mt-1">
+                      {phoneErrors.phonePassword}
+                    </p>
+                  )}
+                  <p className="text-[11px] text-charcoal-subtle mt-1">
+                    {t("portal.profile.phoneHelper")}
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Button type="submit" disabled={phoneSaving}>
+                    {phoneSaving
+                      ? t("portal.profile.phoneUpdating")
+                      : t("portal.profile.phoneUpdateButton")}
+                  </Button>
+                  {phoneSaved && (
+                    <span className="inline-flex items-center gap-1 text-sm text-sage font-medium animate-in fade-in">
+                      <Check className="w-4 h-4" />
+                      {t("portal.profile.phoneUpdated")}
+                    </span>
+                  )}
+                </div>
+              </form>
+            </Card>
+
+            {/* Security card */}
             <Card className="p-6">
               <div className="flex items-center gap-2 mb-1">
                 <Shield className="w-4 h-4 text-sage" />

@@ -3705,15 +3705,6 @@
       "rowSecurity": true,
       "columns": [
         {
-          "key": "displayName",
-          "type": "varchar",
-          "required": false,
-          "array": false,
-          "size": 255,
-          "default": null,
-          "encrypt": false
-        },
-        {
           "key": "firstName",
           "type": "varchar",
           "required": false,
@@ -3777,12 +3768,6 @@
         }
       ],
       "indexes": [
-        {
-          "key": "displayName_fulltext",
-          "type": "fulltext",
-          "attributes": ["displayName"],
-          "orders": []
-        },
         {
           "key": "email_fulltext",
           "type": "fulltext",

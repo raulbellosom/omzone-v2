@@ -1,22 +1,22 @@
-import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, Globe, List } from 'lucide-react';
-import DocsSearch from './DocsSearch';
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Menu, Globe, List } from "lucide-react";
+import DocsSearch from "./DocsSearch";
 
-export default function DocsTopbar({ onMenuClick, onTOCClick, lang = 'en' }) {
+export default function DocsTopbar({ onMenuClick, onTOCClick, lang = "en" }) {
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleLangChange = (newLang) => {
     setLangMenuOpen(false);
-    
+
     // Get current path parts
-    const pathParts = location.pathname.split('/').filter(Boolean);
-    const VALID_LANGS = ['en', 'es'];
-    
+    const pathParts = location.pathname.split("/").filter(Boolean);
+    const VALID_LANGS = ["en", "es"];
+
     // Check if we're on a docs page with lang prefix
-    if (pathParts[0] === 'help' && pathParts[1] === 'docs') {
+    if (pathParts[0] === "help" && pathParts[1] === "docs") {
       if (pathParts.length >= 4) {
         // Has lang prefix: /help/docs/es/slug -> /help/docs/en/slug
         const slug = pathParts[3];
@@ -43,9 +43,9 @@ export default function DocsTopbar({ onMenuClick, onTOCClick, lang = 'en' }) {
   };
 
   return (
-    <header 
-      className="h-14 sm:h-16 border-b border-stone-200 bg-white sticky top-0 z-20 overflow-x-hidden"
-      style={{ paddingTop: 'env(safe-area-inset-top)' }}
+    <header
+      className="h-14 sm:h-16 border-b border-stone-200 bg-white sticky top-0 z-20"
+      style={{ paddingTop: "env(safe-area-inset-top)" }}
     >
       <div className="h-full px-2 sm:px-4 flex items-center justify-between gap-1 sm:gap-4 min-w-0">
         {/* Mobile Menu Button */}
@@ -58,8 +58,8 @@ export default function DocsTopbar({ onMenuClick, onTOCClick, lang = 'en' }) {
         </button>
 
         {/* Left: Branding - hidden on mobile, shown in sidebar */}
-        <a 
-          href={`/help/docs/${lang}`} 
+        <a
+          href={`/help/docs/${lang}`}
           className="hidden md:block text-lg font-semibold text-stone-800 whitespace-nowrap shrink-0"
         >
           OMZONE Docs
@@ -82,21 +82,25 @@ export default function DocsTopbar({ onMenuClick, onTOCClick, lang = 'en' }) {
               <Globe className="w-4 h-4 shrink-0" />
               <span className="uppercase text-xs sm:text-sm">{lang}</span>
             </button>
-            
+
             {langMenuOpen && (
               <div className="absolute right-0 mt-1 w-32 bg-white border border-stone-200 rounded-lg shadow-lg z-30">
                 <button
-                  onClick={() => handleLangChange('en')}
+                  onClick={() => handleLangChange("en")}
                   className={`w-full px-3 py-2 text-left text-sm hover:bg-stone-50 ${
-                    lang === 'en' ? 'text-stone-900 font-medium' : 'text-stone-600'
+                    lang === "en"
+                      ? "text-stone-900 font-medium"
+                      : "text-stone-600"
                   }`}
                 >
                   English
                 </button>
                 <button
-                  onClick={() => handleLangChange('es')}
+                  onClick={() => handleLangChange("es")}
                   className={`w-full px-3 py-2 text-left text-sm hover:bg-stone-50 ${
-                    lang === 'es' ? 'text-stone-900 font-medium' : 'text-stone-600'
+                    lang === "es"
+                      ? "text-stone-900 font-medium"
+                      : "text-stone-600"
                   }`}
                 >
                   Español
@@ -119,8 +123,18 @@ export default function DocsTopbar({ onMenuClick, onTOCClick, lang = 'en' }) {
             href="/admin"
             className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-stone-600 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors whitespace-nowrap"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
             Back to Admin
           </a>

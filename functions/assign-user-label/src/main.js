@@ -95,6 +95,7 @@ async function handleSignupEvent({ req, res, log, error }) {
     const userId = eventUser.$id;
     const userName = eventUser.name || "";
     const userEmail = eventUser.email || "";
+    const userPhone = eventUser.phone || null;
 
     log(`Processing signup for user: ${userId}`);
 
@@ -115,9 +116,6 @@ async function handleSignupEvent({ req, res, log, error }) {
     const firstName = nameParts[0] || "";
     const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
 
-    // Derive displayName: prefer name, fallback to email prefix
-    const displayName = userName || (userEmail ? userEmail.split("@")[0] : "");
-
     // Create user_profiles document — $id = Auth userId
     try {
       const created = await db.createDocument(
@@ -125,11 +123,11 @@ async function handleSignupEvent({ req, res, log, error }) {
         COLLECTION_PROFILES,
         userId,
         {
-          displayName,
           firstName,
           lastName,
           language: "es",
           email: userEmail || null,
+          phone: userPhone || null,
         },
         [
           `read("user:${userId}")`,
@@ -163,7 +161,6 @@ async function handleSignupEvent({ req, res, log, error }) {
       ok: true,
       data: {
         userId,
-        displayName,
         labels: currentLabels.includes("client")
           ? currentLabels
           : [...currentLabels, "client"],
@@ -209,21 +206,21 @@ async function handleEnsureProfile({ req, res, log, error }) {
       log(`ensure-profile: profile already exists for ${userId}`);
       return res.json({
         ok: true,
-        data: { userId, existed: true, displayName: existing.displayName },
+        data: { userId, existed: true },
       });
     } catch {
       // Not found — proceed to create
     }
 
-    // Fetch Auth user for name/email
+    // Fetch Auth user for name/email/phone
     const authUser = await users.get(userId);
     const userName = authUser.name || "";
     const userEmail = authUser.email || "";
+    const userPhone = authUser.phone || null;
 
     const nameParts = userName.trim().split(/\s+/);
     const firstName = nameParts[0] || "";
     const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
-    const displayName = userName || (userEmail ? userEmail.split("@")[0] : "");
 
     try {
       const created = await db.createDocument(
@@ -231,11 +228,11 @@ async function handleEnsureProfile({ req, res, log, error }) {
         COLLECTION_PROFILES,
         userId,
         {
-          displayName,
           firstName,
           lastName,
           language: "es",
           email: userEmail || null,
+          phone: userPhone || null,
         },
         [
           `read("user:${userId}")`,
@@ -277,7 +274,7 @@ async function handleEnsureProfile({ req, res, log, error }) {
 
     return res.json({
       ok: true,
-      data: { userId, existed: false, displayName },
+      data: { userId, existed: false },
     });
   } catch (err) {
     error(`ensure-profile failed: ${err.message}`);

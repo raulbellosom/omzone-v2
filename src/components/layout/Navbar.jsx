@@ -14,6 +14,7 @@ import {
   SheetTitle,
 } from "@/components/common/sheet";
 import { Menu, ArrowRight } from "lucide-react";
+import UserAvatar from "@/components/common/UserAvatar";
 import isHeroRoute from "@/lib/heroRoutes";
 
 const NAV_LINKS = [
@@ -238,12 +239,27 @@ export default function Navbar() {
                   )}
 
                   <div className="my-2 border-t border-warm-gray-dark/40" />
-                  <div className="px-3 py-2 text-xs text-charcoal-muted">
-                    {user.name || user.email}
+
+                  {/* User card */}
+                  <div className="flex items-center gap-3 px-3 py-3">
+                    <UserAvatar
+                      name={user.name}
+                      photoId={user.prefs?.photoId}
+                      size="md"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-charcoal truncate">
+                        {user.name || t("nav.user")}
+                      </p>
+                      <p className="text-xs text-charcoal-muted truncate">
+                        {user.email}
+                      </p>
+                    </div>
                   </div>
+
                   <button
                     onClick={handleLogout}
-                    className="py-3 px-3 text-sm font-medium text-left text-charcoal hover:bg-warm-gray rounded-xl transition-colors cursor-pointer"
+                    className="py-3 px-3 text-sm font-medium text-left text-red-600 hover:bg-red-50 rounded-xl transition-colors cursor-pointer"
                   >
                     {t("nav.logout")}
                   </button>

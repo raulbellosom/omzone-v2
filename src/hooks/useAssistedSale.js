@@ -68,7 +68,10 @@ export function useAssistedSale() {
 
     // Resolve customer name/email from selected customer or new customer fields
     const customerName = wizard.customer
-      ? (wizard.customer.displayName || wizard.customerName).trim()
+      ? (
+          `${wizard.customer.firstName ?? ""} ${wizard.customer.lastName ?? ""}`.trim() ||
+          wizard.customerName
+        ).trim()
       : wizard.customerName.trim();
     const customerEmail = wizard.customer
       ? (wizard.customer.email || wizard.customerEmail).trim().toLowerCase()

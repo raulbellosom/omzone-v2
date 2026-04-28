@@ -184,6 +184,7 @@ export function AuthProvider({ children }) {
         login,
         register,
         logout,
+        hydrateUser,
         resendVerification,
         resendVerificationWithCredentials,
         changePassword,

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { User, Globe, FileText, Check } from "lucide-react";
+import { Globe, FileText, Check } from "lucide-react";
 import { Input } from "@/components/common/Input";
 import { Textarea } from "@/components/common/Textarea";
 import StickyFormBar from "@/components/common/StickyFormBar";
@@ -9,8 +9,8 @@ const BIO_MAX = 1000;
 
 function validate(form) {
   const errors = {};
-  if (!form.displayName?.trim() && !form.firstName?.trim()) {
-    errors.displayName = "Se requiere al menos nombre visible o nombre.";
+  if (!form.firstName?.trim()) {
+    errors.firstName = "El nombre es requerido.";
   }
   if (form.bio && form.bio.length > BIO_MAX) {
     errors.bio = `Máximo ${BIO_MAX} caracteres.`;
@@ -21,7 +21,6 @@ function validate(form) {
 export default function ProfileForm({ profile, email, onSave, saving }) {
   const { t } = useLanguage();
   const [form, setForm] = useState({
-    displayName: "",
     firstName: "",
     lastName: "",
     language: "es",
@@ -33,7 +32,6 @@ export default function ProfileForm({ profile, email, onSave, saving }) {
   useEffect(() => {
     if (profile) {
       setForm({
-        displayName: profile.displayName || "",
         firstName: profile.firstName || "",
         lastName: profile.lastName || "",
         language: profile.language || "es",
@@ -51,7 +49,6 @@ export default function ProfileForm({ profile, email, onSave, saving }) {
   async function handleSubmit(e) {
     e.preventDefault();
     const trimmed = {
-      displayName: form.displayName.trim(),
       firstName: form.firstName.trim(),
       lastName: form.lastName.trim(),
       language: form.language,
@@ -88,22 +85,6 @@ export default function ProfileForm({ profile, email, onSave, saving }) {
         </p>
       </div>
 
-      {/* Display name */}
-      <div>
-        <label className="block text-xs font-medium text-charcoal-muted mb-1.5">
-          Nombre visible
-        </label>
-        <Input
-          icon={User}
-          value={form.displayName}
-          onChange={(e) => handleChange("displayName", e.target.value)}
-          placeholder="Cómo quieres que te llamemos"
-        />
-        {errors.displayName && (
-          <p className="text-xs text-red-600 mt-1">{errors.displayName}</p>
-        )}
-      </div>
-
       {/* First / last name — two columns on sm+ */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
@@ -115,6 +96,9 @@ export default function ProfileForm({ profile, email, onSave, saving }) {
             onChange={(e) => handleChange("firstName", e.target.value)}
             placeholder="Nombre"
           />
+          {errors.firstName && (
+            <p className="text-xs text-red-600 mt-1">{errors.firstName}</p>
+          )}
         </div>
         <div>
           <label className="block text-xs font-medium text-charcoal-muted mb-1.5">

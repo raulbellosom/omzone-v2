@@ -34,7 +34,12 @@ export default function PortalSidebar({ open, onClose }) {
   const { t } = useLanguage();
 
   const displayName =
-    profile?.displayName || user?.name || user?.email?.split("@")[0] || "User";
+    (profile?.firstName
+      ? `${profile.firstName} ${profile.lastName ?? ""}`.trim()
+      : null) ||
+    user?.name ||
+    user?.email?.split("@")[0] ||
+    "User";
   const photoId = profile?.photoId || null;
 
   const handleLogout = async () => {

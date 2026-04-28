@@ -103,7 +103,12 @@ export default function PortalDashboardPage() {
   if (loading || profileLoading) return <DashboardSkeleton />;
 
   const displayName =
-    profile?.displayName || user?.name || user?.email?.split("@")[0] || "there";
+    (profile?.firstName
+      ? `${profile.firstName} ${profile.lastName ?? ""}`.trim()
+      : null) ||
+    user?.name ||
+    user?.email?.split("@")[0] ||
+    "there";
   const photoId = profile?.photoId || null;
   const hasActivity =
     data.activeTickets > 0 || data.activePasses > 0 || data.recentOrders > 0;

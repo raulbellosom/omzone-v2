@@ -42,9 +42,9 @@ function formatCurrency(amount, currency = "MXN") {
 }
 
 function getDisplayName(profile) {
-  if (profile?.displayName) return profile.displayName;
   const parts = [profile?.firstName, profile?.lastName].filter(Boolean);
-  return parts.length > 0 ? parts.join(" ") : "—";
+  if (parts.length > 0) return parts.join(" ");
+  return profile?.email || "—";
 }
 
 function DetailRow({ label, children }) {

@@ -13,7 +13,6 @@ function formatDate(iso) {
 }
 
 function getDisplayName(client) {
-  if (client.displayName) return client.displayName;
   const parts = [client.firstName, client.lastName].filter(Boolean);
   return parts.length > 0 ? parts.join(" ") : "—";
 }
@@ -35,7 +34,9 @@ export default function ClientCard({ client }) {
             {getDisplayName(client)}
           </p>
           {client.phone && (
-            <p className="text-xs text-charcoal-muted truncate">{client.phone}</p>
+            <p className="text-xs text-charcoal-muted truncate">
+              {client.phone}
+            </p>
           )}
         </div>
         {client.language && (

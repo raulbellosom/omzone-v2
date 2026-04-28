@@ -12,7 +12,6 @@ function formatDate(iso) {
 }
 
 function getDisplayName(client) {
-  if (client.displayName) return client.displayName;
   const parts = [client.firstName, client.lastName].filter(Boolean);
   return parts.length > 0 ? parts.join(" ") : "—";
 }
@@ -20,10 +19,18 @@ function getDisplayName(client) {
 function SkeletonRow() {
   return (
     <tr className="border-b border-sand-dark/40 animate-pulse">
-      <td className="px-4 py-3"><div className="h-4 w-36 rounded bg-warm-gray" /></td>
-      <td className="px-4 py-3 hidden md:table-cell"><div className="h-4 w-28 rounded bg-warm-gray" /></td>
-      <td className="px-4 py-3 hidden lg:table-cell"><div className="h-4 w-12 rounded bg-warm-gray" /></td>
-      <td className="px-4 py-3 hidden lg:table-cell"><div className="h-4 w-24 rounded bg-warm-gray" /></td>
+      <td className="px-4 py-3">
+        <div className="h-4 w-36 rounded bg-warm-gray" />
+      </td>
+      <td className="px-4 py-3 hidden md:table-cell">
+        <div className="h-4 w-28 rounded bg-warm-gray" />
+      </td>
+      <td className="px-4 py-3 hidden lg:table-cell">
+        <div className="h-4 w-12 rounded bg-warm-gray" />
+      </td>
+      <td className="px-4 py-3 hidden lg:table-cell">
+        <div className="h-4 w-24 rounded bg-warm-gray" />
+      </td>
     </tr>
   );
 }
@@ -61,7 +68,10 @@ export default function ClientTable({ clients, loading }) {
 
           {!loading && clients.length === 0 && (
             <tr>
-              <td colSpan={4} className="px-4 py-12 text-center text-sm text-charcoal-subtle">
+              <td
+                colSpan={4}
+                className="px-4 py-12 text-center text-sm text-charcoal-subtle"
+              >
                 {t("admin.clients.emptyDefault")}
               </td>
             </tr>
@@ -75,7 +85,9 @@ export default function ClientTable({ clients, loading }) {
                 onClick={() => handleRowClick(client.$id)}
               >
                 <td className="px-4 py-3">
-                  <p className="font-medium text-charcoal">{getDisplayName(client)}</p>
+                  <p className="font-medium text-charcoal">
+                    {getDisplayName(client)}
+                  </p>
                 </td>
                 <td className="px-4 py-3 hidden md:table-cell text-charcoal-muted">
                   {client.phone || "—"}

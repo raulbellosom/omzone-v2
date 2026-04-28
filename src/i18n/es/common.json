@@ -149,7 +149,12 @@
       "errorPasswordShort": "La nueva contraseña debe tener al menos 8 caracteres.",
       "errorMismatch": "Las contraseñas no coinciden.",
       "errorWrongPassword": "La contraseña actual es incorrecta.",
-      "errorGeneric": "Algo salió mal. Intenta de nuevo."
+      "errorGeneric": "Algo salió mal. Intenta de nuevo.",
+      "sendRecoveryHelper": "¿Olvidaste tu contraseña actual? Te enviamos un enlace de cambio a tu correo.",
+      "sendRecoveryButton": "Enviar enlace por correo",
+      "sendRecoverySending": "Enviando…",
+      "sendRecoverySent": "Enlace enviado. Revisa tu bandeja de entrada.",
+      "sendRecoveryError": "No pudimos enviar el enlace. Intenta de nuevo."
     },
     "forgotPasswordLink": "¿Olvidaste tu contraseña?"
   }

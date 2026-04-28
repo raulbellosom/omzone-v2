@@ -210,7 +210,8 @@ export default function ReviewConfirmStep({
   }
 
   const customerName = wizard.customer
-    ? wizard.customer.displayName || wizard.customerName
+    ? `${wizard.customer.firstName ?? ""} ${wizard.customer.lastName ?? ""}`.trim() ||
+      wizard.customerName
     : wizard.customerName;
   const customerEmail = wizard.customer?.email || wizard.customerEmail;
   const emailMissing = !customerEmail?.trim();

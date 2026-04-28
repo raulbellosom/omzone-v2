@@ -354,9 +354,9 @@ export default async ({ req, res, log, error }) => {
               COL_PROFILES,
               ticket.userId,
             );
-            customerName =
-              profile.displayName ||
-              [profile.firstName, profile.lastName].filter(Boolean).join(" ");
+            customerName = [profile.firstName, profile.lastName]
+              .filter(Boolean)
+              .join(" ");
           } catch {
             // ignore
           }

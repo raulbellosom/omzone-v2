@@ -12,6 +12,8 @@ import {
   BookOpen,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserProfile } from "@/hooks/useUserProfile";
+import { useAvatarUpload } from "@/hooks/useAvatarUpload";
 import { displayRoleName } from "@/constants/roles";
 import { ROUTES } from "@/constants/routes";
 import {
@@ -38,13 +40,19 @@ function getInitials(name) {
 
 export default function UserMenuDropdown({ transparent = false }) {
   const { user, labels, logout, isAdmin, isClient, isRoot } = useAuth();
+  const { profile } = useUserProfile();
+  const { getPreviewUrl } = useAvatarUpload();
   const navigate = useNavigate();
 
   if (!user) return null;
 
-  const displayName = user.name || user.email || "Usuario";
+  const firstName = profile?.firstName || user.name?.split(" ")[0] || "User";
+  const displayName = profile?.firstName
+    ? [profile.firstName, profile.lastName].filter(Boolean).join(" ")
+    : user.name || user.email || "Usuario";
   const roleName = displayRoleName(labels);
-  const initials = getInitials(user.name);
+  const initials = getInitials(displayName);
+  const avatarUrl = getPreviewUrl(profile?.photoId, { width: 80, height: 80 });
 
   const handleLogout = async () => {
     await logout();
@@ -63,12 +71,12 @@ export default function UserMenuDropdown({ transparent = false }) {
           <span
             className={`hidden sm:block text-sm font-medium truncate max-w-32 transition-colors duration-300 ${transparent ? "text-white" : "text-charcoal"}`}
           >
-            {user.name?.split(" ")[0] || "User"}
+            {firstName}
           </span>
           <Avatar className="h-8 w-8">
-            {user.avatarUrl && (
-              <AvatarImage src={user.avatarUrl} alt={displayName} />
-            )}
+            {avatarUrl ? (
+              <AvatarImage src={avatarUrl} alt={displayName} />
+            ) : null}
             <AvatarFallback className="text-xs">{initials}</AvatarFallback>
           </Avatar>
         </button>

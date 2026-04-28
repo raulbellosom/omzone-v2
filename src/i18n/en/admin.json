@@ -956,7 +956,9 @@
       "heading": "My Account",
       "subtitle": "Manage your profile and security settings",
       "sectionProfile": "Profile",
-      "sectionSecurity": "Security"
+      "sectionSecurity": "Security",
+      "sectionPhone": "Phone",
+      "sectionPhoneDesc": "Update your contact number. Your current password is required."
     },
     "assistedSale": {
       "steps": {

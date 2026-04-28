@@ -3,7 +3,9 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export const DropdownMenu = DropdownMenuPrimitive.Root;
+export function DropdownMenu({ modal = false, ...props }) {
+  return <DropdownMenuPrimitive.Root modal={modal} {...props} />;
+}
 export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 export const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 export const DropdownMenuSub = DropdownMenuPrimitive.Sub;
@@ -83,7 +85,10 @@ export const DropdownMenuSeparator = React.forwardRef(
 );
 
 export const DropdownMenuCheckboxItem = React.forwardRef(
-  function DropdownMenuCheckboxItem({ className, children, checked, ...props }, ref) {
+  function DropdownMenuCheckboxItem(
+    { className, children, checked, ...props },
+    ref,
+  ) {
     return (
       <DropdownMenuPrimitive.CheckboxItem
         ref={ref}

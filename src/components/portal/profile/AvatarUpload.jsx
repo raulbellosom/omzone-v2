@@ -14,13 +14,16 @@ export default function AvatarUpload({ name, photoId, onUploaded }) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Local preview
+    // Local preview while uploading
     const objectUrl = URL.createObjectURL(file);
     setPreview(objectUrl);
 
     try {
       const fileId = await upload(file);
-      onUploaded(fileId);
+      // Wait for the parent's updateProfile to complete before clearing the
+      // local preview, so the Appwrite storage URL can take over seamlessly.
+      await onUploaded(fileId);
+      setPreview(null);
     } catch {
       // error shown via hook state
       setPreview(null);
