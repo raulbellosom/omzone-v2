@@ -135,7 +135,7 @@ export default function OrderDetailPage() {
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div className="min-w-0 flex-1">
-          <h1 className="text-xl md:text-2xl font-semibold text-charcoal truncate">
+          <h1 className="text-xl md:text-2xl font-display font-semibold text-charcoal truncate">
             {order.orderNumber}
           </h1>
           <p className="text-sm text-charcoal-muted">
@@ -285,7 +285,7 @@ export default function OrderDetailPage() {
                       <p className="text-sm text-charcoal font-medium">
                         {formatCurrency(p.amount, p.currency)}
                       </p>
-                      <p className="text-xs text-charcoal-muted truncate max-w-[200px]">
+                      <p className="text-xs text-charcoal-muted truncate max-w-50">
                         {p.stripePaymentIntentId || "—"}
                       </p>
                     </div>

@@ -128,7 +128,7 @@ export default function HeroSlidesPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div className="space-y-1">
-          <h1 className="text-xl font-semibold text-charcoal">
+          <h1 className="text-2xl font-display font-semibold text-charcoal">
             {t("admin.heroSlides.pageTitle")}
           </h1>
           <p className="text-sm text-charcoal-subtle max-w-2xl">

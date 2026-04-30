@@ -159,7 +159,7 @@ export default function UserPassDetailPage() {
             <ArrowLeft className="h-4 w-4" />
             {t("admin.userPassDetail.assignedPasses")}
           </Link>
-          <h1 className="text-xl font-semibold text-charcoal">
+          <h1 className="text-2xl font-display font-semibold text-charcoal">
             {snap?.name ?? userPass.passId}
           </h1>
           <p className="text-xs text-charcoal-muted font-mono mt-0.5">
@@ -202,7 +202,7 @@ export default function UserPassDetailPage() {
               <dt className="text-charcoal-muted">
                 {t("admin.userPassDetail.order")}
               </dt>
-              <dd className="text-charcoal font-mono text-xs truncate max-w-[140px]">
+              <dd className="text-charcoal font-mono text-xs truncate max-w-36">
                 {userPass.orderId}
               </dd>
             </div>
@@ -312,10 +312,10 @@ export default function UserPassDetailPage() {
                           : `+${Math.abs(c.creditsUsed)}`}
                       </span>
                     </td>
-                    <td className="px-4 py-2 text-charcoal-muted text-xs truncate max-w-[120px]">
+                    <td className="px-4 py-2 text-charcoal-muted text-xs truncate max-w-30">
                       {c.experienceId || "—"}
                     </td>
-                    <td className="px-4 py-2 text-charcoal-muted text-xs truncate max-w-[160px]">
+                    <td className="px-4 py-2 text-charcoal-muted text-xs truncate max-w-40">
                       {c.notes || "—"}
                     </td>
                   </tr>

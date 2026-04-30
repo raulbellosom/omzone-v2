@@ -51,20 +51,20 @@ function OrderTable({ orders, loading, navigate, t }) {
     <div className="hidden md:block overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-sand-dark/40 text-left">
-            <th className="px-4 py-2.5 font-medium text-charcoal-subtle">
+          <tr className="border-b border-sand-dark bg-warm-gray/60">
+            <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
               {t("admin.recentOrders.order")}
             </th>
-            <th className="px-4 py-2.5 font-medium text-charcoal-subtle">
+            <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
               {t("admin.recentOrders.customer")}
             </th>
-            <th className="px-4 py-2.5 font-medium text-charcoal-subtle text-right">
+            <th className="px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
               {t("admin.recentOrders.total")}
             </th>
-            <th className="px-4 py-2.5 font-medium text-charcoal-subtle">
+            <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
               {t("admin.recentOrders.status")}
             </th>
-            <th className="px-4 py-2.5 font-medium text-charcoal-subtle">
+            <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
               {t("admin.recentOrders.date")}
             </th>
           </tr>

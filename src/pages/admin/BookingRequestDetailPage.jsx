@@ -288,7 +288,7 @@ export default function BookingRequestDetailPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold text-charcoal">
+          <h1 className="text-2xl font-display font-semibold text-charcoal">
             {t("admin.bookingDetail.title")}
           </h1>
           <p className="text-sm text-charcoal-muted mt-0.5">

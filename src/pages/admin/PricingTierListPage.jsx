@@ -167,7 +167,7 @@ export default function PricingTierListPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">
+          <h1 className="text-2xl font-display font-semibold text-charcoal">
             {t("admin.pricingTiers.title")}
           </h1>
           {experience && (

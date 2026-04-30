@@ -61,7 +61,7 @@ export default function PublicationSectionsPage() {
             {t("admin.publications.backToPublications")}
           </button>
           <div className="flex items-center gap-3">
-            <h1 className="text-xl font-semibold text-charcoal">
+            <h1 className="text-2xl font-display font-semibold text-charcoal">
               {publication.title}
             </h1>
             <StatusBadge status={publication.status} />

@@ -51,7 +51,7 @@ export default function ExperienceTable({
     <div className="overflow-x-auto rounded-xl border border-sand-dark">
       <table className="min-w-full text-sm">
         <thead>
-          <tr className="border-b border-sand-dark bg-warm-gray/50">
+          <tr className="border-b border-sand-dark bg-warm-gray/60">
             <th className="px-3 py-3 w-16">
               <span className="sr-only">Cover</span>
             </th>

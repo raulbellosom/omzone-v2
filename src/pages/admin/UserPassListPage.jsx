@@ -38,7 +38,7 @@ function ProgressBar({ used, total }) {
   const pct = total > 0 ? Math.min((used / total) * 100, 100) : 0;
   return (
     <div className="flex items-center gap-2">
-      <div className="flex-1 h-2 rounded-full bg-warm-gray overflow-hidden max-w-[120px]">
+      <div className="flex-1 h-2 rounded-full bg-warm-gray overflow-hidden max-w-30">
         <div
           className={cn(
             "h-full rounded-full transition-all",
@@ -60,20 +60,20 @@ function TableSkeleton() {
     <div className="hidden md:block overflow-x-auto rounded-xl border border-sand-dark">
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
-            <th className="px-4 py-3 font-medium">
+          <tr className="border-b border-sand-dark bg-warm-gray/60">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
               {t("admin.userPasses.pass")}
             </th>
-            <th className="px-4 py-3 font-medium">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
               {t("admin.userPasses.user")}
             </th>
-            <th className="px-4 py-3 font-medium">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
               {t("admin.userPasses.credits")}
             </th>
-            <th className="px-4 py-3 font-medium">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
               {t("admin.userPasses.expires")}
             </th>
-            <th className="px-4 py-3 font-medium">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
               {t("admin.userPasses.status")}
             </th>
           </tr>
@@ -151,7 +151,7 @@ export default function UserPassListPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">
+          <h1 className="text-2xl font-display font-semibold text-charcoal">
             {t("admin.userPasses.title")}
           </h1>
           <p className="text-sm text-charcoal-subtle mt-0.5">
@@ -170,7 +170,7 @@ export default function UserPassListPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[180px] max-w-sm">
+        <div className="relative flex-1 min-w-44 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal-muted" />
           <Input
             value={userSearch}
@@ -217,37 +217,43 @@ export default function UserPassListPage() {
         <div className="hidden md:block overflow-x-auto rounded-xl border border-sand-dark">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
-                <th className="px-4 py-3 font-medium">
+              <tr className="border-b border-sand-dark bg-warm-gray/60">
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.userPasses.pass")}
                 </th>
-                <th className="px-4 py-3 font-medium">
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.userPasses.user")}
                 </th>
-                <th className="px-4 py-3 font-medium">
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.userPasses.credits")}
                 </th>
-                <th className="px-4 py-3 font-medium">
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.userPasses.expires")}
                 </th>
-                <th className="px-4 py-3 font-medium">
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.userPasses.status")}
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-sand-dark">
+            <tbody>
               {userPasses.map((up) => {
                 const snap = parseSnapshot(up.passSnapshot);
                 return (
                   <tr
                     key={up.$id}
-                    className="hover:bg-warm-gray/30 transition-colors cursor-pointer"
+                    className="group border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors cursor-pointer"
                     onClick={() => navigate(`/admin/user-passes/${up.$id}`)}
                   >
-                    <td className="px-4 py-3 font-medium text-charcoal">
-                      {snap?.name ?? up.passId}
+                    <td className="px-4 py-3">
+                      <Link
+                        to={ROUTES.ADMIN_USER_PASS_DETAIL.replace(":userPassId", up.$id)}
+                        className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {snap?.name ?? up.passId}
+                      </Link>
                     </td>
-                    <td className="px-4 py-3 text-charcoal-muted text-xs font-mono truncate max-w-[160px]">
+                    <td className="px-4 py-3 text-charcoal-muted text-xs font-mono truncate max-w-40">
                       {up.userId}
                     </td>
                     <td className="px-4 py-3">
@@ -287,7 +293,7 @@ export default function UserPassListPage() {
                 </div>
                 <ProgressBar used={up.usedCredits} total={up.totalCredits} />
                 <div className="flex items-center gap-4 text-xs text-charcoal-muted">
-                  <span className="font-mono truncate max-w-[120px]">
+                  <span className="font-mono truncate max-w-30">
                     {up.userId}
                   </span>
                   <span>

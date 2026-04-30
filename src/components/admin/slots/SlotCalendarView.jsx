@@ -96,7 +96,7 @@ export default function SlotCalendarView({
           <Button variant="ghost" size="sm" onClick={prevWeek}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <span className="text-sm font-medium text-charcoal min-w-[200px] text-center">
+          <span className="text-sm font-medium text-charcoal min-w-52 text-center">
             {weekLabel}
           </span>
           <Button variant="ghost" size="sm" onClick={nextWeek}>

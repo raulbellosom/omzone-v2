@@ -187,7 +187,7 @@ export default function SlotQuickCreatePage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">
+        <h1 className="text-2xl font-display font-semibold text-charcoal">
           {t("admin.slotQuickCreate.title")}
         </h1>
         {experience && (
@@ -349,7 +349,7 @@ export default function SlotQuickCreatePage() {
                 key={i}
                 className="flex items-center gap-3 text-sm px-3 py-1.5 rounded-lg bg-warm-gray/40"
               >
-                <span className="text-charcoal font-medium min-w-[120px]">
+                <span className="text-charcoal font-medium min-w-30">
                   {s.label}
                 </span>
                 <span className="text-charcoal-muted">

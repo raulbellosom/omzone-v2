@@ -173,7 +173,7 @@ export default function RoomListTab() {
             { value: "", label: t("admin.resourceLists.allLocations") },
             ...locations.map((l) => ({ value: l.$id, label: l.name })),
           ]}
-          minWidth="min-w-[180px]"
+          minWidth="min-w-44"
           fullWidth={false}
         />
 

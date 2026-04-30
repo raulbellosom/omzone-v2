@@ -252,7 +252,7 @@ export default function ClientDetailPage() {
           <ArrowLeft className="h-4 w-4" />
           {t("admin.clientDetail.back")}
         </button>
-        <h1 className="text-2xl font-semibold text-charcoal">
+        <h1 className="text-2xl font-display font-semibold text-charcoal">
           {getDisplayName(profile)}
         </h1>
       </div>

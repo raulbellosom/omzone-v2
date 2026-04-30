@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 import { getStatusBadgeClass, getStatusLabel } from "@/hooks/useBookingRequests";
 import { cn } from "@/lib/utils";
@@ -49,13 +49,13 @@ export default function BookingRequestTable({ requests, loading }) {
     <div className="overflow-x-auto rounded-xl border border-sand-dark">
       <table className="min-w-full text-sm">
         <thead>
-          <tr className="bg-warm-gray/50">
-            <th className="px-4 py-3 text-left font-medium text-charcoal">Contact</th>
-            <th className="px-4 py-3 text-left font-medium text-charcoal hidden sm:table-cell">Experience</th>
-            <th className="px-4 py-3 text-left font-medium text-charcoal hidden md:table-cell">Preferred Date</th>
-            <th className="px-4 py-3 text-center font-medium text-charcoal hidden md:table-cell">Pax</th>
-            <th className="px-4 py-3 text-left font-medium text-charcoal">Status</th>
-            <th className="px-4 py-3 text-left font-medium text-charcoal hidden lg:table-cell">Created</th>
+          <tr className="border-b border-sand-dark bg-warm-gray/60">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">Contact</th>
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted hidden sm:table-cell">Experience</th>
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted hidden md:table-cell">Preferred Date</th>
+            <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-charcoal-muted hidden md:table-cell">Pax</th>
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">Status</th>
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted hidden lg:table-cell">Created</th>
           </tr>
         </thead>
         <tbody>
@@ -73,15 +73,21 @@ export default function BookingRequestTable({ requests, loading }) {
             requests.map((req) => (
               <tr
                 key={req.$id}
-                className="border-b border-sand-dark/40 hover:bg-warm-gray/30 transition-colors cursor-pointer"
+                className="group border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors cursor-pointer"
                 onClick={() => handleRowClick(req.$id)}
               >
                 <td className="px-4 py-3">
-                  <p className="font-medium text-charcoal truncate max-w-[160px]">{req.contactName}</p>
-                  <p className="text-xs text-charcoal-subtle truncate max-w-[160px]">{req.contactEmail}</p>
+                  <Link
+                    to={ROUTES.ADMIN_BOOKING_REQUEST_DETAIL.replace(":id", req.$id)}
+                    className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors truncate max-w-40 block"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {req.contactName}
+                  </Link>
+                  <p className="text-xs text-charcoal-subtle truncate max-w-40">{req.contactEmail}</p>
                 </td>
                 <td className="px-4 py-3 hidden sm:table-cell">
-                  <p className="text-charcoal truncate max-w-[200px]">
+                  <p className="text-charcoal truncate max-w-50">
                     {req._experience?.publicName || req.experienceId}
                   </p>
                 </td>

@@ -43,7 +43,7 @@ export default function AdminDashboardPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-semibold text-charcoal">
+        <h1 className="text-2xl font-display font-semibold text-charcoal">
           {t("admin.dashboard.welcome").replace("{name}", firstName)}
         </h1>
         <p className="text-charcoal-muted mt-0.5">

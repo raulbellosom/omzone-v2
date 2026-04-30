@@ -278,24 +278,24 @@ export default function PricingTierTable({
         <SortableContext items={ids} strategy={verticalListSortingStrategy}>
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
-                <th className="px-3 py-3 font-medium w-10" />
-                <th className="px-4 py-3 font-medium">
+              <tr className="border-b border-sand-dark bg-warm-gray/60">
+                <th className="px-3 py-3 w-10" />
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.pricingTierTable.headers.name")}
                 </th>
-                <th className="px-4 py-3 font-medium">
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.pricingTierTable.headers.type")}
                 </th>
-                <th className="px-4 py-3 font-medium text-right">
+                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.pricingTierTable.headers.price")}
                 </th>
-                <th className="px-4 py-3 font-medium text-center">
+                <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.pricingTierTable.headers.badge")}
                 </th>
-                <th className="px-4 py-3 font-medium text-center">
+                <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.pricingTierTable.headers.active")}
                 </th>
-                <th className="px-4 py-3 font-medium text-right">
+                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.pricingTierTable.headers.actions")}
                 </th>
               </tr>

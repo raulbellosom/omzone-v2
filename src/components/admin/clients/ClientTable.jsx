@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 import { useLanguage } from "@/hooks/useLanguage";
 
@@ -47,17 +47,17 @@ export default function ClientTable({ clients, loading }) {
     <div className="overflow-x-auto rounded-xl border border-sand-dark">
       <table className="min-w-full text-sm">
         <thead>
-          <tr className="bg-warm-gray/50">
-            <th className="px-4 py-3 text-left font-medium text-charcoal">
+          <tr className="border-b border-sand-dark bg-warm-gray/60">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
               {t("admin.clients.name")}
             </th>
-            <th className="px-4 py-3 text-left font-medium text-charcoal hidden md:table-cell">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted hidden md:table-cell">
               {t("admin.clients.phone")}
             </th>
-            <th className="px-4 py-3 text-left font-medium text-charcoal hidden lg:table-cell">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted hidden lg:table-cell">
               {t("admin.clients.language")}
             </th>
-            <th className="px-4 py-3 text-left font-medium text-charcoal hidden lg:table-cell">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted hidden lg:table-cell">
               {t("admin.clients.registered")}
             </th>
           </tr>
@@ -81,13 +81,17 @@ export default function ClientTable({ clients, loading }) {
             clients.map((client) => (
               <tr
                 key={client.$id}
-                className="border-b border-sand-dark/40 hover:bg-warm-gray/30 transition-colors cursor-pointer"
+                className="group border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors cursor-pointer"
                 onClick={() => handleRowClick(client.$id)}
               >
                 <td className="px-4 py-3">
-                  <p className="font-medium text-charcoal">
+                  <Link
+                    to={ROUTES.ADMIN_CLIENT_DETAIL.replace(":userId", client.$id)}
+                    className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     {getDisplayName(client)}
-                  </p>
+                  </Link>
                 </td>
                 <td className="px-4 py-3 hidden md:table-cell text-charcoal-muted">
                   {client.phone || "—"}
