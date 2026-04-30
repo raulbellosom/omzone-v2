@@ -24,9 +24,9 @@ export default function ExperienceCreatePage() {
   }
 
   return (
-    <div className="space-y-5 max-w-4xl">
+    <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">
+        <h1 className="text-2xl font-display font-semibold text-charcoal">
           {t("admin.experiences.createTitle")}
         </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5">

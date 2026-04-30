@@ -1,11 +1,12 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Search, X, Sparkles } from "lucide-react";
+import { Plus, Search, X, Sparkles, LayoutList, Grid2x2 } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
 import { Card } from "@/components/common/Card";
 import ExperienceTable from "@/components/admin/experiences/ExperienceTable";
 import ExperienceCard from "@/components/admin/experiences/ExperienceCard";
+import ExperienceGridView from "@/components/admin/experiences/ExperienceGridView";
 import { useExperiences, updateExperience } from "@/hooks/useExperiences";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -42,6 +43,9 @@ export default function ExperienceListPage() {
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(0);
   const [actionError, setActionError] = useState(null);
+  const [viewMode, setViewMode] = useState(
+    () => localStorage.getItem("admin:exp:view") || "table",
+  );
 
   const offset = page * PAGE_SIZE;
   const { data, total, loading, error, refetch } = useExperiences({
@@ -69,6 +73,11 @@ export default function ExperienceListPage() {
     setPage(0);
   }
 
+  function setView(mode) {
+    setViewMode(mode);
+    localStorage.setItem("admin:exp:view", mode);
+  }
+
   const handleStatusUpdate = useCallback(
     async (id, newStatus) => {
       setActionError(null);
@@ -89,7 +98,7 @@ export default function ExperienceListPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">
+          <h1 className="text-2xl font-display font-semibold text-charcoal">
             {t("admin.experiences.title")}
           </h1>
           {!loading && (
@@ -112,9 +121,10 @@ export default function ExperienceListPage() {
         )}
       </div>
 
-      {/* Filters */}
+      {/* Controls bar: filters + view toggle */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[200px] max-w-sm">
+        {/* Search */}
+        <div className="relative flex-1 min-w-50">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal-subtle pointer-events-none" />
           <Input
             value={search}
@@ -123,18 +133,24 @@ export default function ExperienceListPage() {
             className="pl-9 h-10"
           />
         </div>
+
+        {/* Type filter */}
         <AdminSelect
           value={type}
           onChange={handleTypeChange}
           options={TYPE_OPTIONS.map((o) => ({ ...o, label: t(o.i18nKey) }))}
           fullWidth={false}
         />
+
+        {/* Status filter */}
         <AdminSelect
           value={status}
           onChange={handleStatusChange}
           options={STATUS_OPTIONS.map((o) => ({ ...o, label: t(o.i18nKey) }))}
           fullWidth={false}
         />
+
+        {/* Clear filters */}
         {hasFilters && (
           <button
             type="button"
@@ -150,6 +166,36 @@ export default function ExperienceListPage() {
             {t("admin.common.clear")}
           </button>
         )}
+
+        {/* View toggle — desktop only */}
+        <div className="hidden md:flex items-center gap-1 ml-auto">
+          <button
+            type="button"
+            onClick={() => setView("table")}
+            title="Table view"
+            className={cn(
+              "p-2 rounded-lg transition-colors",
+              viewMode === "table"
+                ? "bg-warm-gray-dark/30 text-charcoal"
+                : "text-charcoal-subtle hover:text-charcoal hover:bg-warm-gray",
+            )}
+          >
+            <LayoutList className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setView("grid")}
+            title="Grid view"
+            className={cn(
+              "p-2 rounded-lg transition-colors",
+              viewMode === "grid"
+                ? "bg-warm-gray-dark/30 text-charcoal"
+                : "text-charcoal-subtle hover:text-charcoal hover:bg-warm-gray",
+            )}
+          >
+            <Grid2x2 className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       {/* Error states */}
@@ -182,31 +228,28 @@ export default function ExperienceListPage() {
         </Card>
       )}
 
-      {/* Desktop table */}
-      {!loading && data.length > 0 && (
+      {/* Desktop: table or grid based on viewMode */}
+      {(loading || data.length > 0) && (
         <div className="hidden md:block">
-          <ExperienceTable
-            experiences={data}
-            loading={loading}
-            onStatusChange={handleStatusUpdate}
-            canAdmin={isAdmin}
-          />
+          {viewMode === "grid" ? (
+            <ExperienceGridView
+              experiences={data}
+              loading={loading}
+              onStatusChange={handleStatusUpdate}
+              canAdmin={isAdmin}
+            />
+          ) : (
+            <ExperienceTable
+              experiences={data}
+              loading={loading}
+              onStatusChange={handleStatusUpdate}
+              canAdmin={isAdmin}
+            />
+          )}
         </div>
       )}
 
-      {/* Loading skeleton — desktop */}
-      {loading && (
-        <div className="hidden md:block">
-          <ExperienceTable
-            experiences={[]}
-            loading={true}
-            onStatusChange={handleStatusUpdate}
-            canAdmin={isAdmin}
-          />
-        </div>
-      )}
-
-      {/* Mobile cards */}
+      {/* Mobile: always cards */}
       <div className="md:hidden space-y-3">
         {loading &&
           Array.from({ length: 4 }).map((_, i) => (

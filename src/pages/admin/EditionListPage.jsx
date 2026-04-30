@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Plus, Pencil, Calendar, Users } from "lucide-react";
 import { useEditions } from "@/hooks/useEditions";
@@ -111,7 +111,7 @@ export default function EditionListPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">
+          <h1 className="text-2xl font-display font-semibold text-charcoal">
             {t("admin.editions.title")}
           </h1>
           {experience && (
@@ -156,24 +156,27 @@ export default function EditionListPage() {
         <div className="hidden md:block overflow-x-auto rounded-xl border border-sand-dark">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
-                <th className="px-4 py-3 font-medium">Nombre</th>
-                <th className="px-4 py-3 font-medium">Fechas</th>
-                <th className="px-4 py-3 font-medium text-center">Capacidad</th>
-                <th className="px-4 py-3 font-medium">Estado</th>
-                <th className="px-4 py-3 font-medium text-right">Acciones</th>
+              <tr className="bg-warm-gray/60 border-b border-sand-dark text-left">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">{t("admin.editions.name")}</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">{t("admin.editions.dates")}</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted text-center">{t("admin.editions.capacity")}</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">{t("admin.editions.status")}</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted text-right">{t("admin.editions.actions")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-sand-dark">
               {editions.map((ed) => {
                 const st = STATUS_MAP[ed.status] || STATUS_MAP.draft;
+                const editUrl = `/admin/experiences/${id}/editions/${ed.$id}/edit`;
                 return (
-                  <tr
-                    key={ed.$id}
-                    className="hover:bg-warm-gray/30 transition-colors"
-                  >
-                    <td className="px-4 py-3 font-medium text-charcoal">
-                      {ed.name}
+                  <tr key={ed.$id} className="group hover:bg-warm-gray/30 transition-colors">
+                    <td className="px-4 py-3">
+                      <Link
+                        to={editUrl}
+                        className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors"
+                      >
+                        {ed.name}
+                      </Link>
                     </td>
                     <td className="px-4 py-3 text-charcoal-muted whitespace-nowrap">
                       {formatDate(ed.startDate)} — {formatDate(ed.endDate)}
@@ -184,18 +187,14 @@ export default function EditionListPage() {
                     <td className="px-4 py-3">
                       <Badge variant={st.variant}>{t(st.i18nKey)}</Badge>
                     </td>
-                    <td className="px-4 py-3 text-right">
-                      <button
-                        onClick={() =>
-                          navigate(
-                            `/admin/experiences/${id}/editions/${ed.$id}/edit`,
-                          )
-                        }
-                        className="p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
+                    <td className="px-4 py-3 text-right opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                      <Link
+                        to={editUrl}
+                        className="inline-flex p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
                         aria-label={t("admin.editions.editAriaLabel")}
                       >
                         <Pencil className="h-4 w-4" />
-                      </button>
+                      </Link>
                     </td>
                   </tr>
                 );

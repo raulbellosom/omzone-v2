@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Copy } from "lucide-react";
 import { Input } from "@/components/common/Input";
 import AdminFormLayout from "@/components/admin/AdminFormLayout";
 import { Card } from "@/components/common/Card";
@@ -151,9 +152,55 @@ export default function EditionForm({
   }
 
   const isDisabled = submitting;
+  const isEditMode = Boolean(initialData?.$id);
+
+  const asideContent = (
+    <>
+      <div className="rounded-2xl border border-sand-dark/40 bg-white p-4 shadow-sm space-y-4">
+        <p className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wider">
+          {t("admin.formSections.publication")}
+        </p>
+        <Field label={t("admin.experienceForm.status")} required error={errors.status}>
+          <AdminSelect
+            value={form.status}
+            onChange={(v) => set("status", v)}
+            options={STATUS_OPTIONS.map((o) => ({ ...o, label: t(o.i18nKey) }))}
+            disabled={isDisabled}
+            error={errors.status}
+          />
+        </Field>
+      </div>
+
+      {isEditMode && (
+        <div className="rounded-2xl border border-sand-dark/40 bg-white p-4 shadow-sm space-y-3">
+          <p className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wider">
+            {t("admin.common.quickInfo") || "Quick Info"}
+          </p>
+          <div className="space-y-2.5 text-sm">
+            {initialData?.$createdAt && (
+              <div>
+                <p className="text-xs text-charcoal-subtle">Created</p>
+                <p className="text-xs text-charcoal">
+                  {new Date(initialData.$createdAt).toLocaleDateString()}
+                </p>
+              </div>
+            )}
+            {initialData?.$updatedAt && (
+              <div>
+                <p className="text-xs text-charcoal-subtle">Last updated</p>
+                <p className="text-xs text-charcoal">
+                  {new Date(initialData.$updatedAt).toLocaleDateString()}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
 
   return (
-    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={isDisabled} submitLabel={submitLabel}>
+    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={isDisabled} submitLabel={submitLabel} asideChildren={asideContent}>
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
@@ -261,12 +308,12 @@ export default function EditionForm({
         </div>
       </Card>
 
-      {/* Capacidad y estado */}
+      {/* Capacidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
           {t("admin.editionForm.sectionCapacityStatus")}
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="max-w-xs">
           <Field
             label={t("admin.editionForm.maxCapacity")}
             hint={t("admin.editionForm.capacityHint")}
@@ -278,22 +325,6 @@ export default function EditionForm({
               onChange={(e) => set("capacity", e.target.value)}
               placeholder="30"
               disabled={isDisabled}
-            />
-          </Field>
-          <Field
-            label={t("admin.experienceForm.status")}
-            required
-            error={errors.status}
-          >
-            <AdminSelect
-              value={form.status}
-              onChange={(v) => set("status", v)}
-              options={STATUS_OPTIONS.map((o) => ({
-                ...o,
-                label: t(o.i18nKey),
-              }))}
-              disabled={isDisabled}
-              error={errors.status}
             />
           </Field>
         </div>

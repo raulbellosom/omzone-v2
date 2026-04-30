@@ -18,6 +18,7 @@ import {
   MessageSquare,
   FileText,
   Image,
+  Images as HeroImagesIcon,
   Settings,
   UserCog,
   BookOpen,
@@ -104,6 +105,12 @@ const NAV_SECTIONS = [
     labelKey: "admin.sidebar.content",
     items: [
       {
+        nameKey: "admin.sidebar.heroSlides",
+        path: ROUTES.ADMIN_HERO_SLIDES,
+        icon: HeroImagesIcon,
+        adminOnly: true,
+      },
+      {
         nameKey: "admin.sidebar.publications",
         path: ROUTES.ADMIN_PUBLICATIONS,
         icon: FileText,
@@ -143,7 +150,8 @@ function SidebarNav({ onNavigate }) {
   const { t } = useLanguage();
   const { labels } = useAuth();
   const isRoot = labels.includes(ROLES.ROOT);
-  
+  const isAdmin = labels.includes(ROLES.ADMIN) || isRoot;
+
   return (
     <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
       {NAV_SECTIONS.map((section) => (
@@ -155,7 +163,9 @@ function SidebarNav({ onNavigate }) {
             {section.items.map((item) => {
               // Skip root-only items for non-root users
               if (item.rootOnly && !isRoot) return null;
-              
+              // Skip admin-only items for operators
+              if (item.adminOnly && !isAdmin) return null;
+
               return (
                 <li key={item.path}>
                   <NavLink

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Copy } from "lucide-react";
 import { Input } from "@/components/common/Input";
 import AdminFormLayout from "@/components/admin/AdminFormLayout";
 import { Card } from "@/components/common/Card";
@@ -211,9 +212,84 @@ export default function AddonForm({
   }
 
   const isDisabled = submitting;
+  const isEditMode = Boolean(initialData?.$id);
+
+  const asideContent = (
+    <>
+      <div className="rounded-2xl border border-sand-dark/40 bg-white p-4 shadow-sm space-y-4">
+        <p className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wider">
+          {t("admin.formSections.publication")}
+        </p>
+        <Field label={t("admin.addonForm.status")} required error={errors.status}>
+          <AdminSelect
+            value={form.status}
+            onChange={(v) => set("status", v)}
+            options={STATUS_OPTIONS.map((o) => ({ ...o, label: t(o.i18nKey) }))}
+            disabled={isDisabled}
+            error={errors.status}
+          />
+        </Field>
+        <Field
+          label={t("admin.addonForm.sortOrder")}
+          hint={t("admin.addonForm.sortOrderHint")}
+        >
+          <Input
+            type="number"
+            min={0}
+            value={form.sortOrder}
+            onChange={(e) => set("sortOrder", e.target.value)}
+            placeholder="0"
+            disabled={isDisabled}
+          />
+        </Field>
+      </div>
+
+      {isEditMode && (
+        <div className="rounded-2xl border border-sand-dark/40 bg-white p-4 shadow-sm space-y-3">
+          <p className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wider">
+            {t("admin.common.quickInfo") || "Quick Info"}
+          </p>
+          <div className="space-y-2.5 text-sm">
+            <div>
+              <p className="text-xs text-charcoal-subtle mb-1">Slug</p>
+              <div className="flex items-center gap-1.5">
+                <code className="text-xs text-charcoal bg-warm-gray rounded-lg px-2 py-1 font-mono truncate flex-1 border border-sand-dark/40">
+                  {form.slug || "—"}
+                </code>
+                <button
+                  type="button"
+                  onClick={() => navigator.clipboard.writeText(form.slug)}
+                  className="p-1.5 rounded-lg hover:bg-warm-gray text-charcoal-subtle hover:text-charcoal transition-colors"
+                  title="Copy slug"
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
+            {initialData?.$createdAt && (
+              <div>
+                <p className="text-xs text-charcoal-subtle">Created</p>
+                <p className="text-xs text-charcoal">
+                  {new Date(initialData.$createdAt).toLocaleDateString()}
+                </p>
+              </div>
+            )}
+            {initialData?.$updatedAt && (
+              <div>
+                <p className="text-xs text-charcoal-subtle">Last updated</p>
+                <p className="text-xs text-charcoal">
+                  {new Date(initialData.$updatedAt).toLocaleDateString()}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
 
   return (
-    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={isDisabled} submitLabel={submitLabel}>
+    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={isDisabled} submitLabel={submitLabel} asideChildren={asideContent}>
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
@@ -391,44 +467,6 @@ export default function AddonForm({
               onChange={(e) => set("maxQuantity", e.target.value)}
               placeholder="10"
               disabled={isDisabled}
-            />
-          </Field>
-          <Field
-            label={t("admin.addonForm.sortOrder")}
-            hint={t("admin.addonForm.sortOrderHint")}
-          >
-            <Input
-              type="number"
-              min={0}
-              value={form.sortOrder}
-              onChange={(e) => set("sortOrder", e.target.value)}
-              placeholder="0"
-              disabled={isDisabled}
-            />
-          </Field>
-        </div>
-      </Card>
-
-      {/* Estado */}
-      <Card className="p-5 space-y-4">
-        <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          {t("admin.addonForm.sectionStatus")}
-        </h2>
-        <div className="max-w-xs">
-          <Field
-            label={t("admin.addonForm.status")}
-            required
-            error={errors.status}
-          >
-            <AdminSelect
-              value={form.status}
-              onChange={(v) => set("status", v)}
-              options={STATUS_OPTIONS.map((o) => ({
-                ...o,
-                label: t(o.i18nKey),
-              }))}
-              disabled={isDisabled}
-              error={errors.status}
             />
           </Field>
         </div>

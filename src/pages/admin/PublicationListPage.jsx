@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+﻿import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Search, X, FileText } from "lucide-react";
 import { Button } from "@/components/common/Button";
@@ -92,7 +92,7 @@ export default function PublicationListPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">
+          <h1 className="text-2xl font-display font-semibold text-charcoal">
             {t("admin.publications.title")}
           </h1>
           {!loading && (
@@ -117,7 +117,7 @@ export default function PublicationListPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[200px] max-w-sm">
+        <div className="relative flex-1 min-w-50 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal-subtle pointer-events-none" />
           <Input
             value={search}

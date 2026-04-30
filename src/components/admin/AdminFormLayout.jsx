@@ -2,18 +2,6 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "@/components/common/Button";
 import { cn } from "@/lib/utils";
 
-/**
- * Admin form layout with responsive save actions.
- *
- * - Mobile/tablet (< lg): sticky bottom bar with full-width button
- * - Desktop (lg+): sticky aside panel on the right with save button
- *
- * Usage:
- *   <AdminFormLayout onSubmit={handleSubmit} submitting={submitting}>
- *     <Card>...</Card>
- *     <Card>...</Card>
- *   </AdminFormLayout>
- */
 export default function AdminFormLayout({
   children,
   onSubmit,
@@ -23,13 +11,13 @@ export default function AdminFormLayout({
   onCancel,
   cancelLabel,
   isDirty,
+  asideChildren,
 }) {
   const { t } = useLanguage();
 
   const label = submitLabel || t("admin.common.saveChanges");
   const isDisabled = disabled || submitting;
 
-  /* ── Shared button block ─────────────────────────────────── */
   const submitButton = (fullWidth) => (
     <Button
       type="submit"
@@ -73,11 +61,11 @@ export default function AdminFormLayout({
   return (
     <form onSubmit={onSubmit}>
       <div className="lg:flex lg:gap-6 lg:items-start">
-        {/* ── Left: form fields ─────────────────────────────── */}
+        {/* Left: form fields */}
         <div className="space-y-6 lg:flex-1 min-w-0">{children}</div>
 
-        {/* ── Right: desktop aside ──────────────────────────── */}
-        <aside className="hidden lg:block lg:w-64 xl:w-72 lg:shrink-0 self-start sticky top-0">
+        {/* Right: desktop aside */}
+        <aside className="hidden lg:block lg:w-72 xl:w-80 shrink-0 self-start sticky top-0 space-y-4">
           <div className="rounded-2xl border border-sand-dark/40 bg-white p-4 shadow-sm space-y-3">
             <p className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wider">
               {t("admin.common.actions")}
@@ -86,27 +74,18 @@ export default function AdminFormLayout({
             {cancelButton(true)}
             {dirtyIndicator()}
           </div>
+          {asideChildren}
         </aside>
       </div>
 
-      {/* ── Mobile/tablet: sticky bottom bar ────────────────── */}
+      {/* Mobile/tablet: sticky bottom bar */}
       <div className="lg:hidden">
-        {/* Scroll buffer */}
         <div className="h-20" aria-hidden="true" />
-
-        <div
-          className={cn(
-            "sticky bottom-0 z-20",
-            "-mx-4 md:-mx-6",
-          )}
-        >
-          {/* Gradient fade */}
+        <div className={cn("sticky bottom-0 z-20", "-mx-4 md:-mx-6")}>
           <div
-            className="h-6 pointer-events-none bg-gradient-to-t from-warm-gray to-transparent"
+            className="h-6 pointer-events-none bg-linear-to-t from-warm-gray to-transparent"
             aria-hidden="true"
           />
-
-          {/* Bar */}
           <div className="py-3 px-4 md:px-6 border-t border-warm-gray-dark/15 shadow-[0_-2px_8px_rgba(0,0,0,0.06)] bg-warm-gray">
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               {submitButton(false)}

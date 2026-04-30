@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, Pencil, Ticket, Search, Users } from "lucide-react";
 import { usePasses, updatePass } from "@/hooks/usePasses";
@@ -138,7 +138,7 @@ export default function PassListPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">
+          <h1 className="text-2xl font-display font-semibold text-charcoal">
             {t("admin.passes.title")}
           </h1>
           <p className="text-sm text-charcoal-subtle mt-0.5">
@@ -169,7 +169,7 @@ export default function PassListPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[180px] max-w-sm">
+        <div className="relative flex-1 min-w-44 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal-muted" />
           <Input
             value={search}
@@ -211,76 +211,81 @@ export default function PassListPage() {
         <div className="hidden md:block overflow-x-auto rounded-xl border border-sand-dark">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
-                <th className="px-4 py-3 font-medium">
+              <tr className="bg-warm-gray/60 border-b border-sand-dark text-left">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.passes.name")}
                 </th>
-                <th className="px-4 py-3 font-medium">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.passes.credits")}
                 </th>
-                <th className="px-4 py-3 font-medium">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.passes.price")}
                 </th>
-                <th className="px-4 py-3 font-medium">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.passes.validity")}
                 </th>
-                <th className="px-4 py-3 font-medium">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.passes.status")}
                 </th>
-                <th className="px-4 py-3 font-medium text-right">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted text-right">
                   {t("admin.passes.actions")}
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-sand-dark">
-              {passes.map((pass) => (
-                <tr
-                  key={pass.$id}
-                  className="hover:bg-warm-gray/30 transition-colors"
-                >
-                  <td className="px-4 py-3 font-medium text-charcoal">
-                    {pass.name}
-                  </td>
-                  <td className="px-4 py-3 text-charcoal-muted">
-                    {pass.totalCredits} {t("admin.passes.creditsSuffix")}
-                  </td>
-                  <td className="px-4 py-3 text-charcoal-muted whitespace-nowrap">
-                    {formatPrice(pass.basePrice, pass.currency)}
-                  </td>
-                  <td className="px-4 py-3 text-charcoal-muted">
-                    {pass.validityDays
-                      ? `${pass.validityDays} ${t("admin.packages.durationDays")}`
-                      : t("admin.passes.noExpiry")}
-                  </td>
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() => toggleStatus(pass)}
-                      disabled={toggling === pass.$id}
-                      className="focus:outline-none"
-                    >
-                      <Badge
-                        variant={pass.status === "active" ? "success" : "warm"}
-                        className="cursor-pointer"
+              {passes.map((pass) => {
+                const editUrl = `/admin/passes/${pass.$id}/edit`;
+                return (
+                  <tr key={pass.$id} className="group hover:bg-warm-gray/30 transition-colors">
+                    <td className="px-4 py-3">
+                      <Link
+                        to={editUrl}
+                        className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors"
                       >
-                        {toggling === pass.$id
-                          ? "..."
-                          : pass.status === "active"
-                            ? t("admin.statuses.active")
-                            : t("admin.statuses.inactive")}
-                      </Badge>
-                    </button>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <button
-                      onClick={() => navigate(`/admin/passes/${pass.$id}/edit`)}
-                      className="p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
-                      aria-label={t("admin.passes.editAriaLabel")}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                        {pass.name}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-3 text-charcoal-muted">
+                      {pass.totalCredits} {t("admin.passes.creditsSuffix")}
+                    </td>
+                    <td className="px-4 py-3 text-charcoal-muted whitespace-nowrap">
+                      {formatPrice(pass.basePrice, pass.currency)}
+                    </td>
+                    <td className="px-4 py-3 text-charcoal-muted">
+                      {pass.validityDays
+                        ? `${pass.validityDays} ${t("admin.packages.durationDays")}`
+                        : t("admin.passes.noExpiry")}
+                    </td>
+                    <td className="px-4 py-3">
+                      <button
+                        onClick={() => toggleStatus(pass)}
+                        disabled={toggling === pass.$id}
+                        className="focus:outline-none"
+                      >
+                        <Badge
+                          variant={pass.status === "active" ? "success" : "warm"}
+                          className="cursor-pointer"
+                        >
+                          {toggling === pass.$id
+                            ? "..."
+                            : pass.status === "active"
+                              ? t("admin.statuses.active")
+                              : t("admin.statuses.inactive")}
+                        </Badge>
+                      </button>
+                    </td>
+                    <td className="px-4 py-3 text-right opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                      <Link
+                        to={editUrl}
+                        className="inline-flex p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
+                        aria-label={t("admin.passes.editAriaLabel")}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

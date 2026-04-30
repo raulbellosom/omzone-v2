@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   Plus,
@@ -182,7 +182,7 @@ export default function SlotListPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">
+          <h1 className="text-2xl font-display font-semibold text-charcoal">
             {t("admin.slots.title")}
           </h1>
           {experience && (
@@ -299,23 +299,23 @@ export default function SlotListPage() {
           <div className="hidden md:block overflow-x-auto rounded-xl border border-sand-dark">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
-                  <th className="px-4 py-3 font-medium">
+                <tr className="bg-warm-gray/60 border-b border-sand-dark text-left">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                     {t("admin.slots.date")}
                   </th>
-                  <th className="px-4 py-3 font-medium">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                     {t("admin.slots.schedule")}
                   </th>
-                  <th className="px-4 py-3 font-medium">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                     {t("admin.slots.capacity")}
                   </th>
-                  <th className="px-4 py-3 font-medium">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                     {t("admin.slots.location")}
                   </th>
-                  <th className="px-4 py-3 font-medium">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                     {t("admin.slots.status")}
                   </th>
-                  <th className="px-4 py-3 font-medium text-right">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted text-right">
                     {t("admin.slots.actions")}
                   </th>
                 </tr>
@@ -323,16 +323,19 @@ export default function SlotListPage() {
               <tbody className="divide-y divide-sand-dark">
                 {slots.map((slot) => {
                   const st = STATUS_LABELS[slot.status] || STATUS_LABELS.draft;
+                  const editUrl = `/admin/experiences/${id}/slots/${slot.$id}/edit`;
                   return (
-                    <tr
-                      key={slot.$id}
-                      className="hover:bg-warm-gray/30 transition-colors"
-                    >
+                    <tr key={slot.$id} className="group hover:bg-warm-gray/30 transition-colors">
                       <td className="px-4 py-3 text-charcoal whitespace-nowrap">
-                        {new Date(slot.startDatetime).toLocaleDateString(
-                          "es-MX",
-                          { day: "2-digit", month: "short", year: "numeric" },
-                        )}
+                        <Link
+                          to={editUrl}
+                          className="font-medium hover:text-sage-dark hover:underline underline-offset-2 transition-colors"
+                        >
+                          {new Date(slot.startDatetime).toLocaleDateString(
+                            "es-MX",
+                            { day: "2-digit", month: "short", year: "numeric" },
+                          )}
+                        </Link>
                       </td>
                       <td className="px-4 py-3 text-charcoal-muted whitespace-nowrap">
                         {formatTime(slot.startDatetime)} –{" "}
@@ -347,18 +350,14 @@ export default function SlotListPage() {
                       <td className="px-4 py-3">
                         <Badge variant={st.variant}>{t(st.i18nKey)}</Badge>
                       </td>
-                      <td className="px-4 py-3 text-right space-x-1">
-                        <button
-                          onClick={() =>
-                            navigate(
-                              `/admin/experiences/${id}/slots/${slot.$id}/edit`,
-                            )
-                          }
-                          className="p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
+                      <td className="px-4 py-3 text-right space-x-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                        <Link
+                          to={editUrl}
+                          className="inline-flex p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
                           aria-label={t("admin.common.edit")}
                         >
                           <Pencil className="h-4 w-4" />
-                        </button>
+                        </Link>
                         {slot.status !== "cancelled" && (
                           <button
                             onClick={() => handleCancel(slot)}

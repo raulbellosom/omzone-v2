@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Copy } from "lucide-react";
 import { Input } from "@/components/common/Input";
 import AdminFormLayout from "@/components/admin/AdminFormLayout";
 import { Card } from "@/components/common/Card";
@@ -190,9 +191,85 @@ export default function PublicationForm({
   }
 
   const isDisabled = submitting;
+  const isEditMode = Boolean(initialData?.$id);
+
+  const asideContent = (
+    <>
+      <div className="rounded-2xl border border-sand-dark/40 bg-white p-4 shadow-sm space-y-4">
+        <p className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wider">
+          {t("admin.formSections.publication")}
+        </p>
+        <Field label={t("admin.publicationForm.status")} required>
+          <AdminSelect
+            value={form.status}
+            onChange={(v) => set("status", v)}
+            options={STATUS_OPTIONS.map((o) => ({ ...o, label: t(o.i18nKey) }))}
+            disabled={isDisabled}
+          />
+        </Field>
+        {form.status === "published" && (
+          <Field
+            label={t("admin.publicationForm.publishDate")}
+            hint={t("admin.publicationForm.publishDateHint")}
+          >
+            <Input
+              type="datetime-local"
+              value={form.publishedAt ? form.publishedAt.slice(0, 16) : ""}
+              onChange={(e) =>
+                set("publishedAt", e.target.value ? new Date(e.target.value).toISOString() : "")
+              }
+              disabled={isDisabled}
+            />
+          </Field>
+        )}
+      </div>
+
+      {isEditMode && (
+        <div className="rounded-2xl border border-sand-dark/40 bg-white p-4 shadow-sm space-y-3">
+          <p className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wider">
+            {t("admin.common.quickInfo") || "Quick Info"}
+          </p>
+          <div className="space-y-2.5 text-sm">
+            <div>
+              <p className="text-xs text-charcoal-subtle mb-1">Slug</p>
+              <div className="flex items-center gap-1.5">
+                <code className="text-xs text-charcoal bg-warm-gray rounded-lg px-2 py-1 font-mono truncate flex-1 border border-sand-dark/40">
+                  {form.slug || "—"}
+                </code>
+                <button
+                  type="button"
+                  onClick={() => navigator.clipboard.writeText(form.slug)}
+                  className="p-1.5 rounded-lg hover:bg-warm-gray text-charcoal-subtle hover:text-charcoal transition-colors"
+                  title="Copy slug"
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
+            {initialData?.$createdAt && (
+              <div>
+                <p className="text-xs text-charcoal-subtle">Created</p>
+                <p className="text-xs text-charcoal">
+                  {new Date(initialData.$createdAt).toLocaleDateString()}
+                </p>
+              </div>
+            )}
+            {initialData?.$updatedAt && (
+              <div>
+                <p className="text-xs text-charcoal-subtle">Last updated</p>
+                <p className="text-xs text-charcoal">
+                  {new Date(initialData.$updatedAt).toLocaleDateString()}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
 
   return (
-    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={isDisabled} submitLabel={submitLabel || t("admin.common.save")}>
+    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={isDisabled} submitLabel={submitLabel || t("admin.common.save")} asideChildren={asideContent}>
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
@@ -338,46 +415,6 @@ export default function PublicationForm({
             onRemove={() => set("heroImageId", "")}
             disabled={isDisabled}
           />
-        </div>
-      </Card>
-
-      {/* Publicación */}
-      <Card className="p-5 space-y-4">
-        <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
-          {t("admin.publicationForm.sectionPublication")}
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label={t("admin.publicationForm.status")} required>
-            <AdminSelect
-              value={form.status}
-              onChange={(v) => set("status", v)}
-              options={STATUS_OPTIONS.map((o) => ({
-                ...o,
-                label: t(o.i18nKey),
-              }))}
-              disabled={isDisabled}
-            />
-          </Field>
-          {form.status === "published" && (
-            <Field
-              label={t("admin.publicationForm.publishDate")}
-              hint={t("admin.publicationForm.publishDateHint")}
-            >
-              <Input
-                type="datetime-local"
-                value={form.publishedAt ? form.publishedAt.slice(0, 16) : ""}
-                onChange={(e) =>
-                  set(
-                    "publishedAt",
-                    e.target.value
-                      ? new Date(e.target.value).toISOString()
-                      : "",
-                  )
-                }
-                disabled={isDisabled}
-              />
-            </Field>
-          )}
         </div>
       </Card>
 

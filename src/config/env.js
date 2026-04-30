@@ -73,6 +73,8 @@ const env = {
   collectionContactMessages:
     import.meta.env.VITE_APPWRITE_COLLECTION_CONTACT_MESSAGES ||
     "contact_messages",
+  collectionHeroSlides:
+    import.meta.env.VITE_APPWRITE_COLLECTION_HERO_SLIDES || "hero_slides",
 
   // ─── Buckets ───
   bucketExperienceMedia:
@@ -92,8 +94,7 @@ const env = {
     import.meta.env.VITE_APPWRITE_BUCKET_PUBLIC_RESOURCES || "public-resources",
 
   // ─── Stripe ───
-  stripePublishableKey:
-    import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "",
+  stripePublishableKey: import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "",
 
   // ─── Functions ───
   functionCreateCheckout:

@@ -146,6 +146,7 @@ const PublicationEditPage = lazy(
 const PublicationSectionsPage = lazy(
   () => import("@/pages/admin/PublicationSectionsPage"),
 );
+const HeroSlidesPage = lazy(() => import("@/pages/admin/HeroSlidesPage"));
 const AssistedSalePage = lazy(
   () => import("@/pages/admin/sales/AssistedSalePage"),
 );
@@ -378,6 +379,11 @@ export default function App() {
                 path="publications/:id/sections"
                 element={<PublicationSectionsPage />}
               />
+              <Route
+                element={<RequireLabel labels={[ROLES.ADMIN, ROLES.ROOT]} />}
+              >
+                <Route path="hero-slides" element={<HeroSlidesPage />} />
+              </Route>
               <Route path="media" element={<MediaManagerPage />} />
               <Route path="account" element={<AdminAccountPage />} />
               <Route path="settings" element={<SettingsPage />} />

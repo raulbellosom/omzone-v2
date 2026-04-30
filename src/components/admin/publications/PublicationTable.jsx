@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Pencil,
   Archive,
@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import StatusBadge from "@/components/admin/experiences/StatusBadge";
+import PublicationCategoryChip from "@/components/admin/publications/PublicationCategoryChip";
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -96,15 +97,13 @@ function ActionsMenu({ publication, onStatusChange, canAdmin }) {
       />
 
       <div className="relative flex items-center justify-end gap-1">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate(editUrl)}
+        <Link
+          to={editUrl}
+          className="inline-flex items-center justify-center h-9 w-9 rounded-lg text-charcoal-subtle hover:text-charcoal hover:bg-warm-gray transition-colors"
           title={t("admin.publications.editButton")}
         >
           <Pencil className="h-4 w-4" />
-        </Button>
+        </Link>
         <Button
           type="button"
           variant="ghost"
@@ -198,20 +197,20 @@ export default function PublicationTable({
     <div className="overflow-x-auto rounded-xl border border-sand-dark">
       <table className="min-w-full text-sm">
         <thead>
-          <tr className="border-b border-sand-dark bg-warm-gray/50">
-            <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
+          <tr className="border-b border-sand-dark bg-warm-gray/60">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
               {t("admin.publications.titleHeader")}
             </th>
-            <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
               {t("admin.publications.categoryHeader")}
             </th>
-            <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
               {t("admin.publications.statusHeader")}
             </th>
-            <th className="px-4 py-3 text-left font-medium text-charcoal-subtle hidden lg:table-cell">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted hidden lg:table-cell">
               {t("admin.publications.publishedHeader")}
             </th>
-            <th className="px-4 py-3 text-right font-medium text-charcoal-subtle">
+            <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
               {t("admin.common.actions")}
             </th>
           </tr>
@@ -232,47 +231,49 @@ export default function PublicationTable({
           )}
 
           {!loading &&
-            publications.map((pub) => (
-              <tr
-                key={pub.$id}
-                className="border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors"
-              >
-                <td className="px-4 py-3">
-                  <div>
-                    <p className="font-medium text-charcoal truncate max-w-60">
+            publications.map((pub) => {
+              const editUrl = ROUTES.ADMIN_PUBLICATION_EDIT.replace(":id", pub.$id);
+              return (
+                <tr
+                  key={pub.$id}
+                  className="group border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors"
+                >
+                  <td className="px-4 py-3">
+                    <Link
+                      to={editUrl}
+                      className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors truncate max-w-60 block"
+                    >
                       {pub.title}
-                    </p>
+                    </Link>
                     <p className="text-xs text-charcoal-subtle truncate max-w-60">
                       /{pub.slug}
                     </p>
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-charcoal-subtle">
-                  {CATEGORY_I18N_KEYS[pub.category]
-                    ? t(CATEGORY_I18N_KEYS[pub.category])
-                    : pub.category}
-                </td>
-                <td className="px-4 py-3">
-                  <StatusBadge status={pub.status} />
-                </td>
-                <td className="px-4 py-3 text-charcoal-subtle hidden lg:table-cell">
-                  {pub.publishedAt
-                    ? new Date(pub.publishedAt).toLocaleDateString("es-MX", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })
-                    : "—"}
-                </td>
-                <td className="px-4 py-3">
-                  <ActionsMenu
-                    publication={pub}
-                    onStatusChange={onStatusChange}
-                    canAdmin={canAdmin}
-                  />
-                </td>
-              </tr>
-            ))}
+                  </td>
+                  <td className="px-4 py-3">
+                    <PublicationCategoryChip category={pub.category} />
+                  </td>
+                  <td className="px-4 py-3">
+                    <StatusBadge status={pub.status} />
+                  </td>
+                  <td className="px-4 py-3 text-charcoal-subtle hidden lg:table-cell">
+                    {pub.publishedAt
+                      ? new Date(pub.publishedAt).toLocaleDateString("es-MX", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })
+                      : "—"}
+                  </td>
+                  <td className="px-4 py-3 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                    <ActionsMenu
+                      publication={pub}
+                      onStatusChange={onStatusChange}
+                      canAdmin={canAdmin}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
     </div>

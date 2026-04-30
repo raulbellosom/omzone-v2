@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Plus, Search, Pencil, X } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
@@ -214,20 +214,20 @@ export default function ResourceListTab() {
       <div className="hidden md:block overflow-x-auto rounded-xl border border-sand-dark">
         <table className="min-w-full text-sm">
           <thead>
-            <tr className="border-b border-sand-dark bg-warm-gray/50">
-              <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
+            <tr className="border-b border-sand-dark bg-warm-gray/60">
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                 {t("admin.resourceLists.name")}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                 {t("admin.resourceLists.type")}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-charcoal-subtle hidden sm:table-cell">
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted hidden sm:table-cell">
                 {t("admin.resourceLists.contact")}
               </th>
-              <th className="px-4 py-3 text-center font-medium text-charcoal-subtle">
+              <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                 {t("admin.resourceLists.active")}
               </th>
-              <th className="px-4 py-3 text-right font-medium text-charcoal-subtle">
+              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                 {t("admin.resourceLists.actions")}
               </th>
             </tr>
@@ -250,51 +250,53 @@ export default function ResourceListTab() {
             )}
 
             {!loading &&
-              data.map((r) => (
-                <tr
-                  key={r.$id}
-                  className="border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors"
-                >
-                  <td className="px-4 py-3">
-                    <p className="font-medium text-charcoal truncate max-w-48">
-                      {r.name}
-                    </p>
-                  </td>
-                  <td className="px-4 py-3 text-charcoal-subtle">
-                    {getTypeLabel(r.type)}
-                  </td>
-                  <td className="px-4 py-3 text-charcoal-subtle hidden sm:table-cell truncate max-w-48">
-                    {r.contactInfo ?? "—"}
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    {isAdmin ? (
-                      <ActiveToggle
-                        isActive={r.isActive}
-                        onChange={(v) => handleToggle(r.$id, v)}
-                      />
-                    ) : (
-                      <Badge variant={r.isActive ? "success" : "warm"}>
-                        {r.isActive
-                          ? t("admin.resourceLists.active")
-                          : t("admin.resourceLists.inactive")}
-                      </Badge>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() =>
-                        navigate(RESOURCE_EDIT_ROUTE.replace(":id", r.$id))
-                      }
-                      title={t("admin.resourceLists.edit")}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+              data.map((r) => {
+                const editUrl = RESOURCE_EDIT_ROUTE.replace(":id", r.$id);
+                return (
+                  <tr
+                    key={r.$id}
+                    className="group border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors"
+                  >
+                    <td className="px-4 py-3">
+                      <Link
+                        to={editUrl}
+                        className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors truncate max-w-48 block"
+                      >
+                        {r.name}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-3 text-charcoal-subtle">
+                      {getTypeLabel(r.type)}
+                    </td>
+                    <td className="px-4 py-3 text-charcoal-subtle hidden sm:table-cell truncate max-w-48">
+                      {r.contactInfo ?? "—"}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {isAdmin ? (
+                        <ActiveToggle
+                          isActive={r.isActive}
+                          onChange={(v) => handleToggle(r.$id, v)}
+                        />
+                      ) : (
+                        <Badge variant={r.isActive ? "success" : "warm"}>
+                          {r.isActive
+                            ? t("admin.resourceLists.active")
+                            : t("admin.resourceLists.inactive")}
+                        </Badge>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-right opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                      <Link
+                        to={editUrl}
+                        className="inline-flex items-center justify-center h-9 w-9 rounded-lg text-charcoal-subtle hover:text-sage hover:bg-sage/10 transition-colors"
+                        title={t("admin.resourceLists.edit")}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>

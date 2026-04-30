@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useParams } from "react-router-dom";
 import PublicationForm from "@/components/admin/publications/PublicationForm";
 import { usePublication, updatePublication } from "@/hooks/usePublications";
@@ -8,7 +8,7 @@ import { toast } from "sonner";
 
 function LoadingSkeleton() {
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6">
       {[1, 2, 3].map((i) => (
         <Card key={i} className="p-5 space-y-4 animate-pulse">
           <div className="h-4 w-32 rounded bg-warm-gray" />
@@ -47,7 +47,7 @@ export default function PublicationEditPage() {
 
   if (loadError || !publication) {
     return (
-      <div className="max-w-4xl">
+      <div>
         <Card className="p-6 border-red-200 bg-red-50">
           <p className="text-sm text-red-700">
             {loadError ?? t("admin.publications.notFound")}
@@ -58,9 +58,9 @@ export default function PublicationEditPage() {
   }
 
   return (
-    <div className="space-y-5 max-w-4xl">
+    <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">
+        <h1 className="text-2xl font-display font-semibold text-charcoal">
           {t("admin.publications.editTitle")}
         </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5 truncate">

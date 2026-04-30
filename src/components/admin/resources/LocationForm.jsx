@@ -132,8 +132,59 @@ export default function LocationForm({
     await onSubmit(payload);
   }
 
+  const isEditMode = Boolean(initialData?.$id);
+
+  const asideContent = (
+    <>
+      <div className="rounded-2xl border border-sand-dark/40 bg-white p-4 shadow-sm space-y-4">
+        <p className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wider">
+          {t("admin.formSections.publication")}
+        </p>
+        <Toggle
+          checked={form.isActive}
+          onChange={(v) => set("isActive", v)}
+          label={t("admin.resourceForms.locationActive")}
+          disabled={submitting}
+        />
+      </div>
+      {isEditMode && (
+        <div className="rounded-2xl border border-sand-dark/40 bg-white p-4 shadow-sm space-y-3">
+          <p className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wider">
+            {t("admin.common.quickInfo")}
+          </p>
+          <div className="space-y-2.5 text-sm">
+            {form.address && (
+              <div>
+                <p className="text-xs text-charcoal-subtle mb-1">
+                  {t("admin.resourceForms.address")}
+                </p>
+                <p className="text-xs text-charcoal">{form.address}</p>
+              </div>
+            )}
+            {initialData?.$createdAt && (
+              <div>
+                <p className="text-xs text-charcoal-subtle">Created</p>
+                <p className="text-xs text-charcoal">
+                  {new Date(initialData.$createdAt).toLocaleDateString()}
+                </p>
+              </div>
+            )}
+            {initialData?.$updatedAt && (
+              <div>
+                <p className="text-xs text-charcoal-subtle">Last updated</p>
+                <p className="text-xs text-charcoal">
+                  {new Date(initialData.$updatedAt).toLocaleDateString()}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+
   return (
-    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={submitting} submitLabel={submitLabel || t("admin.resourceForms.save")}>
+    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={submitting} submitLabel={submitLabel || t("admin.resourceForms.save")} asideChildren={asideContent}>
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
@@ -177,14 +228,6 @@ export default function LocationForm({
               maxLength={100}
             />
           </Field>
-          <div className="flex items-center pt-5">
-            <Toggle
-              checked={form.isActive}
-              onChange={(v) => set("isActive", v)}
-              label={t("admin.resourceForms.locationActive")}
-              disabled={submitting}
-            />
-          </div>
         </div>
       </Card>
 

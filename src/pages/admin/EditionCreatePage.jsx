@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useParams } from "react-router-dom";
 import EditionForm from "@/components/admin/experiences/EditionForm";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
@@ -29,9 +29,9 @@ export default function EditionCreatePage() {
   }
 
   return (
-    <div className="space-y-5 max-w-4xl">
+    <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">
+        <h1 className="text-2xl font-display font-semibold text-charcoal">
           {t("admin.editions.createTitle")}
         </h1>
         {experience && (

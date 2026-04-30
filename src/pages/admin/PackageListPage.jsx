@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, Pencil, Package, Search } from "lucide-react";
 import { usePackages } from "@/hooks/usePackages";
@@ -129,7 +129,7 @@ export default function PackageListPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">
+          <h1 className="text-2xl font-display font-semibold text-charcoal">
             {t("admin.packages.title")}
           </h1>
           <p className="text-sm text-charcoal-subtle mt-0.5">
@@ -150,7 +150,7 @@ export default function PackageListPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[180px] max-w-sm">
+        <div className="relative flex-1 min-w-44 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal-muted" />
           <Input
             value={search}
@@ -192,23 +192,23 @@ export default function PackageListPage() {
         <div className="hidden md:block overflow-x-auto rounded-xl border border-sand-dark">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-warm-gray/60 text-left text-charcoal-muted">
-                <th className="px-4 py-3 font-medium">
+              <tr className="bg-warm-gray/60 border-b border-sand-dark text-left">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.packages.name")}
                 </th>
-                <th className="px-4 py-3 font-medium">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.packages.price")}
                 </th>
-                <th className="px-4 py-3 font-medium">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.packages.duration")}
                 </th>
-                <th className="px-4 py-3 font-medium">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.packages.capacity")}
                 </th>
-                <th className="px-4 py-3 font-medium">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                   {t("admin.packages.status")}
                 </th>
-                <th className="px-4 py-3 font-medium text-right">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted text-right">
                   {t("admin.packages.actions")}
                 </th>
               </tr>
@@ -216,15 +216,16 @@ export default function PackageListPage() {
             <tbody className="divide-y divide-sand-dark">
               {packages.map((pkg) => {
                 const badge = STATUS_BADGE[pkg.status] || STATUS_BADGE.draft;
+                const editUrl = `/admin/packages/${pkg.$id}/edit`;
                 return (
-                  <tr
-                    key={pkg.$id}
-                    className="hover:bg-warm-gray/30 transition-colors"
-                  >
+                  <tr key={pkg.$id} className="group hover:bg-warm-gray/30 transition-colors">
                     <td className="px-4 py-3">
-                      <div className="font-medium text-charcoal">
+                      <Link
+                        to={editUrl}
+                        className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors"
+                      >
                         {pkg.name}
-                      </div>
+                      </Link>
                       {pkg.nameEs && (
                         <div className="text-xs text-charcoal-subtle truncate max-w-xs">
                           {pkg.nameEs}
@@ -247,16 +248,14 @@ export default function PackageListPage() {
                     <td className="px-4 py-3">
                       <Badge variant={badge.variant}>{t(badge.i18nKey)}</Badge>
                     </td>
-                    <td className="px-4 py-3 text-right">
-                      <button
-                        onClick={() =>
-                          navigate(`/admin/packages/${pkg.$id}/edit`)
-                        }
-                        className="p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
+                    <td className="px-4 py-3 text-right opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                      <Link
+                        to={editUrl}
+                        className="inline-flex p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
                         aria-label={t("admin.packages.editAriaLabel")}
                       >
                         <Pencil className="h-4 w-4" />
-                      </button>
+                      </Link>
                     </td>
                   </tr>
                 );

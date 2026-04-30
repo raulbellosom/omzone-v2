@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import PackageForm from "@/components/admin/packages/PackageForm";
 import { createPackage } from "@/hooks/usePackages";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -35,9 +35,9 @@ export default function PackageCreatePage() {
   }
 
   return (
-    <div className="space-y-5 max-w-4xl">
+    <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">
+        <h1 className="text-2xl font-display font-semibold text-charcoal">
           {t("admin.packages.createTitle")}
         </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5">

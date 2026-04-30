@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Plus, Pencil } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
@@ -200,23 +200,23 @@ export default function RoomListTab() {
       <div className="hidden md:block overflow-x-auto rounded-xl border border-sand-dark">
         <table className="min-w-full text-sm">
           <thead>
-            <tr className="border-b border-sand-dark bg-warm-gray/50">
-              <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
+            <tr className="border-b border-sand-dark bg-warm-gray/60">
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                 {t("admin.resourceLists.name")}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-charcoal-subtle">
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                 {t("admin.resourceLists.location")}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-charcoal-subtle hidden lg:table-cell">
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted hidden lg:table-cell">
                 {t("admin.resourceLists.type")}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-charcoal-subtle hidden sm:table-cell">
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-muted hidden sm:table-cell">
                 {t("admin.resourceLists.capacity")}
               </th>
-              <th className="px-4 py-3 text-center font-medium text-charcoal-subtle">
+              <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                 {t("admin.resourceLists.active")}
               </th>
-              <th className="px-4 py-3 text-right font-medium text-charcoal-subtle">
+              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
                 {t("admin.resourceLists.actions")}
               </th>
             </tr>
@@ -239,56 +239,58 @@ export default function RoomListTab() {
             )}
 
             {!loading &&
-              rooms.map((room) => (
-                <tr
-                  key={room.$id}
-                  className="border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors"
-                >
-                  <td className="px-4 py-3">
-                    <p className="font-medium text-charcoal truncate max-w-40">
-                      {room.name}
-                    </p>
-                  </td>
-                  <td className="px-4 py-3 text-charcoal-subtle truncate max-w-40">
-                    {locationMap[room.locationId] ?? room.locationId}
-                  </td>
-                  <td className="px-4 py-3 text-charcoal-subtle hidden lg:table-cell">
-                    {getRoomTypeLabel(room.type)}
-                  </td>
-                  <td className="px-4 py-3 text-charcoal-subtle hidden sm:table-cell">
-                    {room.capacity
-                      ? `${room.capacity} ${t("admin.resourceLists.persAbbr")}`
-                      : "\u2014"}
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    {isAdmin ? (
-                      <ActiveToggle
-                        isActive={room.isActive}
-                        onChange={(v) => handleToggle(room.$id, v)}
-                      />
-                    ) : (
-                      <Badge variant={room.isActive ? "success" : "warm"}>
-                        {room.isActive
-                          ? t("admin.resourceLists.active")
-                          : t("admin.resourceLists.inactive")}
-                      </Badge>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() =>
-                        navigate(ROOM_EDIT_ROUTE.replace(":id", room.$id))
-                      }
-                      title={t("admin.resourceLists.edit")}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+              rooms.map((room) => {
+                const editUrl = ROOM_EDIT_ROUTE.replace(":id", room.$id);
+                return (
+                  <tr
+                    key={room.$id}
+                    className="group border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors"
+                  >
+                    <td className="px-4 py-3">
+                      <Link
+                        to={editUrl}
+                        className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors truncate max-w-40 block"
+                      >
+                        {room.name}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-3 text-charcoal-subtle truncate max-w-40">
+                      {locationMap[room.locationId] ?? room.locationId}
+                    </td>
+                    <td className="px-4 py-3 text-charcoal-subtle hidden lg:table-cell">
+                      {getRoomTypeLabel(room.type)}
+                    </td>
+                    <td className="px-4 py-3 text-charcoal-subtle hidden sm:table-cell">
+                      {room.capacity
+                        ? `${room.capacity} ${t("admin.resourceLists.persAbbr")}`
+                        : "\u2014"}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {isAdmin ? (
+                        <ActiveToggle
+                          isActive={room.isActive}
+                          onChange={(v) => handleToggle(room.$id, v)}
+                        />
+                      ) : (
+                        <Badge variant={room.isActive ? "success" : "warm"}>
+                          {room.isActive
+                            ? t("admin.resourceLists.active")
+                            : t("admin.resourceLists.inactive")}
+                        </Badge>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-right opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                      <Link
+                        to={editUrl}
+                        className="inline-flex items-center justify-center h-9 w-9 rounded-lg text-charcoal-subtle hover:text-sage hover:bg-sage/10 transition-colors"
+                        title={t("admin.resourceLists.edit")}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>

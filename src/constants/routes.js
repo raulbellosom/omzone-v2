@@ -87,6 +87,7 @@ export const ROUTES = {
   ADMIN_PUBLICATION_NEW: "/admin/publications/new",
   ADMIN_PUBLICATION_EDIT: "/admin/publications/:id/edit",
   ADMIN_PUBLICATION_SECTIONS: "/admin/publications/:id/sections",
+  ADMIN_HERO_SLIDES: "/admin/hero-slides",
   ADMIN_MEDIA: "/admin/media",
   ADMIN_ACCOUNT: "/admin/account",
   ADMIN_SETTINGS: "/admin/settings",

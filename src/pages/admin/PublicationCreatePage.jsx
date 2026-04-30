@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicationForm from "@/components/admin/publications/PublicationForm";
 import { createPublication } from "@/hooks/usePublications";
@@ -26,9 +26,9 @@ export default function PublicationCreatePage() {
   }
 
   return (
-    <div className="space-y-5 max-w-4xl">
+    <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">
+        <h1 className="text-2xl font-display font-semibold text-charcoal">
           {t("admin.publications.createTitle")}
         </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5">

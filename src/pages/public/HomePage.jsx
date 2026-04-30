@@ -10,8 +10,9 @@ export default function HomePage() {
     <>
       <SEOHead
         title="Wellness Experiences in Puerto Vallarta"
-        description="Curated wellness journeys in Puerto Vallarta — sessions, immersions, retreats and stays designed to reconnect you with what matters most."
+        description="Sessions, immersions, private retreats and stays in Bahía de Banderas — curated wellness experiences designed for your transformation."
         canonical={env.siteUrl}
+        ogImage={`${env.siteUrl}/og-home.jpg`}
       />
 
       <HeroSection />

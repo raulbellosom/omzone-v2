@@ -25,7 +25,7 @@ export default function ResourcesPage() {
     <div className="space-y-5">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-semibold text-charcoal">
+        <h1 className="text-2xl font-display font-semibold text-charcoal">
           {t("admin.resources.title")}
         </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5">

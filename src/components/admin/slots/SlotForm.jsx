@@ -168,8 +168,60 @@ export default function SlotForm({
   const roomOptions = rooms.map((r) => ({ value: r.$id, label: r.name }));
   const editionOptions = editions.map((e) => ({ value: e.$id, label: e.name }));
 
+  const isEditMode = Boolean(initialData?.$id);
+
+  const asideContent = (
+    <>
+      <div className="rounded-2xl border border-sand-dark/40 bg-white p-4 shadow-sm space-y-4">
+        <p className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wider">
+          {t("admin.formSections.publication")}
+        </p>
+        <Field label={t("admin.slotForm.status")}>
+          <AdminSelect
+            value={form.status}
+            onChange={(v) => set("status", v)}
+            options={STATUS_OPTIONS.map((o) => ({ ...o, label: t(o.i18nKey) }))}
+            disabled={submitting}
+          />
+        </Field>
+      </div>
+
+      {isEditMode && (
+        <div className="rounded-2xl border border-sand-dark/40 bg-white p-4 shadow-sm space-y-3">
+          <p className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wider">
+            {t("admin.common.quickInfo") || "Quick Info"}
+          </p>
+          <div className="space-y-2.5 text-sm">
+            {form.timezone && (
+              <div>
+                <p className="text-xs text-charcoal-subtle">Timezone</p>
+                <p className="text-xs text-charcoal">{form.timezone}</p>
+              </div>
+            )}
+            {initialData?.$createdAt && (
+              <div>
+                <p className="text-xs text-charcoal-subtle">Created</p>
+                <p className="text-xs text-charcoal">
+                  {new Date(initialData.$createdAt).toLocaleDateString()}
+                </p>
+              </div>
+            )}
+            {initialData?.$updatedAt && (
+              <div>
+                <p className="text-xs text-charcoal-subtle">Last updated</p>
+                <p className="text-xs text-charcoal">
+                  {new Date(initialData.$updatedAt).toLocaleDateString()}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+
   return (
-    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={submitting} submitLabel={submitLabel}>
+    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={submitting} submitLabel={submitLabel} asideChildren={asideContent}>
       {/* Basic info */}
       <Card className="p-5 space-y-4">
         <h2 className="text-base font-semibold text-charcoal">
@@ -309,23 +361,11 @@ export default function SlotForm({
         </div>
       </Card>
 
-      {/* Status & notes */}
+      {/* Notes */}
       <Card className="p-5 space-y-4">
-        <h2 className="text-base font-semibold text-charcoal">
+        <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
           {t("admin.slotForm.sectionStatusNotes")}
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label={t("admin.slotForm.status")}>
-            <AdminSelect
-              value={form.status}
-              onChange={(v) => set("status", v)}
-              options={STATUS_OPTIONS.map((o) => ({
-                ...o,
-                label: t(o.i18nKey),
-              }))}
-            />
-          </Field>
-        </div>
         <Field
           label={t("admin.slotForm.internalNotes")}
           hint={t("admin.slotForm.internalNotesHint")}

@@ -1,71 +1,153 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 import { Button } from "@/components/common/Button";
-import { getPreviewUrl, getResponsiveSrcSet } from "@/hooks/useImagePreview";
+import { getResponsiveSrcSet } from "@/hooks/useImagePreview";
+import { useHeroSlides } from "@/hooks/useHeroSlides";
 import env from "@/config/env";
 
 const HERO_WIDTHS = [640, 1024, 1600];
-
-const HERO_IMAGES = [
-  "69d3ddd100364abb45c8", // Yoga al amanecer en Puerto Vallarta
-  "69d3dde10018007e19f4", // Yoga en el mar al amanecer
-  "69d3de0e00004f880284", // Meditación en retiro rodeado de naturaleza
-  "69d3de31001d508809b0", // Sesión de sanación con sonido
-  "69d3de3500234a1f7eb9", // Relajación al atardecer con yoga
-];
-
 const INTERVAL = 6000;
 
+// Fallback slides — kept hardcoded so the home never renders empty if the
+// hero_slides collection is empty or unreachable. These match the original
+// curated set from the launch.
+const FALLBACK_SLIDES = [
+  {
+    $id: "fb-1",
+    mediaFileId: "69d3ddd100364abb45c8",
+    bucketId: env.bucketPublicResources,
+  },
+  {
+    $id: "fb-2",
+    mediaFileId: "69d3dde10018007e19f4",
+    bucketId: env.bucketPublicResources,
+  },
+  {
+    $id: "fb-3",
+    mediaFileId: "69d3de0e00004f880284",
+    bucketId: env.bucketPublicResources,
+  },
+  {
+    $id: "fb-4",
+    mediaFileId: "69d3de31001d508809b0",
+    bucketId: env.bucketPublicResources,
+  },
+  {
+    $id: "fb-5",
+    mediaFileId: "69d3de3500234a1f7eb9",
+    bucketId: env.bucketPublicResources,
+  },
+];
+
 export default function HeroSection() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const { data: slidesFromDB } = useHeroSlides();
   const [current, setCurrent] = useState(0);
 
+  // Use DB slides when available; otherwise fall back to the curated set
+  // so SEO/LCP never breaks during transitions or empty states.
+  const slides = useMemo(() => {
+    if (slidesFromDB && slidesFromDB.length > 0) return slidesFromDB;
+    return FALLBACK_SLIDES;
+  }, [slidesFromDB]);
+
   const advance = useCallback(() => {
-    setCurrent((prev) => (prev + 1) % HERO_IMAGES.length);
-  }, []);
+    setCurrent((prev) => (prev + 1) % slides.length);
+  }, [slides.length]);
+
+  // Reset index if slide source changes (e.g. when DB data hydrates after fallback).
+  useEffect(() => {
+    setCurrent(0);
+  }, [slides]);
 
   useEffect(() => {
+    if (slides.length <= 1) return undefined;
     const id = setInterval(advance, INTERVAL);
     return () => clearInterval(id);
-  }, [advance]);
+  }, [advance, slides.length]);
 
   return (
-    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-svh flex items-center justify-center overflow-hidden">
       {/* Crossfade image layers */}
-      {HERO_IMAGES.map((fileId, i) => {
+      {slides.map((slide, i) => {
+        const fileId = slide.mediaFileId;
+        const bucketId = slide.bucketId || env.bucketPublicResources;
         const { src, srcSet, sizes } = getResponsiveSrcSet(fileId, {
-          bucketId: env.bucketPublicResources,
+          bucketId,
           quality: 82,
           widths: HERO_WIDTHS,
         });
+        const altRaw = localizedField(slide, "altText", language);
+        const alt = altRaw && altRaw.trim() ? altRaw : "";
         return (
-        <div
-          key={fileId}
-          className="absolute inset-0 transition-opacity duration-[1800ms] ease-in-out"
-          style={{ opacity: i === current ? 1 : 0 }}
-          aria-hidden={i !== current}
-        >
-          <img
-            src={src}
-            srcSet={srcSet}
-            sizes={sizes}
-            alt=""
-            role="presentation"
-            loading={i === 0 ? "eager" : "lazy"}
-            fetchPriority={i === 0 ? "high" : undefined}
-            decoding={i === 0 ? "sync" : "async"}
-            className="h-full w-full object-cover scale-105"
-          />
-        </div>
+          <div
+            key={slide.$id || fileId}
+            className="absolute inset-0 transition-opacity duration-1800 ease-in-out"
+            style={{ opacity: i === current ? 1 : 0 }}
+            aria-hidden={i !== current}
+          >
+            <img
+              src={src}
+              srcSet={srcSet}
+              sizes={sizes}
+              alt={alt}
+              role={alt ? undefined : "presentation"}
+              loading={i === 0 ? "eager" : "lazy"}
+              fetchPriority={i === 0 ? "high" : undefined}
+              decoding={i === 0 ? "sync" : "async"}
+              className="h-full w-full object-cover scale-105"
+            />
+          </div>
         );
       })}
 
       {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-charcoal/55 via-charcoal/35 to-charcoal/65" />
+      <div className="absolute inset-0 bg-linear-to-b from-charcoal/55 via-charcoal/35 to-charcoal/65" />
 
-      {/* Content */}
-      <div className="relative z-10 container-shell text-center px-6 py-32 md:py-40">
+      {/* Per-slide caption overlay — hidden on mobile, visible sm+ */}
+      {slides.map((slide, i) => {
+        const eyebrow = localizedField(slide, "eyebrow", language);
+        const caption = localizedField(slide, "caption", language);
+        const ctaLabel = localizedField(slide, "ctaLabel", language);
+        const ctaHref = slide.ctaHref;
+        const hasContent = eyebrow || caption;
+        if (!hasContent) return null;
+        return (
+          <div
+            key={`caption-${slide.$id}`}
+            className="absolute bottom-28 left-0 right-0 z-20 hidden sm:block pointer-events-none transition-opacity duration-1800 ease-in-out"
+            style={{ opacity: i === current ? 1 : 0 }}
+            aria-hidden={i !== current}
+          >
+            <div className="container-shell px-6">
+              <div className="max-w-sm">
+                {eyebrow && (
+                  <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-white/65 mb-2">
+                    {eyebrow}
+                  </p>
+                )}
+                {caption && (
+                  <p className="text-lg md:text-xl font-light text-white/90 leading-snug mb-3">
+                    {caption}
+                  </p>
+                )}
+                {ctaLabel && ctaHref && (
+                  <Link
+                    to={ctaHref}
+                    className="pointer-events-auto text-sm text-white/80 hover:text-white underline underline-offset-4 transition-colors duration-200"
+                  >
+                    {ctaLabel} →
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+
+      {/* Centered global content — H1, subtitle, CTA (always constant for SEO) */}
+      <div className="relative z-30 container-shell text-center px-6 py-32 md:py-40">
         <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight max-w-4xl mx-auto animate-fade-in-up">
           {t("home.hero.title")}
         </h1>
@@ -79,10 +161,12 @@ export default function HeroSection() {
             <Link to="/experiences">{t("home.hero.cta")}</Link>
           </Button>
         </div>
+      </div>
 
-        {/* Slide indicators */}
-        <div className="flex items-center justify-center gap-2 mt-12">
-          {HERO_IMAGES.map((_, i) => (
+      {/* Slide indicators — fixed at bottom center, above the cream fade */}
+      {slides.length > 1 && (
+        <div className="absolute bottom-28 left-0 right-0 z-30 flex items-center justify-center gap-2">
+          {slides.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrent(i)}
@@ -95,10 +179,10 @@ export default function HeroSection() {
             />
           ))}
         </div>
-      </div>
+      )}
 
       {/* Bottom fade to cream */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-cream to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-linear-to-t from-cream to-transparent" />
     </section>
   );
 }
