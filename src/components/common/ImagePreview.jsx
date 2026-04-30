@@ -33,7 +33,12 @@ export default function ImagePreview({
 
   if (!fileId) {
     return (
-      <div className={cn("flex items-center justify-center bg-warm-gray rounded-lg", className)}>
+      <div
+        className={cn(
+          "flex items-center justify-center bg-warm-gray rounded-lg",
+          className,
+        )}
+      >
         <ImageIcon className="h-6 w-6 text-charcoal-subtle" />
       </div>
     );
@@ -41,14 +46,35 @@ export default function ImagePreview({
 
   let src = null;
   try {
-    src = storage.getFilePreview(bucketId, fileId, width, height, undefined, quality);
+    // params: bucketId, fileId, width, height, gravity, quality,
+    //         borderWidth, borderColor, borderRadius, opacity, rotation, background, output
+    src = storage.getFilePreview(
+      bucketId,
+      fileId,
+      width,
+      height,
+      undefined,
+      quality,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "webp",
+    );
   } catch {
     // invalid fileId — fall through to error state
   }
 
   if (!src) {
     return (
-      <div className={cn("flex items-center justify-center bg-warm-gray rounded-lg", className)}>
+      <div
+        className={cn(
+          "flex items-center justify-center bg-warm-gray rounded-lg",
+          className,
+        )}
+      >
         <ImageIcon className="h-6 w-6 text-charcoal-subtle" />
       </div>
     );
@@ -76,7 +102,7 @@ export default function ImagePreview({
             "w-full h-full transition-opacity duration-300",
             fit === "cover" ? "object-cover" : "object-contain",
             status === "loaded" ? "opacity-100" : "opacity-0",
-            imgClass
+            imgClass,
           )}
         />
       )}

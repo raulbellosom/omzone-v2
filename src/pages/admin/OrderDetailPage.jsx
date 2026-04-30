@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useOrderDetail, updateOrderStatus } from "@/hooks/useOrders";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -63,7 +63,6 @@ function LoadingSkeleton() {
 
 export default function OrderDetailPage() {
   const { orderId } = useParams();
-  const navigate = useNavigate();
   const { user } = useAuth();
   const { order, items, payments, loading, error } = useOrderDetail(orderId);
   const { t } = useLanguage();
@@ -96,9 +95,9 @@ export default function OrderDetailPage() {
           variant="ghost"
           size="sm"
           className="mt-3"
-          onClick={() => navigate(ROUTES.ADMIN_ORDERS)}
+          asChild
         >
-          {t("admin.orders.backToOrders")}
+          <Link to={ROUTES.ADMIN_ORDERS}>{t("admin.orders.backToOrders")}</Link>
         </Button>
       </Card>
     );
@@ -115,9 +114,9 @@ export default function OrderDetailPage() {
           variant="ghost"
           size="sm"
           className="mt-3"
-          onClick={() => navigate(ROUTES.ADMIN_ORDERS)}
+          asChild
         >
-          {t("admin.orders.backToOrders")}
+          <Link to={ROUTES.ADMIN_ORDERS}>{t("admin.orders.backToOrders")}</Link>
         </Button>
       </Card>
     );
@@ -130,9 +129,11 @@ export default function OrderDetailPage() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => navigate(ROUTES.ADMIN_ORDERS)}
+          asChild
         >
-          <ArrowLeft className="h-4 w-4" />
+          <Link to={ROUTES.ADMIN_ORDERS}>
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
         </Button>
         <div className="min-w-0 flex-1">
           <h1 className="text-xl md:text-2xl font-display font-semibold text-charcoal truncate">

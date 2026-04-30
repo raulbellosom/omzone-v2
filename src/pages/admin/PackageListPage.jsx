@@ -1,5 +1,5 @@
 ﻿import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Plus, Pencil, Package, Search } from "lucide-react";
 import { usePackages } from "@/hooks/usePackages";
 import { useAuth } from "@/hooks/useAuth";
@@ -111,7 +111,6 @@ function EmptyState({ t, isAdmin }) {
 export default function PackageListPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const { isAdmin } = useAuth();
 
@@ -271,11 +270,12 @@ export default function PackageListPage() {
           {packages.map((pkg) => {
             const badge = STATUS_BADGE[pkg.status] || STATUS_BADGE.draft;
             return (
-              <Card
+              <Link
                 key={pkg.$id}
-                className="p-4 space-y-2 cursor-pointer hover:shadow-sm transition-shadow"
-                onClick={() => navigate(`/admin/packages/${pkg.$id}/edit`)}
+                to={`/admin/packages/${pkg.$id}/edit`}
+                className="block"
               >
+                <Card className="p-4 space-y-2 cursor-pointer hover:shadow-sm transition-shadow">
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-medium text-charcoal truncate">
                     {pkg.name}
@@ -295,7 +295,8 @@ export default function PackageListPage() {
                     </span>
                   )}
                 </div>
-              </Card>
+                </Card>
+              </Link>
             );
           })}
         </div>

@@ -7,11 +7,31 @@ const PUB_BUCKET = env.bucketPublicationMedia;
 
 /**
  * Get a preview URL for a publication media file.
+ * Always outputs WebP for smaller file sizes.
  */
-export function getPublicationPreviewUrl(fileId, { width = 1200, height = 800 } = {}) {
+export function getPublicationPreviewUrl(
+  fileId,
+  { width = 1200, height = 800 } = {},
+) {
   if (!fileId) return null;
   try {
-    return storage.getFilePreview(PUB_BUCKET, fileId, width, height);
+    // params: bucketId, fileId, width, height, gravity, quality,
+    //         borderWidth, borderColor, borderRadius, opacity, rotation, background, output
+    return storage.getFilePreview(
+      PUB_BUCKET,
+      fileId,
+      width,
+      height,
+      undefined,
+      80,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "webp",
+    );
   } catch {
     return null;
   }
@@ -49,7 +69,8 @@ export function usePublicationBySlug(slug) {
         );
 
         if (pubRes.total === 0) {
-          if (!cancelled) setState((s) => ({ ...s, loading: false, error: "not_found" }));
+          if (!cancelled)
+            setState((s) => ({ ...s, loading: false, error: "not_found" }));
           return;
         }
 
@@ -67,16 +88,28 @@ export function usePublicationBySlug(slug) {
 
         if (publication.experienceId) {
           fetches.push(
-            databases.getDocument(DB, env.collectionExperiences, publication.experienceId),
+            databases.getDocument(
+              DB,
+              env.collectionExperiences,
+              publication.experienceId,
+            ),
           );
         }
 
         const results = await Promise.allSettled(fetches);
-        const sections = results[0].status === "fulfilled" ? results[0].value.documents : [];
-        const experience = results[1]?.status === "fulfilled" ? results[1].value : null;
+        const sections =
+          results[0].status === "fulfilled" ? results[0].value.documents : [];
+        const experience =
+          results[1]?.status === "fulfilled" ? results[1].value : null;
 
         if (!cancelled) {
-          setState({ publication, sections, experience, loading: false, error: null });
+          setState({
+            publication,
+            sections,
+            experience,
+            loading: false,
+            error: null,
+          });
         }
       } catch (err) {
         if (!cancelled) {
@@ -86,7 +119,9 @@ export function usePublicationBySlug(slug) {
     }
 
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [slug]);
 
   return state;

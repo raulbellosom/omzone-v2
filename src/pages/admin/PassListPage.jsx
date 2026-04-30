@@ -1,5 +1,5 @@
 ﻿import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Plus, Pencil, Ticket, Search, Users } from "lucide-react";
 import { usePasses, updatePass } from "@/hooks/usePasses";
 import { useAuth } from "@/hooks/useAuth";
@@ -105,7 +105,6 @@ export default function PassListPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [toggling, setToggling] = useState(null);
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const { isAdmin } = useAuth();
 
@@ -295,11 +294,12 @@ export default function PassListPage() {
       {!loading && passes.length > 0 && (
         <div className="md:hidden space-y-3">
           {passes.map((pass) => (
-            <Card
+            <Link
               key={pass.$id}
-              className="p-4 space-y-2 cursor-pointer hover:shadow-sm transition-shadow"
-              onClick={() => navigate(`/admin/passes/${pass.$id}/edit`)}
+              to={`/admin/passes/${pass.$id}/edit`}
+              className="block"
             >
+              <Card className="p-4 space-y-2 cursor-pointer hover:shadow-sm transition-shadow">
               <div className="flex items-center justify-between gap-2">
                 <span className="font-medium text-charcoal truncate">
                   {pass.name}
@@ -321,7 +321,8 @@ export default function PassListPage() {
                     : t("admin.passes.noExpiry")}
                 </span>
               </div>
-            </Card>
+              </Card>
+            </Link>
           ))}
         </div>
       )}

@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Plus, Pencil } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
@@ -64,7 +64,6 @@ function RoomCard({
   locationName,
   onToggle,
   canAdmin,
-  navigate,
   t,
   roomTypeLabel,
 }) {
@@ -99,10 +98,12 @@ function RoomCard({
           type="button"
           variant="ghost"
           size="sm"
-          onClick={() => navigate(ROOM_EDIT_ROUTE.replace(":id", room.$id))}
+          asChild
           className="flex-1 justify-center"
         >
-          <Pencil className="h-3.5 w-3.5" /> {t("admin.resourceLists.edit")}
+          <Link to={ROOM_EDIT_ROUTE.replace(":id", room.$id)}>
+            <Pencil className="h-3.5 w-3.5" /> {t("admin.resourceLists.edit")}
+          </Link>
         </Button>
         {canAdmin && (
           <div className="flex items-center gap-2 ml-auto">
@@ -123,7 +124,6 @@ function RoomCard({
 }
 
 export default function RoomListTab() {
-  const navigate = useNavigate();
   const { isAdmin } = useAuth();
   const { t } = useLanguage();
   const [locationFilter, setLocationFilter] = useState("");
@@ -179,12 +179,10 @@ export default function RoomListTab() {
 
         <div className="ml-auto">
           {isAdmin && (
-            <Button
-              type="button"
-              size="sm"
-              onClick={() => navigate(ROOM_NEW_ROUTE)}
-            >
-              <Plus className="h-4 w-4" /> {t("admin.resourceLists.createRoom")}
+            <Button type="button" size="sm" asChild>
+              <Link to={ROOM_NEW_ROUTE}>
+                <Plus className="h-4 w-4" /> {t("admin.resourceLists.createRoom")}
+              </Link>
             </Button>
           )}
         </div>
@@ -315,13 +313,11 @@ export default function RoomListTab() {
               {t("admin.resourceLists.noRoomsMobile")}
             </p>
             {isAdmin && (
-              <Button
-                type="button"
-                size="sm"
-                onClick={() => navigate(ROOM_NEW_ROUTE)}
-              >
-                <Plus className="h-4 w-4" />{" "}
-                {t("admin.resourceLists.createFirstRoom")}
+              <Button type="button" size="sm" asChild>
+                <Link to={ROOM_NEW_ROUTE}>
+                  <Plus className="h-4 w-4" />{" "}
+                  {t("admin.resourceLists.createFirstRoom")}
+                </Link>
               </Button>
             )}
           </Card>
@@ -334,7 +330,6 @@ export default function RoomListTab() {
               locationName={locationMap[room.locationId]}
               onToggle={handleToggle}
               canAdmin={isAdmin}
-              navigate={navigate}
               t={t}
               roomTypeLabel={getRoomTypeLabel(room.type)}
             />

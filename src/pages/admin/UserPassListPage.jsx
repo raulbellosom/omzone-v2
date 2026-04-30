@@ -280,11 +280,12 @@ export default function UserPassListPage() {
           {userPasses.map((up) => {
             const snap = parseSnapshot(up.passSnapshot);
             return (
-              <Card
+              <Link
                 key={up.$id}
-                className="p-4 space-y-2 cursor-pointer hover:shadow-sm transition-shadow"
-                onClick={() => navigate(`/admin/user-passes/${up.$id}`)}
+                to={`/admin/user-passes/${up.$id}`}
+                className="block"
               >
+                <Card className="p-4 space-y-2 cursor-pointer hover:shadow-sm transition-shadow">
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-medium text-charcoal truncate">
                     {snap?.name ?? up.passId}
@@ -300,7 +301,8 @@ export default function UserPassListPage() {
                     {t("admin.userPasses.expires")}: {formatDate(up.expiresAt)}
                   </span>
                 </div>
-              </Card>
+                </Card>
+              </Link>
             );
           })}
         </div>

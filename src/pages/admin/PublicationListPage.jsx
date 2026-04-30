@@ -1,5 +1,5 @@
 ﻿import { useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Plus, Search, X, FileText } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
@@ -35,7 +35,6 @@ const STATUS_OPTIONS = [
 const PAGE_SIZE = 25;
 
 export default function PublicationListPage() {
-  const navigate = useNavigate();
   const { isAdmin } = useAuth();
   const { t } = useLanguage();
 
@@ -104,13 +103,11 @@ export default function PublicationListPage() {
           )}
         </div>
         {isAdmin && (
-          <Button
-            type="button"
-            size="md"
-            onClick={() => navigate(ROUTES.ADMIN_PUBLICATION_NEW)}
-          >
-            <Plus className="h-4 w-4" />
-            {t("admin.publications.newPublication")}
+          <Button type="button" size="md" asChild>
+            <Link to={ROUTES.ADMIN_PUBLICATION_NEW}>
+              <Plus className="h-4 w-4" />
+              {t("admin.publications.newPublication")}
+            </Link>
           </Button>
         )}
       </div>
@@ -173,13 +170,11 @@ export default function PublicationListPage() {
             {t("admin.publications.emptyMessage")}
           </p>
           {isAdmin && (
-            <Button
-              type="button"
-              size="sm"
-              onClick={() => navigate(ROUTES.ADMIN_PUBLICATION_NEW)}
-            >
-              <Plus className="h-4 w-4" />
-              {t("admin.publications.emptyButton")}
+            <Button type="button" size="sm" asChild>
+              <Link to={ROUTES.ADMIN_PUBLICATION_NEW}>
+                <Plus className="h-4 w-4" />
+                {t("admin.publications.emptyButton")}
+              </Link>
             </Button>
           )}
         </Card>

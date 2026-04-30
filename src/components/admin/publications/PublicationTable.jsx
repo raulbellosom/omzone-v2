@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Pencil,
   Archive,
@@ -55,7 +55,6 @@ function ConfirmDialog({
 function ActionsMenu({ publication, onStatusChange, canAdmin }) {
   const [open, setOpen] = useState(false);
   const [confirm, setConfirm] = useState(null);
-  const navigate = useNavigate();
   const { t } = useLanguage();
 
   const editUrl = ROUTES.ADMIN_PUBLICATION_EDIT.replace(":id", publication.$id);
@@ -108,10 +107,12 @@ function ActionsMenu({ publication, onStatusChange, canAdmin }) {
           type="button"
           variant="ghost"
           size="icon"
-          onClick={() => navigate(sectionsUrl)}
+          asChild
           title={t("admin.publications.sectionsButton")}
         >
-          <Layers className="h-4 w-4" />
+          <Link to={sectionsUrl}>
+            <Layers className="h-4 w-4" />
+          </Link>
         </Button>
 
         <div className="relative">

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/common/Card";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -18,16 +18,14 @@ function getDisplayName(client) {
 }
 
 export default function ClientCard({ client }) {
-  const navigate = useNavigate();
   const { t } = useLanguage();
 
   return (
-    <Card
-      className="p-4 space-y-2 cursor-pointer hover:shadow-md transition-shadow"
-      onClick={() =>
-        navigate(ROUTES.ADMIN_CLIENT_DETAIL.replace(":userId", client.$id))
-      }
+    <Link
+      to={ROUTES.ADMIN_CLIENT_DETAIL.replace(":userId", client.$id)}
+      className="block"
     >
+      <Card className="p-4 space-y-2 cursor-pointer hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="font-medium text-charcoal truncate">
@@ -49,6 +47,7 @@ export default function ClientCard({ client }) {
       <div className="flex items-center justify-between text-xs text-charcoal-muted">
         <span>{formatDate(client.$createdAt)}</span>
       </div>
-    </Card>
+      </Card>
+    </Link>
   );
 }

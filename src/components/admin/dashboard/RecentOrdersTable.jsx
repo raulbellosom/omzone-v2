@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/common/Card";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -46,7 +46,7 @@ function SkeletonRows() {
 
 // ─── Desktop table ───────────────────────────────────────────────────────────
 
-function OrderTable({ orders, loading, navigate, t }) {
+function OrderTable({ orders, loading, t }) {
   return (
     <div className="hidden md:block overflow-x-auto">
       <table className="w-full text-sm">
@@ -85,13 +85,16 @@ function OrderTable({ orders, loading, navigate, t }) {
             orders.map((o) => (
               <tr
                 key={o.$id}
-                onClick={() =>
-                  navigate(ROUTES.ADMIN_ORDER_DETAIL.replace(":orderId", o.$id))
-                }
-                className="hover:bg-warm-gray/50 cursor-pointer transition-colors"
+                className="hover:bg-warm-gray/50 transition-colors"
               >
                 <td className="px-4 py-3 font-medium text-charcoal">
-                  {o.orderNumber}
+                  <Link
+                    to={ROUTES.ADMIN_ORDER_DETAIL.replace(":orderId", o.$id)}
+                    className="hover:text-sage-dark hover:underline underline-offset-2 transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {o.orderNumber}
+                  </Link>
                 </td>
                 <td className="px-4 py-3 text-charcoal-muted">
                   {o.customerName}
@@ -123,7 +126,7 @@ function OrderTable({ orders, loading, navigate, t }) {
 
 // ─── Mobile cards ────────────────────────────────────────────────────────────
 
-function OrderCards({ orders, loading, navigate, t }) {
+function OrderCards({ orders, loading, t }) {
   if (loading) {
     return (
       <div className="md:hidden space-y-3">
@@ -150,13 +153,12 @@ function OrderCards({ orders, loading, navigate, t }) {
   return (
     <div className="md:hidden space-y-3">
       {orders.map((o) => (
-        <Card
+        <Link
           key={o.$id}
-          onClick={() =>
-            navigate(ROUTES.ADMIN_ORDER_DETAIL.replace(":orderId", o.$id))
-          }
-          className="p-4 cursor-pointer hover:shadow-card-hover transition-shadow"
+          to={ROUTES.ADMIN_ORDER_DETAIL.replace(":orderId", o.$id)}
+          className="block"
         >
+          <Card className="p-4 cursor-pointer hover:shadow-card-hover transition-shadow">
           <div className="flex items-center justify-between mb-1">
             <span className="text-sm font-medium text-charcoal">
               {o.orderNumber}
@@ -179,7 +181,8 @@ function OrderCards({ orders, loading, navigate, t }) {
               {formatDate(o.$createdAt)}
             </span>
           </div>
-        </Card>
+          </Card>
+        </Link>
       ))}
     </div>
   );
@@ -188,12 +191,11 @@ function OrderCards({ orders, loading, navigate, t }) {
 // ─── Export ───────────────────────────────────────────────────────────────────
 
 export default function RecentOrdersTable({ orders, loading }) {
-  const navigate = useNavigate();
   const { t } = useLanguage();
   return (
     <>
-      <OrderTable orders={orders} loading={loading} navigate={navigate} t={t} />
-      <OrderCards orders={orders} loading={loading} navigate={navigate} t={t} />
+      <OrderTable orders={orders} loading={loading} t={t} />
+      <OrderCards orders={orders} loading={loading} t={t} />
     </>
   );
 }

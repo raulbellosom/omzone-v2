@@ -2,7 +2,10 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage, localizedField } from "@/hooks/useLanguage";
 import { Button } from "@/components/common/Button";
-import { getResponsiveSrcSet } from "@/hooks/useImagePreview";
+import {
+  getResponsiveSrcSet,
+  getPlaceholderUrl,
+} from "@/hooks/useImagePreview";
 import { useHeroSlides } from "@/hooks/useHeroSlides";
 import env from "@/config/env";
 
@@ -42,15 +45,18 @@ const FALLBACK_SLIDES = [
 
 export default function HeroSection() {
   const { t, language } = useLanguage();
-  const { data: slidesFromDB } = useHeroSlides();
+  const { data: slidesFromDB, loading: slidesLoading } = useHeroSlides();
   const [current, setCurrent] = useState(0);
+  const [firstLoaded, setFirstLoaded] = useState(false);
 
-  // Use DB slides when available; otherwise fall back to the curated set
-  // so SEO/LCP never breaks during transitions or empty states.
+  // While the DB fetch is in-flight, return an empty array so the stale
+  // fallback slides never flash before the real content arrives.
+  // Only once loading resolves do we pick DB slides (or fall back if empty).
   const slides = useMemo(() => {
+    if (slidesLoading) return [];
     if (slidesFromDB && slidesFromDB.length > 0) return slidesFromDB;
     return FALLBACK_SLIDES;
-  }, [slidesFromDB]);
+  }, [slidesFromDB, slidesLoading]);
 
   const advance = useCallback(() => {
     setCurrent((prev) => (prev + 1) % slides.length);
@@ -67,8 +73,27 @@ export default function HeroSection() {
     return () => clearInterval(id);
   }, [advance, slides.length]);
 
+  // Build LQIP placeholder URL for the first slide (~300 bytes WebP at 20px)
+  const firstSlide = slides[0];
+  const firstSlideBucket = firstSlide?.bucketId || env.bucketPublicResources;
+  const lqipSrc = firstSlide
+    ? getPlaceholderUrl(firstSlide.mediaFileId, { bucketId: firstSlideBucket })
+    : null;
+
   return (
-    <section className="relative min-h-svh flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-svh flex items-center justify-center overflow-hidden bg-charcoal">
+      {/* LQIP blur-up: tiny placeholder shows during first-slide load, ~300 bytes */}
+      {!firstLoaded && lqipSrc && (
+        <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+          <img
+            src={lqipSrc}
+            alt=""
+            className="h-full w-full object-cover scale-110"
+            style={{ filter: "blur(20px)" }}
+          />
+        </div>
+      )}
+
       {/* Crossfade image layers */}
       {slides.map((slide, i) => {
         const fileId = slide.mediaFileId;
@@ -96,6 +121,7 @@ export default function HeroSection() {
               loading={i === 0 ? "eager" : "lazy"}
               fetchPriority={i === 0 ? "high" : undefined}
               decoding={i === 0 ? "sync" : "async"}
+              onLoad={i === 0 ? () => setFirstLoaded(true) : undefined}
               className="h-full w-full object-cover scale-105"
             />
           </div>

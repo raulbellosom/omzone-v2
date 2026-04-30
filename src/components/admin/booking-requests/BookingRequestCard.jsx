@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/common/Card";
 import { StatusBadge } from "./BookingRequestTable";
@@ -13,17 +13,12 @@ function formatDate(iso) {
 }
 
 export default function BookingRequestCard({ request }) {
-  const navigate = useNavigate();
-
   return (
-    <Card
-      className="p-4 space-y-2 cursor-pointer hover:shadow-md transition-shadow"
-      onClick={() =>
-        navigate(
-          ROUTES.ADMIN_BOOKING_REQUEST_DETAIL.replace(":id", request.$id),
-        )
-      }
+    <Link
+      to={ROUTES.ADMIN_BOOKING_REQUEST_DETAIL.replace(":id", request.$id)}
+      className="block"
     >
+      <Card className="p-4 space-y-2 cursor-pointer hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="font-medium text-charcoal truncate">
@@ -47,5 +42,6 @@ export default function BookingRequestCard({ request }) {
         <span>{formatDate(request.$createdAt)}</span>
       </div>
     </Card>
+  </Link>
   );
 }

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ChevronRight, Layers } from "lucide-react";
 import StatusBadge from "@/components/admin/experiences/StatusBadge";
 import { Card } from "@/components/common/Card";
@@ -8,7 +8,6 @@ import { useLanguage } from "@/hooks/useLanguage";
 const CATEGORY_KEYS = ["landing", "blog", "highlight", "institutional", "faq"];
 
 export default function PublicationCard({ publication }) {
-  const navigate = useNavigate();
   const { t, lang } = useLanguage();
   const editUrl = ROUTES.ADMIN_PUBLICATION_EDIT.replace(":id", publication.$id);
   const sectionsUrl = ROUTES.ADMIN_PUBLICATION_SECTIONS.replace(
@@ -48,22 +47,20 @@ export default function PublicationCard({ publication }) {
         )}
       </div>
       <div className="flex items-center gap-2 pt-1">
-        <button
-          type="button"
-          onClick={() => navigate(editUrl)}
+        <Link
+          to={editUrl}
           className="flex items-center gap-1 text-xs text-sage font-medium hover:underline"
         >
           {t("admin.publicationCard.edit")}
           <ChevronRight className="w-3 h-3" />
-        </button>
-        <button
-          type="button"
-          onClick={() => navigate(sectionsUrl)}
+        </Link>
+        <Link
+          to={sectionsUrl}
           className="flex items-center gap-1 text-xs text-sage font-medium hover:underline"
         >
           <Layers className="w-3 h-3" />
           {t("admin.publicationCard.sections")}
-        </button>
+        </Link>
       </div>
     </Card>
   );

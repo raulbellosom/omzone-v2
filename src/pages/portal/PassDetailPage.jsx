@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { databases } from "@/lib/appwrite";
 import { useAuth } from "@/hooks/useAuth";
 import { usePassConsumptions } from "@/hooks/usePassConsumptions";
@@ -90,7 +90,6 @@ function LoadingSkeleton() {
 export default function PassDetailPage() {
   const { userPassId } = useParams();
   const { user } = useAuth();
-  const navigate = useNavigate();
   const [userPass, setUserPass] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -125,11 +124,8 @@ export default function PassDetailPage() {
         <p className="text-charcoal-muted">
           {error || "Pase no encontrado"}
         </p>
-        <Button
-          variant="outline"
-          onClick={() => navigate(ROUTES.PORTAL_PASSES)}
-        >
-          Volver a Pases
+        <Button variant="outline" asChild>
+          <Link to={ROUTES.PORTAL_PASSES}>Volver a Pases</Link>
         </Button>
       </div>
     );
@@ -152,13 +148,13 @@ export default function PassDetailPage() {
   return (
     <div className="space-y-6">
       {/* Back */}
-      <button
-        onClick={() => navigate(ROUTES.PORTAL_PASSES)}
-        className="inline-flex items-center gap-1.5 text-sm text-charcoal-muted hover:text-charcoal transition-colors cursor-pointer"
+      <Link
+        to={ROUTES.PORTAL_PASSES}
+        className="inline-flex items-center gap-1.5 text-sm text-charcoal-muted hover:text-charcoal transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
         Mis Pases
-      </button>
+      </Link>
 
       {/* Main card */}
       <div className="bg-white rounded-2xl border border-warm-gray-dark/10 shadow-sm p-4 sm:p-6 md:p-8 space-y-6">

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Lock, Eye, EyeOff, ArrowLeft, Check } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
@@ -10,7 +10,6 @@ import { ROUTES } from "@/constants/routes";
 
 export default function ResetPasswordPage() {
   const { confirmPasswordRecovery } = useAuth();
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const [searchParams] = useSearchParams();
 
@@ -138,12 +137,10 @@ export default function ResetPasswordPage() {
               <p className="text-sm text-charcoal-muted mb-6">
                 {t("auth.resetPassword.doneMessage")}
               </p>
-              <Button
-                onClick={() => navigate(ROUTES.LOGIN)}
-                size="lg"
-                className="w-full"
-              >
-                {t("auth.resetPassword.goToLogin")}
+              <Button asChild size="lg" className="w-full">
+                <Link to={ROUTES.LOGIN}>
+                  {t("auth.resetPassword.goToLogin")}
+                </Link>
               </Button>
             </div>
           ) : (

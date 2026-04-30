@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Pencil, Eye } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
@@ -27,7 +27,6 @@ function LoadingSkeleton() {
 
 export default function PublicationSectionsPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { data: publication, loading, error } = usePublication(id);
   const { data: sections } = usePublicationSections(id);
   const [showPreview, setShowPreview] = useState(false);
@@ -52,14 +51,13 @@ export default function PublicationSectionsPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div className="space-y-1">
-          <button
-            type="button"
-            onClick={() => navigate(ROUTES.ADMIN_PUBLICATIONS)}
+          <Link
+            to={ROUTES.ADMIN_PUBLICATIONS}
             className="flex items-center gap-1 text-sm text-charcoal-subtle hover:text-charcoal mb-1"
           >
             <ArrowLeft className="h-4 w-4" />
             {t("admin.publications.backToPublications")}
-          </button>
+          </Link>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-display font-semibold text-charcoal">
               {publication.title}
@@ -89,10 +87,12 @@ export default function PublicationSectionsPage() {
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => navigate(editUrl)}
+            asChild
           >
-            <Pencil className="h-4 w-4" />
-            {t("admin.publications.editData")}
+            <Link to={editUrl}>
+              <Pencil className="h-4 w-4" />
+              {t("admin.publications.editData")}
+            </Link>
           </Button>
         </div>
       </div>

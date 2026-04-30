@@ -1,6 +1,6 @@
 import Card from "../../common/Card";
 import TicketStatusBadge from "./TicketStatusBadge";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function formatDate(iso) {
   if (!iso) return "—";
@@ -12,13 +12,9 @@ function formatDate(iso) {
 }
 
 export default function TicketCard({ ticket }) {
-  const navigate = useNavigate();
-
   return (
-    <Card
-      className="p-4 cursor-pointer hover:shadow-md transition-shadow"
-      onClick={() => navigate(`/admin/tickets/${ticket.$id}`)}
-    >
+    <Link to={`/admin/tickets/${ticket.$id}`} className="block">
+      <Card className="p-4 cursor-pointer hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
           <p className="font-mono text-xs font-medium text-charcoal">{ticket.ticketCode}</p>
@@ -36,6 +32,7 @@ export default function TicketCard({ ticket }) {
         </p>
         <p className="text-xs text-charcoal-subtle">{formatDate(ticket.$createdAt)}</p>
       </div>
-    </Card>
+      </Card>
+    </Link>
   );
 }

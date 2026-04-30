@@ -4,9 +4,11 @@ import { ChevronDown, ArrowRight } from "lucide-react";
 import Markdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 import { getPublicationPreviewUrl } from "@/hooks/usePublicationBySlug";
+import { getResponsiveSrcSet } from "@/hooks/useImagePreview";
 import { useLanguage, localizedField } from "@/hooks/useLanguage";
 import { Button } from "@/components/common/Button";
 import { cn } from "@/lib/utils";
+import env from "@/config/env";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -45,18 +47,27 @@ function isAllowedVideoUrl(url) {
 function HeroSection({ section, language }) {
   const ids = parseMediaIds(section.mediaIds);
   const imageId = ids[0];
-  const imageUrl = getPublicationPreviewUrl(imageId, {
-    width: 1600,
-    height: 900,
+  const {
+    src: imgSrc,
+    srcSet: imgSrcSet,
+    sizes: imgSizes,
+  } = getResponsiveSrcSet(imageId, {
+    bucketId: env.bucketPublicationMedia,
+    widths: [800, 1200, 1600],
+    quality: 82,
   });
 
   return (
     <section className="relative w-full">
       <div className="relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden bg-warm-gray">
-        {imageUrl ? (
+        {imgSrc ? (
           <img
-            src={imageUrl}
+            src={imgSrc}
+            srcSet={imgSrcSet || undefined}
+            sizes={imgSizes || undefined}
             alt={localizedField(section, "title", language) || ""}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover"
           />
         ) : (

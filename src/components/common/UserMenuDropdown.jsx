@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   User,
   CalendarCheck,
@@ -59,8 +59,6 @@ export default function UserMenuDropdown({ transparent = false }) {
     navigate(ROUTES.LOGIN);
   };
 
-  const go = (route) => () => navigate(route);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -100,21 +98,29 @@ export default function UserMenuDropdown({ transparent = false }) {
           <>
             <DropdownMenuLabel>Cliente</DropdownMenuLabel>
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={go(ROUTES.PORTAL)}>
-                <User className="h-4 w-4 text-charcoal-muted" />
-                Mi cuenta
+              <DropdownMenuItem asChild>
+                <Link to={ROUTES.PORTAL}>
+                  <User className="h-4 w-4 text-charcoal-muted" />
+                  Mi cuenta
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={go(ROUTES.PORTAL_TICKETS)}>
-                <CalendarCheck className="h-4 w-4 text-charcoal-muted" />
-                Mis reservaciones
+              <DropdownMenuItem asChild>
+                <Link to={ROUTES.PORTAL_TICKETS}>
+                  <CalendarCheck className="h-4 w-4 text-charcoal-muted" />
+                  Mis reservaciones
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={go(ROUTES.PORTAL_ORDERS)}>
-                <ShoppingBag className="h-4 w-4 text-charcoal-muted" />
-                Mis compras
+              <DropdownMenuItem asChild>
+                <Link to={ROUTES.PORTAL_ORDERS}>
+                  <ShoppingBag className="h-4 w-4 text-charcoal-muted" />
+                  Mis compras
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={go(ROUTES.PORTAL_PROFILE)}>
-                <UserPen className="h-4 w-4 text-charcoal-muted" />
-                Mi perfil
+              <DropdownMenuItem asChild>
+                <Link to={ROUTES.PORTAL_PROFILE}>
+                  <UserPen className="h-4 w-4 text-charcoal-muted" />
+                  Mi perfil
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
@@ -126,22 +132,30 @@ export default function UserMenuDropdown({ transparent = false }) {
           <>
             <DropdownMenuLabel>Administración</DropdownMenuLabel>
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={go(ROUTES.ADMIN)}>
-                <LayoutDashboard className="h-4 w-4 text-charcoal-muted" />
-                Panel de administración
+              <DropdownMenuItem asChild>
+                <Link to={ROUTES.ADMIN}>
+                  <LayoutDashboard className="h-4 w-4 text-charcoal-muted" />
+                  Panel de administración
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={go(ROUTES.ADMIN_ACCOUNT)}>
-                <UserCog className="h-4 w-4 text-charcoal-muted" />
-                Mi cuenta admin
+              <DropdownMenuItem asChild>
+                <Link to={ROUTES.ADMIN_ACCOUNT}>
+                  <UserCog className="h-4 w-4 text-charcoal-muted" />
+                  Mi cuenta admin
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={go(ROUTES.ADMIN_USERS)}>
-                <Users className="h-4 w-4 text-charcoal-muted" />
-                Gestión de usuarios
+              <DropdownMenuItem asChild>
+                <Link to={ROUTES.ADMIN_USERS}>
+                  <Users className="h-4 w-4 text-charcoal-muted" />
+                  Gestión de usuarios
+                </Link>
               </DropdownMenuItem>
               {isRoot && (
-                <DropdownMenuItem onClick={go("/help/docs/en")}>
-                  <BookOpen className="h-4 w-4 text-charcoal-muted" />
-                  Documentación
+                <DropdownMenuItem asChild>
+                  <Link to="/help/docs/en">
+                    <BookOpen className="h-4 w-4 text-charcoal-muted" />
+                    Documentación
+                  </Link>
                 </DropdownMenuItem>
               )}
             </DropdownMenuGroup>
@@ -150,9 +164,11 @@ export default function UserMenuDropdown({ transparent = false }) {
         )}
 
         {/* Navigation */}
-        <DropdownMenuItem onClick={go(ROUTES.HOME)}>
-          <Globe className="h-4 w-4 text-charcoal-muted" />
-          Ir a la landing
+        <DropdownMenuItem asChild>
+          <Link to={ROUTES.HOME}>
+            <Globe className="h-4 w-4 text-charcoal-muted" />
+            Ir a la landing
+          </Link>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />

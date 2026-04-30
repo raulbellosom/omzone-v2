@@ -1,4 +1,4 @@
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useUserOrderDetail } from "@/hooks/useUserOrderDetail";
 import { Badge } from "@/components/common/Badge";
 import { ROUTES } from "@/constants/routes";
@@ -168,7 +168,6 @@ function TicketRow({ ticket }) {
 
 export default function PortalOrderDetailPage() {
   const { orderId } = useParams();
-  const navigate = useNavigate();
   const { order, items, tickets, loading, error } = useUserOrderDetail(orderId);
 
   if (loading) return <LoadingSkeleton />;
@@ -176,13 +175,13 @@ export default function PortalOrderDetailPage() {
   if (error || !order) {
     return (
       <div className="space-y-4">
-        <button
-          onClick={() => navigate(ROUTES.PORTAL_ORDERS)}
-          className="flex items-center gap-1.5 text-sm text-charcoal-muted hover:text-charcoal transition-colors cursor-pointer"
+        <Link
+          to={ROUTES.PORTAL_ORDERS}
+          className="flex items-center gap-1.5 text-sm text-charcoal-muted hover:text-charcoal transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Mis Órdenes
-        </button>
+        </Link>
         <div className="bg-red-50 text-red-700 rounded-xl px-4 py-3 text-sm">
           {error || "Orden no encontrada"}
         </div>
@@ -196,13 +195,13 @@ export default function PortalOrderDetailPage() {
   return (
     <div className="space-y-6">
       {/* Back link */}
-      <button
-        onClick={() => navigate(ROUTES.PORTAL_ORDERS)}
-        className="flex items-center gap-1.5 text-sm text-charcoal-muted hover:text-charcoal transition-colors cursor-pointer"
+      <Link
+        to={ROUTES.PORTAL_ORDERS}
+        className="flex items-center gap-1.5 text-sm text-charcoal-muted hover:text-charcoal transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         Mis Órdenes
-      </button>
+      </Link>
 
       {/* Order header */}
       <div className="bg-white rounded-2xl border border-warm-gray-dark/10 p-5">

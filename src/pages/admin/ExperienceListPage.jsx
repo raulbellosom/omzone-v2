@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Plus, Search, X, Sparkles, LayoutList, Grid2x2 } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
@@ -34,7 +34,6 @@ const STATUS_OPTIONS = [
 const PAGE_SIZE = 25;
 
 export default function ExperienceListPage() {
-  const navigate = useNavigate();
   const { isAdmin } = useAuth();
   const { t } = useLanguage();
 
@@ -110,13 +109,11 @@ export default function ExperienceListPage() {
           )}
         </div>
         {isAdmin && (
-          <Button
-            type="button"
-            size="md"
-            onClick={() => navigate(ROUTES.ADMIN_EXPERIENCE_NEW)}
-          >
-            <Plus className="h-4 w-4" />
-            {t("admin.experiences.newExperience")}
+          <Button type="button" size="md" asChild>
+            <Link to={ROUTES.ADMIN_EXPERIENCE_NEW}>
+              <Plus className="h-4 w-4" />
+              {t("admin.experiences.newExperience")}
+            </Link>
           </Button>
         )}
       </div>
@@ -216,13 +213,11 @@ export default function ExperienceListPage() {
             {t("admin.experiences.emptyMessage")}
           </p>
           {isAdmin && (
-            <Button
-              type="button"
-              size="sm"
-              onClick={() => navigate(ROUTES.ADMIN_EXPERIENCE_NEW)}
-            >
-              <Plus className="h-4 w-4" />
-              {t("admin.experiences.emptyButton")}
+            <Button type="button" size="sm" asChild>
+              <Link to={ROUTES.ADMIN_EXPERIENCE_NEW}>
+                <Plus className="h-4 w-4" />
+                {t("admin.experiences.emptyButton")}
+              </Link>
             </Button>
           )}
         </Card>

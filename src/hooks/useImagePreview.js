@@ -51,14 +51,14 @@ export function getPreviewUrl(
       fileId,
       width,
       height ?? undefined,
-      undefined,    // gravity
+      undefined, // gravity
       quality,
-      undefined,    // borderWidth
-      undefined,    // borderColor
-      undefined,    // borderRadius
-      undefined,    // opacity
-      undefined,    // rotation
-      undefined,    // background
+      undefined, // borderWidth
+      undefined, // borderColor
+      undefined, // borderRadius
+      undefined, // opacity
+      undefined, // rotation
+      undefined, // background
       OUTPUT_FORMAT,
     );
   } catch {
@@ -76,6 +76,42 @@ export function getPreviewUrl(
  * @param {number[]} opts.widths  — custom widths (default: [400, 800, 1200])
  * @returns {{ src: string|null, srcSet: string|null, sizes: string }}
  */
+/**
+ * Generate an ultra-small placeholder URL for blur-up LQIP.
+ * Appwrite returns a ~200–500 byte WebP at 20px width — use it as
+ * a blurred background image before the full image finishes loading.
+ *
+ * @param {string} fileId
+ * @param {Object}  opts
+ * @param {string}  opts.bucketId  — default: experience_media
+ * @returns {string|null}
+ */
+export function getPlaceholderUrl(
+  fileId,
+  { bucketId = env.bucketExperienceMedia } = {},
+) {
+  if (!fileId) return null;
+  try {
+    return storage.getFilePreview(
+      bucketId,
+      fileId,
+      20, // tiny width — ~200–500 bytes
+      undefined, // auto height
+      undefined, // gravity
+      1, // quality 1 — we only need color information
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "webp",
+    );
+  } catch {
+    return null;
+  }
+}
+
 export function getResponsiveSrcSet(
   fileId,
   {

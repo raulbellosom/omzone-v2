@@ -1,4 +1,4 @@
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useClientDetail } from "@/hooks/useAdminClients";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
@@ -217,7 +217,6 @@ function ClientPassesSection({ passes, t }) {
 
 export default function ClientDetailPage() {
   const { userId } = useParams();
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const { profile, orders, tickets, passes, loading, error } =
     useClientDetail(userId);
@@ -227,13 +226,13 @@ export default function ClientDetailPage() {
   if (error) {
     return (
       <div className="space-y-4">
-        <button
-          onClick={() => navigate(ROUTES.ADMIN_CLIENTS)}
+        <Link
+          to={ROUTES.ADMIN_CLIENTS}
           className="flex items-center gap-1 text-sm text-charcoal-muted hover:text-charcoal transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           {t("admin.clientDetail.back")}
-        </button>
+        </Link>
         <Card className="p-4 border-red-200 bg-red-50">
           <p className="text-sm text-red-700">{error}</p>
         </Card>
@@ -245,13 +244,13 @@ export default function ClientDetailPage() {
     <div className="space-y-6">
       {/* Back + header */}
       <div>
-        <button
-          onClick={() => navigate(ROUTES.ADMIN_CLIENTS)}
+        <Link
+          to={ROUTES.ADMIN_CLIENTS}
           className="flex items-center gap-1 text-sm text-charcoal-muted hover:text-charcoal transition-colors mb-3"
         >
           <ArrowLeft className="h-4 w-4" />
           {t("admin.clientDetail.back")}
-        </button>
+        </Link>
         <h1 className="text-2xl font-display font-semibold text-charcoal">
           {getDisplayName(profile)}
         </h1>

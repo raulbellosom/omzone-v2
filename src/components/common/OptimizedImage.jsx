@@ -1,25 +1,33 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ImageIcon } from "lucide-react";
-import { getResponsiveSrcSet, getPreviewUrl } from "@/hooks/useImagePreview";
+import {
+  getResponsiveSrcSet,
+  getPreviewUrl,
+  getPlaceholderUrl,
+} from "@/hooks/useImagePreview";
 import env from "@/config/env";
 
 /**
  * OptimizedImage — responsive Appwrite Storage image with srcSet,
- * lazy loading, skeleton placeholder and fade-in transition.
+ * lazy loading, blur-up LQIP placeholder, aspect-ratio CLS prevention
+ * and fade-in transition.
  *
  * Props:
- *  - fileId      {string}   Appwrite file ID
- *  - bucketId    {string}   Bucket ID (default: experience_media)
- *  - widths      {number[]} Responsive widths for srcSet (default [400,800,1200])
- *  - quality     {number}   JPEG quality 0-100 (default 80)
- *  - alt         {string}
- *  - className   {string}   Applied to outer wrapper
- *  - imgClass    {string}   Applied to <img>
- *  - fit         {string}   "cover" | "contain" (default "cover")
- *  - eager       {boolean}  Set true for above-the-fold images (disables lazy)
- *  - priority    {boolean}  Alias for eager
- *  - fallbackWidth {number} Fixed width if srcSet not desired
+ *  - fileId       {string}   Appwrite file ID
+ *  - bucketId     {string}   Bucket ID (default: experience_media)
+ *  - widths       {number[]} Responsive widths for srcSet (default [400,800,1200])
+ *  - quality      {number}   JPEG quality 0-100 (default 80)
+ *  - alt          {string}
+ *  - className    {string}   Applied to outer wrapper
+ *  - imgClass     {string}   Applied to <img>
+ *  - fit          {string}   "cover" | "contain" (default "cover")
+ *  - eager        {boolean}  Set true for above-the-fold images (disables lazy)
+ *  - priority     {boolean}  Alias for eager
+ *  - lqip         {boolean}  Enable blur-up LQIP placeholder (default true)
+ *  - aspectRatio  {string}   CSS aspect-ratio value e.g. "16/9", "4/3", "1/1"
+ *                            Prevents CLS by reserving space before image loads
+ *  - fallbackWidth  {number} Fixed width if srcSet not desired
  *  - fallbackHeight {number}
  */
 export default function OptimizedImage({
@@ -33,6 +41,8 @@ export default function OptimizedImage({
   fit = "cover",
   eager = false,
   priority = false,
+  lqip = true,
+  aspectRatio,
   fallbackWidth,
   fallbackHeight,
 }) {
@@ -44,6 +54,7 @@ export default function OptimizedImage({
       <div
         className={cn(
           "flex items-center justify-center bg-warm-gray rounded-lg",
+          aspectRatio && `aspect-[${aspectRatio}]`,
           className,
         )}
       >
@@ -71,11 +82,15 @@ export default function OptimizedImage({
     }));
   }
 
+  // Tiny placeholder URL for blur-up effect (~200–500 bytes)
+  const placeholderSrc = lqip ? getPlaceholderUrl(fileId, { bucketId }) : null;
+
   if (!src) {
     return (
       <div
         className={cn(
           "flex items-center justify-center bg-warm-gray rounded-lg",
+          aspectRatio && `aspect-[${aspectRatio}]`,
           className,
         )}
       >
@@ -85,9 +100,27 @@ export default function OptimizedImage({
   }
 
   return (
-    <div className={cn("relative overflow-hidden bg-warm-gray", className)}>
-      {/* Skeleton pulse while loading */}
-      {status !== "loaded" && status !== "error" && (
+    <div
+      className={cn(
+        "relative overflow-hidden bg-warm-gray",
+        aspectRatio && `aspect-[${aspectRatio}]`,
+        className,
+      )}
+    >
+      {/* Blur-up LQIP: tiny image scaled up with blur — acts as dominant-color placeholder.
+          Loads almost instantly (~300 bytes). Fades away when full image is ready. */}
+      {placeholderSrc && status !== "loaded" && status !== "error" && (
+        <img
+          src={placeholderSrc}
+          aria-hidden="true"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover scale-110"
+          style={{ filter: "blur(16px)" }}
+        />
+      )}
+
+      {/* Fallback pulse skeleton when LQIP is disabled */}
+      {!placeholderSrc && status !== "loaded" && status !== "error" && (
         <div className="absolute inset-0 animate-pulse bg-warm-gray" />
       )}
 
@@ -107,7 +140,7 @@ export default function OptimizedImage({
           onLoad={() => setStatus("loaded")}
           onError={() => setStatus("error")}
           className={cn(
-            "w-full h-full transition-opacity duration-300",
+            "absolute inset-0 w-full h-full transition-opacity duration-500",
             fit === "cover" ? "object-cover" : "object-contain",
             status === "loaded" ? "opacity-100" : "opacity-0",
             imgClass,

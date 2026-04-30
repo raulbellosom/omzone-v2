@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Pencil, Archive, Globe, RotateCcw } from "lucide-react";
 import { Card } from "@/components/common/Card";
 import { Button } from "@/components/common/Button";
@@ -51,7 +51,6 @@ export default function ExperienceCard({
   onStatusChange,
   canAdmin,
 }) {
-  const navigate = useNavigate();
   const { t } = useLanguage();
   const [confirmAction, setConfirmAction] = useState(null);
   const editUrl = ROUTES.ADMIN_EXPERIENCE_EDIT.replace(":id", experience.$id);
@@ -101,11 +100,13 @@ export default function ExperienceCard({
             type="button"
             variant="ghost"
             size="sm"
-            onClick={() => navigate(editUrl)}
+            asChild
             className="flex-1 min-w-0 justify-center"
           >
-            <Pencil className="h-3.5 w-3.5" />
-            {t("admin.experienceActions.edit")}
+            <Link to={editUrl}>
+              <Pencil className="h-3.5 w-3.5" />
+              {t("admin.experienceActions.edit")}
+            </Link>
           </Button>
 
           {canAdmin && experience.status !== "published" && (

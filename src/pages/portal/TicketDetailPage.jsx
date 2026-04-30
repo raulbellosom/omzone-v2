@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { databases } from "@/lib/appwrite";
 import { useAuth } from "@/hooks/useAuth";
 import env from "@/config/env";
@@ -87,7 +87,6 @@ function LoadingSkeleton() {
 export default function TicketDetailPage() {
   const { ticketId } = useParams();
   const { user } = useAuth();
-  const navigate = useNavigate();
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -132,8 +131,8 @@ export default function TicketDetailPage() {
     return (
       <div className="text-center py-16 space-y-4">
         <p className="text-charcoal-muted">{error || "Ticket no encontrado"}</p>
-        <Button variant="outline" onClick={() => navigate(ROUTES.PORTAL_TICKETS)}>
-          Volver a Tickets
+        <Button variant="outline" asChild>
+          <Link to={ROUTES.PORTAL_TICKETS}>Volver a Tickets</Link>
         </Button>
       </div>
     );
@@ -158,13 +157,13 @@ export default function TicketDetailPage() {
   return (
     <div className="space-y-6">
       {/* Back button */}
-      <button
-        onClick={() => navigate(ROUTES.PORTAL_TICKETS)}
-        className="inline-flex items-center gap-1.5 text-sm text-charcoal-muted hover:text-charcoal transition-colors cursor-pointer"
+      <Link
+        to={ROUTES.PORTAL_TICKETS}
+        className="inline-flex items-center gap-1.5 text-sm text-charcoal-muted hover:text-charcoal transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
         Mis Tickets
-      </button>
+      </Link>
 
       {/* Print-friendly ticket card */}
       <div
@@ -293,9 +292,9 @@ export default function TicketDetailPage() {
         <Button
           variant="outline"
           size="md"
-          onClick={() => navigate(ROUTES.PORTAL_TICKETS)}
+          asChild
         >
-          Volver a Tickets
+          <Link to={ROUTES.PORTAL_TICKETS}>Volver a Tickets</Link>
         </Button>
       </div>
 

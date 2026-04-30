@@ -311,12 +311,8 @@ export default function UsePassPage() {
                 <Button size="md">Ver ticket</Button>
               </Link>
             )}
-            <Button
-              variant="outline"
-              size="md"
-              onClick={() => navigate(`/portal/passes/${userPassId}`)}
-            >
-              Volver al pase
+            <Button variant="outline" size="md" asChild>
+              <Link to={`/portal/passes/${userPassId}`}>Volver al pase</Link>
             </Button>
           </div>
         </div>
