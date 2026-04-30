@@ -1,7 +1,6 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import { visualizer } from "rollup-plugin-visualizer";
 import path from "path";
 import fs from "fs";
 
@@ -22,7 +21,11 @@ function versionPlugin() {
   };
 }
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(async ({ mode }) => {
+  const visualizer =
+    mode === "analyze"
+      ? (await import("rollup-plugin-visualizer")).visualizer
+      : null;
   const env = loadEnv(mode, process.cwd(), ["APPWRITE_", "VITE_"]);
 
   const mapped = {};
