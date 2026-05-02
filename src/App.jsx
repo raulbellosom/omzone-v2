@@ -1,6 +1,8 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Suspense, lazy, useEffect } from "react";
 import { Toaster } from "sonner";
+import env from "@/config/env";
+import UnderConstructionPage from "@/pages/UnderConstructionPage";
 
 import PublicLayout from "@/layouts/PublicLayout";
 import AuthLayout from "@/layouts/AuthLayout";
@@ -202,6 +204,15 @@ function ScrollToTop() {
 }
 
 export default function App() {
+  if (env.underConstruction) {
+    return (
+      <>
+        <Toaster richColors position="top-right" />
+        <UnderConstructionPage />
+      </>
+    );
+  }
+
   return (
     <>
       <ScrollToTop />

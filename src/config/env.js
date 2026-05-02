@@ -114,6 +114,9 @@ const env = {
     "send-confirmation",
   functionSendReminder:
     import.meta.env.VITE_APPWRITE_FUNCTION_SEND_REMINDER || "send-reminder",
+
+  // ─── Feature Flags ───
+  underConstruction: import.meta.env.VITE_UNDER_CONSTRUCTION === "true",
 };
 
 export default env;
