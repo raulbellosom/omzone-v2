@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { Archive, RotateCcw, Trash2, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/common/Button";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/common/dropdown-menu";
 import { useLanguage } from "@/hooks/useLanguage";
 
 /**
@@ -28,14 +34,9 @@ export default function ArchiveActionsMenu({
   className,
 }) {
   const { t } = useLanguage();
-  const [open, setOpen] = useState(false);
   const [confirm, setConfirm] = useState(null); // 'archive' | 'restore' | 'hardDelete'
 
   const isArchived = Boolean(document?.archivedAt);
-
-  function close() {
-    setOpen(false);
-  }
 
   async function handleConfirm() {
     if (!confirm) return;
@@ -101,71 +102,47 @@ export default function ArchiveActionsMenu({
       )}
 
       {/* Hard delete modal trigger — delegates to ConfirmHardDeleteModal in parent */}
-      <div className="relative">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className={className}
-          onClick={() => setOpen((p) => !p)}
-          disabled={loading}
-          title={t("admin.archive.moreActions")}
-        >
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-
-        {open && (
-          <>
-            <div className="fixed inset-0 z-30" onClick={close} />
-            <div className="absolute right-0 top-full mt-1 z-40 min-w-44 rounded-xl border border-sand-dark bg-white shadow-lg py-1 overflow-hidden">
-              {canArchive && !isArchived && (
-                <button
-                  type="button"
-                  className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray transition-colors"
-                  onClick={() => {
-                    close();
-                    setConfirm("archive");
-                  }}
-                >
-                  <Archive className="h-4 w-4 text-charcoal-subtle shrink-0" />
-                  {t("admin.archive.archive")}
-                </button>
-              )}
-
-              {canArchive && isArchived && (
-                <button
-                  type="button"
-                  className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray transition-colors"
-                  onClick={() => {
-                    close();
-                    setConfirm("restore");
-                  }}
-                >
-                  <RotateCcw className="h-4 w-4 text-sage shrink-0" />
-                  {t("admin.archive.restore")}
-                </button>
-              )}
-
-              {canHardDelete && isArchived && (
-                <>
-                  <div className="border-t border-sand-dark mx-2 my-1" />
-                  <button
-                    type="button"
-                    className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                    onClick={() => {
-                      close();
-                      onHardDelete?.({ document });
-                    }}
-                  >
-                    <Trash2 className="h-4 w-4 shrink-0" />
-                    {t("admin.archive.hardDelete")}
-                  </button>
-                </>
-              )}
-            </div>
-          </>
-        )}
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className={className}
+            disabled={loading}
+            title={t("admin.archive.moreActions")}
+          >
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {canArchive && !isArchived && (
+            <DropdownMenuItem
+              onSelect={() => setConfirm("archive")}
+            >
+              <Archive className="h-4 w-4 text-charcoal-subtle shrink-0" />
+              {t("admin.archive.archive")}
+            </DropdownMenuItem>
+          )}
+          {canArchive && isArchived && (
+            <DropdownMenuItem
+              onSelect={() => setConfirm("restore")}
+            >
+              <RotateCcw className="h-4 w-4 text-sage shrink-0" />
+              {t("admin.archive.restore")}
+            </DropdownMenuItem>
+          )}
+          {canHardDelete && isArchived && (
+            <DropdownMenuItem
+              onSelect={() => onHardDelete?.({ document })}
+              className="text-red-600 hover:bg-red-50 focus:bg-red-50"
+            >
+              <Trash2 className="h-4 w-4 shrink-0" />
+              {t("admin.archive.hardDelete")}
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </>
   );
 }

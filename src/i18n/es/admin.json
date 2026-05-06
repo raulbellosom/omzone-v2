@@ -1655,7 +1655,8 @@
       "reason": "Motivo",
       "showArchived": "Mostrar archivados",
       "showDrafts": "Mostrar borradores",
-      "archivedBadge": "Archivado"
+      "archivedBadge": "Archivado",
+      "archivedTab": "Archivados"
     }
   }
 }

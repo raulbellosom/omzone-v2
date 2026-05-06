@@ -1655,7 +1655,8 @@
       "reason": "Reason",
       "showArchived": "Show archived",
       "showDrafts": "Show drafts",
-      "archivedBadge": "Archived"
+      "archivedBadge": "Archived",
+      "archivedTab": "Archived"
     }
   }
 }

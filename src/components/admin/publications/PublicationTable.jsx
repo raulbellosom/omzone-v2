@@ -9,6 +9,12 @@ import {
   Layers,
 } from "lucide-react";
 import { Button } from "@/components/common/Button";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/common/dropdown-menu";
 import StatusBadge from "@/components/admin/experiences/StatusBadge";
 import PublicationCategoryChip from "@/components/admin/publications/PublicationCategoryChip";
 import { ROUTES } from "@/constants/routes";
@@ -59,7 +65,6 @@ function ActionsMenu({
   onRestore,
   canAdmin,
 }) {
-  const [open, setOpen] = useState(false);
   const [confirm, setConfirm] = useState(null);
   const { t } = useLanguage();
 
@@ -70,7 +75,6 @@ function ActionsMenu({
   );
 
   function handleAction(type) {
-    setOpen(false);
     setConfirm({ type });
   }
 
@@ -110,7 +114,7 @@ function ActionsMenu({
         onCancel={() => setConfirm(null)}
       />
 
-      <div className="relative flex items-center justify-end gap-1">
+      <div className="flex items-center justify-end gap-1">
         <Link
           to={editUrl}
           className="inline-flex items-center justify-center h-9 w-9 rounded-lg text-charcoal-subtle hover:text-charcoal hover:bg-warm-gray transition-colors"
@@ -130,70 +134,46 @@ function ActionsMenu({
           </Link>
         </Button>
 
-        <div className="relative">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={() => setOpen((p) => !p)}
-            title={t("admin.publications.moreActions")}
-          >
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-
-          {open && (
-            <>
-              <div
-                className="fixed inset-0 z-10"
-                onClick={() => setOpen(false)}
-              />
-              <div className="absolute right-0 top-full mt-1 z-20 w-44 rounded-xl border border-sand-dark bg-white shadow-lg py-1">
-                {canAdmin &&
-                  publication.status !== "published" &&
-                  !publication.archivedAt && (
-                    <button
-                      type="button"
-                      onClick={() => handleAction("publish")}
-                      className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
-                    >
-                      <Globe className="h-4 w-4 text-emerald-600" />
-                      {t("admin.publications.publish")}
-                    </button>
-                  )}
-                {publication.status !== "draft" && !publication.archivedAt && (
-                  <button
-                    type="button"
-                    onClick={() => handleAction("draft")}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
-                  >
-                    <RotateCcw className="h-4 w-4 text-amber-600" />
-                    {t("admin.publications.backToDraft")}
-                  </button>
-                )}
-                {canAdmin && !publication.archivedAt && (
-                  <button
-                    type="button"
-                    onClick={() => handleAction("archive")}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
-                  >
-                    <Archive className="h-4 w-4 text-charcoal-subtle" />
-                    {t("admin.publications.archiveButton")}
-                  </button>
-                )}
-                {publication.archivedAt && (
-                  <button
-                    type="button"
-                    onClick={() => handleAction("restore")}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
-                  >
-                    <RotateCcw className="h-4 w-4 text-sage" />
-                    {t("admin.archive.restore")}
-                  </button>
-                )}
-              </div>
-            </>
-          )}
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              title={t("admin.publications.moreActions")}
+            >
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {canAdmin &&
+              publication.status !== "published" &&
+              !publication.archivedAt && (
+                <DropdownMenuItem onSelect={() => handleAction("publish")}>
+                  <Globe className="h-4 w-4 text-emerald-600" />
+                  {t("admin.publications.publish")}
+                </DropdownMenuItem>
+              )}
+            {publication.status !== "draft" && !publication.archivedAt && (
+              <DropdownMenuItem onSelect={() => handleAction("draft")}>
+                <RotateCcw className="h-4 w-4 text-amber-600" />
+                {t("admin.publications.backToDraft")}
+              </DropdownMenuItem>
+            )}
+            {canAdmin && !publication.archivedAt && (
+              <DropdownMenuItem onSelect={() => handleAction("archive")}>
+                <Archive className="h-4 w-4 text-charcoal-subtle" />
+                {t("admin.publications.archiveButton")}
+              </DropdownMenuItem>
+            )}
+            {publication.archivedAt && (
+              <DropdownMenuItem onSelect={() => handleAction("restore")}>
+                <RotateCcw className="h-4 w-4 text-sage" />
+                {t("admin.archive.restore")}
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </>
   );

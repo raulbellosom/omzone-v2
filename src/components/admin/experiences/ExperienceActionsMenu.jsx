@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Pencil,
   Archive,
@@ -8,6 +8,12 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import { Button } from "@/components/common/Button";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/common/dropdown-menu";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 
@@ -53,14 +59,12 @@ export default function ExperienceActionsMenu({
   onRestore,
   canAdmin,
 }) {
-  const [open, setOpen] = useState(false);
   const [confirm, setConfirm] = useState(null);
   const { t } = useLanguage();
 
   const editUrl = ROUTES.ADMIN_EXPERIENCE_EDIT.replace(":id", experience.$id);
 
   function handleAction(type) {
-    setOpen(false);
     setConfirm({ type });
   }
 
@@ -103,7 +107,7 @@ export default function ExperienceActionsMenu({
         onCancel={() => setConfirm(null)}
       />
 
-      <div className="relative flex items-center justify-end gap-1">
+      <div className="flex items-center justify-end gap-1">
         <Link
           to={editUrl}
           className="inline-flex items-center justify-center h-8 w-8 rounded-lg text-charcoal-subtle hover:text-charcoal hover:bg-warm-gray transition-colors"
@@ -112,70 +116,46 @@ export default function ExperienceActionsMenu({
           <Pencil className="h-4 w-4" />
         </Link>
 
-        <div className="relative">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={() => setOpen((p) => !p)}
-            title={t("admin.experienceActions.moreActions")}
-          >
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-
-          {open && (
-            <>
-              <div
-                className="fixed inset-0 z-10"
-                onClick={() => setOpen(false)}
-              />
-              <div className="absolute right-0 top-full mt-1 z-20 w-44 rounded-xl border border-sand-dark bg-white shadow-lg py-1">
-                {canAdmin &&
-                  experience.status !== "published" &&
-                  !experience.archivedAt && (
-                    <button
-                      type="button"
-                      onClick={() => handleAction("publish")}
-                      className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
-                    >
-                      <Globe className="h-4 w-4 text-emerald-600" />
-                      {t("admin.experienceActions.publish")}
-                    </button>
-                  )}
-                {experience.status !== "draft" && !experience.archivedAt && (
-                  <button
-                    type="button"
-                    onClick={() => handleAction("draft")}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
-                  >
-                    <RotateCcw className="h-4 w-4 text-amber-600" />
-                    {t("admin.experienceActions.backToDraft")}
-                  </button>
-                )}
-                {!experience.archivedAt && (
-                  <button
-                    type="button"
-                    onClick={() => handleAction("archive")}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
-                  >
-                    <Archive className="h-4 w-4 text-charcoal-subtle" />
-                    {t("admin.experienceActions.archive")}
-                  </button>
-                )}
-                {experience.archivedAt && (
-                  <button
-                    type="button"
-                    onClick={() => handleAction("restore")}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
-                  >
-                    <RotateCcw className="h-4 w-4 text-sage" />
-                    {t("admin.archive.restore")}
-                  </button>
-                )}
-              </div>
-            </>
-          )}
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              title={t("admin.experienceActions.moreActions")}
+            >
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {canAdmin &&
+              experience.status !== "published" &&
+              !experience.archivedAt && (
+                <DropdownMenuItem onSelect={() => handleAction("publish")}>
+                  <Globe className="h-4 w-4 text-emerald-600" />
+                  {t("admin.experienceActions.publish")}
+                </DropdownMenuItem>
+              )}
+            {experience.status !== "draft" && !experience.archivedAt && (
+              <DropdownMenuItem onSelect={() => handleAction("draft")}>
+                <RotateCcw className="h-4 w-4 text-amber-600" />
+                {t("admin.experienceActions.backToDraft")}
+              </DropdownMenuItem>
+            )}
+            {!experience.archivedAt && (
+              <DropdownMenuItem onSelect={() => handleAction("archive")}>
+                <Archive className="h-4 w-4 text-charcoal-subtle" />
+                {t("admin.experienceActions.archive")}
+              </DropdownMenuItem>
+            )}
+            {experience.archivedAt && (
+              <DropdownMenuItem onSelect={() => handleAction("restore")}>
+                <RotateCcw className="h-4 w-4 text-sage" />
+                {t("admin.archive.restore")}
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </>
   );
