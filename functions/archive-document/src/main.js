@@ -213,12 +213,22 @@ export default async ({ req, res, log, error }) => {
     const now = new Date();
     const nowIso = now.toISOString();
 
-    // Archive the document
-    await db.updateDocument(DB, collectionId, documentId, {
+    // Build update payload — normalize legacy status="archived" in the same patch
+    // so Appwrite's enum validation on the merged document doesn't fail.
+    const updatePayload = {
       archivedAt: nowIso,
       archivedBy: userId,
       archiveReason: reason || null,
-    });
+    };
+    if (doc.status === "archived") {
+      updatePayload.status = "draft";
+      log(
+        `Normalizing legacy status="archived" for ${collectionId}/${documentId}`,
+      );
+    }
+
+    // Archive the document
+    await db.updateDocument(DB, collectionId, documentId, updatePayload);
 
     log(`Archived ${collectionId}/${documentId} by ${userId}`);
 

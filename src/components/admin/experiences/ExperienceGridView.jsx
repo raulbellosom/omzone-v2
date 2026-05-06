@@ -40,7 +40,9 @@ export default function ExperienceGridView({
   onStatusChange,
   onArchive,
   onRestore,
+  onHardDelete,
   canAdmin,
+  canHardDelete,
 }) {
   const { language } = useLanguage();
 
@@ -96,7 +98,9 @@ export default function ExperienceGridView({
                   onStatusChange={onStatusChange}
                   onArchive={onArchive}
                   onRestore={onRestore}
+                  onHardDelete={onHardDelete}
                   canAdmin={canAdmin}
+                  canHardDelete={canHardDelete}
                 />
               </div>
             </div>

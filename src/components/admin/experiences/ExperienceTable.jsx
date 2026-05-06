@@ -45,7 +45,9 @@ export default function ExperienceTable({
   onStatusChange,
   onArchive,
   onRestore,
+  onHardDelete,
   canAdmin,
+  canHardDelete,
 }) {
   const { t, language } = useLanguage();
 
@@ -143,7 +145,9 @@ export default function ExperienceTable({
                         onStatusChange={onStatusChange}
                         onArchive={onArchive}
                         onRestore={onRestore}
+                        onHardDelete={onHardDelete}
                         canAdmin={canAdmin}
+                        canHardDelete={canHardDelete}
                       />
                     </div>
                   </td>

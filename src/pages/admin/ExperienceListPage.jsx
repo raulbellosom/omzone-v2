@@ -37,7 +37,7 @@ const STATUS_OPTIONS = [
 const PAGE_SIZE = 25;
 
 export default function ExperienceListPage() {
-  const { isAdmin } = useAuth();
+  const { isAdmin, isRoot } = useAuth();
   const { t } = useLanguage();
 
   const [search, setSearch] = useState("");
@@ -275,7 +275,9 @@ export default function ExperienceListPage() {
               onStatusChange={handleStatusUpdate}
               onArchive={handleArchive}
               onRestore={handleRestore}
+              onHardDelete={handleHardDelete}
               canAdmin={isAdmin}
+              canHardDelete={isRoot}
             />
           ) : (
             <ExperienceTable
@@ -284,7 +286,9 @@ export default function ExperienceListPage() {
               onStatusChange={handleStatusUpdate}
               onArchive={handleArchive}
               onRestore={handleRestore}
+              onHardDelete={handleHardDelete}
               canAdmin={isAdmin}
+              canHardDelete={isRoot}
             />
           )}
         </div>
@@ -314,7 +318,9 @@ export default function ExperienceListPage() {
               onStatusChange={handleStatusUpdate}
               onArchive={handleArchive}
               onRestore={handleRestore}
+              onHardDelete={handleHardDelete}
               canAdmin={isAdmin}
+              canHardDelete={isRoot}
             />
           ))}
       </div>

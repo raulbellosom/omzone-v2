@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Pencil, Archive, Globe, RotateCcw } from "lucide-react";
+import { Pencil, Archive, Globe, RotateCcw, Trash2 } from "lucide-react";
 import { Card } from "@/components/common/Card";
 import { Button } from "@/components/common/Button";
 import StatusBadge from "./StatusBadge";
@@ -51,7 +51,9 @@ export default function ExperienceCard({
   onStatusChange,
   onArchive,
   onRestore,
+  onHardDelete,
   canAdmin,
+  canHardDelete,
 }) {
   const { t } = useLanguage();
   const [confirmAction, setConfirmAction] = useState(null);
@@ -175,6 +177,19 @@ export default function ExperienceCard({
             >
               <RotateCcw className="h-3.5 w-3.5" />
               {t("admin.experienceActions.draft")}
+            </Button>
+          )}
+
+          {canHardDelete && experience.archivedAt && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => onHardDelete?.({ document: experience })}
+              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              {t("admin.archive.hardDelete")}
             </Button>
           )}
         </div>

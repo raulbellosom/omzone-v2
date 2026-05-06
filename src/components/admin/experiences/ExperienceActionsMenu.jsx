@@ -6,6 +6,7 @@ import {
   Globe,
   RotateCcw,
   MoreHorizontal,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import {
@@ -57,7 +58,9 @@ export default function ExperienceActionsMenu({
   onStatusChange,
   onArchive,
   onRestore,
+  onHardDelete,
   canAdmin,
+  canHardDelete,
 }) {
   const [confirm, setConfirm] = useState(null);
   const { t } = useLanguage();
@@ -152,6 +155,15 @@ export default function ExperienceActionsMenu({
               <DropdownMenuItem onSelect={() => handleAction("restore")}>
                 <RotateCcw className="h-4 w-4 text-sage" />
                 {t("admin.archive.restore")}
+              </DropdownMenuItem>
+            )}
+            {canHardDelete && experience.archivedAt && (
+              <DropdownMenuItem
+                onSelect={() => onHardDelete?.({ document: experience })}
+                className="text-red-600 hover:bg-red-50 focus:bg-red-50"
+              >
+                <Trash2 className="h-4 w-4" />
+                {t("admin.archive.hardDelete")}
               </DropdownMenuItem>
             )}
           </DropdownMenuContent>

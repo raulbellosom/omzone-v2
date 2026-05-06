@@ -7,6 +7,7 @@ import {
   RotateCcw,
   MoreHorizontal,
   Layers,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import {
@@ -63,7 +64,9 @@ function ActionsMenu({
   onStatusChange,
   onArchive,
   onRestore,
+  onHardDelete,
   canAdmin,
+  canHardDelete,
 }) {
   const [confirm, setConfirm] = useState(null);
   const { t } = useLanguage();
@@ -172,6 +175,15 @@ function ActionsMenu({
                 {t("admin.archive.restore")}
               </DropdownMenuItem>
             )}
+            {canHardDelete && publication.archivedAt && (
+              <DropdownMenuItem
+                onSelect={() => onHardDelete?.(publication)}
+                className="text-red-600 hover:bg-red-50 focus:bg-red-50"
+              >
+                <Trash2 className="h-4 w-4" />
+                {t("admin.archive.hardDelete")}
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -200,7 +212,9 @@ export default function PublicationTable({
   onStatusChange,
   onArchive,
   onRestore,
+  onHardDelete,
   canAdmin,
+  canHardDelete,
 }) {
   const { t } = useLanguage();
   return (
@@ -283,7 +297,9 @@ export default function PublicationTable({
                       onStatusChange={onStatusChange}
                       onArchive={onArchive}
                       onRestore={onRestore}
+                      onHardDelete={onHardDelete}
                       canAdmin={canAdmin}
+                      canHardDelete={canHardDelete}
                     />
                   </td>
                 </tr>
