@@ -52,6 +52,14 @@
       "name": "stripe-webhook",
       "runtime": "node-22",
       "execute": ["any"],
+      "scopes": [
+        "documents.read",
+        "documents.write",
+        "collections.read",
+        "databases.read",
+        "functions.write",
+        "execution.write"
+      ],
       "events": [],
       "timeout": 30,
       "enabled": true,
@@ -62,10 +70,40 @@
       "path": "functions/stripe-webhook"
     },
     {
+      "$id": "admin-order-action",
+      "name": "admin-order-action",
+      "runtime": "node-22",
+      "execute": ["users"],
+      "scopes": [
+        "users.read",
+        "documents.read",
+        "documents.write",
+        "databases.read",
+        "functions.write",
+        "execution.write"
+      ],
+      "events": [],
+      "timeout": 30,
+      "enabled": true,
+      "logging": true,
+      "deploymentRetention": 0,
+      "entrypoint": "src/main.js",
+      "commands": "npm install",
+      "path": "functions/admin-order-action"
+    },
+    {
       "$id": "generate-ticket",
       "name": "generate-ticket",
       "runtime": "node-22",
       "execute": ["users"],
+      "scopes": [
+        "documents.read",
+        "documents.write",
+        "collections.read",
+        "databases.read",
+        "functions.write",
+        "execution.write"
+      ],
       "events": [],
       "timeout": 30,
       "enabled": true,
@@ -131,6 +169,90 @@
       "entrypoint": "src/main.js",
       "commands": "npm install",
       "path": "functions/send-reminder"
+    },
+    {
+      "$id": "archive-document",
+      "name": "archive-document",
+      "runtime": "node-22",
+      "execute": ["users"],
+      "scopes": [
+        "users.read",
+        "documents.read",
+        "documents.write",
+        "databases.read",
+        "collections.read"
+      ],
+      "events": [],
+      "timeout": 30,
+      "enabled": true,
+      "logging": true,
+      "deploymentRetention": 0,
+      "entrypoint": "src/main.js",
+      "commands": "npm install",
+      "path": "functions/archive-document"
+    },
+    {
+      "$id": "restore-document",
+      "name": "restore-document",
+      "runtime": "node-22",
+      "execute": ["users"],
+      "scopes": [
+        "users.read",
+        "documents.read",
+        "documents.write",
+        "databases.read",
+        "collections.read"
+      ],
+      "events": [],
+      "timeout": 30,
+      "enabled": true,
+      "logging": true,
+      "deploymentRetention": 0,
+      "entrypoint": "src/main.js",
+      "commands": "npm install",
+      "path": "functions/restore-document"
+    },
+    {
+      "$id": "hard-delete-document",
+      "name": "hard-delete-document",
+      "runtime": "node-22",
+      "execute": ["users"],
+      "scopes": [
+        "users.read",
+        "documents.read",
+        "documents.write",
+        "databases.read",
+        "collections.read"
+      ],
+      "events": [],
+      "timeout": 30,
+      "enabled": true,
+      "logging": true,
+      "deploymentRetention": 0,
+      "entrypoint": "src/main.js",
+      "commands": "npm install",
+      "path": "functions/hard-delete-document"
+    },
+    {
+      "$id": "archive-personal",
+      "name": "archive-personal",
+      "runtime": "node-22",
+      "execute": ["users"],
+      "scopes": [
+        "users.read",
+        "documents.read",
+        "documents.write",
+        "databases.read",
+        "collections.read"
+      ],
+      "events": [],
+      "timeout": 15,
+      "enabled": true,
+      "logging": true,
+      "deploymentRetention": 0,
+      "entrypoint": "src/main.js",
+      "commands": "npm install",
+      "path": "functions/archive-personal"
     }
   ],
   "databases": [
@@ -312,8 +434,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "minQuantity",
@@ -321,8 +443,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "generatesTickets",
@@ -338,7 +460,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": ["draft", "published", "archived"]
+          "elements": ["draft", "published"]
         },
         {
           "key": "sortOrder",
@@ -346,8 +468,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "seoTitle",
@@ -373,6 +495,32 @@
           "required": false,
           "array": false,
           "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
           "default": null,
           "encrypt": false
         }
@@ -411,6 +559,13 @@
           "type": "fulltext",
           "status": "available",
           "columns": ["publicName"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
           "orders": []
         }
       ]
@@ -526,7 +681,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": ["draft", "published", "archived"]
+          "elements": ["draft", "published"]
         },
         {
           "key": "publishedAt",
@@ -560,6 +715,32 @@
           "required": false,
           "array": false,
           "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
           "default": null,
           "encrypt": false
         }
@@ -598,6 +779,13 @@
           "type": "fulltext",
           "status": "available",
           "columns": ["title"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
           "orders": []
         }
       ]
@@ -704,8 +892,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "isVisible",
@@ -853,8 +1041,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "isVisible",
@@ -878,6 +1066,32 @@
           "array": false,
           "format": "",
           "default": null
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
         }
       ],
       "indexes": [
@@ -894,6 +1108,13 @@
           "status": "available",
           "columns": ["isVisible", "sortOrder"],
           "orders": ["asc", "asc"]
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
+          "orders": []
         }
       ]
     },
@@ -962,8 +1183,34 @@
           "required": false,
           "array": false,
           "default": 0,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
         }
       ],
       "indexes": [
@@ -979,6 +1226,13 @@
           "type": "key",
           "status": "available",
           "columns": ["category"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
           "orders": []
         }
       ]
@@ -1139,8 +1393,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "status",
@@ -1157,6 +1411,32 @@
           "required": false,
           "array": false,
           "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
           "default": null,
           "encrypt": false
         }
@@ -1188,6 +1468,13 @@
           "type": "key",
           "status": "available",
           "columns": ["startDate"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
           "orders": []
         }
       ]
@@ -1293,8 +1580,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "maxPersons",
@@ -1302,8 +1589,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "badge",
@@ -1334,8 +1621,34 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
         }
       ],
       "indexes": [
@@ -1358,6 +1671,13 @@
           "type": "key",
           "status": "available",
           "columns": ["editionId"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
           "orders": []
         }
       ]
@@ -1424,8 +1744,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "isActive",
@@ -1449,6 +1769,32 @@
           "array": false,
           "default": null,
           "format": ""
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
         }
       ],
       "indexes": [
@@ -1464,6 +1810,13 @@
           "type": "key",
           "status": "available",
           "columns": ["pricingTierId", "isActive"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
           "orders": []
         }
       ]
@@ -1597,8 +1950,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "heroImageId",
@@ -1624,8 +1977,34 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
         }
       ],
       "indexes": [
@@ -1655,6 +2034,13 @@
           "type": "fulltext",
           "status": "available",
           "columns": ["name"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
           "orders": []
         }
       ]
@@ -1731,8 +2117,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         }
       ],
       "indexes": [
@@ -1835,8 +2221,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "capacity",
@@ -1844,8 +2230,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "heroImageId",
@@ -1872,7 +2258,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": ["draft", "published", "archived"]
+          "elements": ["draft", "published"]
         },
         {
           "key": "sortOrder",
@@ -1880,8 +2266,34 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
         }
       ],
       "indexes": [
@@ -1904,6 +2316,13 @@
           "type": "fulltext",
           "status": "available",
           "columns": ["name"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
           "orders": []
         }
       ]
@@ -1979,8 +2398,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "sortOrder",
@@ -1988,8 +2407,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         }
       ],
       "indexes": [
@@ -2067,8 +2486,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "basePrice",
@@ -2094,8 +2513,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "validExperienceIds",
@@ -2129,8 +2548,34 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
         }
       ],
       "indexes": [
@@ -2153,6 +2598,13 @@
           "type": "fulltext",
           "status": "available",
           "columns": ["name"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
           "orders": []
         }
       ]
@@ -2216,9 +2668,43 @@
           "required": true,
           "array": false,
           "default": null
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
         }
       ],
-      "indexes": []
+      "indexes": [
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
+          "orders": []
+        }
+      ]
     },
     {
       "$id": "rooms",
@@ -2270,8 +2756,8 @@
           "required": false,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "type",
@@ -2294,6 +2780,32 @@
           "required": true,
           "array": false,
           "default": null
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
         }
       ],
       "indexes": [
@@ -2302,6 +2814,13 @@
           "type": "key",
           "status": "available",
           "columns": ["locationId"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
           "orders": []
         }
       ]
@@ -2382,6 +2901,32 @@
           "array": false,
           "default": null,
           "encrypt": false
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
         }
       ],
       "indexes": [
@@ -2404,6 +2949,13 @@
           "type": "fulltext",
           "status": "available",
           "columns": ["name"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
           "orders": []
         }
       ]
@@ -2483,8 +3035,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "bookedCount",
@@ -2492,8 +3044,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "locationId",
@@ -2527,6 +3079,32 @@
           "type": "text",
           "required": false,
           "array": false,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
           "default": null,
           "encrypt": false
         }
@@ -2565,6 +3143,13 @@
           "type": "key",
           "status": "available",
           "columns": ["experienceId", "status", "startDatetime"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
           "orders": []
         }
       ]
@@ -2810,6 +3395,40 @@
           "array": false,
           "default": null,
           "format": ""
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "userArchivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
         }
       ],
       "indexes": [
@@ -2860,6 +3479,20 @@
           "type": "fulltext",
           "status": "available",
           "columns": ["orderNumber"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
+          "orders": []
+        },
+        {
+          "key": "idx_userArchivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["userArchivedAt"],
           "orders": []
         }
       ]
@@ -2923,8 +3556,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "unitPrice",
@@ -3022,6 +3655,15 @@
           "encrypt": false
         },
         {
+          "key": "stripeSessionId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
+        },
+        {
           "key": "stripeChargeId",
           "type": "string",
           "required": false,
@@ -3106,6 +3748,13 @@
           "type": "unique",
           "status": "available",
           "columns": ["stripePaymentIntentId"],
+          "orders": []
+        },
+        {
+          "key": "idx_stripeSessionId",
+          "type": "key",
+          "status": "available",
+          "columns": ["stripeSessionId"],
           "orders": []
         },
         {
@@ -3230,6 +3879,40 @@
           "array": false,
           "default": null,
           "encrypt": false
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "userArchivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
         }
       ],
       "indexes": [
@@ -3280,6 +3963,20 @@
           "type": "fulltext",
           "status": "available",
           "columns": ["ticketCode"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
+          "orders": []
+        },
+        {
+          "key": "idx_userArchivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["userArchivedAt"],
           "orders": []
         }
       ]
@@ -3411,8 +4108,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "usedCredits",
@@ -3420,8 +4117,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "status",
@@ -3447,6 +4144,40 @@
           "array": false,
           "default": null,
           "encrypt": false
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "userArchivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
         }
       ],
       "indexes": [
@@ -3476,6 +4207,20 @@
           "type": "key",
           "status": "available",
           "columns": ["userId", "status"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
+          "orders": []
+        },
+        {
+          "key": "idx_userArchivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["userArchivedAt"],
           "orders": []
         }
       ]
@@ -3526,8 +4271,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "consumedAt",
@@ -3735,8 +4480,8 @@
           "required": true,
           "array": false,
           "default": null,
-          "min": -9223372036854775808,
-          "max": 9223372036854775807
+          "min": -9223372036854776000,
+          "max": 9223372036854776000
         },
         {
           "key": "contactName",
@@ -3821,6 +4566,32 @@
           "array": false,
           "default": null,
           "format": ""
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
         }
       ],
       "indexes": [
@@ -3850,6 +4621,13 @@
           "type": "fulltext",
           "status": "available",
           "columns": ["contactName"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
           "orders": []
         }
       ]
@@ -4184,6 +4962,32 @@
           "required": true,
           "array": false,
           "default": null
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
         }
       ],
       "indexes": [
@@ -4199,6 +5003,13 @@
           "type": "key",
           "status": "available",
           "columns": ["type", "isActive"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
           "orders": []
         }
       ]
@@ -4291,6 +5102,32 @@
           "array": false,
           "default": null,
           "encrypt": false
+        },
+        {
+          "key": "archivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "archivedBy",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 36,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "archiveReason",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 500,
+          "default": null,
+          "encrypt": false
         }
       ],
       "indexes": [
@@ -4320,6 +5157,13 @@
           "type": "key",
           "status": "available",
           "columns": ["slotId", "status"],
+          "orders": []
+        },
+        {
+          "key": "idx_archivedAt",
+          "type": "key",
+          "status": "available",
+          "columns": ["archivedAt"],
           "orders": []
         }
       ]

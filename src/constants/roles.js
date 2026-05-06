@@ -76,3 +76,24 @@ export function displayRoleName(labels = []) {
   if (role === ROLES.CLIENT) return "Cliente";
   return "—";
 }
+
+// ---------------------------------------------------------------------------
+// Archive / delete permissions
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns true if the user can permanently hard-delete documents.
+ * Hard delete is ONLY available to root users.
+ */
+export function canHardDelete(labels = []) {
+  return labels.includes(ROLES.ROOT);
+}
+
+/**
+ * Returns true if the user can archive/restore documents in general.
+ * Operators have restricted access (only to allowed collections — enforced server-side).
+ */
+export function canArchive(labels = []) {
+  const role = roleFromLabels(labels);
+  return [ROLES.ROOT, ROLES.ADMIN, ROLES.OPERATOR].includes(role);
+}

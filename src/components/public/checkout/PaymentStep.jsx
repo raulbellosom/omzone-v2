@@ -1,6 +1,10 @@
 import { useState, useMemo } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { Link } from "react-router-dom";
+import {
+  CheckoutElementsProvider,
+  PaymentElement,
+  useCheckout as useStripeCheckout,
+} from "@stripe/react-stripe-js/checkout";
 import { Loader2, ShieldCheck } from "lucide-react";
 import { getStripe } from "@/lib/stripe";
 import { Button } from "@/components/common/Button";
@@ -44,10 +48,14 @@ const appearance = {
 
 // ─── Inner form (must be inside <Elements>) ──────────────────────────────────
 
-function PaymentForm({ indicativeTotal, currency, orderId, submitting: externalSubmitting }) {
-  const stripe = useStripe();
-  const elements = useElements();
-  const navigate = useNavigate();
+function PaymentForm({
+  indicativeTotal,
+  currency,
+  orderId,
+  checkoutSessionId,
+  submitting: externalSubmitting,
+}) {
+  const checkoutState = useStripeCheckout();
   const { t } = useLanguage();
 
   const [consentChecked, setConsentChecked] = useState(false);
@@ -67,7 +75,7 @@ function PaymentForm({ indicativeTotal, currency, orderId, submitting: externalS
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (!stripe || !elements) return;
+    if (checkoutState.type !== "success") return;
 
     if (!consentChecked) {
       setError(t("paymentStep.consentRequired"));
@@ -77,29 +85,50 @@ function PaymentForm({ indicativeTotal, currency, orderId, submitting: externalS
     setProcessing(true);
     setError(null);
 
-    const { error: stripeError } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}${ROUTES.CHECKOUT_SUCCESS}?order_id=${orderId}`,
-      },
-    });
+    try {
+      // returnUrl is already set on the Checkout Session at creation time.
+      // Passing it again here causes a Stripe error, so we omit it.
+      const result = await checkoutState.checkout.confirm();
 
-    // If we get here, there was an error (successful redirects don't return)
-    if (stripeError) {
-      if (stripeError.type === "card_error" || stripeError.type === "validation_error") {
-        setError(stripeError.message);
-      } else {
-        setError(t("paymentStep.errorGeneric"));
+      if (result.type === "error") {
+        const stripeError = result.error;
+        if (stripeError.type === "card_error" || stripeError.type === "validation_error") {
+          setError(stripeError.message);
+        } else {
+          setError(stripeError.message || t("paymentStep.errorGeneric"));
+        }
       }
+      // On success Stripe redirects to the session's return_url automatically.
+    } catch (err) {
+      setError(err?.message || t("paymentStep.errorGeneric"));
     }
 
     setProcessing(false);
   }
 
-  const isSubmitDisabled = !stripe || !elements || processing || externalSubmitting || !elementReady;
+  const checkoutLoading = checkoutState.type === "loading";
+  const checkoutError =
+    checkoutState.type === "error" ? checkoutState.error.message : null;
+  const isSubmitDisabled =
+    checkoutState.type !== "success" ||
+    processing ||
+    externalSubmitting ||
+    !elementReady;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {checkoutLoading && (
+        <div className="flex items-center justify-center py-3 text-charcoal-subtle text-sm gap-2">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          {t("paymentStep.initializing")}
+        </div>
+      )}
+      {checkoutError && (
+        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+          {checkoutError}
+        </div>
+      )}
+
       {/* Payment Element */}
       <div className="min-h-50">
         {!elementReady && (
@@ -110,7 +139,14 @@ function PaymentForm({ indicativeTotal, currency, orderId, submitting: externalS
         )}
         <PaymentElement
           onReady={() => setElementReady(true)}
-          options={{ layout: "tabs" }}
+          options={{
+            layout: "tabs",
+            fields: {
+              billingDetails: {
+                address: "never",
+              },
+            },
+          }}
         />
       </div>
 
@@ -211,6 +247,7 @@ function ConsentText({ t }) {
 
 export default function PaymentStep({
   clientSecret,
+  checkoutSessionId,
   indicativeTotal,
   currency,
   orderId,
@@ -246,16 +283,21 @@ export default function PaymentStep({
   }
 
   return (
-    <Elements
+    <CheckoutElementsProvider
+      key={checkoutSessionId || clientSecret}
       stripe={stripePromise}
-      options={{ clientSecret, appearance }}
+      options={{
+        clientSecret,
+        elementsOptions: { appearance },
+      }}
     >
       <PaymentForm
         indicativeTotal={indicativeTotal}
         currency={currency}
         orderId={orderId}
+        checkoutSessionId={checkoutSessionId}
         submitting={submitting}
       />
-    </Elements>
+    </CheckoutElementsProvider>
   );
 }

@@ -1,8 +1,8 @@
 /**
  * @function create-checkout
  * @description Validates purchase intent, reads prices from DB, creates order with
- *   snapshot, generates order items, and creates a Stripe PaymentIntent (direct)
- *   or marks order as paid (assisted + skipStripe).
+ *   snapshot, generates order items, and creates a Stripe Checkout Session
+ *   with ui_mode=custom (direct) or confirms manual assisted payment.
  * @trigger HTTP POST
  *
  * @input {Object} payload
@@ -49,7 +49,7 @@
  * - RESEND_API_KEY   (required when EMAIL_PROVIDER=resend)
  *
  * @returns {Object}
- *   direct:   { ok: true, data: { clientSecret, orderId, orderNumber } }
+ *   direct:   { ok: true, data: { clientSecret, checkoutSessionId, orderId, orderNumber } }
  *   assisted + skipStripe: { ok: true, data: { orderId, orderNumber, paid: true } }
  *   assisted + Stripe:     { ok: true, data: { paymentLink, orderId } }
  */
@@ -140,6 +140,72 @@ async function triggerGenerateTicket(client, orderId, log, error) {
     log(`Triggered generate-ticket for order ${orderId}`);
   } catch (err) {
     error(`generate-ticket trigger failed (non-blocking): ${err.message}`);
+  }
+}
+
+async function createEmbeddedCheckoutSession({
+  stripe,
+  lineItems,
+  order,
+  orderUserId,
+  customerEmail,
+  frontendUrl,
+}) {
+  const session = await stripe.checkout.sessions.create({
+    mode: "payment",
+    ui_mode: "custom",
+    line_items: lineItems,
+    customer_email: customerEmail,
+    client_reference_id: order.$id,
+    metadata: {
+      orderId: order.$id,
+      userId: orderUserId,
+      orderNumber: order.orderNumber,
+    },
+    payment_intent_data: {
+      metadata: {
+        orderId: order.$id,
+        userId: orderUserId,
+        orderNumber: order.orderNumber,
+      },
+    },
+    return_url: `${frontendUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}&order_id=${order.$id}`,
+  });
+
+  return session;
+}
+
+async function createManualPaymentRecord({
+  db,
+  databaseId,
+  collectionPayments,
+  order,
+  method,
+  actorUserId,
+  metadata = {},
+  log,
+  error,
+}) {
+  try {
+    await db.createDocument(databaseId, collectionPayments, ID.unique(), {
+      orderId: order.$id,
+      amount: Number(order.totalAmount || 0),
+      currency: (order.currency || "MXN").toUpperCase(),
+      status: "succeeded",
+      method,
+      metadata: JSON.stringify({
+        eventType: "manual_payment_registered",
+        method,
+        actorUserId,
+        orderId: order.$id,
+        orderNumber: order.orderNumber,
+        registeredAt: new Date().toISOString(),
+        ...metadata,
+      }),
+    });
+    log(`Manual payment record created for order ${order.$id}`);
+  } catch (err) {
+    error(`Manual payment record failed for ${order.$id}: ${err.message}`);
   }
 }
 
@@ -319,6 +385,7 @@ export default async ({ req, res, log, error }) => {
       targetUserId,
       bookingRequestId,
       quotedAmount,
+      frontendUrl: payloadFrontendUrl,
     } = body;
 
     // ── 2. Validate input ──────────────────────────────────────────────────
@@ -517,11 +584,13 @@ export default async ({ req, res, log, error }) => {
     const COL_ORDERS = process.env.APPWRITE_COLLECTION_ORDERS || "orders";
     const COL_ORDER_ITEMS =
       process.env.APPWRITE_COLLECTION_ORDER_ITEMS || "order_items";
+    const COL_PAYMENTS = process.env.APPWRITE_COLLECTION_PAYMENTS || "payments";
     const COL_ACTIVITY_LOGS =
       process.env.APPWRITE_COLLECTION_ADMIN_ACTIVITY_LOGS ||
       "admin_activity_logs";
     const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY;
-    const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+    const FRONTEND_URL =
+      payloadFrontendUrl || process.env.FRONTEND_URL || "http://localhost:5173";
 
     // Stripe is only required for non-skipStripe flows
     if (!skipStripe && !STRIPE_SECRET) {
@@ -538,7 +607,9 @@ export default async ({ req, res, log, error }) => {
       );
     }
 
-    const stripe = STRIPE_SECRET ? new Stripe(STRIPE_SECRET) : null;
+    const stripe = STRIPE_SECRET
+      ? new Stripe(STRIPE_SECRET, { apiVersion: "2026-02-25.clover" })
+      : null;
 
     // ── 4b. Request-conversion: early branch ───────────────────────────────
     if (isRequestConversion) {
@@ -668,7 +739,7 @@ export default async ({ req, res, log, error }) => {
         snapshotAt: new Date().toISOString(),
       });
 
-      const rcStatus = skipStripe ? "paid" : "pending";
+      const rcStatus = skipStripe ? "confirmed" : "pending";
       const rcPaymentStatus = skipStripe ? "succeeded" : "pending";
       const rcPaidAt = skipStripe ? new Date().toISOString() : null;
 
@@ -763,6 +834,17 @@ export default async ({ req, res, log, error }) => {
       });
 
       if (skipStripe) {
+        await createManualPaymentRecord({
+          db,
+          databaseId: DB,
+          collectionPayments: COL_PAYMENTS,
+          order: rcOrder,
+          method: "manual",
+          actorUserId: callerUserId,
+          metadata: { orderType: "request-conversion" },
+          log,
+          error,
+        });
         // No webhook fires for manual payment — trigger ticket generation directly
         await triggerGenerateTicket(client, rcOrder.$id, log, error);
         return res.json({
@@ -1131,22 +1213,31 @@ export default async ({ req, res, log, error }) => {
             (!slotId && !snap.slotId) || snap.slotId === slotId;
           if (matchesExperience && matchesTier && matchesSlot) {
             log(`Reusing pending order ${pendingOrder.$id}`);
-            // Direct sale: create PaymentIntent (embedded Payment Element)
-            const paymentIntent = await stripe.paymentIntents.create({
-              amount: Math.round(pendingOrder.totalAmount * 100),
-              currency: (snap.currency || "MXN").toLowerCase(),
-              automatic_payment_methods: { enabled: true },
-              metadata: { orderId: pendingOrder.$id, userId: orderUserId },
+            const lineItems = buildLineItems(
+              experience,
+              tier,
+              validatedAddons,
+              quantity,
+              snap.currency || "MXN",
+            );
+            const checkoutSession = await createEmbeddedCheckoutSession({
+              stripe,
+              lineItems,
+              order: pendingOrder,
+              orderUserId,
+              customerEmail: customerEmail.trim().toLowerCase(),
+              frontendUrl: FRONTEND_URL,
             });
             await db.updateDocument(DB, COL_ORDERS, pendingOrder.$id, {
-              stripePaymentIntentId: paymentIntent.id,
+              stripeSessionId: checkoutSession.id,
               customerName: customerName.trim(),
               customerEmail: customerEmail.trim().toLowerCase(),
             });
             return res.json({
               ok: true,
               data: {
-                clientSecret: paymentIntent.client_secret,
+                clientSecret: checkoutSession.client_secret,
+                checkoutSessionId: checkoutSession.id,
                 orderId: pendingOrder.$id,
                 orderNumber: pendingOrder.orderNumber,
               },
@@ -1203,8 +1294,9 @@ export default async ({ req, res, log, error }) => {
     const orderNumber = generateOrderNumber();
     const permissions = buildDocPermissions(orderUserId);
 
-    // Assisted + skipStripe → create as paid immediately
-    const initialStatus = isAssistedSale && skipStripe ? "paid" : "pending";
+    // Assisted + skipStripe → confirm reservation immediately via manual payment
+    const initialStatus =
+      isAssistedSale && skipStripe ? "confirmed" : "pending";
     const initialPaymentStatus =
       isAssistedSale && skipStripe ? "succeeded" : "pending";
     const paidAt =
@@ -1339,6 +1431,17 @@ export default async ({ req, res, log, error }) => {
 
     // ── 15. Return for assisted + skipStripe (manual payment) ─────────────
     if (isAssistedSale && skipStripe) {
+      await createManualPaymentRecord({
+        db,
+        databaseId: DB,
+        collectionPayments: COL_PAYMENTS,
+        order,
+        method: "manual",
+        actorUserId: callerUserId,
+        metadata: { orderType: "assisted" },
+        log,
+        error,
+      });
       // No webhook fires for manual payment — trigger ticket generation directly
       await triggerGenerateTicket(client, order.$id, log, error);
       return res.json({
@@ -1410,8 +1513,8 @@ export default async ({ req, res, log, error }) => {
       });
     }
 
-    // ── 17. Direct sale: create Stripe PaymentIntent (embedded Payment Element) ──
-    _step = "create-stripe-payment-intent";
+    // ── 17. Direct sale: create Stripe Checkout Session (custom UI) ──
+    _step = "create-stripe-checkout-session";
 
     // Stripe enforces minimum amounts per currency
     const STRIPE_MIN_AMOUNTS = { mxn: 1000, usd: 50, eur: 50 };
@@ -1431,24 +1534,34 @@ export default async ({ req, res, log, error }) => {
       );
     }
 
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amountInCents,
-      currency: currency.toLowerCase(),
-      automatic_payment_methods: { enabled: true },
-      metadata: { orderId: order.$id, userId: orderUserId },
+    const lineItems = buildLineItems(
+      experience,
+      tier,
+      validatedAddons,
+      quantity,
+      currency,
+    );
+    const checkoutSession = await createEmbeddedCheckoutSession({
+      stripe,
+      lineItems,
+      order,
+      orderUserId,
+      customerEmail: customerEmail.trim().toLowerCase(),
+      frontendUrl: FRONTEND_URL,
     });
 
     await db.updateDocument(DB, COL_ORDERS, order.$id, {
-      stripePaymentIntentId: paymentIntent.id,
+      stripeSessionId: checkoutSession.id,
     });
     log(
-      `Stripe PaymentIntent created: ${paymentIntent.id} for order ${order.$id}`,
+      `Stripe Checkout Session created: ${checkoutSession.id} for order ${order.$id}`,
     );
 
     return res.json({
       ok: true,
       data: {
-        clientSecret: paymentIntent.client_secret,
+        clientSecret: checkoutSession.client_secret,
+        checkoutSessionId: checkoutSession.id,
         orderId: order.$id,
         orderNumber,
       },

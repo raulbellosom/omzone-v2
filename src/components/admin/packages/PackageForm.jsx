@@ -15,13 +15,11 @@ import { cn } from "@/lib/utils";
 const STATUS_OPTIONS = [
   { value: "draft", i18nKey: "admin.packageStatuses.draft" },
   { value: "published", i18nKey: "admin.packageStatuses.published" },
-  { value: "archived", i18nKey: "admin.packageStatuses.archived" },
 ];
 
 const STATUS_TRANSITIONS = {
   draft: ["draft", "published"],
-  published: ["published", "archived"],
-  archived: ["archived", "draft"],
+  published: ["published", "draft"],
 };
 
 const CURRENCY_OPTIONS = [
@@ -196,12 +194,19 @@ export default function PackageForm({
         <p className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wider">
           {t("admin.formSections.publication")}
         </p>
-        <Field label={t("admin.packageForm.status")} required error={errors.status}>
+        <Field
+          label={t("admin.packageForm.status")}
+          required
+          error={errors.status}
+        >
           <AdminSelect
             value={form.status}
             onChange={(v) => set("status", v)}
             options={STATUS_OPTIONS.filter((o) =>
-              (STATUS_TRANSITIONS[initialData?.status || "draft"] || STATUS_TRANSITIONS.draft).includes(o.value)
+              (
+                STATUS_TRANSITIONS[initialData?.status || "draft"] ||
+                STATUS_TRANSITIONS.draft
+              ).includes(o.value),
             ).map((o) => ({ ...o, label: t(o.i18nKey) }))}
             disabled={isDisabled}
             error={errors.status}
@@ -267,7 +272,13 @@ export default function PackageForm({
   );
 
   return (
-    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={isDisabled} submitLabel={submitLabel || t("admin.common.save")} asideChildren={asideContent}>
+    <AdminFormLayout
+      onSubmit={handleSubmit}
+      submitting={submitting}
+      disabled={isDisabled}
+      submitLabel={submitLabel || t("admin.common.save")}
+      asideChildren={asideContent}
+    >
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
@@ -448,7 +459,6 @@ export default function PackageForm({
           disabled={isDisabled}
         />
       </Card>
-
     </AdminFormLayout>
   );
 }

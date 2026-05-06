@@ -26,6 +26,7 @@ export function useValidSlots({ experienceId = "" } = {}) {
       const queries = [
         Query.equal("experienceId", experienceId),
         Query.equal("status", "published"),
+        Query.isNull("archivedAt"),
         Query.greaterThan("startDatetime", new Date().toISOString()),
         Query.orderAsc("startDatetime"),
         Query.limit(50),
@@ -34,9 +35,7 @@ export function useValidSlots({ experienceId = "" } = {}) {
       const res = await databases.listDocuments(DB, COL, queries);
 
       // Client-side filter: only slots with remaining capacity
-      const available = res.documents.filter(
-        (s) => s.bookedCount < s.capacity,
-      );
+      const available = res.documents.filter((s) => s.bookedCount < s.capacity);
       setData(available);
     } catch (err) {
       setError(err.message);

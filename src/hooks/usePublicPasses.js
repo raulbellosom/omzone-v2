@@ -22,6 +22,7 @@ export function usePublicPasses() {
     try {
       const res = await databases.listDocuments(DB, COL, [
         Query.equal("status", "active"),
+        Query.isNull("archivedAt"),
         Query.orderAsc("sortOrder"),
         Query.limit(50),
       ]);

@@ -6,7 +6,13 @@ const DB = env.appwriteDatabaseId;
 const COL = env.collectionRooms;
 
 /** Admin list — all rooms, optional locationId filter */
-export function useRooms({ locationId = "", activeOnly = false, limit = 100, offset = 0 } = {}) {
+export function useRooms({
+  locationId = "",
+  activeOnly = false,
+  includeArchived = false,
+  limit = 100,
+  offset = 0,
+} = {}) {
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -16,7 +22,12 @@ export function useRooms({ locationId = "", activeOnly = false, limit = 100, off
     setLoading(true);
     setError(null);
     try {
-      const queries = [Query.limit(limit), Query.offset(offset), Query.orderAsc("name")];
+      const queries = [
+        Query.limit(limit),
+        Query.offset(offset),
+        Query.orderAsc("name"),
+      ];
+      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
       if (locationId) queries.push(Query.equal("locationId", locationId));
       if (activeOnly) queries.push(Query.equal("isActive", true));
       const res = await databases.listDocuments(DB, COL, queries);
@@ -27,9 +38,11 @@ export function useRooms({ locationId = "", activeOnly = false, limit = 100, off
     } finally {
       setLoading(false);
     }
-  }, [locationId, activeOnly, limit, offset]);
+  }, [locationId, activeOnly, includeArchived, limit, offset]);
 
-  useEffect(() => { fetch(); }, [fetch]);
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
 
   return { data, total, loading, error, refetch: fetch };
 }
@@ -42,7 +55,8 @@ export function useRoom(id) {
   useEffect(() => {
     if (!id) return;
     setLoading(true);
-    databases.getDocument(DB, COL, id)
+    databases
+      .getDocument(DB, COL, id)
       .then(setData)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));

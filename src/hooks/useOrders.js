@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { databases, Query, ID } from "@/lib/appwrite";
+import { databases, functions, Query } from "@/lib/appwrite";
 import env from "@/config/env";
 
 const DB = env.appwriteDatabaseId;
@@ -34,6 +34,7 @@ export function useOrders({
   search = "",
   limit = 25,
   offset = 0,
+  includeArchived = false,
 } = {}) {
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
@@ -49,8 +50,10 @@ export function useOrders({
         Query.offset(offset),
         Query.orderDesc("$createdAt"),
       ];
+      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
       if (status) queries.push(Query.equal("status", status));
-      if (paymentStatus) queries.push(Query.equal("paymentStatus", paymentStatus));
+      if (paymentStatus)
+        queries.push(Query.equal("paymentStatus", paymentStatus));
       if (search) queries.push(Query.search("orderNumber", search));
 
       const res = await databases.listDocuments(DB, COL_ORDERS, queries);
@@ -61,7 +64,7 @@ export function useOrders({
     } finally {
       setLoading(false);
     }
-  }, [status, paymentStatus, search, limit, offset]);
+  }, [status, paymentStatus, search, includeArchived, limit, offset]);
 
   useEffect(() => {
     fetch();
@@ -117,10 +120,28 @@ export async function updateOrderStatus(orderId, newStatus) {
     throw new Error(`Invalid transition: ${order.status} → ${newStatus}`);
   }
 
-  const updateData = { status: newStatus };
-  if (newStatus === "cancelled") {
-    updateData.cancelledAt = new Date().toISOString();
+  const actionByStatus = {
+    paid: "record_manual_payment",
+    confirmed: "confirm_order",
+    cancelled: "cancel_order",
+    refunded: "mark_refunded",
+  };
+  const action = actionByStatus[newStatus];
+  if (!action) {
+    throw new Error(`Unsupported order action for status: ${newStatus}`);
   }
 
-  return databases.updateDocument(DB, COL_ORDERS, orderId, updateData);
+  const execution = await functions.createExecution(
+    env.functionAdminOrderAction,
+    JSON.stringify({ orderId, action }),
+    false,
+    "/",
+    "POST",
+    { "Content-Type": "application/json" },
+  );
+  const body = JSON.parse(execution.responseBody || "{}");
+  if (!body.ok) {
+    throw new Error(body.error?.message || "Order action failed");
+  }
+  return body.data?.order || body.data;
 }

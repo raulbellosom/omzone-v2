@@ -10,7 +10,11 @@ const COL = env.collectionUserPasses;
  * Lists user_passes for the authenticated user with optional status filter.
  * Supports load-more pagination.
  */
-export function usePortalPasses({ status = "", limit = 25 } = {}) {
+export function usePortalPasses({
+  status = "",
+  includePersonalArchived = false,
+  limit = 25,
+} = {}) {
   const { user } = useAuth();
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
@@ -35,7 +39,15 @@ export function usePortalPasses({ status = "", limit = 25 } = {}) {
           Query.orderDesc("$createdAt"),
           Query.limit(limit),
           Query.offset(offset),
+          // Never show admin-archived passes
+          Query.isNull("archivedAt"),
         ];
+        // Personal archive filter
+        if (!includePersonalArchived) {
+          queries.push(Query.isNull("userArchivedAt"));
+        } else {
+          queries.push(Query.isNotNull("userArchivedAt"));
+        }
         if (status) queries.push(Query.equal("status", status));
 
         const res = await databases.listDocuments(DB, COL, queries);
@@ -53,7 +65,7 @@ export function usePortalPasses({ status = "", limit = 25 } = {}) {
         setLoadingMore(false);
       }
     },
-    [user?.$id, status, limit],
+    [user?.$id, status, includePersonalArchived, limit],
   );
 
   useEffect(() => {

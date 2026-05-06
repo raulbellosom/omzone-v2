@@ -1,28 +1,37 @@
-﻿import { useState } from "react";
+﻿import { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Pencil, Package, Search } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Package,
+  Search,
+  Archive,
+  RotateCcw,
+} from "lucide-react";
 import { usePackages } from "@/hooks/usePackages";
+import { useArchive } from "@/hooks/useArchive";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/common/Button";
 import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
 import { Input } from "@/components/common/Input";
+import ConfirmHardDeleteModal from "@/components/admin/ConfirmHardDeleteModal";
 import AdminSelect from "@/components/common/AdminSelect";
 import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/constants/routes";
+import env from "@/config/env";
 
 const STATUS_FILTER_OPTIONS = [
   { value: "", i18nKey: "admin.statuses.all" },
   { value: "draft", i18nKey: "admin.statuses.draft" },
   { value: "published", i18nKey: "admin.statuses.published" },
-  { value: "archived", i18nKey: "admin.statuses.archived" },
+  { value: "__archived__", i18nKey: "admin.archive.archivedTab" },
 ];
 
 const STATUS_BADGE = {
   draft: { variant: "warm", i18nKey: "admin.statuses.draft" },
   published: { variant: "success", i18nKey: "admin.statuses.published" },
-  archived: { variant: "default", i18nKey: "admin.statuses.archived" },
 };
 
 function formatPrice(amount, currency) {
@@ -111,17 +120,52 @@ function EmptyState({ t, isAdmin }) {
 export default function PackageListPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [hardDeleteDoc, setHardDeleteDoc] = useState(null);
   const { t } = useLanguage();
-  const { isAdmin } = useAuth();
+  const { isAdmin, isRoot } = useAuth();
+
+  const showArchived = statusFilter === "__archived__";
 
   const {
     data: packages,
     loading,
     error,
+    refetch,
   } = usePackages({
     search: search.trim(),
-    status: statusFilter,
+    status: showArchived ? "" : statusFilter,
+    onlyArchived: showArchived,
+    includeDrafts: true,
   });
+
+  const {
+    archive,
+    restore,
+    hardDelete,
+    loading: archiving,
+  } = useArchive(env.collectionPackages, refetch);
+
+  const handleArchive = useCallback(
+    (id) => archive({ documentId: id }),
+    [archive],
+  );
+
+  const handleRestore = useCallback(
+    (id) => restore({ documentId: id }),
+    [restore],
+  );
+
+  const handleHardDeleteConfirm = useCallback(
+    async (doc) => {
+      await hardDelete({
+        documentId: doc.$id,
+        confirmationId: doc.$id,
+        reason: "admin hard delete",
+      });
+      setHardDeleteDoc(null);
+    },
+    [hardDelete],
+  );
 
   return (
     <div className="space-y-5">
@@ -217,7 +261,10 @@ export default function PackageListPage() {
                 const badge = STATUS_BADGE[pkg.status] || STATUS_BADGE.draft;
                 const editUrl = `/admin/packages/${pkg.$id}/edit`;
                 return (
-                  <tr key={pkg.$id} className="group hover:bg-warm-gray/30 transition-colors">
+                  <tr
+                    key={pkg.$id}
+                    className="group hover:bg-warm-gray/30 transition-colors"
+                  >
                     <td className="px-4 py-3">
                       <Link
                         to={editUrl}
@@ -248,13 +295,62 @@ export default function PackageListPage() {
                       <Badge variant={badge.variant}>{t(badge.i18nKey)}</Badge>
                     </td>
                     <td className="px-4 py-3 text-right opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
-                      <Link
-                        to={editUrl}
-                        className="inline-flex p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
-                        aria-label={t("admin.packages.editAriaLabel")}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Link>
+                      <div className="inline-flex items-center gap-1">
+                        <Link
+                          to={editUrl}
+                          className="inline-flex p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
+                          aria-label={t("admin.packages.editAriaLabel")}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Link>
+                        {isAdmin && !pkg.archivedAt && (
+                          <button
+                            type="button"
+                            onClick={() => handleArchive(pkg.$id)}
+                            className="inline-flex p-1.5 rounded-lg text-charcoal-muted hover:text-amber-600 hover:bg-amber-50 transition-colors"
+                            aria-label={
+                              t("admin.packages.archiveButton") || "Archive"
+                            }
+                          >
+                            <Archive className="h-4 w-4" />
+                          </button>
+                        )}
+                        {pkg.archivedAt && (
+                          <button
+                            type="button"
+                            onClick={() => handleRestore(pkg.$id)}
+                            className="inline-flex p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
+                            aria-label={t("admin.archive.restore")}
+                          >
+                            <RotateCcw className="h-4 w-4" />
+                          </button>
+                        )}
+                        {isRoot && pkg.archivedAt && (
+                          <button
+                            type="button"
+                            onClick={() => setHardDeleteDoc(pkg)}
+                            className="inline-flex p-1.5 rounded-lg text-charcoal-muted hover:text-red-600 hover:bg-red-50 transition-colors"
+                            aria-label="Hard delete"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <polyline points="3 6 5 6 21 6" />
+                              <path d="M19 6l-1 14H6L5 6" />
+                              <path d="M10 11v6" />
+                              <path d="M14 11v6" />
+                              <path d="M9 6V4h6v2" />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );
@@ -276,31 +372,40 @@ export default function PackageListPage() {
                 className="block"
               >
                 <Card className="p-4 space-y-2 cursor-pointer hover:shadow-sm transition-shadow">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-medium text-charcoal truncate">
-                    {pkg.name}
-                  </span>
-                  <Badge variant={badge.variant}>{t(badge.i18nKey)}</Badge>
-                </div>
-                <div className="flex items-center gap-4 text-xs text-charcoal-muted">
-                  <span>{formatPrice(pkg.totalPrice, pkg.currency)}</span>
-                  {pkg.durationDays && (
-                    <span>
-                      {pkg.durationDays} {t("admin.packages.durationDays")}
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-medium text-charcoal truncate">
+                      {pkg.name}
                     </span>
-                  )}
-                  {pkg.capacity && (
-                    <span>
-                      {pkg.capacity} {t("admin.packages.capacityAbbr")}
-                    </span>
-                  )}
-                </div>
+                    <Badge variant={badge.variant}>{t(badge.i18nKey)}</Badge>
+                  </div>
+                  <div className="flex items-center gap-4 text-xs text-charcoal-muted">
+                    <span>{formatPrice(pkg.totalPrice, pkg.currency)}</span>
+                    {pkg.durationDays && (
+                      <span>
+                        {pkg.durationDays} {t("admin.packages.durationDays")}
+                      </span>
+                    )}
+                    {pkg.capacity && (
+                      <span>
+                        {pkg.capacity} {t("admin.packages.capacityAbbr")}
+                      </span>
+                    )}
+                  </div>
                 </Card>
               </Link>
             );
           })}
         </div>
       )}
+
+      <ConfirmHardDeleteModal
+        open={!!hardDeleteDoc}
+        document={hardDeleteDoc}
+        collectionId={env.collectionPackages}
+        loading={archiving}
+        onConfirm={handleHardDeleteConfirm}
+        onCancel={() => setHardDeleteDoc(null)}
+      />
     </div>
   );
 }

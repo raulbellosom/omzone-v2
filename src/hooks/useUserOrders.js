@@ -10,7 +10,11 @@ const COL = env.collectionOrders;
  * Lists orders for the authenticated user with optional status filter.
  * Supports load-more pagination.
  */
-export function useUserOrders({ status = "", limit = 25 } = {}) {
+export function useUserOrders({
+  status = "",
+  includePersonalArchived = false,
+  limit = 25,
+} = {}) {
   const { user } = useAuth();
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
@@ -35,7 +39,15 @@ export function useUserOrders({ status = "", limit = 25 } = {}) {
           Query.orderDesc("$createdAt"),
           Query.limit(limit),
           Query.offset(offset),
+          // Exclude admin-archived always
+          Query.isNull("archivedAt"),
         ];
+        // Personal archive filter
+        if (!includePersonalArchived) {
+          queries.push(Query.isNull("userArchivedAt"));
+        } else {
+          queries.push(Query.isNotNull("userArchivedAt"));
+        }
         if (status) queries.push(Query.equal("status", status));
 
         const res = await databases.listDocuments(DB, COL, queries);
@@ -53,7 +65,7 @@ export function useUserOrders({ status = "", limit = 25 } = {}) {
         setLoadingMore(false);
       }
     },
-    [user?.$id, status, limit],
+    [user?.$id, status, includePersonalArchived, limit],
   );
 
   useEffect(() => {
@@ -66,5 +78,14 @@ export function useUserOrders({ status = "", limit = 25 } = {}) {
 
   const hasMore = data.length < total;
 
-  return { data, total, loading, loadingMore, error, refetch: () => fetch(0, false), loadMore, hasMore };
+  return {
+    data,
+    total,
+    loading,
+    loadingMore,
+    error,
+    refetch: () => fetch(0, false),
+    loadMore,
+    hasMore,
+  };
 }

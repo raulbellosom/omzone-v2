@@ -9,6 +9,8 @@ export function useUserPasses({
   userId = "",
   passId = "",
   status = "",
+  includeArchived = false,
+  includePersonalArchived = false,
   limit = 50,
   offset = 0,
 } = {}) {
@@ -26,6 +28,10 @@ export function useUserPasses({
         Query.offset(offset),
         Query.orderDesc("$createdAt"),
       ];
+      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
+      if (!includePersonalArchived) {
+        queries.push(Query.isNull("userArchivedAt"));
+      }
       if (userId) queries.push(Query.equal("userId", userId));
       if (passId) queries.push(Query.equal("passId", passId));
       if (status) queries.push(Query.equal("status", status));
@@ -38,7 +44,15 @@ export function useUserPasses({
     } finally {
       setLoading(false);
     }
-  }, [userId, passId, status, limit, offset]);
+  }, [
+    userId,
+    passId,
+    status,
+    includeArchived,
+    includePersonalArchived,
+    limit,
+    offset,
+  ]);
 
   useEffect(() => {
     fetch();
@@ -62,15 +76,20 @@ export function useUserPass(id) {
       .finally(() => setLoading(false));
   }, [id]);
 
-  return { data, loading, error, refetch: () => {
-    if (!id) return;
-    setLoading(true);
-    databases
-      .getDocument(DB, COL, id)
-      .then(setData)
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
-  }};
+  return {
+    data,
+    loading,
+    error,
+    refetch: () => {
+      if (!id) return;
+      setLoading(true);
+      databases
+        .getDocument(DB, COL, id)
+        .then(setData)
+        .catch((err) => setError(err.message))
+        .finally(() => setLoading(false));
+    },
+  };
 }
 
 export async function updateUserPass(id, payload) {

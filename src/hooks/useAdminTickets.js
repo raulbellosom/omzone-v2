@@ -14,6 +14,7 @@ export function useAdminTickets({
   status = "",
   experienceId = "",
   search = "",
+  includeArchived = false,
   limit = 25,
   offset = 0,
 } = {}) {
@@ -31,6 +32,7 @@ export function useAdminTickets({
         Query.offset(offset),
         Query.orderDesc("$createdAt"),
       ];
+      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
       if (status) queries.push(Query.equal("status", status));
       if (experienceId) queries.push(Query.equal("experienceId", experienceId));
       if (search) queries.push(Query.search("ticketCode", search));
@@ -43,7 +45,7 @@ export function useAdminTickets({
     } finally {
       setLoading(false);
     }
-  }, [status, experienceId, search, limit, offset]);
+  }, [status, experienceId, search, includeArchived, limit, offset]);
 
   useEffect(() => {
     fetch();

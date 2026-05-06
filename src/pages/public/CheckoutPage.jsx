@@ -161,6 +161,7 @@ export default function CheckoutPage() {
     clearSubmitError,
     createPaymentIntent,
     clientSecret,
+    checkoutSessionId,
     orderId,
     orderNumber,
   } = checkout;
@@ -210,6 +211,7 @@ export default function CheckoutPage() {
     <PaymentStep
       key="payment"
       clientSecret={clientSecret}
+      checkoutSessionId={checkoutSessionId}
       indicativeTotal={indicativeTotal}
       currency={currency}
       orderId={orderId}

@@ -6,7 +6,14 @@ const DB = env.appwriteDatabaseId;
 const COL = env.collectionResources;
 
 /** Admin list — all resources, optional search + type filter, pagination */
-export function useResources({ activeOnly = false, type = "", search = "", limit = 50, offset = 0 } = {}) {
+export function useResources({
+  activeOnly = false,
+  type = "",
+  search = "",
+  includeArchived = false,
+  limit = 50,
+  offset = 0,
+} = {}) {
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -16,7 +23,12 @@ export function useResources({ activeOnly = false, type = "", search = "", limit
     setLoading(true);
     setError(null);
     try {
-      const queries = [Query.limit(limit), Query.offset(offset), Query.orderAsc("name")];
+      const queries = [
+        Query.limit(limit),
+        Query.offset(offset),
+        Query.orderAsc("name"),
+      ];
+      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
       if (activeOnly) queries.push(Query.equal("isActive", true));
       if (type) queries.push(Query.equal("type", type));
       if (search) queries.push(Query.search("name", search));
@@ -28,9 +40,11 @@ export function useResources({ activeOnly = false, type = "", search = "", limit
     } finally {
       setLoading(false);
     }
-  }, [activeOnly, type, search, limit, offset]);
+  }, [activeOnly, type, search, includeArchived, limit, offset]);
 
-  useEffect(() => { fetch(); }, [fetch]);
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
 
   return { data, total, loading, error, refetch: fetch };
 }
@@ -43,7 +57,8 @@ export function useResource(id) {
   useEffect(() => {
     if (!id) return;
     setLoading(true);
-    databases.getDocument(DB, COL, id)
+    databases
+      .getDocument(DB, COL, id)
       .then(setData)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));

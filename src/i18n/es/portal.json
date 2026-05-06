@@ -37,7 +37,6 @@
       "changePhoto": "Cambiar foto",
       "uploading": "Subiendo…",
       "photoHint": "JPG, PNG o WebP · máx. 2 MB",
-
       "noProfileYet": "Tu perfil aún no se ha configurado. Intenta más tarde o contacta soporte."
     },
     "sidebar": {
@@ -62,6 +61,15 @@
       "allCategories": "Todas",
       "noExperiences": "No hay experiencias disponibles ahora. Vuelve pronto.",
       "noFilterResults": "No hay resultados para este filtro."
+    },
+    "archive": {
+      "archive": "Archivar",
+      "restore": "Restaurar",
+      "archived": "Archivados",
+      "archiveTitle": "Archivar este registro",
+      "archiveDesc": "Se ocultará de tu vista activa. Puedes recuperarlo en la pestaña de archivados.",
+      "restoreTitle": "Restaurar este registro",
+      "restoreDesc": "El registro volverá a tu vista activa."
     }
   }
 }

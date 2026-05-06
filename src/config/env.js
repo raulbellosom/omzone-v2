@@ -101,6 +101,9 @@ const env = {
     import.meta.env.VITE_APPWRITE_FUNCTION_CREATE_CHECKOUT || "create-checkout",
   functionStripeWebhook:
     import.meta.env.VITE_APPWRITE_FUNCTION_STRIPE_WEBHOOK || "stripe-webhook",
+  functionAdminOrderAction:
+    import.meta.env.VITE_APPWRITE_FUNCTION_ADMIN_ORDER_ACTION ||
+    "admin-order-action",
   functionGenerateTicket:
     import.meta.env.VITE_APPWRITE_FUNCTION_GENERATE_TICKET || "generate-ticket",
   functionValidateTicket:

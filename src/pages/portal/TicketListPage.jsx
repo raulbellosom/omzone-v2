@@ -1,14 +1,17 @@
 import { useState, useMemo } from "react";
 import { useUserTickets } from "@/hooks/useUserTickets";
+import { useArchive } from "@/hooks/useArchive";
 import TicketCard from "@/components/portal/tickets/TicketCard";
-import { Ticket, Compass } from "lucide-react";
+import { Ticket, Compass, Archive, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
+import env from "@/config/env";
 
 const STATUS_FILTERS = [
   { value: "", label: "Todos" },
   { value: "valid", label: "Activos" },
   { value: "used", label: "Usados" },
+  { value: "__archived__", label: "Archivados" },
 ];
 
 function parseSnapshot(ticket) {
@@ -37,7 +40,19 @@ function TicketSkeleton() {
 
 export default function TicketListPage() {
   const [status, setStatus] = useState("");
-  const { data, loading, error } = useUserTickets({ status });
+  const showArchived = status === "__archived__";
+  const activeStatus = showArchived ? "" : status;
+
+  const { data, loading, error, refetch } = useUserTickets({
+    status: activeStatus,
+    includePersonalArchived: showArchived,
+  });
+
+  const {
+    archiveOwn,
+    restoreOwn,
+    loading: archiving,
+  } = useArchive(env.collectionTickets, refetch);
 
   // Sort: active first, then by upcoming slot date ASC, then by $createdAt DESC
   const sorted = useMemo(() => {
@@ -53,10 +68,8 @@ export default function TicketListPage() {
         if (aActive !== bActive) return aActive - bActive;
 
         // By slot date ASC (upcoming first)
-        const aDate =
-          a._snap.slotStartDatetime || a._snap.editionDate || "";
-        const bDate =
-          b._snap.slotStartDatetime || b._snap.editionDate || "";
+        const aDate = a._snap.slotStartDatetime || a._snap.editionDate || "";
+        const bDate = b._snap.slotStartDatetime || b._snap.editionDate || "";
         if (aDate && bDate) return aDate.localeCompare(bDate);
         if (aDate) return -1;
         if (bDate) return 1;
@@ -143,7 +156,17 @@ export default function TicketListPage() {
       {!loading && sorted.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {sorted.map((ticket) => (
-            <TicketCard key={ticket.$id} ticket={ticket} />
+            <TicketCard
+              key={ticket.$id}
+              ticket={ticket}
+              onArchive={() =>
+                showArchived
+                  ? restoreOwn({ documentId: ticket.$id })
+                  : archiveOwn({ documentId: ticket.$id })
+              }
+              isArchived={showArchived}
+              archiving={archiving}
+            />
           ))}
         </div>
       )}

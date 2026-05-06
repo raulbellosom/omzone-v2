@@ -34,7 +34,6 @@ const FULFILLMENT_OPTIONS = [
 const STATUS_OPTIONS = [
   { value: "draft", i18nKey: "admin.statuses.draft" },
   { value: "published", i18nKey: "admin.statuses.published" },
-  { value: "archived", i18nKey: "admin.statuses.archived" },
 ];
 
 const EMPTY = {

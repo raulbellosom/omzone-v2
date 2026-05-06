@@ -6,12 +6,15 @@ import { Input } from "@/components/common/Input";
 import { Card } from "@/components/common/Card";
 import PublicationTable from "@/components/admin/publications/PublicationTable";
 import PublicationCard from "@/components/admin/publications/PublicationCard";
+import ConfirmHardDeleteModal from "@/components/admin/ConfirmHardDeleteModal";
 import { usePublications, updatePublication } from "@/hooks/usePublications";
+import { useArchive } from "@/hooks/useArchive";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES } from "@/constants/routes";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
+import env from "@/config/env";
 
 const CATEGORY_OPTIONS = [
   { value: "", i18nKey: "admin.publicationCategories.all" },
@@ -29,7 +32,7 @@ const STATUS_OPTIONS = [
   { value: "", i18nKey: "admin.statuses.all" },
   { value: "draft", i18nKey: "admin.statuses.draft" },
   { value: "published", i18nKey: "admin.statuses.published" },
-  { value: "archived", i18nKey: "admin.statuses.archived" },
+  { value: "__archived__", i18nKey: "admin.archive.archivedTab" },
 ];
 
 const PAGE_SIZE = 25;
@@ -43,15 +46,27 @@ export default function PublicationListPage() {
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(0);
   const [actionError, setActionError] = useState(null);
+  const [hardDeleteDoc, setHardDeleteDoc] = useState(null);
+
+  const showArchived = status === "__archived__";
 
   const offset = page * PAGE_SIZE;
   const { data, total, loading, error, refetch } = usePublications({
     search,
     category,
-    status,
+    status: showArchived ? "" : status,
+    onlyArchived: showArchived,
+    includeDrafts: true,
     limit: PAGE_SIZE,
     offset,
   });
+
+  const {
+    archive,
+    restore,
+    hardDelete,
+    loading: archiving,
+  } = useArchive(env.collectionPublications, refetch);
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
@@ -82,6 +97,28 @@ export default function PublicationListPage() {
       }
     },
     [refetch],
+  );
+
+  const handleArchive = useCallback(
+    (id) => archive({ documentId: id }),
+    [archive],
+  );
+
+  const handleRestore = useCallback(
+    (id) => restore({ documentId: id }),
+    [restore],
+  );
+
+  const handleHardDeleteConfirm = useCallback(
+    async (doc) => {
+      await hardDelete({
+        documentId: doc.$id,
+        confirmationId: doc.$id,
+        reason: "admin hard delete",
+      });
+      setHardDeleteDoc(null);
+    },
+    [hardDelete],
   );
 
   const hasFilters = search || category || status;
@@ -187,6 +224,8 @@ export default function PublicationListPage() {
             publications={data}
             loading={loading}
             onStatusChange={handleStatusUpdate}
+            onArchive={handleArchive}
+            onRestore={handleRestore}
             canAdmin={isAdmin}
           />
         </div>
@@ -199,6 +238,8 @@ export default function PublicationListPage() {
             publications={[]}
             loading={true}
             onStatusChange={handleStatusUpdate}
+            onArchive={handleArchive}
+            onRestore={handleRestore}
             canAdmin={isAdmin}
           />
         </div>
@@ -256,6 +297,15 @@ export default function PublicationListPage() {
           </div>
         </div>
       )}
+
+      <ConfirmHardDeleteModal
+        open={!!hardDeleteDoc}
+        document={hardDeleteDoc}
+        collectionId={env.collectionPublications}
+        loading={archiving}
+        onConfirm={handleHardDeleteConfirm}
+        onCancel={() => setHardDeleteDoc(null)}
+      />
     </div>
   );
 }

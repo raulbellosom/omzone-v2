@@ -6,7 +6,7 @@ const DB = env.appwriteDatabaseId;
 const COL_TAGS = env.collectionTags;
 const COL_EXP_TAGS = env.collectionExperienceTags;
 
-export function useTags() {
+export function useTags({ includeArchived = false } = {}) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,10 +15,9 @@ export function useTags() {
     setLoading(true);
     setError(null);
     try {
-      const res = await databases.listDocuments(DB, COL_TAGS, [
-        Query.orderAsc("sortOrder"),
-        Query.limit(100),
-      ]);
+      const queries = [Query.orderAsc("sortOrder"), Query.limit(100)];
+      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
+      const res = await databases.listDocuments(DB, COL_TAGS, queries);
       setData(res.documents);
     } catch (err) {
       setError(err.message);

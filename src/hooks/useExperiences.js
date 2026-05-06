@@ -20,6 +20,9 @@ export function useExperiences({
   search = "",
   type = "",
   status = "",
+  includeArchived = false,
+  onlyArchived = false,
+  includeDrafts = false,
   limit = 25,
   offset = 0,
 } = {}) {
@@ -37,8 +40,17 @@ export function useExperiences({
         Query.offset(offset),
         Query.orderDesc("$createdAt"),
       ];
+      if (onlyArchived) {
+        queries.push(Query.isNotNull("archivedAt"));
+      } else if (!includeArchived) {
+        queries.push(Query.isNull("archivedAt"));
+      }
       if (type) queries.push(Query.equal("type", type));
-      if (status) queries.push(Query.equal("status", status));
+      if (status && !onlyArchived) {
+        queries.push(Query.equal("status", status));
+      } else if (!includeDrafts && !onlyArchived) {
+        queries.push(Query.notEqual("status", "draft"));
+      }
       if (search) queries.push(Query.search("publicName", search));
 
       const res = await databases.listDocuments(DB, COL, queries);
@@ -49,7 +61,16 @@ export function useExperiences({
     } finally {
       setLoading(false);
     }
-  }, [search, type, status, limit, offset]);
+  }, [
+    search,
+    type,
+    status,
+    includeArchived,
+    onlyArchived,
+    includeDrafts,
+    limit,
+    offset,
+  ]);
 
   useEffect(() => {
     fetch();

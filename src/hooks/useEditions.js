@@ -5,7 +5,7 @@ import env from "@/config/env";
 const DB = env.appwriteDatabaseId;
 const COL = env.collectionEditions;
 
-export function useEditions(experienceId) {
+export function useEditions(experienceId, { includeArchived = false } = {}) {
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -21,6 +21,7 @@ export function useEditions(experienceId) {
         Query.orderDesc("$createdAt"),
         Query.limit(100),
       ];
+      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
       const res = await databases.listDocuments(DB, COL, queries);
       setData(res.documents);
       setTotal(res.total);
@@ -29,7 +30,7 @@ export function useEditions(experienceId) {
     } finally {
       setLoading(false);
     }
-  }, [experienceId]);
+  }, [experienceId, includeArchived]);
 
   useEffect(() => {
     fetch();

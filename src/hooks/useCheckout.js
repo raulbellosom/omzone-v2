@@ -49,8 +49,9 @@ export function useCheckout() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
 
-  // ─── Payment state (Stripe Payment Element) ─────────────────────────────
+  // ─── Payment state (Stripe Checkout Session + Payment Element) ─────────
   const [clientSecret, setClientSecret] = useState(null);
+  const [checkoutSessionId, setCheckoutSessionId] = useState(null);
   const [orderId, setOrderId] = useState(null);
   const [orderNumber, setOrderNumber] = useState(null);
 
@@ -278,11 +279,13 @@ export function useCheckout() {
   // step 4 (payment) is always valid (handled by Stripe + consent in component)
   const stepValidation = [isStep0Valid, isStep1Valid, isStep2Valid, true, true];
 
-  // ─── Create PaymentIntent (called on Review → Payment transition) ──────
+  // ─── Create Checkout Session (called on Review → Payment transition) ───
 
   const createPaymentIntent = useCallback(async () => {
     // Skip if we already have a clientSecret for this checkout
-    if (clientSecret) return { clientSecret, orderId, orderNumber };
+    if (clientSecret) {
+      return { clientSecret, checkoutSessionId, orderId, orderNumber };
+    }
 
     setSubmitting(true);
     setSubmitError(null);
@@ -295,6 +298,7 @@ export function useCheckout() {
         customerName: customerName.trim(),
         customerEmail: customerEmail.trim().toLowerCase(),
         addonIds: selectedAddonIds,
+        frontendUrl: window.location.origin,
       };
 
       if (selectedSlotId) {
@@ -322,20 +326,30 @@ export function useCheckout() {
         return null;
       }
 
-      const { clientSecret: secret, orderId: oid, orderNumber: onum } = result.data;
+      const {
+        clientSecret: secret,
+        checkoutSessionId: sessionId,
+        orderId: oid,
+        orderNumber: onum,
+      } = result.data;
       setClientSecret(secret);
+      setCheckoutSessionId(sessionId);
       setOrderId(oid);
       setOrderNumber(onum);
 
       return result.data;
     } catch (err) {
-      setSubmitError({ code: "ERR_NETWORK", message: err.message || "Network error" });
+      setSubmitError({
+        code: "ERR_NETWORK",
+        message: err.message || "Network error",
+      });
       return null;
     } finally {
       setSubmitting(false);
     }
   }, [
     clientSecret,
+    checkoutSessionId,
     orderId,
     orderNumber,
     experienceId,
@@ -409,6 +423,7 @@ export function useCheckout() {
     clearSubmitError: () => setSubmitError(null),
     createPaymentIntent,
     clientSecret,
+    checkoutSessionId,
     orderId,
     orderNumber,
   };

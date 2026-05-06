@@ -9,7 +9,10 @@ const COL_TICKETS = env.collectionTickets;
 /**
  * Lists tickets for the authenticated user with optional status filter.
  */
-export function useUserTickets({ status = "" } = {}) {
+export function useUserTickets({
+  status = "",
+  includePersonalArchived = false,
+} = {}) {
   const { user } = useAuth();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,8 +28,15 @@ export function useUserTickets({ status = "" } = {}) {
         Query.equal("userId", user.$id),
         Query.orderDesc("$createdAt"),
         Query.limit(100),
+        // Exclude admin-archived always
+        Query.isNull("archivedAt"),
       ];
-
+      // Personal archive filter
+      if (!includePersonalArchived) {
+        queries.push(Query.isNull("userArchivedAt"));
+      } else {
+        queries.push(Query.isNotNull("userArchivedAt"));
+      }
       if (status) {
         queries.push(Query.equal("status", status));
       }
@@ -38,7 +48,7 @@ export function useUserTickets({ status = "" } = {}) {
     } finally {
       setLoading(false);
     }
-  }, [user?.$id, status]);
+  }, [user?.$id, status, includePersonalArchived]);
 
   useEffect(() => {
     fetch();

@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Pencil, Archive, Globe, RotateCcw, MoreHorizontal } from "lucide-react";
+import {
+  Pencil,
+  Archive,
+  Globe,
+  RotateCcw,
+  MoreHorizontal,
+} from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
@@ -40,7 +46,13 @@ export function ConfirmDialog({
   );
 }
 
-export default function ExperienceActionsMenu({ experience, onStatusChange, canAdmin }) {
+export default function ExperienceActionsMenu({
+  experience,
+  onStatusChange,
+  onArchive,
+  onRestore,
+  canAdmin,
+}) {
   const [open, setOpen] = useState(false);
   const [confirm, setConfirm] = useState(null);
   const { t } = useLanguage();
@@ -55,7 +67,8 @@ export default function ExperienceActionsMenu({ experience, onStatusChange, canA
   function handleConfirm() {
     const { type } = confirm;
     setConfirm(null);
-    if (type === "archive") onStatusChange(experience.$id, "archived");
+    if (type === "archive") onArchive?.(experience.$id);
+    else if (type === "restore") onRestore?.(experience.$id);
     else if (type === "publish") onStatusChange(experience.$id, "published");
     else if (type === "draft") onStatusChange(experience.$id, "draft");
   }
@@ -67,6 +80,15 @@ export default function ExperienceActionsMenu({ experience, onStatusChange, canA
         title={t("admin.experienceActions.archiveTitle")}
         description={t("admin.experienceActions.archiveDescription")}
         confirmLabel={t("admin.experienceActions.archive")}
+        cancelLabel={t("admin.pricingTierForm.cancel")}
+        onConfirm={handleConfirm}
+        onCancel={() => setConfirm(null)}
+      />
+      <ConfirmDialog
+        open={confirm?.type === "restore"}
+        title={t("admin.archive.restoreTitle")}
+        description={t("admin.archive.restoreDescription")}
+        confirmLabel={t("admin.archive.restore")}
         cancelLabel={t("admin.pricingTierForm.cancel")}
         onConfirm={handleConfirm}
         onCancel={() => setConfirm(null)}
@@ -103,19 +125,24 @@ export default function ExperienceActionsMenu({ experience, onStatusChange, canA
 
           {open && (
             <>
-              <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+              <div
+                className="fixed inset-0 z-10"
+                onClick={() => setOpen(false)}
+              />
               <div className="absolute right-0 top-full mt-1 z-20 w-44 rounded-xl border border-sand-dark bg-white shadow-lg py-1">
-                {canAdmin && experience.status !== "published" && (
-                  <button
-                    type="button"
-                    onClick={() => handleAction("publish")}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
-                  >
-                    <Globe className="h-4 w-4 text-emerald-600" />
-                    {t("admin.experienceActions.publish")}
-                  </button>
-                )}
-                {experience.status !== "draft" && (
+                {canAdmin &&
+                  experience.status !== "published" &&
+                  !experience.archivedAt && (
+                    <button
+                      type="button"
+                      onClick={() => handleAction("publish")}
+                      className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
+                    >
+                      <Globe className="h-4 w-4 text-emerald-600" />
+                      {t("admin.experienceActions.publish")}
+                    </button>
+                  )}
+                {experience.status !== "draft" && !experience.archivedAt && (
                   <button
                     type="button"
                     onClick={() => handleAction("draft")}
@@ -125,7 +152,7 @@ export default function ExperienceActionsMenu({ experience, onStatusChange, canA
                     {t("admin.experienceActions.backToDraft")}
                   </button>
                 )}
-                {experience.status !== "archived" && (
+                {!experience.archivedAt && (
                   <button
                     type="button"
                     onClick={() => handleAction("archive")}
@@ -133,6 +160,16 @@ export default function ExperienceActionsMenu({ experience, onStatusChange, canA
                   >
                     <Archive className="h-4 w-4 text-charcoal-subtle" />
                     {t("admin.experienceActions.archive")}
+                  </button>
+                )}
+                {experience.archivedAt && (
+                  <button
+                    type="button"
+                    onClick={() => handleAction("restore")}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
+                  >
+                    <RotateCcw className="h-4 w-4 text-sage" />
+                    {t("admin.archive.restore")}
                   </button>
                 )}
               </div>

@@ -1,15 +1,25 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useUserOrders } from "@/hooks/useUserOrders";
+import { useArchive } from "@/hooks/useArchive";
 import { Badge } from "@/components/common/Badge";
-import { ShoppingBag, Compass, ChevronRight, CreditCard } from "lucide-react";
+import {
+  ShoppingBag,
+  Compass,
+  ChevronRight,
+  CreditCard,
+  Archive,
+  RotateCcw,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+import env from "@/config/env";
 
 const STATUS_FILTERS = [
   { value: "", label: "Todas" },
-  { value: "paid", label: "Pagadas" },
+  { value: "confirmed", label: "Confirmadas" },
   { value: "pending", label: "Pendientes" },
   { value: "cancelled", label: "Canceladas" },
+  { value: "__archived__", label: "Archivadas" },
 ];
 
 const ORDER_STATUS = {
@@ -62,50 +72,77 @@ function OrderCardSkeleton() {
   );
 }
 
-function OrderCard({ order }) {
+function OrderCard({ order, onArchive, isArchived, archiving }) {
   const os = ORDER_STATUS[order.status] || ORDER_STATUS.pending;
   const ps = PAYMENT_STATUS[order.paymentStatus] || PAYMENT_STATUS.pending;
 
   return (
-    <Link
-      to={`/portal/orders/${order.$id}`}
-      className="group block bg-white rounded-2xl border border-warm-gray-dark/10 hover:border-sage/30 hover:shadow-sm transition-all p-4"
-    >
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <div className="min-w-0">
-          <p className="text-sm font-semibold text-charcoal truncate">
-            #{order.orderNumber}
-          </p>
-          <p className="text-xs text-charcoal-muted mt-0.5">
-            {formatDate(order.$createdAt)}
-          </p>
-        </div>
-        <Badge variant={os.variant} className="flex-shrink-0">
-          {os.label}
-        </Badge>
-      </div>
-
-      <div className="flex items-end justify-between mt-3">
-        <div>
-          <p className="text-lg font-bold text-charcoal">
-            {formatCurrency(order.totalAmount, order.currency)}
-          </p>
-          <div className="flex items-center gap-1.5 mt-1">
-            <CreditCard className="w-3 h-3 text-charcoal-muted" />
-            <span className="text-[11px] text-charcoal-muted">Pago:</span>
-            <Badge variant={ps.variant}>{ps.label}</Badge>
+    <div className="bg-white rounded-2xl border border-warm-gray-dark/10 hover:border-sage/30 hover:shadow-sm transition-all overflow-hidden">
+      {/* Clickable main area */}
+      <Link
+        to={`/portal/orders/${order.$id}`}
+        className="block p-4 pb-3 group"
+      >
+        <div className="flex items-start justify-between gap-2 mb-3">
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-charcoal truncate">
+              #{order.orderNumber}
+            </p>
+            <p className="text-xs text-charcoal-muted mt-0.5">
+              {formatDate(order.$createdAt)}
+            </p>
           </div>
+          <ChevronRight className="w-4 h-4 text-charcoal-muted/40 shrink-0 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
-        <ChevronRight className="w-4 h-4 text-charcoal-muted opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+        <p className="text-xl font-bold text-charcoal">
+          {formatCurrency(order.totalAmount, order.currency)}
+        </p>
+      </Link>
+
+      {/* Footer: labeled badges + archive button */}
+      <div className="flex items-center gap-2.5 flex-wrap px-4 py-2.5 border-t border-warm-gray-dark/8 bg-warm-gray/20">
+        <div className="flex items-center gap-1.5">
+          <span className="text-[11px] text-charcoal-muted font-medium">Orden:</span>
+          <Badge variant={os.variant}>{os.label}</Badge>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <CreditCard className="w-3 h-3 text-charcoal-muted" />
+          <span className="text-[11px] text-charcoal-muted font-medium">Pago:</span>
+          <Badge variant={ps.variant}>{ps.label}</Badge>
+        </div>
+        <button
+          onClick={onArchive}
+          disabled={archiving}
+          className="ml-auto p-1.5 rounded-lg text-charcoal-muted hover:text-charcoal hover:bg-warm-gray transition-colors disabled:opacity-40 cursor-pointer"
+          title={isArchived ? "Restaurar orden" : "Archivar orden"}
+        >
+          {isArchived ? (
+            <RotateCcw className="h-3.5 w-3.5" />
+          ) : (
+            <Archive className="h-3.5 w-3.5" />
+          )}
+        </button>
       </div>
-    </Link>
+    </div>
   );
 }
 
 export default function PortalOrdersPage() {
   const [status, setStatus] = useState("");
-  const { data, loading, loadingMore, error, loadMore, hasMore } =
-    useUserOrders({ status });
+  const showArchived = status === "__archived__";
+  const activeStatus = showArchived ? "" : status;
+
+  const { data, loading, loadingMore, error, loadMore, hasMore, refetch } =
+    useUserOrders({
+      status: activeStatus,
+      includePersonalArchived: showArchived,
+    });
+
+  const {
+    archiveOwn,
+    restoreOwn,
+    loading: archiving,
+  } = useArchive(env.collectionOrders, refetch);
 
   return (
     <div className="space-y-6">
@@ -185,7 +222,17 @@ export default function PortalOrdersPage() {
         <>
           <div className="grid gap-3 sm:grid-cols-2">
             {data.map((order) => (
-              <OrderCard key={order.$id} order={order} />
+              <OrderCard
+                key={order.$id}
+                order={order}
+                onArchive={() =>
+                  showArchived
+                    ? restoreOwn({ documentId: order.$id })
+                    : archiveOwn({ documentId: order.$id })
+                }
+                isArchived={showArchived}
+                archiving={archiving}
+              />
             ))}
           </div>
 

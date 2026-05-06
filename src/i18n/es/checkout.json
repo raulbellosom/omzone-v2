@@ -24,6 +24,8 @@
     "confirmed": "Tu reserva ha sido confirmada. Aquí tienes el resumen de tu pedido.",
     "processingTitle": "Procesando tu reserva",
     "processingDesc": "Tu pago está siendo confirmado. Esto suele tomar unos segundos. Recibirás un correo de confirmación en breve.",
+    "paymentIssueTitle": "Pago no completado",
+    "paymentIssueDesc": "No pudimos validar este pago. Intenta de nuevo o contáctanos si recibiste un cargo.",
     "viewOrders": "Ver Mis Pedidos",
     "exploreMore": "Explorar Más",
     "orderSummary": "Resumen del Pedido",

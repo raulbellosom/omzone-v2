@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { CheckCircle, Clock, Ticket } from "lucide-react";
+import { CheckCircle, Clock, Ticket, XCircle } from "lucide-react";
 import { ROUTES } from "@/constants/routes";
 import { Button } from "@/components/common/Button";
 import { Badge } from "@/components/common/Badge";
@@ -82,6 +82,33 @@ function ProcessingState() {
   );
 }
 
+function PaymentIssueState() {
+  const { t } = useLanguage();
+  return (
+    <div className="min-h-[60vh] bg-cream flex items-center justify-center px-4">
+      <div className="text-center space-y-6 max-w-md">
+        <div className="flex justify-center">
+          <div className="h-16 w-16 rounded-full bg-red-50 flex items-center justify-center">
+            <XCircle className="h-8 w-8 text-red-500" />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <h1 className="text-2xl md:text-3xl font-bold text-charcoal font-display">
+            {t("checkoutSuccess.paymentIssueTitle") || "Payment not completed"}
+          </h1>
+          <p className="text-charcoal-subtle text-sm md:text-base">
+            {t("checkoutSuccess.paymentIssueDesc") ||
+              "We could not validate this payment. Please try again or contact support if you were charged."}
+          </p>
+        </div>
+        <Link to={ROUTES.PORTAL_ORDERS}>
+          <Button size="md">{t("checkoutSuccess.viewOrders")}</Button>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 export default function CheckoutSuccessPage() {
   const [params] = useSearchParams();
   const sessionId = params.get("session_id");
@@ -95,8 +122,13 @@ export default function CheckoutSuccessPage() {
 
   // No order found or not yet paid — show processing state
   if (!order || order.status === "pending") return <ProcessingState />;
-
-  const snapshot = order.orderSnapshot ? JSON.parse(order.orderSnapshot) : null;
+  if (
+    order.status === "cancelled" ||
+    order.paymentStatus === "failed" ||
+    order.paymentStatus === "refunded"
+  ) {
+    return <PaymentIssueState />;
+  }
 
   return (
     <div className="min-h-[60vh] bg-cream py-10 px-4">
@@ -168,7 +200,7 @@ export default function CheckoutSuccessPage() {
                         )}
                       </span>
                       <span className="font-medium text-charcoal">
-                        {formatCurrency(item.subtotal, order.currency)}
+                        {formatCurrency(item.totalPrice, order.currency)}
                       </span>
                     </div>
                   );

@@ -12,10 +12,22 @@ const COL_ACTIVITY = env.collectionAdminActivityLogs || "admin_activity_logs";
 
 export const REQUEST_STATUSES = [
   { value: "pending", label: "Pending", color: "bg-amber-100 text-amber-800" },
-  { value: "reviewing", label: "Reviewing", color: "bg-blue-100 text-blue-800" },
-  { value: "approved", label: "Approved", color: "bg-emerald-100 text-emerald-800" },
+  {
+    value: "reviewing",
+    label: "Reviewing",
+    color: "bg-blue-100 text-blue-800",
+  },
+  {
+    value: "approved",
+    label: "Approved",
+    color: "bg-emerald-100 text-emerald-800",
+  },
   { value: "rejected", label: "Rejected", color: "bg-red-100 text-red-800" },
-  { value: "converted", label: "Converted", color: "bg-purple-100 text-purple-800" },
+  {
+    value: "converted",
+    label: "Converted",
+    color: "bg-purple-100 text-purple-800",
+  },
 ];
 
 export const VALID_TRANSITIONS = {
@@ -27,7 +39,10 @@ export const VALID_TRANSITIONS = {
 };
 
 export function getStatusBadgeClass(status) {
-  return REQUEST_STATUSES.find((s) => s.value === status)?.color || "bg-gray-100 text-gray-800";
+  return (
+    REQUEST_STATUSES.find((s) => s.value === status)?.color ||
+    "bg-gray-100 text-gray-800"
+  );
 }
 
 export function getStatusLabel(status) {
@@ -36,7 +51,13 @@ export function getStatusLabel(status) {
 
 // ─── List hook ──────────────────────────────────────────────────────────────
 
-export function useBookingRequests({ status = "", search = "", limit = 25, offset = 0 } = {}) {
+export function useBookingRequests({
+  status = "",
+  search = "",
+  includeArchived = false,
+  limit = 25,
+  offset = 0,
+} = {}) {
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -46,14 +67,21 @@ export function useBookingRequests({ status = "", search = "", limit = 25, offse
     setLoading(true);
     setError(null);
     try {
-      const queries = [Query.orderDesc("$createdAt"), Query.limit(limit), Query.offset(offset)];
+      const queries = [
+        Query.orderDesc("$createdAt"),
+        Query.limit(limit),
+        Query.offset(offset),
+      ];
+      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
       if (status) queries.push(Query.equal("status", status));
       if (search) queries.push(Query.search("contactName", search));
 
       const result = await databases.listDocuments(DB, COL, queries);
 
       // Enrich with experience name in parallel
-      const experienceIds = [...new Set(result.documents.map((d) => d.experienceId).filter(Boolean))];
+      const experienceIds = [
+        ...new Set(result.documents.map((d) => d.experienceId).filter(Boolean)),
+      ];
       const experienceMap = {};
       if (experienceIds.length > 0) {
         const expResult = await databases.listDocuments(DB, COL_EXPERIENCES, [
@@ -95,12 +123,17 @@ export function useNewRequestCount() {
   useEffect(() => {
     let cancelled = false;
     databases
-      .listDocuments(DB, COL, [Query.equal("status", "pending"), Query.limit(1)])
+      .listDocuments(DB, COL, [
+        Query.equal("status", "pending"),
+        Query.limit(1),
+      ])
       .then((result) => {
         if (!cancelled) setCount(result.total);
       })
       .catch(() => {});
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return count;
@@ -124,7 +157,11 @@ export function useBookingRequestDetail(id) {
 
       if (doc.experienceId) {
         try {
-          const exp = await databases.getDocument(DB, COL_EXPERIENCES, doc.experienceId);
+          const exp = await databases.getDocument(
+            DB,
+            COL_EXPERIENCES,
+            doc.experienceId,
+          );
           setExperience(exp);
         } catch {
           // Experience may have been deleted
@@ -165,7 +202,11 @@ export async function createBookingRequest(payload) {
 
 // ─── Update status (admin) ──────────────────────────────────────────────────
 
-export async function updateBookingRequestStatus(id, newStatus, { adminNotes, quotedAmount, adminUserId } = {}) {
+export async function updateBookingRequestStatus(
+  id,
+  newStatus,
+  { adminNotes, quotedAmount, adminUserId } = {},
+) {
   const current = await databases.getDocument(DB, COL, id);
   const allowed = VALID_TRANSITIONS[current.status] || [];
   if (!allowed.includes(newStatus)) {
@@ -175,7 +216,8 @@ export async function updateBookingRequestStatus(id, newStatus, { adminNotes, qu
   const updateData = { status: newStatus };
   if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
   if (quotedAmount !== undefined) updateData.quotedAmount = quotedAmount;
-  if (["approved", "rejected"].includes(newStatus)) updateData.respondedAt = new Date().toISOString();
+  if (["approved", "rejected"].includes(newStatus))
+    updateData.respondedAt = new Date().toISOString();
 
   const updated = await databases.updateDocument(DB, COL, id, updateData);
 
@@ -187,7 +229,11 @@ export async function updateBookingRequestStatus(id, newStatus, { adminNotes, qu
         action: `booking-request-${newStatus}`,
         entityType: "booking_request",
         entityId: id,
-        details: JSON.stringify({ previousStatus: current.status, newStatus, quotedAmount }),
+        details: JSON.stringify({
+          previousStatus: current.status,
+          newStatus,
+          quotedAmount,
+        }),
       });
     } catch {
       // Non-fatal
@@ -202,7 +248,9 @@ export async function updateBookingRequestStatus(id, newStatus, { adminNotes, qu
 export async function updateBookingRequestFields(id, fields) {
   const allowed = {};
   if (fields.adminNotes !== undefined) allowed.adminNotes = fields.adminNotes;
-  if (fields.quotedAmount !== undefined) allowed.quotedAmount = fields.quotedAmount;
-  if (fields.convertedOrderId !== undefined) allowed.convertedOrderId = fields.convertedOrderId;
+  if (fields.quotedAmount !== undefined)
+    allowed.quotedAmount = fields.quotedAmount;
+  if (fields.convertedOrderId !== undefined)
+    allowed.convertedOrderId = fields.convertedOrderId;
   return databases.updateDocument(DB, COL, id, allowed);
 }

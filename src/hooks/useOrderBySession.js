@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { databases, Query } from "@/lib/appwrite";
+import { useAuth } from "@/hooks/useAuth";
 import env from "@/config/env";
 
 const DB = env.appwriteDatabaseId;
@@ -12,6 +13,7 @@ const COL_TICKETS = env.collectionTickets;
  * Handles the timing issue where Stripe redirects before webhook completes.
  */
 export function useOrderBySession(sessionId, orderId) {
+  const { user, loading: authLoading } = useAuth();
   const [order, setOrder] = useState(null);
   const [items, setItems] = useState([]);
   const [tickets, setTickets] = useState([]);
@@ -19,12 +21,25 @@ export function useOrderBySession(sessionId, orderId) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (authLoading) return;
+
+    if (!user?.$id) {
+      setOrder(null);
+      setItems([]);
+      setTickets([]);
+      setLoading(false);
+      setError("Order not found");
+      return;
+    }
+
     if (!sessionId && !orderId) {
       setLoading(false);
       return;
     }
 
     let cancelled = false;
+    let pollTimer = null;
+    let attempts = 0;
 
     async function fetch() {
       setLoading(true);
@@ -60,6 +75,10 @@ export function useOrderBySession(sessionId, orderId) {
           return;
         }
 
+        if (orderDoc.userId !== user.$id) {
+          throw new Error("Order not found");
+        }
+
         setOrder(orderDoc);
 
         // Fetch items and tickets in parallel
@@ -78,6 +97,15 @@ export function useOrderBySession(sessionId, orderId) {
 
         setItems(itemsRes.documents);
         setTickets(ticketsRes.documents);
+
+        if (
+          orderDoc.status === "pending" &&
+          orderDoc.paymentStatus !== "failed" &&
+          attempts < 6
+        ) {
+          attempts += 1;
+          pollTimer = window.setTimeout(fetch, 2500);
+        }
       } catch (err) {
         if (!cancelled) setError(err.message);
       } finally {
@@ -89,8 +117,9 @@ export function useOrderBySession(sessionId, orderId) {
 
     return () => {
       cancelled = true;
+      if (pollTimer) window.clearTimeout(pollTimer);
     };
-  }, [sessionId, orderId]);
+  }, [sessionId, orderId, user?.$id, authLoading]);
 
   return { order, items, tickets, loading, error };
 }

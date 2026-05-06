@@ -37,7 +37,6 @@
       "changePhoto": "Change photo",
       "uploading": "Uploading…",
       "photoHint": "JPG, PNG or WebP · max. 2 MB",
-
       "noProfileYet": "Your profile hasn't been set up yet. Please try again later or contact support."
     },
     "sidebar": {
@@ -62,6 +61,15 @@
       "allCategories": "All",
       "noExperiences": "No experiences available right now. Check back soon.",
       "noFilterResults": "No results match your filter."
+    },
+    "archive": {
+      "archive": "Archive",
+      "restore": "Restore",
+      "archived": "Archived",
+      "archiveTitle": "Archive this record",
+      "archiveDesc": "It will be hidden from your active view. You can recover it from the archived tab.",
+      "restoreTitle": "Restore this record",
+      "restoreDesc": "The record will return to your active view."
     }
   }
 }

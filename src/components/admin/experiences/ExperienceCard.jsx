@@ -49,6 +49,8 @@ function ConfirmOverlay({
 export default function ExperienceCard({
   experience,
   onStatusChange,
+  onArchive,
+  onRestore,
   canAdmin,
 }) {
   const { t } = useLanguage();
@@ -56,17 +58,32 @@ export default function ExperienceCard({
   const editUrl = ROUTES.ADMIN_EXPERIENCE_EDIT.replace(":id", experience.$id);
 
   function handleConfirm() {
-    if (confirmAction) onStatusChange(experience.$id, confirmAction);
+    if (confirmAction === "archive") {
+      onArchive?.(experience.$id);
+    } else if (confirmAction === "restore") {
+      onRestore?.(experience.$id);
+    } else if (confirmAction) {
+      onStatusChange(experience.$id, confirmAction);
+    }
     setConfirmAction(null);
   }
 
   return (
     <>
       <ConfirmOverlay
-        open={confirmAction === "archived"}
+        open={confirmAction === "archive"}
         title={t("admin.experienceActions.archiveTitle")}
         description={t("admin.experienceActions.archiveDescription")}
         confirmLabel={t("admin.experienceActions.archive")}
+        cancelLabel={t("admin.pricingTierForm.cancel")}
+        onConfirm={handleConfirm}
+        onCancel={() => setConfirmAction(null)}
+      />
+      <ConfirmOverlay
+        open={confirmAction === "restore"}
+        title={t("admin.archive.restoreTitle")}
+        description={t("admin.archive.restoreDescription")}
+        confirmLabel={t("admin.archive.restore")}
         cancelLabel={t("admin.pricingTierForm.cancel")}
         onConfirm={handleConfirm}
         onCancel={() => setConfirmAction(null)}
@@ -122,16 +139,29 @@ export default function ExperienceCard({
             </Button>
           )}
 
-          {experience.status !== "archived" && (
+          {experience.status !== "archived" && !experience.archivedAt && (
             <Button
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => setConfirmAction("archived")}
+              onClick={() => setConfirmAction("archive")}
               className="text-charcoal-subtle"
             >
               <Archive className="h-3.5 w-3.5" />
               {t("admin.experienceActions.archive")}
+            </Button>
+          )}
+
+          {experience.archivedAt && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setConfirmAction("restore")}
+              className="text-sage"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+              {t("admin.archive.restore")}
             </Button>
           )}
 

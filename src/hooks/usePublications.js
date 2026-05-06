@@ -20,6 +20,9 @@ export function usePublications({
   search = "",
   category = "",
   status = "",
+  includeArchived = false,
+  onlyArchived = false,
+  includeDrafts = false,
   limit = 25,
   offset = 0,
 } = {}) {
@@ -37,8 +40,17 @@ export function usePublications({
         Query.offset(offset),
         Query.orderDesc("$createdAt"),
       ];
+      if (onlyArchived) {
+        queries.push(Query.isNotNull("archivedAt"));
+      } else if (!includeArchived) {
+        queries.push(Query.isNull("archivedAt"));
+      }
       if (category) queries.push(Query.equal("category", category));
-      if (status) queries.push(Query.equal("status", status));
+      if (status && !onlyArchived) {
+        queries.push(Query.equal("status", status));
+      } else if (!includeDrafts && !onlyArchived) {
+        queries.push(Query.notEqual("status", "draft"));
+      }
       if (search) queries.push(Query.search("title", search));
 
       const res = await databases.listDocuments(DB, COL, queries);
@@ -49,7 +61,16 @@ export function usePublications({
     } finally {
       setLoading(false);
     }
-  }, [search, category, status, limit, offset]);
+  }, [
+    search,
+    category,
+    status,
+    includeArchived,
+    onlyArchived,
+    includeDrafts,
+    limit,
+    offset,
+  ]);
 
   useEffect(() => {
     fetch();

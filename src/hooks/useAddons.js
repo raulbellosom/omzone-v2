@@ -22,6 +22,7 @@ export function useAddons({
   search = "",
   addonType = "",
   status = "",
+  includeArchived = false,
   limit = 50,
   offset = 0,
 } = {}) {
@@ -39,6 +40,7 @@ export function useAddons({
         Query.offset(offset),
         Query.orderAsc("sortOrder"),
       ];
+      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
       if (addonType) queries.push(Query.equal("addonType", addonType));
       if (status) queries.push(Query.equal("status", status));
       if (search) queries.push(Query.search("name", search));
@@ -51,7 +53,7 @@ export function useAddons({
     } finally {
       setLoading(false);
     }
-  }, [search, addonType, status, limit, offset]);
+  }, [search, addonType, status, includeArchived, limit, offset]);
 
   useEffect(() => {
     fetch();

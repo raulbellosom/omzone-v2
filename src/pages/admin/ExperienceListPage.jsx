@@ -7,12 +7,15 @@ import { Card } from "@/components/common/Card";
 import ExperienceTable from "@/components/admin/experiences/ExperienceTable";
 import ExperienceCard from "@/components/admin/experiences/ExperienceCard";
 import ExperienceGridView from "@/components/admin/experiences/ExperienceGridView";
+import ConfirmHardDeleteModal from "@/components/admin/ConfirmHardDeleteModal";
 import { useExperiences, updateExperience } from "@/hooks/useExperiences";
+import { useArchive } from "@/hooks/useArchive";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
+import env from "@/config/env";
 
 const TYPE_OPTIONS = [
   { value: "", i18nKey: "admin.experienceTypes.all" },
@@ -28,7 +31,7 @@ const STATUS_OPTIONS = [
   { value: "", i18nKey: "admin.statuses.all" },
   { value: "draft", i18nKey: "admin.statuses.draft" },
   { value: "published", i18nKey: "admin.statuses.published" },
-  { value: "archived", i18nKey: "admin.statuses.archived" },
+  { value: "__archived__", i18nKey: "admin.archive.archivedTab" },
 ];
 
 const PAGE_SIZE = 25;
@@ -42,18 +45,30 @@ export default function ExperienceListPage() {
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(0);
   const [actionError, setActionError] = useState(null);
+  const [hardDeleteDoc, setHardDeleteDoc] = useState(null);
   const [viewMode, setViewMode] = useState(
     () => localStorage.getItem("admin:exp:view") || "table",
   );
+
+  const showArchived = status === "__archived__";
 
   const offset = page * PAGE_SIZE;
   const { data, total, loading, error, refetch } = useExperiences({
     search,
     type,
-    status,
+    status: showArchived ? "" : status,
+    onlyArchived: showArchived,
+    includeDrafts: true,
     limit: PAGE_SIZE,
     offset,
   });
+
+  const {
+    archive,
+    restore,
+    hardDelete,
+    loading: archiving,
+  } = useArchive(env.collectionExperiences, refetch);
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
@@ -88,6 +103,33 @@ export default function ExperienceListPage() {
       }
     },
     [refetch],
+  );
+
+  const handleArchive = useCallback(
+    (id) => archive({ documentId: id, cascade: true }),
+    [archive],
+  );
+
+  const handleRestore = useCallback(
+    (id) => restore({ documentId: id }),
+    [restore],
+  );
+
+  const handleHardDelete = useCallback(
+    ({ document }) => setHardDeleteDoc(document),
+    [],
+  );
+
+  const handleHardDeleteConfirm = useCallback(
+    async (doc) => {
+      await hardDelete({
+        documentId: doc.$id,
+        confirmationId: doc.$id,
+        reason: "admin hard delete",
+      });
+      setHardDeleteDoc(null);
+    },
+    [hardDelete],
   );
 
   const hasFilters = search || type || status;
@@ -231,6 +273,8 @@ export default function ExperienceListPage() {
               experiences={data}
               loading={loading}
               onStatusChange={handleStatusUpdate}
+              onArchive={handleArchive}
+              onRestore={handleRestore}
               canAdmin={isAdmin}
             />
           ) : (
@@ -238,6 +282,8 @@ export default function ExperienceListPage() {
               experiences={data}
               loading={loading}
               onStatusChange={handleStatusUpdate}
+              onArchive={handleArchive}
+              onRestore={handleRestore}
               canAdmin={isAdmin}
             />
           )}
@@ -266,12 +312,22 @@ export default function ExperienceListPage() {
               key={exp.$id}
               experience={exp}
               onStatusChange={handleStatusUpdate}
+              onArchive={handleArchive}
+              onRestore={handleRestore}
               canAdmin={isAdmin}
             />
           ))}
       </div>
 
-      {/* Pagination */}
+      {/* Hard delete confirmation (root only) */}
+      <ConfirmHardDeleteModal
+        open={!!hardDeleteDoc}
+        document={hardDeleteDoc}
+        collectionId={env.collectionExperiences}
+        loading={archiving}
+        onConfirm={handleHardDeleteConfirm}
+        onCancel={() => setHardDeleteDoc(null)}
+      />
       {totalPages > 1 && (
         <div className="flex items-center justify-between pt-2">
           <p className="text-sm text-charcoal-subtle">

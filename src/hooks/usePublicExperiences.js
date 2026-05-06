@@ -30,16 +30,16 @@ export function usePublicExperiences() {
       const [expRes, tagsRes, expTagsRes, tiersRes] = await Promise.all([
         databases.listDocuments(DB, COL_EXP, [
           Query.equal("status", "published"),
+          Query.isNull("archivedAt"),
           Query.orderDesc("$createdAt"),
           Query.limit(25),
         ]),
         databases.listDocuments(DB, COL_TAGS, [
           Query.orderAsc("sortOrder"),
+          Query.isNull("archivedAt"),
           Query.limit(100),
         ]),
-        databases.listDocuments(DB, COL_EXP_TAGS, [
-          Query.limit(500),
-        ]),
+        databases.listDocuments(DB, COL_EXP_TAGS, [Query.limit(500)]),
         databases.listDocuments(DB, COL_TIERS, [
           Query.equal("isActive", true),
           Query.limit(500),
@@ -62,7 +62,10 @@ export function usePublicExperiences() {
       for (const tier of tiersRes.documents) {
         const eid = tier.experienceId;
         if (!pm[eid] || tier.basePrice < pm[eid].minPrice) {
-          pm[eid] = { minPrice: tier.basePrice, currency: tier.currency || "MXN" };
+          pm[eid] = {
+            minPrice: tier.basePrice,
+            currency: tier.currency || "MXN",
+          };
         }
       }
       setPriceMap(pm);
@@ -77,5 +80,13 @@ export function usePublicExperiences() {
     fetch();
   }, [fetch]);
 
-  return { experiences, tags, experienceTagMap, priceMap, loading, error, refetch: fetch };
+  return {
+    experiences,
+    tags,
+    experienceTagMap,
+    priceMap,
+    loading,
+    error,
+    refetch: fetch,
+  };
 }

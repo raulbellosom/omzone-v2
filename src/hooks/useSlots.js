@@ -7,7 +7,7 @@ const COL = env.collectionSlots;
 
 export function useSlots(
   experienceId,
-  { status = "", dateFrom = "", dateTo = "" } = {},
+  { status = "", dateFrom = "", dateTo = "", includeArchived = false } = {},
 ) {
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
@@ -24,6 +24,7 @@ export function useSlots(
         Query.orderAsc("startDatetime"),
         Query.limit(200),
       ];
+      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
       if (status) queries.push(Query.equal("status", status));
       if (dateFrom)
         queries.push(Query.greaterThanEqual("startDatetime", dateFrom));
@@ -37,7 +38,7 @@ export function useSlots(
     } finally {
       setLoading(false);
     }
-  }, [experienceId, status, dateFrom, dateTo]);
+  }, [experienceId, status, dateFrom, dateTo, includeArchived]);
 
   useEffect(() => {
     fetch();
@@ -51,6 +52,7 @@ export function useAllSlots({
   dateFrom = "",
   dateTo = "",
   experienceId = "",
+  includeArchived = false,
 } = {}) {
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
@@ -62,6 +64,7 @@ export function useAllSlots({
     setError(null);
     try {
       const queries = [Query.orderAsc("startDatetime"), Query.limit(200)];
+      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
       if (experienceId) queries.push(Query.equal("experienceId", experienceId));
       if (status) queries.push(Query.equal("status", status));
       if (dateFrom)
@@ -76,7 +79,7 @@ export function useAllSlots({
     } finally {
       setLoading(false);
     }
-  }, [experienceId, status, dateFrom, dateTo]);
+  }, [experienceId, status, dateFrom, dateTo, includeArchived]);
 
   useEffect(() => {
     fetch();

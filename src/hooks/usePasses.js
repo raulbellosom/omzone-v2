@@ -21,6 +21,7 @@ export { slugify };
 export function usePasses({
   search = "",
   status = "",
+  includeArchived = false,
   limit = 50,
   offset = 0,
 } = {}) {
@@ -38,6 +39,7 @@ export function usePasses({
         Query.offset(offset),
         Query.orderAsc("sortOrder"),
       ];
+      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
       if (status) queries.push(Query.equal("status", status));
       if (search) queries.push(Query.search("name", search));
 
@@ -49,7 +51,7 @@ export function usePasses({
     } finally {
       setLoading(false);
     }
-  }, [search, status, limit, offset]);
+  }, [search, status, includeArchived, limit, offset]);
 
   useEffect(() => {
     fetch();

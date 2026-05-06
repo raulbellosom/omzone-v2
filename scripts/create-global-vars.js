@@ -95,6 +95,7 @@
     { key: "REMINDER_WINDOW_END_HOURS", value: "48" },
 
     // ─── Function IDs ───
+    { key: "APPWRITE_FUNCTION_ADMIN_ORDER_ACTION", value: "admin-order-action" },
     { key: "APPWRITE_FUNCTION_GENERATE_TICKET", value: "generate-ticket" },
     { key: "APPWRITE_FUNCTION_SEND_CONFIRMATION", value: "send-confirmation" },
   ];

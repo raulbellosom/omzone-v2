@@ -11,18 +11,14 @@ function CoverImage({ heroImageId }) {
   if (!heroImageId) {
     return (
       <div className="w-full aspect-video bg-warm-gray flex items-center justify-center">
-        <span className="text-charcoal-subtle/40 text-xs select-none">No image</span>
+        <span className="text-charcoal-subtle/40 text-xs select-none">
+          No image
+        </span>
       </div>
     );
   }
   const src = `${env.appwriteEndpoint}/storage/buckets/${env.bucketExperienceMedia}/files/${heroImageId}/preview?project=${env.appwriteProjectId}&width=400&height=225`;
-  return (
-    <img
-      src={src}
-      alt=""
-      className="w-full aspect-video object-cover"
-    />
-  );
+  return <img src={src} alt="" className="w-full aspect-video object-cover" />;
 }
 
 function SkeletonCard() {
@@ -42,6 +38,8 @@ export default function ExperienceGridView({
   experiences,
   loading,
   onStatusChange,
+  onArchive,
+  onRestore,
   canAdmin,
 }) {
   const { language } = useLanguage();
@@ -66,7 +64,10 @@ export default function ExperienceGridView({
             className="group rounded-2xl overflow-hidden border border-sand-dark/30 bg-white shadow-card hover:shadow-hover transition-shadow flex flex-col"
           >
             {/* Cover image with overlaid chips */}
-            <Link to={editUrl} className="relative block overflow-hidden flex-shrink-0">
+            <Link
+              to={editUrl}
+              className="relative block overflow-hidden flex-shrink-0"
+            >
               <CoverImage heroImageId={exp.heroImageId} />
               <span className="absolute top-2 left-2">
                 <TypeChip type={exp.type} />
@@ -93,6 +94,8 @@ export default function ExperienceGridView({
                 <ExperienceActionsMenu
                   experience={exp}
                   onStatusChange={onStatusChange}
+                  onArchive={onArchive}
+                  onRestore={onRestore}
                   canAdmin={canAdmin}
                 />
               </div>

@@ -26,7 +26,6 @@ const CATEGORY_OPTIONS = [
 const STATUS_OPTIONS = [
   { value: "draft", i18nKey: "admin.statuses.draft" },
   { value: "published", i18nKey: "admin.statuses.published" },
-  { value: "archived", i18nKey: "admin.statuses.archived" },
 ];
 
 const EMPTY = {
@@ -216,7 +215,10 @@ export default function PublicationForm({
               type="datetime-local"
               value={form.publishedAt ? form.publishedAt.slice(0, 16) : ""}
               onChange={(e) =>
-                set("publishedAt", e.target.value ? new Date(e.target.value).toISOString() : "")
+                set(
+                  "publishedAt",
+                  e.target.value ? new Date(e.target.value).toISOString() : "",
+                )
               }
               disabled={isDisabled}
             />
@@ -269,7 +271,13 @@ export default function PublicationForm({
   );
 
   return (
-    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={isDisabled} submitLabel={submitLabel || t("admin.common.save")} asideChildren={asideContent}>
+    <AdminFormLayout
+      onSubmit={handleSubmit}
+      submitting={submitting}
+      disabled={isDisabled}
+      submitLabel={submitLabel || t("admin.common.save")}
+      asideChildren={asideContent}
+    >
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
@@ -464,7 +472,6 @@ export default function PublicationForm({
           </Field>
         </div>
       </Card>
-
     </AdminFormLayout>
   );
 }

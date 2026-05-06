@@ -52,7 +52,13 @@ function ConfirmDialog({
   );
 }
 
-function ActionsMenu({ publication, onStatusChange, canAdmin }) {
+function ActionsMenu({
+  publication,
+  onStatusChange,
+  onArchive,
+  onRestore,
+  canAdmin,
+}) {
   const [open, setOpen] = useState(false);
   const [confirm, setConfirm] = useState(null);
   const { t } = useLanguage();
@@ -71,7 +77,8 @@ function ActionsMenu({ publication, onStatusChange, canAdmin }) {
   function handleConfirm() {
     const { type } = confirm;
     setConfirm(null);
-    if (type === "archive") onStatusChange(publication.$id, "archived");
+    if (type === "archive") onArchive?.(publication.$id);
+    else if (type === "restore") onRestore?.(publication.$id);
     else if (type === "publish") onStatusChange(publication.$id, "published");
     else if (type === "draft") onStatusChange(publication.$id, "draft");
   }
@@ -83,6 +90,14 @@ function ActionsMenu({ publication, onStatusChange, canAdmin }) {
         title={t("admin.publications.archive")}
         description={t("admin.publications.archiveDesc")}
         confirmLabel={t("admin.publications.archiveButton")}
+        onConfirm={handleConfirm}
+        onCancel={() => setConfirm(null)}
+      />
+      <ConfirmDialog
+        open={confirm?.type === "restore"}
+        title={t("admin.archive.restoreTitle")}
+        description={t("admin.archive.restoreDescription")}
+        confirmLabel={t("admin.archive.restore")}
         onConfirm={handleConfirm}
         onCancel={() => setConfirm(null)}
       />
@@ -133,17 +148,19 @@ function ActionsMenu({ publication, onStatusChange, canAdmin }) {
                 onClick={() => setOpen(false)}
               />
               <div className="absolute right-0 top-full mt-1 z-20 w-44 rounded-xl border border-sand-dark bg-white shadow-lg py-1">
-                {canAdmin && publication.status !== "published" && (
-                  <button
-                    type="button"
-                    onClick={() => handleAction("publish")}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
-                  >
-                    <Globe className="h-4 w-4 text-emerald-600" />
-                    {t("admin.publications.publish")}
-                  </button>
-                )}
-                {publication.status !== "draft" && (
+                {canAdmin &&
+                  publication.status !== "published" &&
+                  !publication.archivedAt && (
+                    <button
+                      type="button"
+                      onClick={() => handleAction("publish")}
+                      className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
+                    >
+                      <Globe className="h-4 w-4 text-emerald-600" />
+                      {t("admin.publications.publish")}
+                    </button>
+                  )}
+                {publication.status !== "draft" && !publication.archivedAt && (
                   <button
                     type="button"
                     onClick={() => handleAction("draft")}
@@ -153,7 +170,7 @@ function ActionsMenu({ publication, onStatusChange, canAdmin }) {
                     {t("admin.publications.backToDraft")}
                   </button>
                 )}
-                {canAdmin && publication.status !== "archived" && (
+                {canAdmin && !publication.archivedAt && (
                   <button
                     type="button"
                     onClick={() => handleAction("archive")}
@@ -161,6 +178,16 @@ function ActionsMenu({ publication, onStatusChange, canAdmin }) {
                   >
                     <Archive className="h-4 w-4 text-charcoal-subtle" />
                     {t("admin.publications.archiveButton")}
+                  </button>
+                )}
+                {publication.archivedAt && (
+                  <button
+                    type="button"
+                    onClick={() => handleAction("restore")}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-charcoal hover:bg-warm-gray"
+                  >
+                    <RotateCcw className="h-4 w-4 text-sage" />
+                    {t("admin.archive.restore")}
                   </button>
                 )}
               </div>
@@ -191,6 +218,8 @@ export default function PublicationTable({
   publications,
   loading,
   onStatusChange,
+  onArchive,
+  onRestore,
   canAdmin,
 }) {
   const { t } = useLanguage();
@@ -233,7 +262,10 @@ export default function PublicationTable({
 
           {!loading &&
             publications.map((pub) => {
-              const editUrl = ROUTES.ADMIN_PUBLICATION_EDIT.replace(":id", pub.$id);
+              const editUrl = ROUTES.ADMIN_PUBLICATION_EDIT.replace(
+                ":id",
+                pub.$id,
+              );
               return (
                 <tr
                   key={pub.$id}
@@ -269,6 +301,8 @@ export default function PublicationTable({
                     <ActionsMenu
                       publication={pub}
                       onStatusChange={onStatusChange}
+                      onArchive={onArchive}
+                      onRestore={onRestore}
                       canAdmin={canAdmin}
                     />
                   </td>

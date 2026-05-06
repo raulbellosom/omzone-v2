@@ -1,21 +1,66 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Sparkles, Loader2 } from "lucide-react";
+import { Sparkles, Loader2, Archive, RotateCcw } from "lucide-react";
 import { usePortalPasses } from "@/hooks/usePortalPasses";
+import { useArchive } from "@/hooks/useArchive";
 import PassCard from "@/components/portal/passes/PassCard";
 import { Button } from "@/components/common/Button";
+import env from "@/config/env";
 
 const TABS = [
   { key: "", label: "Todos" },
   { key: "active", label: "Activos" },
   { key: "exhausted", label: "Agotados" },
   { key: "expired", label: "Vencidos" },
+  { key: "__archived__", label: "Archivados" },
 ];
+
+function PassCardWithArchive({
+  userPass,
+  onArchive,
+  onRestore,
+  archiving,
+  isArchived,
+}) {
+  return (
+    <div className="relative group">
+      <PassCard userPass={userPass} />
+      <button
+        onClick={() =>
+          isArchived
+            ? onRestore?.({ documentId: userPass.$id })
+            : onArchive?.({ documentId: userPass.$id })
+        }
+        disabled={archiving}
+        className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg bg-white/80 text-charcoal-muted hover:bg-warm-gray"
+        title={isArchived ? "Restaurar" : "Archivar"}
+      >
+        {isArchived ? (
+          <RotateCcw className="h-3.5 w-3.5" />
+        ) : (
+          <Archive className="h-3.5 w-3.5" />
+        )}
+      </button>
+    </div>
+  );
+}
 
 export default function PortalPassesPage() {
   const [statusFilter, setStatusFilter] = useState("");
-  const { data, loading, loadingMore, error, loadMore, hasMore } =
-    usePortalPasses({ status: statusFilter });
+  const showArchived = statusFilter === "__archived__";
+  const activeStatus = showArchived ? "" : statusFilter;
+
+  const { data, loading, loadingMore, error, loadMore, hasMore, refetch } =
+    usePortalPasses({
+      status: activeStatus,
+      includePersonalArchived: showArchived,
+    });
+
+  const {
+    archiveOwn,
+    restoreOwn,
+    loading: archiving,
+  } = useArchive(env.collectionUserPasses, refetch);
 
   // Split into active vs past (exhausted/expired/cancelled)
   const { activePasses, pastPasses } = useMemo(() => {
@@ -28,7 +73,7 @@ export default function PortalPassesPage() {
     return { activePasses: active, pastPasses: past };
   }, [data]);
 
-  const showSplit = !statusFilter; // only split when showing "Todos"
+  const showSplit = !statusFilter && !showArchived; // only split when showing "Todos"
 
   if (loading) {
     return (
@@ -98,7 +143,12 @@ export default function PortalPassesPage() {
             <section className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {activePasses.map((p) => (
-                  <PassCard key={p.$id} userPass={p} />
+                  <PassCardWithArchive
+                    key={p.$id}
+                    userPass={p}
+                    onArchive={archiveOwn}
+                    archiving={archiving}
+                  />
                 ))}
               </div>
             </section>
@@ -110,17 +160,40 @@ export default function PortalPassesPage() {
               </h2>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {pastPasses.map((p) => (
-                  <PassCard key={p.$id} userPass={p} />
+                  <PassCardWithArchive
+                    key={p.$id}
+                    userPass={p}
+                    onArchive={archiveOwn}
+                    archiving={archiving}
+                  />
                 ))}
               </div>
             </section>
           )}
         </div>
+      ) : showArchived ? (
+        /* Archived passes */
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {data.map((p) => (
+            <PassCardWithArchive
+              key={p.$id}
+              userPass={p}
+              onRestore={restoreOwn}
+              archiving={archiving}
+              isArchived
+            />
+          ))}
+        </div>
       ) : (
         /* Flat grid when a specific filter is active */
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {data.map((p) => (
-            <PassCard key={p.$id} userPass={p} />
+            <PassCardWithArchive
+              key={p.$id}
+              userPass={p}
+              onArchive={archiveOwn}
+              archiving={archiving}
+            />
           ))}
         </div>
       )}

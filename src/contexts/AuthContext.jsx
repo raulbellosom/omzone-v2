@@ -23,6 +23,13 @@ export function AuthProvider({ children }) {
   const hydrateUser = useCallback(async () => {
     try {
       const authUser = await account.get();
+      // Block unverified sessions — same rule as login()
+      if (!authUser.emailVerification) {
+        await account.deleteSession("current").catch(() => {});
+        setUser(null);
+        setLabels([]);
+        return null;
+      }
       setUser(authUser);
       setLabels(authUser.labels ?? []);
       return authUser;

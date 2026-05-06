@@ -92,6 +92,7 @@ export function useAssistedSale() {
       customerPhone: customerPhone || undefined,
       skipStripe,
       targetUserId: wizard.customer?.$id ?? undefined,
+      frontendUrl: window.location.origin,
     };
 
     try {

@@ -1,7 +1,9 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useUserOrderDetail } from "@/hooks/useUserOrderDetail";
+import { useArchive } from "@/hooks/useArchive";
 import { Badge } from "@/components/common/Badge";
 import { ROUTES } from "@/constants/routes";
+import env from "@/config/env";
 import {
   ArrowLeft,
   ShoppingBag,
@@ -10,6 +12,8 @@ import {
   Sparkles,
   Calendar,
   ChevronRight,
+  Archive,
+  RotateCcw,
 } from "lucide-react";
 
 const ORDER_STATUS = {
@@ -168,7 +172,13 @@ function TicketRow({ ticket }) {
 
 export default function PortalOrderDetailPage() {
   const { orderId } = useParams();
+  const navigate = useNavigate();
   const { order, items, tickets, loading, error } = useUserOrderDetail(orderId);
+
+  const { archiveOwn, restoreOwn, loading: archiving } = useArchive(
+    env.collectionOrders,
+    () => navigate(ROUTES.PORTAL_ORDERS),
+  );
 
   if (loading) return <LoadingSkeleton />;
 
@@ -214,7 +224,7 @@ export default function PortalOrderDetailPage() {
               {formatDate(order.$createdAt)}
             </p>
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-1.5">
               <span className="text-xs text-charcoal-muted">Orden:</span>
               <Badge variant={os.variant}>{os.label}</Badge>
@@ -223,6 +233,28 @@ export default function PortalOrderDetailPage() {
               <span className="text-xs text-charcoal-muted">Pago:</span>
               <Badge variant={ps.variant}>{ps.label}</Badge>
             </div>
+            <button
+              onClick={() =>
+                order.userArchivedAt
+                  ? restoreOwn({ documentId: order.$id })
+                  : archiveOwn({ documentId: order.$id })
+              }
+              disabled={archiving}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-charcoal-muted border border-warm-gray-dark/20 hover:border-warm-gray-dark/40 hover:bg-warm-gray transition-colors disabled:opacity-40 cursor-pointer"
+              title={order.userArchivedAt ? "Restaurar orden" : "Archivar orden"}
+            >
+              {order.userArchivedAt ? (
+                <>
+                  <RotateCcw className="h-3.5 w-3.5" />
+                  Restaurar
+                </>
+              ) : (
+                <>
+                  <Archive className="h-3.5 w-3.5" />
+                  Archivar
+                </>
+              )}
+            </button>
           </div>
         </div>
 

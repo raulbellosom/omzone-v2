@@ -466,7 +466,7 @@
       "refunded": "Reembolsada",
       "allPayments": "Todos los pagos",
       "processing": "Procesando",
-      "succeeded": "Exitoso",
+      "succeeded": "Pagado",
       "failed": "Fallido"
     },
     "orderDetail": {
@@ -1100,7 +1100,7 @@
         "pricingTier": "Tier de precio",
         "slotDate": "Slot / Fecha",
         "noSelection": "Sin seleccionar",
-        "slotSkippedWarning": "Esta orden se crear\u00e1 sin un slot de horario asignado. Podr\u00e1s asignar uno despu\u00e9s desde el detalle de la orden.",
+        "slotSkippedWarning": "Esta orden se creará sin un slot de horario asignado. Podrás asignar uno después desde el detalle de la orden.",
         "quantity": "Cantidad",
         "addons": "Complementos",
         "selectedCount": "{count} seleccionado(s)",
@@ -1487,7 +1487,7 @@
     "paymentStatus": {
       "pending": "Pendiente",
       "processing": "Procesando",
-      "succeeded": "Exitoso",
+      "succeeded": "Pagado",
       "failed": "Fallido",
       "refunded": "Reembolsado"
     },
@@ -1632,6 +1632,30 @@
       "seoDescription": "Descubre nuestra transformadora yoga al amanecer..."
     },
     "templatePreviewTitle": "Vista previa de plantilla",
-    "breadcrumbsAriaLabel": "Navegación de migas"
+    "breadcrumbsAriaLabel": "Navegación de migas",
+    "archive": {
+      "archive": "Archivar",
+      "restore": "Restaurar",
+      "hardDelete": "Eliminar permanentemente",
+      "moreActions": "Más acciones",
+      "archiveTitle": "¿Archivar este registro?",
+      "archiveDesc": "El registro dejará de mostrarse en las vistas activas. Podrás restaurarlo en cualquier momento.",
+      "restoreTitle": "¿Restaurar este registro?",
+      "restoreDesc": "El registro volverá a aparecer en las vistas activas.",
+      "hardDeleteTitle": "Eliminar permanentemente",
+      "hardDeleteDesc": "Esta acción es irreversible. El registro será eliminado de la base de datos y no podrá recuperarse.",
+      "hardDeleteReason": "Motivo de eliminación",
+      "hardDeleteReasonPlaceholder": "Explica por qué eliminas este registro...",
+      "hardDeleteConfirmLabel": "Escribe el ID del documento para confirmar",
+      "hardDeleteConfirmPlaceholder": "ID del documento...",
+      "hardDeleteMismatch": "El ID no coincide. Verifica y vuelve a intentarlo.",
+      "hardDeleteConfirm": "Sí, eliminar permanentemente",
+      "archivedAt": "Archivado el",
+      "archivedBy": "Archivado por",
+      "reason": "Motivo",
+      "showArchived": "Mostrar archivados",
+      "showDrafts": "Mostrar borradores",
+      "archivedBadge": "Archivado"
+    }
   }
 }

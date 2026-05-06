@@ -24,6 +24,8 @@
     "confirmed": "Your booking has been confirmed. Here's a summary of your order.",
     "processingTitle": "Processing your booking",
     "processingDesc": "Your payment is being confirmed. This usually takes just a few seconds. You'll receive a confirmation email shortly.",
+    "paymentIssueTitle": "Payment not completed",
+    "paymentIssueDesc": "We could not validate this payment. Please try again or contact support if you were charged.",
     "viewOrders": "View My Orders",
     "exploreMore": "Explore More",
     "orderSummary": "Order Summary",

@@ -43,6 +43,8 @@ export default function ExperienceTable({
   experiences,
   loading,
   onStatusChange,
+  onArchive,
+  onRestore,
   canAdmin,
 }) {
   const { t, language } = useLanguage();
@@ -73,7 +75,8 @@ export default function ExperienceTable({
           </tr>
         </thead>
         <tbody>
-          {loading && Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)}
+          {loading &&
+            Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)}
 
           {!loading && experiences.length === 0 && (
             <tr>
@@ -88,7 +91,10 @@ export default function ExperienceTable({
 
           {!loading &&
             experiences.map((exp) => {
-              const editUrl = ROUTES.ADMIN_EXPERIENCE_EDIT.replace(":id", exp.$id);
+              const editUrl = ROUTES.ADMIN_EXPERIENCE_EDIT.replace(
+                ":id",
+                exp.$id,
+              );
               return (
                 <tr
                   key={exp.$id}
@@ -135,6 +141,8 @@ export default function ExperienceTable({
                       <ExperienceActionsMenu
                         experience={exp}
                         onStatusChange={onStatusChange}
+                        onArchive={onArchive}
+                        onRestore={onRestore}
                         canAdmin={canAdmin}
                       />
                     </div>

@@ -5,7 +5,7 @@ import env from "@/config/env";
 const DB = env.appwriteDatabaseId;
 const COL = env.collectionNotificationTemplates;
 
-export function useNotificationTemplates() {
+export function useNotificationTemplates({ includeArchived = false } = {}) {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,26 +14,28 @@ export function useNotificationTemplates() {
     setLoading(true);
     setError(null);
     try {
-      const res = await databases.listDocuments(DB, COL, [
-        Query.orderAsc("key"),
-        Query.limit(100),
-      ]);
+      const queries = [Query.orderAsc("key"), Query.limit(100)];
+      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
+      const res = await databases.listDocuments(DB, COL, queries);
       setTemplates(res.documents);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [includeArchived]);
 
   useEffect(() => {
     fetch();
   }, [fetch]);
 
-  const updateTemplate = useCallback(async (documentId, data) => {
-    await databases.updateDocument(DB, COL, documentId, data);
-    await fetch();
-  }, [fetch]);
+  const updateTemplate = useCallback(
+    async (documentId, data) => {
+      await databases.updateDocument(DB, COL, documentId, data);
+      await fetch();
+    },
+    [fetch],
+  );
 
   return { templates, loading, error, refetch: fetch, updateTemplate };
 }

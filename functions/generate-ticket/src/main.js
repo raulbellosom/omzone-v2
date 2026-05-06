@@ -12,7 +12,7 @@
  * @validates
  * - Input: orderId is present and is a string
  * - Auth: caller is admin/root, or server-side invocation (API key)
- * - Business: order exists, order.status === "paid", idempotency check
+ * - Business: order exists, order is paid/confirmed, idempotency check
  *
  * @entities
  * - Reads: orders, order_items, slots
@@ -220,13 +220,16 @@ export default async ({ req, res, log, error }) => {
     }
 
     // ── Validate order status ────────────────────────────────────────────────
-    if (order.status !== "paid") {
+    if (
+      !["paid", "confirmed"].includes(order.status) ||
+      order.paymentStatus !== "succeeded"
+    ) {
       return res.json(
         {
           ok: false,
           error: {
             code: "ERR_TICKET_ORDER_NOT_PAID",
-            message: "Order not yet paid",
+            message: "Order payment is not confirmed",
           },
         },
         400,

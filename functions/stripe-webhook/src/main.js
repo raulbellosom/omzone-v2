@@ -37,11 +37,20 @@
 import { Client, Databases, Query, ID, Functions } from "node-appwrite";
 import Stripe from "stripe";
 import { reconcileSlots } from "./reconciliation.js";
+import {
+  buildCheckoutCompletedOrderUpdate,
+  buildCheckoutPaymentData,
+  getSessionOrderId,
+  isOrderFulfilled,
+  validateCheckoutSessionForOrder,
+} from "./lifecycle.js";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const HANDLED_EVENTS = [
   "checkout.session.completed",
+  "checkout.session.async_payment_succeeded",
+  "checkout.session.async_payment_failed",
   "checkout.session.expired",
   "payment_intent.succeeded",
   "payment_intent.payment_failed",
@@ -83,6 +92,31 @@ async function findOrderBySessionId(db, DB, COL, sessionId) {
   return result.documents[0] || null;
 }
 
+async function findOrderForCheckoutSession(db, DB, COL, session) {
+  const orderId = getSessionOrderId(session);
+  if (orderId) {
+    const byId = await findOrderById(db, DB, COL, orderId);
+    if (byId) return byId;
+  }
+
+  if (session.id) {
+    const bySession = await findOrderBySessionId(db, DB, COL, session.id);
+    if (bySession) return bySession;
+  }
+
+  if (session.payment_link) {
+    const byPaymentLink = await findOrderBySessionId(
+      db,
+      DB,
+      COL,
+      session.payment_link,
+    );
+    if (byPaymentLink) return byPaymentLink;
+  }
+
+  return null;
+}
+
 /**
  * Find order by stripePaymentIntentId.
  */
@@ -98,11 +132,51 @@ async function findOrderByPaymentIntentId(db, DB, COL, piId) {
  * Check if a payment record already exists for a given stripePaymentIntentId.
  */
 async function paymentExists(db, DB, COL, piId) {
+  if (!piId) return false;
   const result = await db.listDocuments(DB, COL, [
     Query.equal("stripePaymentIntentId", piId),
     Query.limit(1),
   ]);
   return result.total > 0;
+}
+
+async function paymentExistsForOrderSession(db, DB, COL, orderId, sessionId) {
+  if (!orderId || !sessionId) return false;
+  const result = await db.listDocuments(DB, COL, [
+    Query.equal("orderId", orderId),
+    Query.limit(100),
+  ]);
+  return result.documents.some((doc) => {
+    if (doc.stripeSessionId === sessionId) return true;
+    try {
+      const metadata = JSON.parse(doc.metadata || "{}");
+      return metadata.sessionId === sessionId;
+    } catch {
+      return false;
+    }
+  });
+}
+
+async function createPaymentRecord(db, DB, COL_PAYMENTS, paymentData, log) {
+  try {
+    await db.createDocument(DB, COL_PAYMENTS, ID.unique(), paymentData);
+  } catch (err) {
+    if (
+      paymentData.stripeSessionId &&
+      /stripeSessionId|Invalid document structure|Unknown attribute/i.test(
+        err.message,
+      )
+    ) {
+      const fallback = { ...paymentData };
+      delete fallback.stripeSessionId;
+      await db.createDocument(DB, COL_PAYMENTS, ID.unique(), fallback);
+      log(
+        `Payment record created without stripeSessionId column fallback for order ${paymentData.orderId}`,
+      );
+      return;
+    }
+    throw err;
+  }
 }
 
 // ─── Event Handlers ──────────────────────────────────────────────────────────
@@ -122,25 +196,23 @@ async function handleCheckoutCompleted(
   functions,
   log,
 ) {
-  const orderId =
-    (session.metadata && session.metadata.orderId) ||
-    session.client_reference_id;
-
-  if (!orderId) {
-    log("WARN: checkout.session.completed missing orderId in metadata");
-    return;
-  }
-
-  // Find order
-  const order = await findOrderById(db, DB, COL_ORDERS, orderId);
+  const order = await findOrderForCheckoutSession(db, DB, COL_ORDERS, session);
   if (!order) {
-    log(`WARN: Order ${orderId} not found for session ${session.id}`);
+    log(`WARN: Order not found for checkout session ${session.id}`);
     return;
   }
 
-  // Idempotency: already paid
-  if (order.status === "paid" || order.paymentStatus === "succeeded") {
-    log(`Order ${orderId} already paid, skipping`);
+  const validation = validateCheckoutSessionForOrder(session, order);
+  if (!validation.ok) {
+    log(
+      `WARN: checkout.session.completed rejected for order ${order.$id}: ${validation.reason}`,
+    );
+    return;
+  }
+
+  // Idempotency: already fulfilled
+  if (isOrderFulfilled(order)) {
+    log(`Order ${order.$id} already fulfilled, skipping`);
     return;
   }
 
@@ -148,40 +220,28 @@ async function handleCheckoutCompleted(
   const piId = session.payment_intent || null;
 
   // Update order
-  const updateData = {
-    status: "paid",
-    paymentStatus: "succeeded",
-    paidAt: new Date().toISOString(),
-  };
-  if (piId) {
-    updateData.stripePaymentIntentId = piId;
-  }
+  const updateData = buildCheckoutCompletedOrderUpdate(
+    session,
+    new Date().toISOString(),
+  );
 
-  await db.updateDocument(DB, COL_ORDERS, orderId, updateData);
-  log(`Order ${orderId} updated to paid`);
+  await db.updateDocument(DB, COL_ORDERS, order.$id, updateData);
+  log(`Order ${order.$id} confirmed via checkout.session.completed`);
 
   // Create payment record (idempotent check)
-  if (piId && !(await paymentExists(db, DB, COL_PAYMENTS, piId))) {
-    const paymentData = {
-      orderId,
-      stripePaymentIntentId: piId,
-      amount: (session.amount_total || 0) / 100,
-      currency: (session.currency || "mxn").toUpperCase(),
-      status: "succeeded",
-      method: session.payment_method_types
-        ? session.payment_method_types[0] || null
-        : null,
-      metadata: JSON.stringify({
-        eventType: "checkout.session.completed",
-        sessionId: session.id,
-        paymentIntentId: piId,
-        customerEmail: session.customer_email || null,
-        amountTotal: session.amount_total,
-        currency: session.currency,
-      }),
-    };
-    await db.createDocument(DB, COL_PAYMENTS, ID.unique(), paymentData);
-    log(`Payment record created for order ${orderId} (PI: ${piId})`);
+  const hasPayment =
+    (piId && (await paymentExists(db, DB, COL_PAYMENTS, piId))) ||
+    (await paymentExistsForOrderSession(
+      db,
+      DB,
+      COL_PAYMENTS,
+      order.$id,
+      session.id,
+    ));
+  if (!hasPayment) {
+    const paymentData = buildCheckoutPaymentData(session, order);
+    await createPaymentRecord(db, DB, COL_PAYMENTS, paymentData, log);
+    log(`Payment record created for order ${order.$id} (session: ${session.id})`);
   }
 
   // Reconcile slot bookedCount
@@ -190,7 +250,7 @@ async function handleCheckoutCompleted(
     databaseId: DB,
     collectionOrderItems: COL_ORDER_ITEMS,
     collectionSlots: COL_SLOTS,
-    orderId,
+    orderId: order.$id,
     log,
   });
 
@@ -198,16 +258,16 @@ async function handleCheckoutCompleted(
   try {
     await functions.createExecution(
       "generate-ticket",
-      JSON.stringify({ orderId }),
+      JSON.stringify({ orderId: order.$id }),
       true, // async
       "/",
       "POST",
     );
-    log(`Triggered generate-ticket for order ${orderId}`);
+    log(`Triggered generate-ticket for order ${order.$id}`);
   } catch (err) {
     // Don't fail the webhook if ticket generation trigger fails
     log(
-      `WARN: Failed to trigger generate-ticket for ${orderId}: ${err.message}`,
+      `WARN: Failed to trigger generate-ticket for ${order.$id}: ${err.message}`,
     );
   }
 }
@@ -217,37 +277,46 @@ async function handleCheckoutCompleted(
  * Updates order to cancelled.
  */
 async function handleCheckoutExpired(session, db, DB, COL_ORDERS, log) {
-  const orderId =
-    (session.metadata && session.metadata.orderId) ||
-    session.client_reference_id;
-
-  if (!orderId) {
-    log("WARN: checkout.session.expired missing orderId in metadata");
-    return;
-  }
-
-  const order = await findOrderById(db, DB, COL_ORDERS, orderId);
+  const order = await findOrderForCheckoutSession(db, DB, COL_ORDERS, session);
   if (!order) {
-    log(`WARN: Order ${orderId} not found for expired session ${session.id}`);
+    log(`WARN: Order not found for expired session ${session.id}`);
     return;
   }
 
   // Idempotency: already cancelled / already paid (edge case: events out of order)
   if (order.status === "cancelled") {
-    log(`Order ${orderId} already cancelled, skipping`);
+    log(`Order ${order.$id} already cancelled, skipping`);
     return;
   }
-  if (order.status === "paid") {
-    log(`Order ${orderId} already paid, ignoring expired event`);
+  if (isOrderFulfilled(order)) {
+    log(`Order ${order.$id} already fulfilled, ignoring expired event`);
     return;
   }
 
-  await db.updateDocument(DB, COL_ORDERS, orderId, {
+  await db.updateDocument(DB, COL_ORDERS, order.$id, {
     status: "cancelled",
     paymentStatus: "failed",
     cancelledAt: new Date().toISOString(),
   });
-  log(`Order ${orderId} cancelled (session expired)`);
+  log(`Order ${order.$id} cancelled (session expired)`);
+}
+
+async function handleCheckoutAsyncFailed(session, db, DB, COL_ORDERS, log) {
+  const order = await findOrderForCheckoutSession(db, DB, COL_ORDERS, session);
+  if (!order) {
+    log(`WARN: Order not found for async failed session ${session.id}`);
+    return;
+  }
+
+  if (isOrderFulfilled(order)) {
+    log(`Order ${order.$id} already fulfilled, ignoring async failed event`);
+    return;
+  }
+
+  await db.updateDocument(DB, COL_ORDERS, order.$id, {
+    paymentStatus: "failed",
+  });
+  log(`Order ${order.$id} payment marked failed (async checkout session)`);
 }
 
 /**
@@ -284,20 +353,20 @@ async function handlePaymentIntentSucceeded(
     return;
   }
 
-  // Idempotency: already paid
-  if (order.status === "paid" || order.paymentStatus === "succeeded") {
-    log(`Order ${order.$id} already paid, PI succeeded is no-op`);
+  // Idempotency: checkout.session.completed is the preferred fulfillment path.
+  if (isOrderFulfilled(order)) {
+    log(`Order ${order.$id} already fulfilled, PI succeeded is no-op`);
     return;
   }
 
   // Update order
   await db.updateDocument(DB, COL_ORDERS, order.$id, {
-    status: "paid",
+    status: "confirmed",
     paymentStatus: "succeeded",
     paidAt: new Date().toISOString(),
     stripePaymentIntentId: piId,
   });
-  log(`Order ${order.$id} updated to paid via payment_intent.succeeded`);
+  log(`Order ${order.$id} confirmed via payment_intent.succeeded fallback`);
 
   // Create payment record
   if (!(await paymentExists(db, DB, COL_PAYMENTS, piId))) {
@@ -394,8 +463,8 @@ async function handlePaymentIntentFailed(
   }
 
   // Don't downgrade a paid order
-  if (order.status === "paid") {
-    log(`Order ${order.$id} already paid, ignoring failed PI event`);
+  if (isOrderFulfilled(order)) {
+    log(`Order ${order.$id} already fulfilled, ignoring failed PI event`);
     return;
   }
 
@@ -459,7 +528,9 @@ export default async ({ req, res, log, error }) => {
   }
 
   // ── Verify HMAC signature ──────────────────────────────────────────────────
-  const stripe = new Stripe(STRIPE_SECRET);
+  const stripe = new Stripe(STRIPE_SECRET, {
+    apiVersion: "2026-02-25.clover",
+  });
   const signature = req.headers["stripe-signature"];
 
   if (!signature) {
@@ -524,6 +595,7 @@ export default async ({ req, res, log, error }) => {
 
     switch (event.type) {
       case "checkout.session.completed":
+      case "checkout.session.async_payment_succeeded":
         await handleCheckoutCompleted(
           dataObject,
           db,
@@ -535,6 +607,10 @@ export default async ({ req, res, log, error }) => {
           functions,
           log,
         );
+        break;
+
+      case "checkout.session.async_payment_failed":
+        await handleCheckoutAsyncFailed(dataObject, db, DB, COL_ORDERS, log);
         break;
 
       case "checkout.session.expired":

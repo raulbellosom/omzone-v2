@@ -466,7 +466,7 @@
       "refunded": "Refunded",
       "allPayments": "All payments",
       "processing": "Processing",
-      "succeeded": "Succeeded",
+      "succeeded": "Paid",
       "failed": "Failed"
     },
     "orderDetail": {
@@ -1487,7 +1487,7 @@
     "paymentStatus": {
       "pending": "Pending",
       "processing": "Processing",
-      "succeeded": "Succeeded",
+      "succeeded": "Paid",
       "failed": "Failed",
       "refunded": "Refunded"
     },
@@ -1632,6 +1632,30 @@
       "seoDescription": "Discover our transformative sunrise yoga..."
     },
     "templatePreviewTitle": "Template preview",
-    "breadcrumbsAriaLabel": "Breadcrumb"
+    "breadcrumbsAriaLabel": "Breadcrumb",
+    "archive": {
+      "archive": "Archive",
+      "restore": "Restore",
+      "hardDelete": "Delete permanently",
+      "moreActions": "More actions",
+      "archiveTitle": "Archive this record?",
+      "archiveDesc": "The record will be hidden from active views. You can restore it at any time.",
+      "restoreTitle": "Restore this record?",
+      "restoreDesc": "The record will appear again in active views.",
+      "hardDeleteTitle": "Delete permanently",
+      "hardDeleteDesc": "This action is irreversible. The record will be permanently removed from the database and cannot be recovered.",
+      "hardDeleteReason": "Reason for deletion",
+      "hardDeleteReasonPlaceholder": "Explain why you are deleting this record...",
+      "hardDeleteConfirmLabel": "Type the document ID to confirm",
+      "hardDeleteConfirmPlaceholder": "Document ID...",
+      "hardDeleteMismatch": "ID does not match. Please check and try again.",
+      "hardDeleteConfirm": "Yes, delete permanently",
+      "archivedAt": "Archived on",
+      "archivedBy": "Archived by",
+      "reason": "Reason",
+      "showArchived": "Show archived",
+      "showDrafts": "Show drafts",
+      "archivedBadge": "Archived"
+    }
   }
 }

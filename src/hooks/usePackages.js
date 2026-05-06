@@ -21,6 +21,9 @@ export { slugify };
 export function usePackages({
   search = "",
   status = "",
+  includeArchived = false,
+  onlyArchived = false,
+  includeDrafts = false,
   limit = 50,
   offset = 0,
 } = {}) {
@@ -38,7 +41,16 @@ export function usePackages({
         Query.offset(offset),
         Query.orderAsc("sortOrder"),
       ];
-      if (status) queries.push(Query.equal("status", status));
+      if (onlyArchived) {
+        queries.push(Query.isNotNull("archivedAt"));
+      } else if (!includeArchived) {
+        queries.push(Query.isNull("archivedAt"));
+      }
+      if (status && !onlyArchived) {
+        queries.push(Query.equal("status", status));
+      } else if (!includeDrafts && !onlyArchived) {
+        queries.push(Query.notEqual("status", "draft"));
+      }
       if (search) queries.push(Query.search("name", search));
 
       const res = await databases.listDocuments(DB, COL, queries);
@@ -49,7 +61,15 @@ export function usePackages({
     } finally {
       setLoading(false);
     }
-  }, [search, status, limit, offset]);
+  }, [
+    search,
+    status,
+    includeArchived,
+    onlyArchived,
+    includeDrafts,
+    limit,
+    offset,
+  ]);
 
   useEffect(() => {
     fetch();

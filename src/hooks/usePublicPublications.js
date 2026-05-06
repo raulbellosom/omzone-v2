@@ -25,6 +25,7 @@ export function usePublicPublications() {
     try {
       const res = await databases.listDocuments(DB, COL, [
         Query.equal("status", "published"),
+        Query.isNull("archivedAt"),
         Query.orderDesc("publishedAt"),
         Query.limit(50),
       ]);
