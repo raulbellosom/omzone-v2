@@ -11,6 +11,7 @@ import AddonSelectStep from "./AddonSelectStep";
 import QuantityStep from "./QuantityStep";
 import ReviewConfirmStep from "./ReviewConfirmStep";
 import { cn } from "@/lib/utils";
+import { computeCheckoutConstraints } from "@/lib/checkoutRules";
 
 // ─── Step definitions ─────────────────────────────────────────────────────────
 
@@ -88,11 +89,25 @@ function canProceed(stepId, wizard) {
     case "tier":
       return !!wizard.pricingTier;
     case "slot":
-      return !!wizard.slot || wizard.slotSkipped;
+      return !!wizard.slot;
     case "addons":
-      return true; // addons are optional
+      return !wizard.hasUnsupportedRequiredAddons;
     case "quantity":
-      return wizard.quantity >= 1;
+      if (!wizard.experience || !wizard.pricingTier) return false;
+      if (wizard.experience.requiresSchedule && !wizard.slot) return false;
+      {
+        const constraints = computeCheckoutConstraints({
+          experience: wizard.experience,
+          tier: wizard.pricingTier,
+          slot: wizard.slot || null,
+          quantity: wizard.quantity,
+        });
+        return (
+          constraints.isValid &&
+          wizard.quantity >= constraints.effectiveMin &&
+          wizard.quantity <= constraints.effectiveMax
+        );
+      }
     case "review":
       return true;
     default:

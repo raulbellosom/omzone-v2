@@ -3,17 +3,10 @@ import { Link } from "react-router-dom";
 import { Sparkles, Loader2, Archive, RotateCcw } from "lucide-react";
 import { usePortalPasses } from "@/hooks/usePortalPasses";
 import { useArchive } from "@/hooks/useArchive";
+import { useLanguage } from "@/hooks/useLanguage";
 import PassCard from "@/components/portal/passes/PassCard";
 import { Button } from "@/components/common/Button";
 import env from "@/config/env";
-
-const TABS = [
-  { key: "", label: "Todos" },
-  { key: "active", label: "Activos" },
-  { key: "exhausted", label: "Agotados" },
-  { key: "expired", label: "Vencidos" },
-  { key: "__archived__", label: "Archivados" },
-];
 
 function PassCardWithArchive({
   userPass,
@@ -22,6 +15,7 @@ function PassCardWithArchive({
   archiving,
   isArchived,
 }) {
+  const { t } = useLanguage();
   return (
     <div className="relative group">
       <PassCard userPass={userPass} />
@@ -33,7 +27,11 @@ function PassCardWithArchive({
         }
         disabled={archiving}
         className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg bg-white/80 text-charcoal-muted hover:bg-warm-gray"
-        title={isArchived ? "Restaurar" : "Archivar"}
+        title={
+          isArchived
+            ? t("portal.passes.restoreTitle")
+            : t("portal.passes.archiveTitle")
+        }
       >
         {isArchived ? (
           <RotateCcw className="h-3.5 w-3.5" />
@@ -46,9 +44,18 @@ function PassCardWithArchive({
 }
 
 export default function PortalPassesPage() {
+  const { t } = useLanguage();
   const [statusFilter, setStatusFilter] = useState("");
   const showArchived = statusFilter === "__archived__";
   const activeStatus = showArchived ? "" : statusFilter;
+
+  const TABS = [
+    { key: "", label: t("portal.passes.tabAll") },
+    { key: "active", label: t("portal.passes.tabActive") },
+    { key: "exhausted", label: t("portal.passes.tabExhausted") },
+    { key: "expired", label: t("portal.passes.tabExpired") },
+    { key: "__archived__", label: t("portal.passes.tabArchived") },
+  ];
 
   const { data, loading, loadingMore, error, loadMore, hasMore, refetch } =
     usePortalPasses({
@@ -94,7 +101,7 @@ export default function PortalPassesPage() {
   return (
     <div className="space-y-6">
       <h1 className="font-display text-2xl font-bold text-charcoal">
-        Mis Pases
+        {t("portal.passes.heading")}
       </h1>
 
       {/* Status filter tabs */}
@@ -122,18 +129,17 @@ export default function PortalPassesPage() {
           </div>
           <h2 className="font-display text-lg font-semibold text-charcoal mb-2">
             {statusFilter
-              ? "No tienes pases con este estado"
-              : "Aún no tienes pases"}
+              ? t("portal.passes.emptyFilter")
+              : t("portal.passes.emptyAll")}
           </h2>
           <p className="text-sm text-charcoal-muted max-w-sm mx-auto mb-6">
-            Descubre nuestras experiencias y adquiere un pase para disfrutarlas
-            con créditos flexibles.
+            {t("portal.passes.emptyDesc")}
           </p>
           <Link
             to="/experiencias"
             className="inline-flex items-center gap-2 text-sm text-sage font-medium hover:underline"
           >
-            Explorar experiencias
+            {t("portal.passes.exploreLink")}
           </Link>
         </div>
       ) : showSplit ? (
@@ -156,7 +162,7 @@ export default function PortalPassesPage() {
           {pastPasses.length > 0 && (
             <section className="space-y-3">
               <h2 className="text-sm font-semibold text-charcoal-muted uppercase tracking-wider">
-                Pases anteriores
+                {t("portal.passes.pastPasses")}
               </h2>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {pastPasses.map((p) => (
@@ -210,7 +216,7 @@ export default function PortalPassesPage() {
             {loadingMore ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              "Cargar más"
+              t("portal.passes.loadMore")
             )}
           </Button>
         </div>

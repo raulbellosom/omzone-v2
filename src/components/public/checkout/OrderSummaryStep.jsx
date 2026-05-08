@@ -1,3 +1,4 @@
+import { MapPin } from "lucide-react";
 import { formatPrice } from "@/components/public/checkout/utils";
 import { useLanguage, localizedField } from "@/hooks/useLanguage";
 
@@ -48,6 +49,12 @@ export default function OrderSummaryStep({
                 )}
               </p>
             )}
+            {selectedSlot && (selectedSlot.locationName || selectedSlot.roomName) && (
+              <span className="inline-flex items-center gap-1 mt-1.5 text-xs text-sage font-medium">
+                <MapPin className="h-3 w-3" />
+                {[selectedSlot.locationName, selectedSlot.roomName].filter(Boolean).join(" · ")}
+              </span>
+            )}
           </div>
           <span className="text-sm font-semibold text-charcoal whitespace-nowrap">
             {selectedTier
@@ -66,12 +73,12 @@ export default function OrderSummaryStep({
               <p className="text-sm text-charcoal">
                 {localizedField(addon, "name", language)}
               </p>
-              {quantity > 1 && (
-                <p className="text-xs text-charcoal-subtle">× {quantity}</p>
+              {addon.chargeQuantity > 1 && (
+                <p className="text-xs text-charcoal-subtle">× {addon.chargeQuantity}</p>
               )}
             </div>
             <span className="text-sm font-semibold text-charcoal whitespace-nowrap">
-              {formatPrice(addon.effectivePrice * quantity, currency)}
+              {formatPrice(addon.effectivePrice * addon.chargeQuantity, currency)}
             </span>
           </div>
         ))}

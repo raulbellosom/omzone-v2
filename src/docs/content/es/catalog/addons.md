@@ -3,7 +3,7 @@ title: Complementos
 description: Extras opcionales que se pueden adjuntar a las experiencias - servicios, transporte, comida, equipamiento y más
 section: catalog
 order: 4
-lastUpdated: 2026-04-25
+lastUpdated: 2026-05-06
 relatedRoutes:
   - /admin/addons
   - /admin/addons/new
@@ -74,6 +74,21 @@ Navega a **Catálogo -> Complementos -> Nuevo complemento**
 | `per-day` | Por día de la experiencia |
 | `per-unit` | Por unidad/artículo |
 | `quote` | Requiere cotización personalizada |
+
+### Nota de Alcance en Checkout
+
+El catálogo permite todos los `priceType` listados arriba.
+
+En checkout directo y venta asistida, en esta fase solo se soporta:
+- `fixed`
+- `per-person`
+
+En esta fase, checkout directo/asistido bloquea:
+- `per-day`
+- `per-unit`
+- `quote`
+
+Para esos casos usa flujos de solicitud/cotización.
 
 ### Sección de Opciones
 
@@ -157,4 +172,5 @@ Cuando un cliente reserva una experiencia con complementos asignados:
 
 - [Experiencias](./experiences.md) - La entidad padre para las asignaciones de complementos
 - [Venta Asistida](../sales/assisted-sale.md) - Complementos en el flujo de venta manual
+- [Playbooks de Reservas](../reference/reservation-playbooks.md) - Casos reales de addons en checkout y venta asistida
 - [Paquetes](./packages.md) - Enfoque alternativo de agrupación

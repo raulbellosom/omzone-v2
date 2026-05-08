@@ -203,6 +203,25 @@ export default function ExperienceForm({
     if (!form.saleMode) e.saleMode = t("admin.validation.saleModeRequired");
     if (!form.fulfillmentType)
       e.fulfillmentType = t("admin.validation.fulfillmentRequired");
+    if (form.allowQuantity) {
+      const minQty = form.minQuantity ? parseInt(form.minQuantity, 10) : null;
+      const maxQty = form.maxQuantity ? parseInt(form.maxQuantity, 10) : null;
+      if (minQty != null && minQty < 1) {
+        e.minQuantity = t("admin.validation.quantityPositive");
+      }
+      if (maxQty != null && maxQty < 1) {
+        e.maxQuantity = t("admin.validation.quantityPositive");
+      }
+      if (
+        minQty != null &&
+        maxQty != null &&
+        Number.isInteger(minQty) &&
+        Number.isInteger(maxQty) &&
+        minQty > maxQty
+      ) {
+        e.maxQuantity = t("admin.validation.quantityBoundsInvalid");
+      }
+    }
     return e;
   }
 
@@ -564,7 +583,10 @@ export default function ExperienceForm({
         </div>
         {form.allowQuantity && (
           <div className="grid grid-cols-2 gap-4 pt-2">
-            <Field label={t("admin.experienceForm.minAttendees")}>
+            <Field
+              label={t("admin.experienceForm.minAttendees")}
+              error={errors.minQuantity}
+            >
               <Input
                 type="number"
                 min={1}
@@ -572,9 +594,13 @@ export default function ExperienceForm({
                 onChange={(e) => set("minQuantity", e.target.value)}
                 placeholder="1"
                 disabled={isDisabled}
+                className={errors.minQuantity ? "border-red-400" : ""}
               />
             </Field>
-            <Field label={t("admin.experienceForm.maxAttendees")}>
+            <Field
+              label={t("admin.experienceForm.maxAttendees")}
+              error={errors.maxQuantity}
+            >
               <Input
                 type="number"
                 min={1}
@@ -582,6 +608,7 @@ export default function ExperienceForm({
                 onChange={(e) => set("maxQuantity", e.target.value)}
                 placeholder="10"
                 disabled={isDisabled}
+                className={errors.maxQuantity ? "border-red-400" : ""}
               />
             </Field>
           </div>

@@ -46,12 +46,12 @@ export default function OrderSummary({
           <div key={addon.$id} className="flex justify-between py-2">
             <span className="text-charcoal">
               {localizedField(addon, "name", language)}
-              {quantity > 1 && (
-                <span className="text-charcoal-subtle"> × {quantity}</span>
+              {addon.chargeQuantity > 1 && (
+                <span className="text-charcoal-subtle"> × {addon.chargeQuantity}</span>
               )}
             </span>
             <span className="font-medium text-charcoal">
-              {formatPrice(addon.effectivePrice * quantity, currency)}
+              {formatPrice(addon.effectivePrice * addon.chargeQuantity, currency)}
             </span>
           </div>
         ))}

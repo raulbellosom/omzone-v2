@@ -33,7 +33,17 @@
     "dateLabel": "Fecha",
     "tickets": "Tus Tickets",
     "total": "Total",
-    "status": "Estado"
+    "status": "Estado",
+    "viewTickets": "Ver Mis Tickets",
+    "downloadPass": "Guardar Pase",
+    "experienceFallback": "Experiencia",
+    "orderStatus": {
+      "pending": "Pendiente",
+      "paid": "Pagada",
+      "confirmed": "Confirmada",
+      "cancelled": "Cancelada",
+      "refunded": "Reembolsada"
+    }
   },
   "checkoutCancel": {
     "title": "Pago cancelado",
@@ -45,6 +55,14 @@
     "selectOption": "Selecciona tu opción",
     "chooseDateTime": "Elige fecha y hora",
     "selectTimeSlot": "Selecciona un horario",
+    "selectTierFirst": "Primero selecciona una opción de precio",
+    "selectSlotFirst": "Selecciona un horario para habilitar la cantidad",
+    "noCompatibleSlots": "No hay horarios compatibles con esta opción de precio.",
+    "locationLabel": "Ubicación",
+    "locationPending": "La ubicación se confirmará más adelante",
+    "allowedRange": "Rango permitido: {min} a {max}",
+    "quantityAdjusted": "La cantidad se ajustó de {prev} a {next} (permitido: {min}-{max}).",
+    "tierSlotIncompatible": "Esta opción de precio no coincide con el horario seleccionado.",
     "spot": "lugar",
     "spots": "lugares",
     "attendees": "Número de asistentes"
@@ -53,7 +71,11 @@
     "noAddons": "No hay complementos disponibles para esta experiencia.",
     "canContinue": "Puedes continuar al siguiente paso.",
     "enhance": "Mejora tu experiencia con complementos opcionales.",
-    "required": "Requerido"
+    "required": "Requerido",
+    "unsupported": "No soportado",
+    "unsupportedHint": "Este complemento no se puede comprar en línea con este tipo de precio.",
+    "perPerson": "Cobro por persona",
+    "perReservation": "Cobro por reserva"
   },
   "customerInfo": {
     "intro": "Usaremos estos datos para enviar tu confirmación de pedido y tickets.",
@@ -103,6 +125,10 @@
     "experienceNotFound": "Esta experiencia ya no está disponible. Explora otras opciones.",
     "tierNotFound": "La opción de precio seleccionada ya no está disponible.",
     "slotNotFound": "El horario seleccionado ya no está disponible. Elige otro.",
+    "constraintInvalid": "Esta experiencia tiene una configuración inválida de cantidad. Contacta al soporte.",
+    "tierSlotIncompatible": "La opción de precio seleccionada no es compatible con este horario.",
+    "slotRequiredAssisted": "Se requiere un horario para esta reserva agendada.",
+    "addonPriceTypeUnsupported": "Un complemento seleccionado no está disponible para checkout directo.",
     "network": "Ocurrió un error de conexión. Verifica tu internet e intenta de nuevo.",
     "internal": "Algo salió mal de nuestro lado. Intenta de nuevo en unos momentos."
   }

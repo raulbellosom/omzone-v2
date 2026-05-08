@@ -8,7 +8,6 @@ import {
   ShoppingBag,
   CheckCircle2,
   ExternalLink,
-  AlertTriangle,
   Mail,
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -193,7 +192,6 @@ export default function ReviewConfirmStep({
     experience,
     pricingTier,
     slot,
-    slotSkipped,
     quantity,
     selectedAddonIds,
     paymentMethod,
@@ -255,12 +253,6 @@ export default function ReviewConfirmStep({
                   : t("admin.assistedSale.review.noSelection")
               }
             />
-            {slotSkipped && (
-              <div className="flex items-start gap-2 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-xs text-amber-700">
-                <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
-                <span>{t("admin.assistedSale.review.slotSkippedWarning")}</span>
-              </div>
-            )}
           </>
         )}
         <ReviewRow

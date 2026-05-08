@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
-    "node-appwrite": "^16.0.0"
+    "node-appwrite": "^16.0.0",
+    "qrcode": "^1.5.4"
   }
 }

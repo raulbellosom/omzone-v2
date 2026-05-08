@@ -111,14 +111,44 @@ function buildDocPermissions(userId) {
   ];
 }
 
-function buildTicketSnapshot(experience, slot, pass, userPass) {
+function buildTicketSnapshot(
+  experience,
+  slot,
+  pass,
+  userPass,
+  locationData,
+  roomData,
+) {
+  let slotTime = null;
+  if (slot.startDatetime) {
+    try {
+      const d = new Date(slot.startDatetime);
+      slotTime = d.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+        timeZone: slot.timezone || "UTC",
+      });
+    } catch {
+      /* leave null */
+    }
+  }
+
   return JSON.stringify({
     snapshotVersion: SNAPSHOT_VERSION,
     experienceName: experience.name || null,
     experienceType: experience.type || null,
+    // Canonical date/time keys used by UI
+    slotStartDatetime: slot.startDatetime || null,
+    slotTime,
+    // Legacy keys kept for backward compat
     slotDate: slot.startDatetime || null,
     slotEndDate: slot.endDatetime || null,
     timezone: slot.timezone || null,
+    // Location
+    locationName: locationData?.name || null,
+    locationAddress: locationData?.address || null,
+    roomName: roomData?.name || null,
     passName: pass.name || null,
     passId: pass.$id,
     totalCredits: userPass.totalCredits,
@@ -158,6 +188,9 @@ export default async ({ req, res, log, error }) => {
   const COL_TICKETS = process.env.APPWRITE_COLLECTION_TICKETS || "tickets";
   const COL_BOOKINGS = process.env.APPWRITE_COLLECTION_BOOKINGS || "bookings";
   const COL_SLOTS = process.env.APPWRITE_COLLECTION_SLOTS || "slots";
+  const COL_LOCATIONS =
+    process.env.APPWRITE_COLLECTION_LOCATIONS || "locations";
+  const COL_ROOMS = process.env.APPWRITE_COLLECTION_ROOMS || "rooms";
   const COL_EXPERIENCES =
     process.env.APPWRITE_COLLECTION_EXPERIENCES || "experiences";
 
@@ -413,11 +446,34 @@ export default async ({ req, res, log, error }) => {
 
     // 1. Generate ticket
     const ticketCode = generateTicketCode();
+
+    // Fetch location data if slot has locationId
+    let locationData = null;
+    if (slot.locationId) {
+      try {
+        locationData = await db.getDocument(DB, COL_LOCATIONS, slot.locationId);
+      } catch (err) {
+        log(`WARN: Location ${slot.locationId} not found: ${err.message}`);
+      }
+    }
+
+    // Fetch room data if slot has roomId
+    let roomData = null;
+    if (slot.roomId) {
+      try {
+        roomData = await db.getDocument(DB, COL_ROOMS, slot.roomId);
+      } catch (err) {
+        log(`WARN: Room ${slot.roomId} not found: ${err.message}`);
+      }
+    }
+
     const ticketSnapshot = buildTicketSnapshot(
       experience,
       slot,
       pass,
       userPass,
+      locationData,
+      roomData,
     );
 
     const docPerms = buildDocPermissions(userPass.userId);

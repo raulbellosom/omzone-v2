@@ -42,8 +42,64 @@
  */
 
 import { Client, Databases, Query, Users } from "node-appwrite";
+import QRCode from "qrcode";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function normalizeLanguage(value) {
+  if (typeof value !== "string") return null;
+  const normalized = value.trim().toLowerCase();
+  return normalized.startsWith("es")
+    ? "es"
+    : normalized.startsWith("en")
+      ? "en"
+      : null;
+}
+
+function extractLanguageFromSnapshot(snapshotJson) {
+  if (!snapshotJson) return null;
+  try {
+    const snapshot = JSON.parse(snapshotJson);
+    return normalizeLanguage(
+      snapshot.customerLanguage || snapshot.language || snapshot.locale,
+    );
+  } catch {
+    return null;
+  }
+}
+
+function buildQrContentId(text) {
+  const suffix =
+    String(text || "ticket")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "ticket";
+  return `ticket-qr-${suffix}@omzone`;
+}
+
+/** Build an inline PNG attachment so email clients can render the QR via cid:. */
+async function buildInlineQrAttachment(text) {
+  const contentId = buildQrContentId(text);
+  const pngBase64 = (
+    await QRCode.toBuffer(text, {
+      type: "png",
+      width: 220,
+      margin: 2,
+    })
+  ).toString("base64");
+
+  return {
+    qrImageSrc: `cid:${contentId}`,
+    attachments: [
+      {
+        filename: `${text}.png`,
+        content: pngBase64,
+        contentType: "image/png",
+        contentId,
+      },
+    ],
+  };
+}
 
 function initClient(req) {
   let endpoint = process.env.APPWRITE_FUNCTION_API_ENDPOINT;
@@ -103,17 +159,34 @@ function formatDatetime(iso) {
 
 // ─── Email senders ────────────────────────────────────────────────────────────
 
-async function sendViaResend({ to, from, subject, html, log }) {
+async function sendViaResend({
+  to,
+  from,
+  subject,
+  html,
+  attachments = [],
+  idempotencyKey,
+  log,
+}) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) throw new Error("RESEND_API_KEY is not configured");
+
+  const payload = {
+    from,
+    to: [to],
+    subject,
+    html,
+  };
+  if (attachments.length > 0) payload.attachments = attachments;
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
+      ...(idempotencyKey ? { "Idempotency-Key": idempotencyKey } : {}),
     },
-    body: JSON.stringify({ from, to: [to], subject, html }),
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
@@ -144,12 +217,73 @@ async function sendViaSmtp({ to, from, subject, html, log }) {
   );
 }
 
-async function sendEmail({ to, from, subject, html, log }) {
+async function sendEmail({
+  to,
+  from,
+  subject,
+  html,
+  attachments = [],
+  idempotencyKey,
+  log,
+}) {
   const provider = (process.env.EMAIL_PROVIDER || "resend").toLowerCase();
   if (provider === "resend")
-    return sendViaResend({ to, from, subject, html, log });
+    return sendViaResend({
+      to,
+      from,
+      subject,
+      html,
+      attachments,
+      idempotencyKey,
+      log,
+    });
   if (provider === "smtp") return sendViaSmtp({ to, from, subject, html, log });
   throw new Error(`Unknown EMAIL_PROVIDER: ${provider}`);
+}
+
+async function resolveOrderLanguage({
+  db,
+  databaseId,
+  profilesCollection,
+  order,
+}) {
+  const direct = normalizeLanguage(order.customerLanguage || order.language);
+  if (direct) return direct;
+
+  const snapshotLanguage = extractLanguageFromSnapshot(order.snapshot);
+  if (snapshotLanguage) return snapshotLanguage;
+
+  if (!order.userId) return "en";
+
+  try {
+    const profile = await db.getDocument(
+      databaseId,
+      profilesCollection,
+      order.userId,
+    );
+    const profileLanguage = normalizeLanguage(
+      profile.language || profile.locale,
+    );
+    if (profileLanguage) return profileLanguage;
+  } catch {
+    try {
+      const profilesRes = await db.listDocuments(
+        databaseId,
+        profilesCollection,
+        [Query.equal("userId", order.userId), Query.limit(1)],
+      );
+      if (profilesRes.documents.length > 0) {
+        const profileLanguage = normalizeLanguage(
+          profilesRes.documents[0].language || profilesRes.documents[0].locale,
+        );
+        if (profileLanguage) return profileLanguage;
+      }
+    } catch {
+      // No profile — default EN
+    }
+  }
+
+  return "en";
 }
 
 // ─── Main handler ─────────────────────────────────────────────────────────────
@@ -178,10 +312,30 @@ export default async ({ req, res, log, error }) => {
     "notification_templates";
   const COL_USER_PROFILES =
     process.env.APPWRITE_COLLECTION_USER_PROFILES || "user_profiles";
+  const COL_LOCATIONS =
+    process.env.APPWRITE_COLLECTION_LOCATIONS || "locations";
+  const executionId = req.headers["x-appwrite-execution-id"] || "unknown";
+  const trigger = req.headers["x-appwrite-trigger"] || "http";
+  const callerUserId = req.headers["x-appwrite-user-id"] || null;
 
   try {
     // ── 1. Parse input ──────────────────────────────────────────────────────
-    const body = JSON.parse(req.body || "{}");
+    let body;
+    try {
+      body = JSON.parse(req.body || "{}");
+    } catch {
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CONFIRM_INVALID_JSON",
+            message: "Request body must be valid JSON",
+          },
+        },
+        400,
+      );
+    }
+
     const { orderId } = body;
 
     if (!orderId || typeof orderId !== "string") {
@@ -195,6 +349,30 @@ export default async ({ req, res, log, error }) => {
         },
         400,
       );
+    }
+
+    log(
+      `send-confirmation invoked for order ${orderId} ` +
+        `(execution: ${executionId}, trigger: ${trigger}, caller: ${callerUserId || "server"})`,
+    );
+
+    if (callerUserId) {
+      const users = new Users(client);
+      const caller = await users.get(callerUserId);
+      const labels = caller.labels || [];
+
+      if (!labels.includes("admin") && !labels.includes("root")) {
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CONFIRM_UNAUTHORIZED",
+              message: "Insufficient permissions",
+            },
+          },
+          403,
+        );
+      }
     }
 
     // ── 2. Fetch order ──────────────────────────────────────────────────────
@@ -251,21 +429,27 @@ export default async ({ req, res, log, error }) => {
     ]);
     const tickets = ticketsRes.documents;
 
-    // ── 6. Determine user language ──────────────────────────────────────────
-    let language = "en";
-    if (order.userId) {
+    // ── 5a. Generate QR code from first ticket ──────────────────────────────
+    let qrDataUrl = "";
+    let qrAttachments = [];
+    if (tickets.length > 0 && tickets[0].ticketCode) {
       try {
-        const profilesRes = await db.listDocuments(DB, COL_USER_PROFILES, [
-          Query.equal("userId", order.userId),
-          Query.limit(1),
-        ]);
-        if (profilesRes.documents.length > 0) {
-          language = profilesRes.documents[0].language || "en";
-        }
-      } catch {
-        // No profile or collection issue — default EN
+        const qrAsset = await buildInlineQrAttachment(tickets[0].ticketCode);
+        qrDataUrl = qrAsset.qrImageSrc;
+        qrAttachments = qrAsset.attachments;
+      } catch (qrErr) {
+        log(`WARN: QR generation failed: ${qrErr.message}`);
       }
     }
+    // TODO: multi-QR pending decision — currently only first ticket QR is embedded
+
+    // ── 6. Determine user language ──────────────────────────────────────────
+    const language = await resolveOrderLanguage({
+      db,
+      databaseId: DB,
+      profilesCollection: COL_USER_PROFILES,
+      order,
+    });
 
     const useSpanish = language.startsWith("es");
 
@@ -317,6 +501,8 @@ export default async ({ req, res, log, error }) => {
     // Extract experience names and slot dates from order snapshot or items
     const experienceNames = [];
     const slotDates = [];
+    const locationNames = [];
+    let firstSlotId = null;
 
     for (const item of items) {
       try {
@@ -324,6 +510,23 @@ export default async ({ req, res, log, error }) => {
         if (snap.experienceName) experienceNames.push(snap.experienceName);
         if (snap.slotStartDatetime)
           slotDates.push(formatDatetime(snap.slotStartDatetime));
+        if (snap.locationName) locationNames.push(snap.locationName);
+        if (!firstSlotId && snap.slotId) firstSlotId = snap.slotId;
+        if (!firstSlotId && snap.locationId) {
+          // Try to fetch location by ID from snapshot
+          try {
+            const locDoc = await db.getDocument(
+              DB,
+              COL_LOCATIONS,
+              snap.locationId,
+            );
+            if (locDoc.name && !locationNames.includes(locDoc.name)) {
+              locationNames.push(locDoc.name);
+            }
+          } catch {
+            /* location fetch failed — non-critical */
+          }
+        }
       } catch {
         // Snapshot parse failed — skip
       }
@@ -351,9 +554,14 @@ export default async ({ req, res, log, error }) => {
       experienceName: experienceNames.join(", ") || "—",
       date: slotDates.length > 0 ? slotDates[0] : "",
       time: "",
+      location: locationNames.length > 0 ? locationNames[0] : "",
       ticketCodes: ticketCodes || "—",
+      ticketCode: tickets.length > 0 ? tickets[0].ticketCode : "—",
       totalAmount: formatCurrency(order.totalAmount, order.currency || "MXN"),
       currency: order.currency || "MXN",
+      qrDataUrl,
+      qrImageSrc: qrDataUrl,
+      portalUrl: process.env.FRONTEND_URL || "https://omzone.com",
     };
 
     const renderedSubject = renderTemplate(subject, vars);
@@ -368,21 +576,31 @@ export default async ({ req, res, log, error }) => {
         from: emailFrom,
         subject: renderedSubject,
         html: renderedBody,
+        attachments: qrAttachments,
+        idempotencyKey: `order-confirmation-${orderId}`,
         log,
       });
 
-      log(`Confirmation email sent for order ${orderId} to ${customerEmail}`);
+      log(
+        `Confirmation email sent for order ${orderId} to ${customerEmail} ` +
+          `(execution: ${executionId})`,
+      );
       return res.json({ ok: true, data: { sent: true } });
     } catch (sendErr) {
       // Email failure must NOT block the transactional flow
-      error(`Email send failed for order ${orderId}: ${sendErr.message}`);
+      error(
+        `Email send failed for order ${orderId} ` +
+          `(execution: ${executionId}): ${sendErr.message}`,
+      );
       return res.json({
         ok: true,
         data: { sent: false, reason: sendErr.message },
       });
     }
   } catch (err) {
-    error(`send-confirmation failed: ${err.message}`);
+    error(
+      `send-confirmation failed (execution: ${executionId}): ${err.message}`,
+    );
     return res.json(
       {
         ok: false,

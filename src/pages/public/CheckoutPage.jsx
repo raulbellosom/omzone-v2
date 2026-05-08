@@ -83,9 +83,15 @@ function CheckoutErrorBanner({ error, t, onDismiss }) {
     ERR_CHECKOUT_MISSING_NAME: "checkoutErrors.missingName",
     ERR_CHECKOUT_INVALID_EMAIL: "checkoutErrors.invalidEmail",
     ERR_CHECKOUT_NO_CAPACITY: "checkoutErrors.noCapacity",
+    ERR_CHECKOUT_SLOT_CAPACITY: "checkoutErrors.noCapacity",
     ERR_CHECKOUT_EXPERIENCE_NOT_FOUND: "checkoutErrors.experienceNotFound",
     ERR_CHECKOUT_TIER_NOT_FOUND: "checkoutErrors.tierNotFound",
     ERR_CHECKOUT_SLOT_NOT_FOUND: "checkoutErrors.slotNotFound",
+    ERR_CHECKOUT_CONSTRAINT_INVALID: "checkoutErrors.constraintInvalid",
+    ERR_CHECKOUT_TIER_SLOT_INCOMPATIBLE: "checkoutErrors.tierSlotIncompatible",
+    ERR_CHECKOUT_SLOT_REQUIRED_ASSISTED: "checkoutErrors.slotRequiredAssisted",
+    ERR_CHECKOUT_ADDON_PRICE_TYPE_UNSUPPORTED:
+      "checkoutErrors.addonPriceTypeUnsupported",
     ERR_NETWORK: "checkoutErrors.network",
     ERR_INTERNAL: "checkoutErrors.internal",
   };
@@ -143,6 +149,9 @@ export default function CheckoutPage() {
     selectedAddons,
     quantity,
     setQuantity,
+    quantityNotice,
+    effectiveConstraints,
+    tierSlotCompatibility,
     customerName,
     setCustomerName,
     customerEmail,
@@ -181,13 +190,15 @@ export default function CheckoutPage() {
       setSelectedSlotId={setSelectedSlotId}
       quantity={quantity}
       setQuantity={setQuantity}
+      quantityNotice={quantityNotice}
+      effectiveConstraints={effectiveConstraints}
+      tierSlotCompatibility={tierSlotCompatibility}
     />,
     <AddonsStep
       key="addons"
       enrichedAddons={enrichedAddons}
       selectedAddonIds={selectedAddonIds}
       toggleAddon={toggleAddon}
-      quantity={quantity}
     />,
     <CustomerInfoStep
       key="customer"

@@ -33,7 +33,17 @@
     "dateLabel": "Date",
     "tickets": "Your Tickets",
     "total": "Total",
-    "status": "Status"
+    "status": "Status",
+    "viewTickets": "View My Tickets",
+    "downloadPass": "Save Pass",
+    "experienceFallback": "Experience",
+    "orderStatus": {
+      "pending": "Pending",
+      "paid": "Paid",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "refunded": "Refunded"
+    }
   },
   "checkoutCancel": {
     "title": "Payment cancelled",
@@ -45,6 +55,14 @@
     "selectOption": "Select your option",
     "chooseDateTime": "Choose a date & time",
     "selectTimeSlot": "Select a time slot",
+    "selectTierFirst": "Select a pricing option first",
+    "selectSlotFirst": "Select a slot to enable quantity",
+    "noCompatibleSlots": "No compatible slots available for this pricing option.",
+    "locationLabel": "Location",
+    "locationPending": "Location details will be confirmed later",
+    "allowedRange": "Allowed range: {min} to {max}",
+    "quantityAdjusted": "Quantity adjusted from {prev} to {next} (allowed: {min}-{max}).",
+    "tierSlotIncompatible": "This pricing option does not match the selected slot.",
     "spot": "spot",
     "spots": "spots",
     "attendees": "Number of attendees"
@@ -53,7 +71,11 @@
     "noAddons": "No add-ons available for this experience.",
     "canContinue": "You can continue to the next step.",
     "enhance": "Enhance your experience with optional add-ons.",
-    "required": "Required"
+    "required": "Required",
+    "unsupported": "Unsupported",
+    "unsupportedHint": "This add-on cannot be purchased online for this pricing type.",
+    "perPerson": "Charged per person",
+    "perReservation": "Charged once per reservation"
   },
   "customerInfo": {
     "intro": "We'll use this to send your order confirmation and tickets.",
@@ -103,6 +125,10 @@
     "experienceNotFound": "This experience is no longer available. Please explore other options.",
     "tierNotFound": "The selected pricing option is no longer available.",
     "slotNotFound": "The selected time slot is no longer available. Please choose another.",
+    "constraintInvalid": "This experience has an invalid quantity configuration. Please contact support.",
+    "tierSlotIncompatible": "The selected pricing option is not compatible with this time slot.",
+    "slotRequiredAssisted": "A time slot is required for this scheduled booking.",
+    "addonPriceTypeUnsupported": "One selected add-on is not available for direct checkout.",
     "network": "A connection error occurred. Please check your internet and try again.",
     "internal": "Something went wrong on our end. Please try again in a few moments."
   }

@@ -41,7 +41,7 @@ function StatCard({ icon: Icon, label, value, to, color = "sage" }) {
 
 function UpcomingCard({ ticket }) {
   const s = ticket._snapshot || {};
-  const date = s.slotStartDatetime || s.editionDate;
+  const date = s.slotStartDatetime || s.slotDate || s.editionDate;
   const formatted = date
     ? new Date(date).toLocaleDateString("es-MX", {
         weekday: "short",

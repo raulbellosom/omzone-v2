@@ -112,7 +112,30 @@ function safeParse(str) {
 /**
  * Build the immutable ticket snapshot from order and item data.
  */
-function buildTicketSnapshot(order, item, itemSnapshotData, slotData) {
+function buildTicketSnapshot(
+  order,
+  item,
+  itemSnapshotData,
+  slotData,
+  locationData,
+  roomData,
+) {
+  // Derive a human-readable time string from the slot's startDatetime
+  let slotTime = null;
+  if (slotData?.startDatetime) {
+    try {
+      const d = new Date(slotData.startDatetime);
+      slotTime = d.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+        timeZone: slotData.timezone || "UTC",
+      });
+    } catch {
+      /* leave null */
+    }
+  }
+
   return JSON.stringify({
     snapshotVersion: SNAPSHOT_VERSION,
     orderNumber: order.orderNumber,
@@ -121,9 +144,17 @@ function buildTicketSnapshot(order, item, itemSnapshotData, slotData) {
     editionName: itemSnapshotData?.editionName || null,
     tierName:
       itemSnapshotData?.tierName || itemSnapshotData?.pricingTierName || null,
+    // Canonical date/time keys used by UI
+    slotStartDatetime: slotData?.startDatetime || null,
+    slotTime,
+    // Legacy keys kept for backward compat
     slotDate: slotData?.startDatetime || null,
     slotEndDate: slotData?.endDatetime || null,
     timezone: slotData?.timezone || null,
+    // Location
+    locationName: locationData?.name || null,
+    locationAddress: locationData?.address || null,
+    roomName: roomData?.name || null,
     unitPrice: item.unitPrice,
     currency: item.currency || order.currency,
     participantName: order.customerName || null,
@@ -159,6 +190,9 @@ export default async ({ req, res, log, error }) => {
   const COL_TICKETS = process.env.APPWRITE_COLLECTION_TICKETS || "tickets";
   const COL_BOOKINGS = process.env.APPWRITE_COLLECTION_BOOKINGS || "bookings";
   const COL_SLOTS = process.env.APPWRITE_COLLECTION_SLOTS || "slots";
+  const COL_LOCATIONS =
+    process.env.APPWRITE_COLLECTION_LOCATIONS || "locations";
+  const COL_ROOMS = process.env.APPWRITE_COLLECTION_ROOMS || "rooms";
 
   try {
     // ── Parse input ──────────────────────────────────────────────────────────
@@ -280,6 +314,8 @@ export default async ({ req, res, log, error }) => {
     const createdTickets = [];
     const createdBookings = [];
     const slotCache = new Map();
+    const locationCache = new Map();
+    const roomCache = new Map();
 
     for (const item of orderItems.documents) {
       // Only generate tickets for ticketable item types
@@ -308,6 +344,42 @@ export default async ({ req, res, log, error }) => {
         }
       }
 
+      // Fetch location data if slot has locationId (cached)
+      let locationData = null;
+      if (slotData?.locationId) {
+        if (locationCache.has(slotData.locationId)) {
+          locationData = locationCache.get(slotData.locationId);
+        } else {
+          try {
+            locationData = await db.getDocument(
+              DB,
+              COL_LOCATIONS,
+              slotData.locationId,
+            );
+            locationCache.set(slotData.locationId, locationData);
+          } catch (err) {
+            log(
+              `WARN: Location ${slotData.locationId} not found: ${err.message}`,
+            );
+          }
+        }
+      }
+
+      // Fetch room data if slot has roomId (cached)
+      let roomData = null;
+      if (slotData?.roomId) {
+        if (roomCache.has(slotData.roomId)) {
+          roomData = roomCache.get(slotData.roomId);
+        } else {
+          try {
+            roomData = await db.getDocument(DB, COL_ROOMS, slotData.roomId);
+            roomCache.set(slotData.roomId, roomData);
+          } catch (err) {
+            log(`WARN: Room ${slotData.roomId} not found: ${err.message}`);
+          }
+        }
+      }
+
       // Derive experienceId from item snapshot or slot
       const experienceId =
         itemSnapshotData?.experienceId ||
@@ -324,6 +396,8 @@ export default async ({ req, res, log, error }) => {
           item,
           itemSnapshotData,
           slotData,
+          locationData,
+          roomData,
         );
 
         const ticket = await db.createDocument(
@@ -398,22 +472,76 @@ export default async ({ req, res, log, error }) => {
       `Order ${orderId}: generated ${createdTickets.length} ticket(s), ${createdBookings.length} booking(s)`,
     );
 
-    // ── Fire-and-forget: trigger confirmation email ──────────────────────────
+    // ── Trigger confirmation email synchronously for reliable diagnostics ────
     try {
       const functions = new Functions(client);
       const FUNC_SEND_CONFIRMATION =
         process.env.APPWRITE_FUNCTION_SEND_CONFIRMATION || "send-confirmation";
-      await functions.createExecution(
+      const emailExecution = await functions.createExecution(
         FUNC_SEND_CONFIRMATION,
         JSON.stringify({ orderId }),
-        true, // async — non-blocking
+        false,
+        "/",
+        "POST",
       );
-      log(`Triggered send-confirmation for order ${orderId}`);
+      log(
+        `Triggered send-confirmation for order ${orderId} ` +
+          `(function: ${FUNC_SEND_CONFIRMATION}, execution: ${emailExecution.$id}, ` +
+          `status: ${emailExecution.status})`,
+      );
     } catch (emailErr) {
       // Never let email failure block ticket delivery
       error(
         `send-confirmation trigger failed (non-blocking): ${emailErr.message}`,
       );
+    }
+
+    // ── Notify pass/package purchasers synchronously for reliable diagnostics ─
+    const passItems = orderItems.documents.filter(
+      (item) => item.itemType === "pass" || item.itemType === "package",
+    );
+    if (passItems.length > 0 && order.customerEmail) {
+      try {
+        const functions = new Functions(client);
+        const FUNC_SEND_NOTIFICATION =
+          process.env.APPWRITE_FUNCTION_SEND_NOTIFICATION ||
+          "send-notification";
+        const snap = (() => {
+          try {
+            return JSON.parse(passItems[0].itemSnapshot || "{}");
+          } catch {
+            return {};
+          }
+        })();
+        const notificationExecution = await functions.createExecution(
+          FUNC_SEND_NOTIFICATION,
+          JSON.stringify({
+            templateKey: "pass-purchased",
+            orderId,
+            userId: order.userId || null,
+            recipientEmail: order.customerEmail,
+            recipientName: order.customerName || "",
+            vars: {
+              orderNumber: order.orderNumber || orderId,
+              customerName: order.customerName || "",
+              passName: snap.name || snap.experienceName || "—",
+              passCredits: String(snap.credits ?? snap.sessions ?? "—"),
+            },
+          }),
+          false,
+          "/",
+          "POST",
+        );
+        log(
+          `Triggered pass-purchased notification for order ${orderId} ` +
+            `(function: ${FUNC_SEND_NOTIFICATION}, execution: ${notificationExecution.$id}, ` +
+            `status: ${notificationExecution.status})`,
+        );
+      } catch (passErr) {
+        error(
+          `pass-purchased notification failed (non-blocking): ${passErr.message}`,
+        );
+      }
     }
 
     return res.json({

@@ -22,10 +22,10 @@ const EMPTY_WIZARD = {
 
   // Step 4 — Slot (conditional)
   slot: null,
-  slotSkipped: false,
 
   // Step 5 — Addons
   selectedAddonIds: [],
+  hasUnsupportedRequiredAddons: false,
 
   // Step 6 — Quantity
   quantity: 1,

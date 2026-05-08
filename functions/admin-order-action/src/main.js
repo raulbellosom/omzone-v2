@@ -1,10 +1,4 @@
-import {
-  Client,
-  Databases,
-  Functions,
-  ID,
-  Users,
-} from "node-appwrite";
+import { Client, Databases, Functions, ID, Users } from "node-appwrite";
 
 function initClient(req) {
   let endpoint = process.env.APPWRITE_FUNCTION_API_ENDPOINT;
@@ -83,6 +77,8 @@ export default async ({ req, res, log, error }) => {
     process.env.APPWRITE_FUNCTION_GENERATE_TICKET || "generate-ticket";
   const FUNC_SEND_CONFIRMATION =
     process.env.APPWRITE_FUNCTION_SEND_CONFIRMATION || "send-confirmation";
+  const FUNC_SEND_NOTIFICATION =
+    process.env.APPWRITE_FUNCTION_SEND_NOTIFICATION || "send-notification";
 
   try {
     await assertAdmin(users, req.headers["x-appwrite-user-id"]);
@@ -182,6 +178,37 @@ export default async ({ req, res, log, error }) => {
           order.paymentStatus === "succeeded" ? order.paymentStatus : "failed",
         cancelledAt: new Date().toISOString(),
       });
+
+      // Notify customer
+      if (order.customerEmail) {
+        const experienceName = (() => {
+          try {
+            return JSON.parse(order.snapshot || "{}").experienceName || "";
+          } catch {
+            return "";
+          }
+        })();
+        await trigger(
+          functions,
+          FUNC_SEND_NOTIFICATION,
+          {
+            templateKey: "order-cancelled",
+            orderId,
+            userId: order.userId || null,
+            recipientEmail: order.customerEmail,
+            recipientName: order.customerName || "",
+            vars: {
+              orderNumber: order.orderNumber || orderId,
+              customerName: order.customerName || "",
+              experienceName: experienceName || "—",
+              adminNote: body.note || "",
+            },
+          },
+          log,
+          error,
+        );
+      }
+
       return res.json({ ok: true, data: { order: updated } });
     }
 
@@ -190,6 +217,37 @@ export default async ({ req, res, log, error }) => {
         status: "refunded",
         paymentStatus: "refunded",
       });
+
+      // Notify customer
+      if (order.customerEmail) {
+        const experienceName = (() => {
+          try {
+            return JSON.parse(order.snapshot || "{}").experienceName || "";
+          } catch {
+            return "";
+          }
+        })();
+        await trigger(
+          functions,
+          FUNC_SEND_NOTIFICATION,
+          {
+            templateKey: "order-refunded",
+            orderId,
+            userId: order.userId || null,
+            recipientEmail: order.customerEmail,
+            recipientName: order.customerName || "",
+            vars: {
+              orderNumber: order.orderNumber || orderId,
+              customerName: order.customerName || "",
+              experienceName: experienceName || "—",
+              adminNote: body.note || "",
+            },
+          },
+          log,
+          error,
+        );
+      }
+
       return res.json({ ok: true, data: { order: updated } });
     }
 

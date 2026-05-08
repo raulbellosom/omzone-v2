@@ -1,3 +1,4 @@
+import { MapPin } from "lucide-react";
 import { formatPrice } from "@/components/public/checkout/utils";
 import { cn } from "@/lib/utils";
 import { useLanguage, localizedField } from "@/hooks/useLanguage";
@@ -9,6 +10,35 @@ import {
   SelectItem,
 } from "@/components/common/select";
 
+function formatSlotLabel(slot, language, t) {
+  const start = new Date(slot.startDatetime);
+  const end = new Date(slot.endDatetime);
+  const available = Math.max(0, Number(slot.capacity || 0) - Number(slot.bookedCount || 0));
+  const locale = language === "es" ? "es-MX" : "en-US";
+  const datePart = start.toLocaleDateString(locale, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+  const startPart = start.toLocaleTimeString(locale, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+  const endPart = end.toLocaleTimeString(locale, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+  return `${datePart} · ${startPart} - ${endPart} (${available} ${
+    available === 1 ? t("selection.spot") : t("selection.spots")
+  })`;
+}
+
+function formatSlotLocation(slot, t) {
+  const parts = [slot.locationName, slot.roomName, slot.locationAddress].filter(Boolean);
+  if (!parts.length) return t("selection.locationPending");
+  return parts.join(" · ");
+}
+
 export default function SelectionStep({
   experience,
   pricingTiers,
@@ -19,14 +49,21 @@ export default function SelectionStep({
   setSelectedSlotId,
   quantity,
   setQuantity,
+  effectiveConstraints,
+  quantityNotice,
+  tierSlotCompatibility,
 }) {
   const { t, language } = useLanguage();
-  const minQty = experience.minQuantity || 1;
-  const maxQty = experience.maxQuantity || 20;
+
+  const canPickSlot = Boolean(selectedTierId);
+  const requiresSchedule = Boolean(experience.requiresSchedule);
+  const canPickQuantity = !requiresSchedule || Boolean(selectedSlotId);
+  const minQty = effectiveConstraints?.effectiveMin ?? 1;
+  const maxQty = effectiveConstraints?.effectiveMax ?? 1;
+  const showRange = Number.isFinite(minQty) && Number.isFinite(maxQty);
 
   return (
     <div className="space-y-6">
-      {/* Experience summary */}
       <div className="rounded-xl border border-warm-gray-dark/20 bg-white p-4 flex gap-4 items-center">
         <div className="flex-shrink-0 w-16 h-16 rounded-lg bg-warm-gray flex items-center justify-center text-2xl">
           🧘
@@ -41,7 +78,6 @@ export default function SelectionStep({
         </div>
       </div>
 
-      {/* Pricing tier selection */}
       <fieldset className="space-y-3">
         <legend className="text-sm font-semibold text-charcoal mb-2">
           {t("selection.selectOption")}
@@ -90,67 +126,63 @@ export default function SelectionStep({
         </div>
       </fieldset>
 
-      {/* Slot selection */}
-      {experience.requiresSchedule && slots.length > 0 && (
+      {requiresSchedule && (
         <fieldset className="space-y-2">
           <legend className="text-sm font-semibold text-charcoal mb-2">
             {t("selection.chooseDateTime")}
           </legend>
           <Select
             value={selectedSlotId || "__empty__"}
-            onValueChange={(v) => setSelectedSlotId(v === "__empty__" ? "" : v)}
+            onValueChange={(value) => setSelectedSlotId(value === "__empty__" ? "" : value)}
+            disabled={!canPickSlot}
           >
-            <SelectTrigger className="w-full h-12 cursor-pointer">
-              <SelectValue placeholder={t("selection.selectTimeSlot")} />
+            <SelectTrigger className="w-full h-12 cursor-pointer disabled:opacity-50">
+              <SelectValue
+                placeholder={
+                  canPickSlot
+                    ? t("selection.selectTimeSlot")
+                    : t("selection.selectTierFirst")
+                }
+              />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="__empty__">
-                {t("selection.selectTimeSlot")}
-              </SelectItem>
-              {slots.map((slot) => {
-                const start = new Date(slot.startDatetime);
-                const end = new Date(slot.endDatetime);
-                const available = slot.capacity - slot.bookedCount;
-                return (
-                  <SelectItem key={slot.$id} value={slot.$id}>
-                    {start.toLocaleDateString(
-                      language === "es" ? "es-MX" : "en-US",
-                      {
-                        weekday: "short",
-                        month: "short",
-                        day: "numeric",
-                      },
-                    )}{" "}
-                    ·{" "}
-                    {start.toLocaleTimeString(
-                      language === "es" ? "es-MX" : "en-US",
-                      {
-                        hour: "numeric",
-                        minute: "2-digit",
-                      },
-                    )}
-                    {" – "}
-                    {end.toLocaleTimeString(
-                      language === "es" ? "es-MX" : "en-US",
-                      {
-                        hour: "numeric",
-                        minute: "2-digit",
-                      },
-                    )}{" "}
-                    ({available}{" "}
-                    {available === 1
-                      ? t("selection.spot")
-                      : t("selection.spots")}{" "}
-                    left)
-                  </SelectItem>
-                );
-              })}
+              <SelectItem value="__empty__">{t("selection.selectTimeSlot")}</SelectItem>
+              {slots.map((slot) => (
+                <SelectItem key={slot.$id} value={slot.$id}>
+                  {formatSlotLabel(slot, language, t)}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
+          {canPickSlot && slots.length === 0 && (
+            <p className="text-xs text-amber-700">{t("selection.noCompatibleSlots")}</p>
+          )}
+          {selectedSlotId && (() => {
+            const selectedSlot = slots.find((slot) => slot.$id === selectedSlotId);
+            const locationParts = selectedSlot
+              ? [selectedSlot.locationName, selectedSlot.roomName].filter(Boolean)
+              : [];
+            const address = selectedSlot?.locationAddress;
+            if (!locationParts.length && !address) return null;
+            return (
+              <div className="flex items-start gap-2 mt-2 px-3 py-2.5 rounded-xl bg-sage/8 border border-sage/20 text-charcoal">
+                <MapPin className="h-4 w-4 text-sage mt-0.5 flex-shrink-0" />
+                <div className="min-w-0">
+                  {locationParts.length > 0 && (
+                    <p className="text-sm font-medium leading-snug">
+                      {locationParts.join(" · ")}
+                    </p>
+                  )}
+                  {address && (
+                    <p className="text-xs text-charcoal-muted mt-0.5 leading-snug">{address}</p>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
         </fieldset>
       )}
 
-      {/* Quantity selector */}
       {experience.allowQuantity && (
         <fieldset className="space-y-2">
           <legend className="text-sm font-semibold text-charcoal mb-2">
@@ -160,10 +192,10 @@ export default function SelectionStep({
             <button
               type="button"
               onClick={() => setQuantity(Math.max(minQty, quantity - 1))}
-              disabled={quantity <= minQty}
+              disabled={!canPickQuantity || quantity <= minQty}
               className="w-10 h-10 rounded-full border border-warm-gray-dark/20 bg-white flex items-center justify-center text-charcoal hover:bg-warm-gray disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
-              −
+              -
             </button>
             <span className="text-lg font-semibold text-charcoal w-8 text-center">
               {quantity}
@@ -171,12 +203,38 @@ export default function SelectionStep({
             <button
               type="button"
               onClick={() => setQuantity(Math.min(maxQty, quantity + 1))}
-              disabled={quantity >= maxQty}
+              disabled={!canPickQuantity || quantity >= maxQty}
               className="w-10 h-10 rounded-full border border-warm-gray-dark/20 bg-white flex items-center justify-center text-charcoal hover:bg-warm-gray disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               +
             </button>
           </div>
+          {!canPickQuantity && (
+            <p className="text-xs text-charcoal-subtle">
+              {t("selection.selectSlotFirst")}
+            </p>
+          )}
+          {canPickQuantity && showRange && (
+            <p className="text-xs text-charcoal-subtle">
+              {t("selection.allowedRange")
+                .replace("{min}", String(minQty))
+                .replace("{max}", String(maxQty))}
+            </p>
+          )}
+          {quantityNotice && (
+            <p className="text-xs text-amber-700">
+              {t("selection.quantityAdjusted")
+                .replace("{prev}", String(quantityNotice.prev))
+                .replace("{next}", String(quantityNotice.next))
+                .replace("{min}", String(quantityNotice.min))
+                .replace("{max}", String(quantityNotice.max))}
+            </p>
+          )}
+          {!tierSlotCompatibility.compatible && (
+            <p className="text-xs text-red-700">
+              {t("selection.tierSlotIncompatible")}
+            </p>
+          )}
         </fieldset>
       )}
     </div>

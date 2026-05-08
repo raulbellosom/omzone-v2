@@ -2,6 +2,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useUserOrderDetail } from "@/hooks/useUserOrderDetail";
 import { useArchive } from "@/hooks/useArchive";
 import { Badge } from "@/components/common/Badge";
+import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 import env from "@/config/env";
 import {
@@ -16,27 +17,27 @@ import {
   RotateCcw,
 } from "lucide-react";
 
-const ORDER_STATUS = {
-  pending: { label: "Pendiente", variant: "warning" },
-  paid: { label: "Pagada", variant: "success" },
-  confirmed: { label: "Confirmada", variant: "success" },
-  cancelled: { label: "Cancelada", variant: "danger" },
-  refunded: { label: "Reembolsada", variant: "warm" },
+const ORDER_STATUS_VARIANT = {
+  pending: "warning",
+  paid: "success",
+  confirmed: "success",
+  cancelled: "danger",
+  refunded: "warm",
 };
 
-const PAYMENT_STATUS = {
-  pending: { label: "Pendiente", variant: "warning" },
-  processing: { label: "Procesando", variant: "warm" },
-  succeeded: { label: "Pagado", variant: "success" },
-  failed: { label: "Fallido", variant: "danger" },
-  refunded: { label: "Reembolsado", variant: "warm" },
+const PAYMENT_STATUS_VARIANT = {
+  pending: "warning",
+  processing: "warm",
+  succeeded: "success",
+  failed: "danger",
+  refunded: "warm",
 };
 
-const TICKET_STATUS = {
-  valid: { label: "Activo", variant: "success" },
-  used: { label: "Usado", variant: "warm" },
-  cancelled: { label: "Cancelado", variant: "danger" },
-  expired: { label: "Expirado", variant: "warning" },
+const TICKET_STATUS_VARIANT = {
+  valid: "success",
+  used: "warm",
+  cancelled: "danger",
+  expired: "warning",
 };
 
 const ITEM_ICONS = {
@@ -145,7 +146,9 @@ function ItemRow({ item }) {
 }
 
 function TicketRow({ ticket }) {
-  const ts = TICKET_STATUS[ticket.status] || TICKET_STATUS.valid;
+  const { t } = useLanguage();
+  const tsVariant = TICKET_STATUS_VARIANT[ticket.status] || "success";
+  const tsLabel = t(`portal.tickets.status.${ticket.status}`) || ticket.status;
   const snapshot = parseSnapshot(ticket.ticketSnapshot);
 
   return (
@@ -162,8 +165,8 @@ function TicketRow({ ticket }) {
         </p>
         <p className="text-xs text-charcoal-muted">{ticket.ticketCode}</p>
       </div>
-      <Badge variant={ts.variant} className="flex-shrink-0">
-        {ts.label}
+      <Badge variant={tsVariant} className="flex-shrink-0">
+        {tsLabel}
       </Badge>
       <ChevronRight className="w-4 h-4 text-charcoal-muted/50 flex-shrink-0" />
     </Link>
@@ -171,14 +174,16 @@ function TicketRow({ ticket }) {
 }
 
 export default function PortalOrderDetailPage() {
+  const { t } = useLanguage();
   const { orderId } = useParams();
   const navigate = useNavigate();
   const { order, items, tickets, loading, error } = useUserOrderDetail(orderId);
 
-  const { archiveOwn, restoreOwn, loading: archiving } = useArchive(
-    env.collectionOrders,
-    () => navigate(ROUTES.PORTAL_ORDERS),
-  );
+  const {
+    archiveOwn,
+    restoreOwn,
+    loading: archiving,
+  } = useArchive(env.collectionOrders, () => navigate(ROUTES.PORTAL_ORDERS));
 
   if (loading) return <LoadingSkeleton />;
 
@@ -190,17 +195,21 @@ export default function PortalOrderDetailPage() {
           className="flex items-center gap-1.5 text-sm text-charcoal-muted hover:text-charcoal transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Mis Órdenes
+          {t("portal.orders.backLink")}
         </Link>
         <div className="bg-red-50 text-red-700 rounded-xl px-4 py-3 text-sm">
-          {error || "Orden no encontrada"}
+          {error || t("portal.orders.notFound")}
         </div>
       </div>
     );
   }
 
-  const os = ORDER_STATUS[order.status] || ORDER_STATUS.pending;
-  const ps = PAYMENT_STATUS[order.paymentStatus] || PAYMENT_STATUS.pending;
+  const osVariant = ORDER_STATUS_VARIANT[order.status] || "warning";
+  const psVariant = PAYMENT_STATUS_VARIANT[order.paymentStatus] || "warning";
+  const osLabel = t(`portal.orders.status.${order.status}`) || order.status;
+  const psLabel =
+    t(`portal.orders.paymentStatus.${order.paymentStatus}`) ||
+    order.paymentStatus;
 
   return (
     <div className="space-y-6">
@@ -210,7 +219,7 @@ export default function PortalOrderDetailPage() {
         className="flex items-center gap-1.5 text-sm text-charcoal-muted hover:text-charcoal transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        Mis Órdenes
+        {t("portal.orders.backLink")}
       </Link>
 
       {/* Order header */}
@@ -218,7 +227,7 @@ export default function PortalOrderDetailPage() {
         <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
           <div>
             <h1 className="font-display text-xl font-bold text-charcoal">
-              Orden #{order.orderNumber}
+              {t("portal.orders.orderNumberLabel")} #{order.orderNumber}
             </h1>
             <p className="text-sm text-charcoal-muted mt-0.5">
               {formatDate(order.$createdAt)}
@@ -226,12 +235,16 @@ export default function PortalOrderDetailPage() {
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-1.5">
-              <span className="text-xs text-charcoal-muted">Orden:</span>
-              <Badge variant={os.variant}>{os.label}</Badge>
+              <span className="text-xs text-charcoal-muted">
+                {t("portal.orders.statusLabel")}
+              </span>
+              <Badge variant={osVariant}>{osLabel}</Badge>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="text-xs text-charcoal-muted">Pago:</span>
-              <Badge variant={ps.variant}>{ps.label}</Badge>
+              <span className="text-xs text-charcoal-muted">
+                {t("portal.orders.paymentLabel")}
+              </span>
+              <Badge variant={psVariant}>{psLabel}</Badge>
             </div>
             <button
               onClick={() =>
@@ -241,17 +254,21 @@ export default function PortalOrderDetailPage() {
               }
               disabled={archiving}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-charcoal-muted border border-warm-gray-dark/20 hover:border-warm-gray-dark/40 hover:bg-warm-gray transition-colors disabled:opacity-40 cursor-pointer"
-              title={order.userArchivedAt ? "Restaurar orden" : "Archivar orden"}
+              title={
+                order.userArchivedAt
+                  ? t("portal.orders.restoreTitle")
+                  : t("portal.orders.archiveTitle")
+              }
             >
               {order.userArchivedAt ? (
                 <>
                   <RotateCcw className="h-3.5 w-3.5" />
-                  Restaurar
+                  {t("portal.orders.restoreLabel")}
                 </>
               ) : (
                 <>
                   <Archive className="h-3.5 w-3.5" />
-                  Archivar
+                  {t("portal.orders.archiveLabel")}
                 </>
               )}
             </button>
@@ -271,7 +288,7 @@ export default function PortalOrderDetailPage() {
         {/* Items */}
         <div className="border-t border-warm-gray-dark/10 pt-3">
           <h2 className="text-xs font-semibold text-charcoal-muted uppercase tracking-wider mb-2">
-            Items
+            {t("portal.orders.itemsHeading")}
           </h2>
           {items.length > 0 ? (
             <div>
@@ -281,7 +298,7 @@ export default function PortalOrderDetailPage() {
             </div>
           ) : (
             <p className="text-sm text-charcoal-muted py-2">
-              Sin detalles de items disponibles
+              {t("portal.orders.noItems")}
             </p>
           )}
         </div>
@@ -290,7 +307,9 @@ export default function PortalOrderDetailPage() {
         <div className="border-t border-warm-gray-dark/10 pt-3 mt-3 space-y-1.5">
           {order.subtotal != null && order.subtotal !== order.totalAmount && (
             <div className="flex justify-between text-sm">
-              <span className="text-charcoal-muted">Subtotal</span>
+              <span className="text-charcoal-muted">
+                {t("portal.orders.subtotalLabel")}
+              </span>
               <span className="text-charcoal">
                 {formatCurrency(order.subtotal, order.currency)}
               </span>
@@ -298,14 +317,18 @@ export default function PortalOrderDetailPage() {
           )}
           {order.taxAmount > 0 && (
             <div className="flex justify-between text-sm">
-              <span className="text-charcoal-muted">Impuestos</span>
+              <span className="text-charcoal-muted">
+                {t("portal.orders.taxLabel")}
+              </span>
               <span className="text-charcoal">
                 {formatCurrency(order.taxAmount, order.currency)}
               </span>
             </div>
           )}
           <div className="flex justify-between items-baseline pt-1">
-            <span className="text-sm font-medium text-charcoal">Total</span>
+            <span className="text-sm font-medium text-charcoal">
+              {t("portal.orders.totalLabel")}
+            </span>
             <span className="text-xl font-bold text-charcoal">
               {formatCurrency(order.totalAmount, order.currency)}
             </span>
@@ -317,7 +340,7 @@ export default function PortalOrderDetailPage() {
       {tickets.length > 0 && (
         <div className="bg-white rounded-2xl border border-warm-gray-dark/10 p-5">
           <h2 className="text-xs font-semibold text-charcoal-muted uppercase tracking-wider mb-2">
-            Tickets ({tickets.length})
+            {t("portal.orders.ticketsHeading", { count: tickets.length })}
           </h2>
           <div>
             {tickets.map((ticket) => (
@@ -331,11 +354,13 @@ export default function PortalOrderDetailPage() {
       {order.paidAt && (
         <div className="bg-white rounded-2xl border border-warm-gray-dark/10 p-5">
           <h2 className="text-xs font-semibold text-charcoal-muted uppercase tracking-wider mb-2">
-            Pago
+            {t("portal.orders.paymentHeading")}
           </h2>
           <div className="text-sm space-y-1">
             <div className="flex justify-between">
-              <span className="text-charcoal-muted">Fecha de pago</span>
+              <span className="text-charcoal-muted">
+                {t("portal.orders.paymentDateLabel")}
+              </span>
               <span className="text-charcoal">
                 {formatDateTime(order.paidAt)}
               </span>

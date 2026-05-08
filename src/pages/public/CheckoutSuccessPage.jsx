@@ -1,12 +1,13 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { CheckCircle, Clock, Ticket, XCircle } from "lucide-react";
+import { CheckCircle, Clock, MapPin, Ticket, XCircle, Download, Loader2 } from "lucide-react";
 import { ROUTES } from "@/constants/routes";
 import { Button } from "@/components/common/Button";
 import { Badge } from "@/components/common/Badge";
 import TicketQR from "@/components/common/TicketQR";
 import { useOrderBySession } from "@/hooks/useOrderBySession";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useTicketPassDownload } from "@/hooks/useTicketPassDownload";
 
 function formatCurrency(amount, currency = "MXN") {
   return new Intl.NumberFormat("en-US", {
@@ -114,8 +115,12 @@ export default function CheckoutSuccessPage() {
   const sessionId = params.get("session_id");
   const orderId = params.get("order_id");
   const { language, t } = useLanguage();
+  const { downloadPass, downloading } = useTicketPassDownload();
 
-  const { order, items, tickets, loading } = useOrderBySession(sessionId, orderId);
+  const { order, items, tickets, loading } = useOrderBySession(
+    sessionId,
+    orderId,
+  );
 
   // Loading
   if (loading) return <LoadingSkeleton />;
@@ -157,7 +162,9 @@ export default function CheckoutSuccessPage() {
             <h2 className="font-display font-semibold text-charcoal">
               {t("checkoutSuccess.orderSummary")}
             </h2>
-            <Badge variant="success">{order.status}</Badge>
+            <Badge variant="success">
+              {t(`checkoutSuccess.orderStatus.${order.status}`) || order.status}
+            </Badge>
           </div>
 
           <div className="space-y-2 text-sm">
@@ -240,18 +247,45 @@ export default function CheckoutSuccessPage() {
                     className="border border-sand-dark/30 rounded-xl p-4 space-y-3 text-center"
                   >
                     <p className="font-medium text-charcoal text-sm">
-                      {snap.experienceName || "Experience"}
+                      {snap.experienceName ||
+                        t("checkoutSuccess.experienceFallback")}
                     </p>
-                    {snap.editionDate && (
+                    {(snap.slotStartDatetime || snap.slotDate || snap.editionDate) && (
                       <p className="text-xs text-charcoal-muted">
-                        {formatDate(snap.editionDate)}
-                        {snap.slotTime && ` · ${snap.slotTime}`}
+                        {new Date(snap.slotStartDatetime || snap.slotDate || snap.editionDate).toLocaleDateString(
+                          language === "es" ? "es-MX" : "en-US",
+                          { weekday: "short", day: "numeric", month: "short" },
+                        )}
+                        {(snap.slotTime || snap.slotStartDatetime || snap.slotDate) && (
+                          <> · {snap.slotTime || new Date(snap.slotStartDatetime || snap.slotDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false })}</>
+                        )}
+                      </p>
+                    )}
+                    {snap.locationName && (
+                      <p className="inline-flex items-center gap-1 text-xs text-sage justify-center">
+                        <MapPin className="h-3 w-3 flex-shrink-0" />
+                        <span>
+                          {snap.locationName}
+                          {snap.roomName && <> · {snap.roomName}</>}
+                        </span>
                       </p>
                     )}
                     <TicketQR value={ticket.ticketCode} size={140} />
                     <p className="font-mono text-xs text-charcoal-muted tracking-wider">
                       {ticket.ticketCode}
                     </p>
+                    <button
+                      onClick={() => downloadPass(ticket, snap, language)}
+                      disabled={downloading}
+                      className="inline-flex items-center gap-1.5 text-xs text-sage font-medium hover:text-sage-dark transition-colors disabled:opacity-50 cursor-pointer"
+                    >
+                      {downloading ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <Download className="h-3.5 w-3.5" />
+                      )}
+                      {t("checkoutSuccess.downloadPass")}
+                    </button>
                   </div>
                 );
               })}
@@ -262,11 +296,11 @@ export default function CheckoutSuccessPage() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link to={ROUTES.PORTAL_TICKETS}>
-            <Button size="md">View My Tickets</Button>
+            <Button size="md">{t("checkoutSuccess.viewTickets")}</Button>
           </Link>
           <Link to={ROUTES.EXPERIENCES}>
             <Button variant="outline" size="md">
-              Explore More
+              {t("checkoutSuccess.exploreMore")}
             </Button>
           </Link>
         </div>

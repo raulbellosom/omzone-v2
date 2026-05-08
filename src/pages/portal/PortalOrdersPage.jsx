@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useUserOrders } from "@/hooks/useUserOrders";
 import { useArchive } from "@/hooks/useArchive";
 import { Badge } from "@/components/common/Badge";
+import { useLanguage } from "@/hooks/useLanguage";
 import {
   ShoppingBag,
   Compass,
@@ -14,28 +15,20 @@ import {
 import { cn } from "@/lib/utils";
 import env from "@/config/env";
 
-const STATUS_FILTERS = [
-  { value: "", label: "Todas" },
-  { value: "confirmed", label: "Confirmadas" },
-  { value: "pending", label: "Pendientes" },
-  { value: "cancelled", label: "Canceladas" },
-  { value: "__archived__", label: "Archivadas" },
-];
-
-const ORDER_STATUS = {
-  pending: { label: "Pendiente", variant: "warning" },
-  paid: { label: "Pagada", variant: "success" },
-  confirmed: { label: "Confirmada", variant: "success" },
-  cancelled: { label: "Cancelada", variant: "danger" },
-  refunded: { label: "Reembolsada", variant: "warm" },
+const ORDER_STATUS_VARIANT = {
+  pending: "warning",
+  paid: "success",
+  confirmed: "success",
+  cancelled: "danger",
+  refunded: "warm",
 };
 
-const PAYMENT_STATUS = {
-  pending: { label: "Pendiente", variant: "warning" },
-  processing: { label: "Procesando", variant: "warm" },
-  succeeded: { label: "Pagado", variant: "success" },
-  failed: { label: "Fallido", variant: "danger" },
-  refunded: { label: "Reembolsado", variant: "warm" },
+const PAYMENT_STATUS_VARIANT = {
+  pending: "warning",
+  processing: "warm",
+  succeeded: "success",
+  failed: "danger",
+  refunded: "warm",
 };
 
 function formatDate(iso) {
@@ -73,16 +66,18 @@ function OrderCardSkeleton() {
 }
 
 function OrderCard({ order, onArchive, isArchived, archiving }) {
-  const os = ORDER_STATUS[order.status] || ORDER_STATUS.pending;
-  const ps = PAYMENT_STATUS[order.paymentStatus] || PAYMENT_STATUS.pending;
+  const { t } = useLanguage();
+  const osVariant = ORDER_STATUS_VARIANT[order.status] || "warning";
+  const psVariant = PAYMENT_STATUS_VARIANT[order.paymentStatus] || "warning";
+  const osLabel = t(`portal.orders.status.${order.status}`) || order.status;
+  const psLabel =
+    t(`portal.orders.paymentStatus.${order.paymentStatus}`) ||
+    order.paymentStatus;
 
   return (
     <div className="bg-white rounded-2xl border border-warm-gray-dark/10 hover:border-sage/30 hover:shadow-sm transition-all overflow-hidden">
       {/* Clickable main area */}
-      <Link
-        to={`/portal/orders/${order.$id}`}
-        className="block p-4 pb-3 group"
-      >
+      <Link to={`/portal/orders/${order.$id}`} className="block p-4 pb-3 group">
         <div className="flex items-start justify-between gap-2 mb-3">
           <div className="min-w-0">
             <p className="text-sm font-semibold text-charcoal truncate">
@@ -102,19 +97,27 @@ function OrderCard({ order, onArchive, isArchived, archiving }) {
       {/* Footer: labeled badges + archive button */}
       <div className="flex items-center gap-2.5 flex-wrap px-4 py-2.5 border-t border-warm-gray-dark/8 bg-warm-gray/20">
         <div className="flex items-center gap-1.5">
-          <span className="text-[11px] text-charcoal-muted font-medium">Orden:</span>
-          <Badge variant={os.variant}>{os.label}</Badge>
+          <span className="text-[11px] text-charcoal-muted font-medium">
+            {t("portal.orders.statusLabel")}
+          </span>
+          <Badge variant={osVariant}>{osLabel}</Badge>
         </div>
         <div className="flex items-center gap-1.5">
           <CreditCard className="w-3 h-3 text-charcoal-muted" />
-          <span className="text-[11px] text-charcoal-muted font-medium">Pago:</span>
-          <Badge variant={ps.variant}>{ps.label}</Badge>
+          <span className="text-[11px] text-charcoal-muted font-medium">
+            {t("portal.orders.paymentLabel")}
+          </span>
+          <Badge variant={psVariant}>{psLabel}</Badge>
         </div>
         <button
           onClick={onArchive}
           disabled={archiving}
           className="ml-auto p-1.5 rounded-lg text-charcoal-muted hover:text-charcoal hover:bg-warm-gray transition-colors disabled:opacity-40 cursor-pointer"
-          title={isArchived ? "Restaurar orden" : "Archivar orden"}
+          title={
+            isArchived
+              ? t("portal.orders.restoreTitle")
+              : t("portal.orders.archiveTitle")
+          }
         >
           {isArchived ? (
             <RotateCcw className="h-3.5 w-3.5" />
@@ -128,9 +131,18 @@ function OrderCard({ order, onArchive, isArchived, archiving }) {
 }
 
 export default function PortalOrdersPage() {
+  const { t } = useLanguage();
   const [status, setStatus] = useState("");
   const showArchived = status === "__archived__";
   const activeStatus = showArchived ? "" : status;
+
+  const STATUS_FILTERS = [
+    { value: "", label: t("portal.orders.filterAll") },
+    { value: "confirmed", label: t("portal.orders.filterConfirmed") },
+    { value: "pending", label: t("portal.orders.filterPending") },
+    { value: "cancelled", label: t("portal.orders.filterCancelled") },
+    { value: "__archived__", label: t("portal.orders.filterArchived") },
+  ];
 
   const { data, loading, loadingMore, error, loadMore, hasMore, refetch } =
     useUserOrders({
@@ -153,10 +165,10 @@ export default function PortalOrdersPage() {
         </div>
         <div>
           <h1 className="text-xl md:text-2xl font-display font-bold text-charcoal">
-            Mis Órdenes
+            {t("portal.orders.heading")}
           </h1>
           <p className="text-sm text-charcoal-muted">
-            Historial de tus compras
+            {t("portal.orders.subheading")}
           </p>
         </div>
       </div>
@@ -203,15 +215,15 @@ export default function PortalOrdersPage() {
           </div>
           <p className="text-charcoal-muted">
             {status
-              ? "No hay órdenes con este filtro"
-              : "Aún no tienes órdenes"}
+              ? t("portal.orders.emptyFilter")
+              : t("portal.orders.emptyAll")}
           </p>
           {!status && (
             <Link
               to="/experiencias"
               className="inline-flex items-center gap-2 text-sm text-sage font-semibold hover:underline"
             >
-              Explorar experiencias
+              {t("portal.orders.exploreLink")}
             </Link>
           )}
         </div>
@@ -243,7 +255,9 @@ export default function PortalOrdersPage() {
                 disabled={loadingMore}
                 className="px-6 py-2 rounded-full text-sm font-medium text-sage border border-sage/30 hover:bg-sage/5 transition-colors disabled:opacity-50 cursor-pointer"
               >
-                {loadingMore ? "Cargando..." : "Cargar más"}
+                {loadingMore
+                  ? t("common.loading")
+                  : t("portal.orders.loadMore")}
               </button>
             </div>
           )}

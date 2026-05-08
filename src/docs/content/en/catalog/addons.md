@@ -3,7 +3,7 @@ title: Addons
 description: Optional extras that can be attached to experiences - services, transport, food, equipment, and more
 section: catalog
 order: 4
-lastUpdated: 2026-04-25
+lastUpdated: 2026-05-06
 relatedRoutes:
   - /admin/addons
   - /admin/addons/new
@@ -73,6 +73,21 @@ Navigate to **Catalog -> Addons -> New addon**
 | `per-day` | Per day of the experience |
 | `per-unit` | Per unit/item |
 | `quote` | Custom quote required |
+
+### Checkout Scope Note
+
+Catalog supports all addon `priceType` values listed above.
+
+Direct checkout and assisted sale currently support only:
+- `fixed`
+- `per-person`
+
+In this phase, direct/assisted checkout blocks:
+- `per-day`
+- `per-unit`
+- `quote`
+
+Use booking-request/quoted flows for scenarios that need unsupported direct-checkout types.
 
 ### Options Section
 
@@ -156,4 +171,5 @@ When a customer books an experience with assigned addons:
 
 - [Experiences](./experiences.md) - The parent entity for addon assignments
 - [Assisted Sale](../sales/assisted-sale.md) - Addons in the manual sale workflow
+- [Reservation Playbooks](../reference/reservation-playbooks.md) - Real checkout and assisted-sale addon examples
 - [Packages](./packages.md) - Alternative bundling approach

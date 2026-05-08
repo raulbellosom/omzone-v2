@@ -4,25 +4,32 @@ import { databases, functions, Query } from "@/lib/appwrite";
 import { useAuth } from "@/hooks/useAuth";
 import { sanitizePhone } from "@/lib/utils";
 import env from "@/config/env";
+import {
+  ADDON_PRICE_TYPES_SUPPORTED_IN_CHECKOUT,
+  computeAddonChargeQuantity,
+  computeCheckoutConstraints,
+  isTierSlotCompatible,
+} from "@/lib/checkoutRules";
 
 const DB = env.appwriteDatabaseId;
 
-/**
- * Hook that drives the entire checkout flow.
- *
- * Reads experienceId + pricingTierId from URL search params, loads
- * experience data, manages step state, and invokes the create-checkout Function.
- */
+async function fetchDocumentsByIds(collectionId, ids) {
+  if (!ids.length) return [];
+  const res = await databases.listDocuments(DB, collectionId, [
+    Query.equal("$id", ids),
+    Query.limit(Math.min(Math.max(ids.length, 1), 500)),
+  ]);
+  return res.documents;
+}
+
 export function useCheckout() {
   const [searchParams] = useSearchParams();
   const { user } = useAuth();
 
-  // ─── URL params ─────────────────────────────────────────────────────────
   const experienceId = searchParams.get("experienceId");
   const initialTierId = searchParams.get("pricingTierId");
   const initialAddonIds = searchParams.get("addonIds");
 
-  // ─── Data loading state ─────────────────────────────────────────────────
   const [experience, setExperience] = useState(null);
   const [pricingTiers, setPricingTiers] = useState([]);
   const [slots, setSlots] = useState([]);
@@ -31,31 +38,25 @@ export function useCheckout() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
 
-  // ─── Selection state ────────────────────────────────────────────────────
   const [selectedTierId, setSelectedTierId] = useState(initialTierId || "");
   const [selectedSlotId, setSelectedSlotId] = useState("");
   const [selectedAddonIds, setSelectedAddonIds] = useState([]);
   const [quantity, setQuantity] = useState(1);
+  const [quantityNotice, setQuantityNotice] = useState(null);
 
-  // ─── Customer info state ────────────────────────────────────────────────
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
 
-  // ─── Step management ────────────────────────────────────────────────────
   const [currentStep, setCurrentStep] = useState(0);
-
-  // ─── Submit state ───────────────────────────────────────────────────────
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
 
-  // ─── Payment state (Stripe Checkout Session + Payment Element) ─────────
   const [clientSecret, setClientSecret] = useState(null);
   const [checkoutSessionId, setCheckoutSessionId] = useState(null);
   const [orderId, setOrderId] = useState(null);
   const [orderNumber, setOrderNumber] = useState(null);
 
-  // ─── Load experience data ───────────────────────────────────────────────
   useEffect(() => {
     if (!experienceId) {
       setLoading(false);
@@ -109,34 +110,56 @@ export function useCheckout() {
 
         const tiers =
           tiersRes.status === "fulfilled" ? tiersRes.value.documents : [];
-        const slotsData =
+        const rawSlots =
           slotsRes.status === "fulfilled" ? slotsRes.value.documents : [];
         const assignments =
           assignmentsRes.status === "fulfilled"
             ? assignmentsRes.value.documents
             : [];
 
-        // Fetch addon details
         let addonsData = [];
         if (assignments.length > 0) {
           const addonIds = assignments.map((a) => a.addonId).filter(Boolean);
           if (addonIds.length > 0) {
             try {
-              const addonsRes = await databases.listDocuments(
-                DB,
-                env.collectionAddons,
-                [
-                  Query.equal("$id", addonIds),
-                  Query.equal("status", "active"),
-                  Query.limit(50),
-                ],
-              );
-              addonsData = addonsRes.documents;
+              addonsData = await fetchDocumentsByIds(env.collectionAddons, addonIds);
+              addonsData = addonsData.filter((addon) => addon.status === "active");
             } catch {
-              // non-fatal
+              addonsData = [];
             }
           }
         }
+
+        let locations = [];
+        let rooms = [];
+        const locationIds = [
+          ...new Set(rawSlots.map((slot) => slot.locationId).filter(Boolean)),
+        ];
+        const roomIds = [
+          ...new Set(rawSlots.map((slot) => slot.roomId).filter(Boolean)),
+        ];
+        try {
+          [locations, rooms] = await Promise.all([
+            fetchDocumentsByIds(env.collectionLocations, locationIds),
+            fetchDocumentsByIds(env.collectionRooms, roomIds),
+          ]);
+        } catch {
+          locations = [];
+          rooms = [];
+        }
+
+        const locationMap = new Map(locations.map((doc) => [doc.$id, doc]));
+        const roomMap = new Map(rooms.map((doc) => [doc.$id, doc]));
+        const slotsData = rawSlots.map((slot) => {
+          const location = slot.locationId ? locationMap.get(slot.locationId) : null;
+          const room = slot.roomId ? roomMap.get(slot.roomId) : null;
+          return {
+            ...slot,
+            locationName: location?.name || null,
+            locationAddress: location?.address || null,
+            roomName: room?.name || null,
+          };
+        });
 
         if (!cancelled) {
           setExperience(exp);
@@ -145,14 +168,12 @@ export function useCheckout() {
           setAddons(addonsData);
           setAddonAssignments(assignments);
 
-          // Pre-select tier if provided and valid
-          if (initialTierId && tiers.some((t) => t.$id === initialTierId)) {
+          if (initialTierId && tiers.some((tier) => tier.$id === initialTierId)) {
             setSelectedTierId(initialTierId);
           } else if (tiers.length === 1) {
             setSelectedTierId(tiers[0].$id);
           }
 
-          // Pre-select required/default addons + addons from URL param
           const preSelected = new Set();
           for (const assignment of assignments) {
             if (assignment.isRequired || assignment.isDefault) {
@@ -166,14 +187,12 @@ export function useCheckout() {
           }
           setSelectedAddonIds([...preSelected]);
 
-          // Pre-fill customer info from auth user
           if (user) {
             setCustomerEmail(user.email || "");
             setCustomerName(user.name || "");
             if (user.phone) setCustomerPhone(user.phone);
           }
 
-          // Set min quantity
           if (exp.minQuantity && exp.minQuantity > 1) {
             setQuantity(exp.minQuantity);
           }
@@ -192,47 +211,110 @@ export function useCheckout() {
     return () => {
       cancelled = true;
     };
-  }, [experienceId, initialTierId, user]);
-
-  // ─── Derived data ───────────────────────────────────────────────────────
+  }, [experienceId, initialTierId, initialAddonIds, user]);
 
   const selectedTier = useMemo(
-    () => pricingTiers.find((t) => t.$id === selectedTierId) || null,
+    () => pricingTiers.find((tier) => tier.$id === selectedTierId) || null,
     [pricingTiers, selectedTierId],
   );
 
+  const compatibleSlots = useMemo(() => {
+    if (!selectedTier?.editionId) return slots;
+    return slots.filter((slot) => slot.editionId === selectedTier.editionId);
+  }, [slots, selectedTier]);
+
+  useEffect(() => {
+    if (!selectedSlotId) return;
+    if (!compatibleSlots.some((slot) => slot.$id === selectedSlotId)) {
+      setSelectedSlotId("");
+    }
+  }, [compatibleSlots, selectedSlotId]);
+
   const selectedSlot = useMemo(
-    () => slots.find((s) => s.$id === selectedSlotId) || null,
-    [slots, selectedSlotId],
+    () => compatibleSlots.find((slot) => slot.$id === selectedSlotId) || null,
+    [compatibleSlots, selectedSlotId],
   );
 
-  /** Addons enriched with assignment data (overridePrice, isRequired) */
-  const enrichedAddons = useMemo(() => {
-    return addons.map((addon) => {
-      const assignment = addonAssignments.find((a) => a.addonId === addon.$id);
-      return {
-        ...addon,
-        isRequired: assignment?.isRequired || false,
-        isDefault: assignment?.isDefault || false,
-        effectivePrice:
-          assignment?.overridePrice != null
-            ? assignment.overridePrice
-            : addon.basePrice,
-      };
+  const tierSlotCompatibility = useMemo(
+    () => isTierSlotCompatible(selectedTier, selectedSlot),
+    [selectedTier, selectedSlot],
+  );
+
+  const effectiveConstraints = useMemo(() => {
+    if (!experience || !selectedTier) return null;
+    return computeCheckoutConstraints({
+      experience,
+      tier: selectedTier,
+      slot: selectedSlot,
+      quantity,
     });
-  }, [addons, addonAssignments]);
+  }, [experience, selectedTier, selectedSlot, quantity]);
+
+  useEffect(() => {
+    if (!effectiveConstraints || !effectiveConstraints.isValid) return;
+    if (experience?.requiresSchedule && !selectedSlot) return;
+    if (quantity === effectiveConstraints.normalizedQuantity) {
+      if (quantityNotice) setQuantityNotice(null);
+      return;
+    }
+    const nextQuantity = effectiveConstraints.normalizedQuantity;
+    setQuantity(nextQuantity);
+    setQuantityNotice({
+      prev: quantity,
+      next: nextQuantity,
+      min: effectiveConstraints.effectiveMin,
+      max: effectiveConstraints.effectiveMax,
+    });
+  }, [
+    effectiveConstraints,
+    experience,
+    selectedSlot,
+    quantity,
+    quantityNotice,
+    setQuantity,
+  ]);
+
+  const enrichedAddons = useMemo(() => {
+    return addons
+      .map((addon) => {
+        const assignment = addonAssignments.find((item) => item.addonId === addon.$id);
+        if (!assignment) return null;
+        const addonPricing = computeAddonChargeQuantity(addon.priceType, quantity);
+        return {
+          ...addon,
+          isRequired: assignment?.isRequired || false,
+          isDefault: assignment?.isDefault || false,
+          effectivePrice:
+            assignment?.overridePrice != null
+              ? assignment.overridePrice
+              : addon.basePrice,
+          chargeQuantity: addonPricing.chargeQuantity || 0,
+          unsupportedPriceType:
+            Boolean(addonPricing.errorCode) ||
+            !ADDON_PRICE_TYPES_SUPPORTED_IN_CHECKOUT.includes(addon.priceType),
+        };
+      })
+      .filter(Boolean);
+  }, [addons, addonAssignments, quantity]);
 
   const selectedAddons = useMemo(
-    () => enrichedAddons.filter((a) => selectedAddonIds.includes(a.$id)),
+    () => enrichedAddons.filter((addon) => selectedAddonIds.includes(addon.$id)),
     [enrichedAddons, selectedAddonIds],
   );
 
-  /** Indicative total (the real one is calculated server-side) */
+  const hasUnsupportedRequiredAddons = useMemo(
+    () =>
+      enrichedAddons.some(
+        (addon) => addon.isRequired && addon.unsupportedPriceType,
+      ),
+    [enrichedAddons],
+  );
+
   const indicativeTotal = useMemo(() => {
     if (!selectedTier) return 0;
     const base = selectedTier.basePrice * quantity;
     const addonsSum = selectedAddons.reduce(
-      (sum, a) => sum + a.effectivePrice * quantity,
+      (sum, addon) => sum + addon.effectivePrice * addon.chargeQuantity,
       0,
     );
     return base + addonsSum;
@@ -240,13 +322,11 @@ export function useCheckout() {
 
   const currency = selectedTier?.currency || "MXN";
 
-  // ─── Addon toggles ─────────────────────────────────────────────────────
-
   const toggleAddon = useCallback(
     (addonId) => {
-      const addon = enrichedAddons.find((a) => a.$id === addonId);
-      if (addon?.isRequired) return; // cannot deselect required
-
+      const addon = enrichedAddons.find((item) => item.$id === addonId);
+      if (!addon) return;
+      if (addon.isRequired || addon.unsupportedPriceType) return;
       setSelectedAddonIds((prev) =>
         prev.includes(addonId)
           ? prev.filter((id) => id !== addonId)
@@ -256,17 +336,24 @@ export function useCheckout() {
     [enrichedAddons],
   );
 
-  // ─── Step validation ────────────────────────────────────────────────────
-
   const isStep0Valid = useMemo(() => {
     if (!selectedTierId) return false;
+    if (!tierSlotCompatibility.compatible) return false;
     if (experience?.requiresSchedule && !selectedSlotId) return false;
-    if (quantity < 1) return false;
+    if (!effectiveConstraints?.isValid) return false;
+    if (quantity < effectiveConstraints.effectiveMin) return false;
+    if (quantity > effectiveConstraints.effectiveMax) return false;
     return true;
-  }, [selectedTierId, selectedSlotId, quantity, experience]);
+  }, [
+    selectedTierId,
+    selectedSlotId,
+    quantity,
+    experience,
+    tierSlotCompatibility,
+    effectiveConstraints,
+  ]);
 
-  // step 1 (addons) is always valid - selection is optional
-  const isStep1Valid = true;
+  const isStep1Valid = !hasUnsupportedRequiredAddons;
 
   const isStep2Valid = useMemo(() => {
     if (!customerName.trim()) return false;
@@ -275,14 +362,9 @@ export function useCheckout() {
     return true;
   }, [customerName, customerEmail]);
 
-  // step 3 (review) is always valid once you reach it
-  // step 4 (payment) is always valid (handled by Stripe + consent in component)
   const stepValidation = [isStep0Valid, isStep1Valid, isStep2Valid, true, true];
 
-  // ─── Create Checkout Session (called on Review → Payment transition) ───
-
   const createPaymentIntent = useCallback(async () => {
-    // Skip if we already have a clientSecret for this checkout
     if (clientSecret) {
       return { clientSecret, checkoutSessionId, orderId, orderNumber };
     }
@@ -301,9 +383,7 @@ export function useCheckout() {
         frontendUrl: window.location.origin,
       };
 
-      if (selectedSlotId) {
-        payload.slotId = selectedSlotId;
-      }
+      if (selectedSlotId) payload.slotId = selectedSlotId;
       if (customerPhone.trim()) {
         payload.customerPhone = sanitizePhone(customerPhone);
       }
@@ -311,8 +391,8 @@ export function useCheckout() {
       const execution = await functions.createExecution(
         env.functionCreateCheckout,
         JSON.stringify(payload),
-        false, // async = false
-        "/", // path
+        false,
+        "/",
         "POST",
       );
 
@@ -362,14 +442,12 @@ export function useCheckout() {
     customerPhone,
   ]);
 
-  // ─── Navigation ─────────────────────────────────────────────────────────
-
   const nextStep = useCallback(() => {
-    setCurrentStep((s) => Math.min(s + 1, 4));
+    setCurrentStep((step) => Math.min(step + 1, 4));
   }, []);
 
   const prevStep = useCallback(() => {
-    setCurrentStep((s) => Math.max(s - 1, 0));
+    setCurrentStep((step) => Math.max(step - 1, 0));
   }, []);
 
   const goToStep = useCallback((step) => {
@@ -377,15 +455,13 @@ export function useCheckout() {
   }, []);
 
   return {
-    // Data
     experience,
     pricingTiers,
-    slots,
+    slots: compatibleSlots,
     enrichedAddons,
     loading,
     loadError,
 
-    // Selection
     selectedTierId,
     setSelectedTierId,
     selectedTier,
@@ -397,8 +473,12 @@ export function useCheckout() {
     selectedAddons,
     quantity,
     setQuantity,
+    quantityNotice,
 
-    // Customer
+    effectiveConstraints,
+    tierSlotCompatibility,
+    hasUnsupportedRequiredAddons,
+
     customerName,
     setCustomerName,
     customerEmail,
@@ -406,18 +486,15 @@ export function useCheckout() {
     customerPhone,
     setCustomerPhone,
 
-    // Pricing
     indicativeTotal,
     currency,
 
-    // Steps
     currentStep,
     nextStep,
     prevStep,
     goToStep,
     stepValidation,
 
-    // Submit / Payment
     submitting,
     submitError,
     clearSubmitError: () => setSubmitError(null),

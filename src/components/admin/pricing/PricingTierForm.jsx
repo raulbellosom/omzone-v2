@@ -150,6 +150,23 @@ export default function PricingTierForm({
     if (isNaN(price) || price <= 0) {
       e.basePrice = t("admin.pricingTierForm.basePricePositive");
     }
+    const minPersons = form.minPersons ? parseInt(form.minPersons, 10) : null;
+    const maxPersons = form.maxPersons ? parseInt(form.maxPersons, 10) : null;
+    if (minPersons != null && minPersons < 1) {
+      e.minPersons = t("admin.validation.quantityPositive");
+    }
+    if (maxPersons != null && maxPersons < 1) {
+      e.maxPersons = t("admin.validation.quantityPositive");
+    }
+    if (
+      minPersons != null &&
+      maxPersons != null &&
+      Number.isInteger(minPersons) &&
+      Number.isInteger(maxPersons) &&
+      minPersons > maxPersons
+    ) {
+      e.maxPersons = t("admin.validation.personsBoundsInvalid");
+    }
     return e;
   }
 
@@ -293,6 +310,7 @@ export default function PricingTierForm({
           <Field
             label={t("admin.pricingTierForm.minPersons")}
             hint={t("admin.pricingTierForm.minPersonsHint")}
+            error={errors.minPersons}
           >
             <Input
               type="number"
@@ -301,9 +319,10 @@ export default function PricingTierForm({
               onChange={(e) => set("minPersons", e.target.value)}
               placeholder={t("admin.placeholders.tierMinPersons")}
               disabled={isDisabled}
+              className={errors.minPersons ? "border-red-400" : ""}
             />
           </Field>
-          <Field label={t("admin.pricingTierForm.maxPersons")}>
+          <Field label={t("admin.pricingTierForm.maxPersons")} error={errors.maxPersons}>
             <Input
               type="number"
               min={1}
@@ -311,6 +330,7 @@ export default function PricingTierForm({
               onChange={(e) => set("maxPersons", e.target.value)}
               placeholder={t("admin.placeholders.tierMaxPersons")}
               disabled={isDisabled}
+              className={errors.maxPersons ? "border-red-400" : ""}
             />
           </Field>
         </div>

@@ -1,7 +1,16 @@
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/common/Badge";
 import TicketQR from "@/components/common/TicketQR";
-import { Calendar, Clock, Archive, RotateCcw } from "lucide-react";
+import { useTicketPassDownload } from "@/hooks/useTicketPassDownload";
+import { useLanguage } from "@/hooks/useLanguage";
+import {
+  Calendar,
+  Clock,
+  Archive,
+  RotateCcw,
+  Download,
+  Loader2,
+} from "lucide-react";
 
 const STATUS_VARIANT = {
   valid: "success",
@@ -26,10 +35,15 @@ function formatDate(iso) {
   });
 }
 
-export default function TicketCard({ ticket, onArchive, isArchived, archiving }) {
-  const snap = ticket.ticketSnapshot
-    ? JSON.parse(ticket.ticketSnapshot)
-    : {};
+export default function TicketCard({
+  ticket,
+  onArchive,
+  isArchived,
+  archiving,
+}) {
+  const { language } = useLanguage();
+  const { downloadPass, downloading } = useTicketPassDownload();
+  const snap = ticket.ticketSnapshot ? JSON.parse(ticket.ticketSnapshot) : {};
 
   const statusVariant = STATUS_VARIANT[ticket.status] || "default";
   const statusLabel = STATUS_LABEL[ticket.status] || ticket.status;
@@ -45,18 +59,30 @@ export default function TicketCard({ ticket, onArchive, isArchived, archiving })
           {snap.experienceName || "Experiencia"}
         </h3>
 
-        {(snap.slotStartDatetime || snap.editionDate || snap.slotTime) && (
+        {(snap.slotStartDatetime ||
+          snap.slotDate ||
+          snap.editionDate ||
+          snap.slotTime) && (
           <div className="flex items-center gap-3 text-xs text-charcoal-muted">
-            {(snap.slotStartDatetime || snap.editionDate) && (
+            {(snap.slotStartDatetime || snap.slotDate || snap.editionDate) && (
               <span className="inline-flex items-center gap-1">
                 <Calendar className="h-3.5 w-3.5" />
-                {formatDate(snap.slotStartDatetime || snap.editionDate)}
+                {formatDate(
+                  snap.slotStartDatetime || snap.slotDate || snap.editionDate,
+                )}
               </span>
             )}
-            {snap.slotTime && (
+            {(snap.slotTime || snap.slotStartDatetime || snap.slotDate) && (
               <span className="inline-flex items-center gap-1">
                 <Clock className="h-3.5 w-3.5" />
-                {snap.slotTime}
+                {snap.slotTime ||
+                  new Date(
+                    snap.slotStartDatetime || snap.slotDate,
+                  ).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                  })}
               </span>
             )}
           </div>
@@ -64,6 +90,27 @@ export default function TicketCard({ ticket, onArchive, isArchived, archiving })
 
         {snap.tierName && (
           <p className="text-xs text-charcoal-muted">{snap.tierName}</p>
+        )}
+
+        {snap.locationName && (
+          <p className="text-xs text-charcoal-muted inline-flex items-center gap-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            {snap.locationName}
+            {snap.roomName ? ` · ${snap.roomName}` : ""}
+          </p>
         )}
 
         <div className="flex justify-center pt-1">
@@ -77,13 +124,30 @@ export default function TicketCard({ ticket, onArchive, isArchived, archiving })
 
       {/* Footer: labeled status badge + archive button */}
       <div className="flex items-center gap-2 px-4 py-2.5 border-t border-warm-gray-dark/8 bg-warm-gray/20">
-        <span className="text-[11px] text-charcoal-muted font-medium">Estado:</span>
+        <span className="text-[11px] text-charcoal-muted font-medium">
+          Estado:
+        </span>
         <Badge variant={statusVariant}>{statusLabel}</Badge>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            downloadPass(ticket, snap, language);
+          }}
+          disabled={downloading}
+          title="Guardar Pase"
+          className="ml-auto p-1.5 rounded-lg text-charcoal-muted hover:text-charcoal hover:bg-warm-gray transition-colors disabled:opacity-40 cursor-pointer"
+        >
+          {downloading ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : (
+            <Download className="h-3.5 w-3.5" />
+          )}
+        </button>
         {onArchive && (
           <button
             onClick={onArchive}
             disabled={archiving}
-            className="ml-auto p-1.5 rounded-lg text-charcoal-muted hover:text-charcoal hover:bg-warm-gray transition-colors disabled:opacity-40 cursor-pointer"
+            className="p-1.5 rounded-lg text-charcoal-muted hover:text-charcoal hover:bg-warm-gray transition-colors disabled:opacity-40 cursor-pointer"
             title={isArchived ? "Restaurar ticket" : "Archivar ticket"}
           >
             {isArchived ? (

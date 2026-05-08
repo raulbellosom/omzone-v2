@@ -1,18 +1,12 @@
 import { useState, useMemo } from "react";
 import { useUserTickets } from "@/hooks/useUserTickets";
 import { useArchive } from "@/hooks/useArchive";
+import { useLanguage } from "@/hooks/useLanguage";
 import TicketCard from "@/components/portal/tickets/TicketCard";
 import { Ticket, Compass, Archive, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import env from "@/config/env";
-
-const STATUS_FILTERS = [
-  { value: "", label: "Todos" },
-  { value: "valid", label: "Activos" },
-  { value: "used", label: "Usados" },
-  { value: "__archived__", label: "Archivados" },
-];
 
 function parseSnapshot(ticket) {
   try {
@@ -39,9 +33,17 @@ function TicketSkeleton() {
 }
 
 export default function TicketListPage() {
+  const { t } = useLanguage();
   const [status, setStatus] = useState("");
   const showArchived = status === "__archived__";
   const activeStatus = showArchived ? "" : status;
+
+  const STATUS_FILTERS = [
+    { value: "", label: t("portal.tickets.filterAll") },
+    { value: "valid", label: t("portal.tickets.filterValid") },
+    { value: "used", label: t("portal.tickets.filterUsed") },
+    { value: "__archived__", label: t("portal.tickets.filterArchived") },
+  ];
 
   const { data, loading, error, refetch } = useUserTickets({
     status: activeStatus,
@@ -88,10 +90,10 @@ export default function TicketListPage() {
         </div>
         <div>
           <h1 className="text-xl md:text-2xl font-display font-bold text-charcoal">
-            Mis Tickets
+            {t("portal.tickets.heading")}
           </h1>
           <p className="text-sm text-charcoal-muted">
-            Todos tus tickets de experiencias en un solo lugar
+            {t("portal.tickets.subheading")}
           </p>
         </div>
       </div>
@@ -138,15 +140,15 @@ export default function TicketListPage() {
           </div>
           <p className="text-charcoal-muted">
             {status
-              ? "No hay tickets con este filtro"
-              : "Aún no tienes tickets"}
+              ? t("portal.tickets.emptyFilter")
+              : t("portal.tickets.emptyAll")}
           </p>
           {!status && (
             <Link
               to="/experiencias"
               className="inline-flex items-center gap-2 text-sm text-sage font-semibold hover:underline"
             >
-              Explorar experiencias
+              {t("portal.tickets.exploreLink")}
             </Link>
           )}
         </div>

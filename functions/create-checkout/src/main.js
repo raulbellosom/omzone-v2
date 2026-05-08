@@ -65,6 +65,11 @@ import {
   Role,
 } from "node-appwrite";
 import Stripe from "stripe";
+import {
+  computeAddonChargeQuantity,
+  computeCheckoutConstraints,
+  isTierSlotCompatible,
+} from "./checkout-rules.js";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -104,14 +109,14 @@ function buildLineItems(experience, tier, validatedAddons, quantity, currency) {
       quantity,
     },
   ];
-  for (const { addon, effectivePrice } of validatedAddons) {
+  for (const { addon, effectivePrice, chargeQuantity } of validatedAddons) {
     items.push({
       price_data: {
         currency: currency.toLowerCase(),
         unit_amount: Math.round(effectivePrice * 100),
         product_data: { name: addon.name },
       },
-      quantity,
+      quantity: chargeQuantity ?? quantity,
     });
   }
   return items;
@@ -977,31 +982,6 @@ export default async ({ req, res, log, error }) => {
       );
     }
 
-    if (experience.minQuantity && quantity < experience.minQuantity) {
-      return res.json(
-        {
-          ok: false,
-          error: {
-            code: "ERR_CHECKOUT_MIN_QUANTITY",
-            message: `Minimum quantity is ${experience.minQuantity}`,
-          },
-        },
-        400,
-      );
-    }
-    if (experience.maxQuantity && quantity > experience.maxQuantity) {
-      return res.json(
-        {
-          ok: false,
-          error: {
-            code: "ERR_CHECKOUT_MAX_QUANTITY",
-            message: `Maximum quantity is ${experience.maxQuantity}`,
-          },
-        },
-        400,
-      );
-    }
-
     // ── 6. Validate pricing tier ───────────────────────────────────────────
     _step = "validate-pricing-tier";
     let tier;
@@ -1049,13 +1029,17 @@ export default async ({ req, res, log, error }) => {
     _step = "validate-slot";
     let slot = null;
 
-    if (experience.requiresSchedule && !slotId && !isAssistedSale) {
+    if (experience.requiresSchedule && !slotId) {
       return res.json(
         {
           ok: false,
           error: {
-            code: "ERR_CHECKOUT_SLOT_REQUIRED",
-            message: "A slot is required for this experience",
+            code: isAssistedSale
+              ? "ERR_CHECKOUT_SLOT_REQUIRED_ASSISTED"
+              : "ERR_CHECKOUT_SLOT_REQUIRED",
+            message: isAssistedSale
+              ? "A slot is required for assisted sales of scheduled experiences"
+              : "A slot is required for this experience",
           },
         },
         400,
@@ -1127,6 +1111,64 @@ export default async ({ req, res, log, error }) => {
           409,
         );
       }
+
+      const compatibility = isTierSlotCompatible(tier, slot);
+      if (!compatibility.compatible) {
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_TIER_SLOT_INCOMPATIBLE",
+              message: "Pricing tier is not compatible with the selected slot",
+            },
+          },
+          400,
+        );
+      }
+    }
+
+    const constraints = computeCheckoutConstraints({
+      experience,
+      tier,
+      slot,
+      quantity,
+    });
+    if (!constraints.compatibility.tierSlotCompatible) {
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_TIER_SLOT_INCOMPATIBLE",
+            message: "Pricing tier is not compatible with the selected slot",
+          },
+        },
+        400,
+      );
+    }
+    if (!constraints.isValid) {
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_CONSTRAINT_INVALID",
+            message:
+              "Invalid quantity constraints for this experience configuration",
+          },
+        },
+        400,
+      );
+    }
+    if (quantity !== constraints.normalizedQuantity) {
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_CHECKOUT_INVALID_QUANTITY",
+            message: `Allowed quantity range is ${constraints.effectiveMin}-${constraints.effectiveMax}`,
+          },
+        },
+        400,
+      );
     }
 
     // ── 8. Validate addons ─────────────────────────────────────────────────
@@ -1181,7 +1223,25 @@ export default async ({ req, res, log, error }) => {
         assignment.overridePrice != null
           ? assignment.overridePrice
           : addon.basePrice;
-      validatedAddons.push({ addon, assignment, effectivePrice });
+      const addonPricing = computeAddonChargeQuantity(addon.priceType, quantity);
+      if (addonPricing.errorCode) {
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: addonPricing.errorCode,
+              message: `Addon "${addon.name}" has unsupported price type for checkout`,
+            },
+          },
+          400,
+        );
+      }
+      validatedAddons.push({
+        addon,
+        assignment,
+        effectivePrice,
+        chargeQuantity: addonPricing.chargeQuantity,
+      });
     }
 
     // ── 9. Calculate prices (server-side only) ─────────────────────────────
@@ -1189,7 +1249,8 @@ export default async ({ req, res, log, error }) => {
     const currency = tier.currency || "MXN";
     const subtotal = tier.basePrice * quantity;
     const addonsTotal = validatedAddons.reduce(
-      (sum, { effectivePrice }) => sum + effectivePrice * quantity,
+      (sum, { effectivePrice, chargeQuantity }) =>
+        sum + effectivePrice * chargeQuantity,
       0,
     );
     const taxAmount = 0;
@@ -1266,13 +1327,19 @@ export default async ({ req, res, log, error }) => {
       slotStart: slot ? slot.startDatetime : null,
       slotEnd: slot ? slot.endDatetime : null,
       slotTimezone: slot ? slot.timezone : null,
-      addons: validatedAddons.map(({ addon, effectivePrice }) => ({
+      constraints: {
+        effectiveMin: constraints.effectiveMin,
+        effectiveMax: constraints.effectiveMax,
+        effectiveAvailable: constraints.effectiveAvailable,
+      },
+      addons: validatedAddons.map(({ addon, effectivePrice, chargeQuantity }) => ({
         addonId: addon.$id,
         name: addon.name,
         nameEs: addon.nameEs || null,
         addonType: addon.addonType,
         basePrice: addon.basePrice,
         effectivePrice,
+        chargeQuantity,
         priceType: addon.priceType,
       })),
       quantity,
@@ -1370,7 +1437,7 @@ export default async ({ req, res, log, error }) => {
       permissions,
     );
 
-    for (const { addon, effectivePrice } of validatedAddons) {
+    for (const { addon, effectivePrice, chargeQuantity } of validatedAddons) {
       await db.createDocument(
         DB,
         COL_ORDER_ITEMS,
@@ -1380,16 +1447,17 @@ export default async ({ req, res, log, error }) => {
           referenceId: addon.$id,
           itemType: "addon",
           name: addon.name,
-          quantity,
+          quantity: chargeQuantity,
           unitPrice: effectivePrice,
           currency,
-          totalPrice: effectivePrice * quantity,
+          totalPrice: effectivePrice * chargeQuantity,
           itemSnapshot: JSON.stringify({
             addonId: addon.$id,
             addonName: addon.name,
             addonType: addon.addonType,
             basePrice: addon.basePrice,
             effectivePrice,
+            chargeQuantity,
             priceType: addon.priceType,
           }),
         },

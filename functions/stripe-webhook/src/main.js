@@ -241,7 +241,9 @@ async function handleCheckoutCompleted(
   if (!hasPayment) {
     const paymentData = buildCheckoutPaymentData(session, order);
     await createPaymentRecord(db, DB, COL_PAYMENTS, paymentData, log);
-    log(`Payment record created for order ${order.$id} (session: ${session.id})`);
+    log(
+      `Payment record created for order ${order.$id} (session: ${session.id})`,
+    );
   }
 
   // Reconcile slot bookedCount
@@ -254,16 +256,19 @@ async function handleCheckoutCompleted(
     log,
   });
 
-  // Trigger ticket generation (async — fire-and-forget)
+  // Trigger ticket generation synchronously so downstream failures are visible.
   try {
-    await functions.createExecution(
+    const ticketExecution = await functions.createExecution(
       "generate-ticket",
       JSON.stringify({ orderId: order.$id }),
-      true, // async
+      false,
       "/",
       "POST",
     );
-    log(`Triggered generate-ticket for order ${order.$id}`);
+    log(
+      `Triggered generate-ticket for order ${order.$id} ` +
+        `(execution: ${ticketExecution.$id}, status: ${ticketExecution.status})`,
+    );
   } catch (err) {
     // Don't fail the webhook if ticket generation trigger fails
     log(
@@ -378,7 +383,11 @@ async function handlePaymentIntentSucceeded(
         paymentIntent.charges &&
         paymentIntent.charges.data &&
         paymentIntent.charges.data[0];
-      if (charge && charge.payment_method_details && charge.payment_method_details.card) {
+      if (
+        charge &&
+        charge.payment_method_details &&
+        charge.payment_method_details.card
+      ) {
         cardBrand = charge.payment_method_details.card.brand || null;
         cardLast4 = charge.payment_method_details.card.last4 || null;
       }
@@ -406,7 +415,9 @@ async function handlePaymentIntentSucceeded(
     if (cardLast4) paymentData.cardLast4 = cardLast4;
 
     await db.createDocument(DB, COL_PAYMENTS, ID.unique(), paymentData);
-    log(`Payment record created for order ${order.$id} (PI: ${piId}, card: ${cardBrand || "n/a"} ****${cardLast4 || "n/a"})`);
+    log(
+      `Payment record created for order ${order.$id} (PI: ${piId}, card: ${cardBrand || "n/a"} ****${cardLast4 || "n/a"})`,
+    );
   }
 
   // Reconcile slot bookedCount
@@ -640,6 +651,66 @@ export default async ({ req, res, log, error }) => {
           COL_PAYMENTS,
           log,
         );
+        // Fire-and-forget: notify customer of failed payment
+        {
+          const piId = dataObject.id;
+          let failedOrder = await findOrderByPaymentIntentId(
+            db,
+            DB,
+            COL_ORDERS,
+            piId,
+          ).catch(() => null);
+          if (
+            !failedOrder &&
+            dataObject.metadata &&
+            dataObject.metadata.orderId
+          ) {
+            failedOrder = await findOrderById(
+              db,
+              DB,
+              COL_ORDERS,
+              dataObject.metadata.orderId,
+            ).catch(() => null);
+          }
+          if (failedOrder && failedOrder.customerEmail) {
+            const FUNC_SEND_NOTIFICATION =
+              process.env.APPWRITE_FUNCTION_SEND_NOTIFICATION ||
+              "send-notification";
+            const expName = (() => {
+              try {
+                return (
+                  JSON.parse(failedOrder.snapshot || "{}").experienceName || "—"
+                );
+              } catch {
+                return "—";
+              }
+            })();
+            functions
+              .createExecution(
+                FUNC_SEND_NOTIFICATION,
+                JSON.stringify({
+                  templateKey: "order-cancelled",
+                  orderId: failedOrder.$id,
+                  userId: failedOrder.userId || null,
+                  recipientEmail: failedOrder.customerEmail,
+                  recipientName: failedOrder.customerName || "",
+                  vars: {
+                    orderNumber: failedOrder.orderNumber || failedOrder.$id,
+                    customerName: failedOrder.customerName || "",
+                    experienceName: expName,
+                    adminNote:
+                      "Your payment could not be processed. Please try again or contact us.",
+                  },
+                }),
+                true,
+              )
+              .catch((notifErr) =>
+                error(
+                  `payment-failed notification failed: ${notifErr.message}`,
+                ),
+              );
+          }
+        }
         break;
     }
 
