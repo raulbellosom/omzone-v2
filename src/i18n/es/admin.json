@@ -1008,7 +1008,9 @@
       "sectionProfile": "Perfil",
       "sectionSecurity": "Seguridad",
       "sectionPhone": "Teléfono",
-      "sectionPhoneDesc": "Actualiza tu número de contacto. Se requiere tu contraseña actual."
+      "sectionPhoneDesc": "Actualiza tu número de contacto. Se requiere tu contraseña actual.",
+      "profileSetupError": "Tu perfil aún no está listo",
+      "profileSetupRetryHint": "Ocurrió un error al configurar tu perfil. Intenta de nuevo."
     },
     "assistedSale": {
       "steps": {

@@ -1008,7 +1008,9 @@
       "sectionProfile": "Profile",
       "sectionSecurity": "Security",
       "sectionPhone": "Phone",
-      "sectionPhoneDesc": "Update your contact number. Your current password is required."
+      "sectionPhoneDesc": "Update your contact number. Your current password is required.",
+      "profileSetupError": "Your profile is not ready yet",
+      "profileSetupRetryHint": "An error occurred while setting up your profile. Please try again."
     },
     "assistedSale": {
       "steps": {

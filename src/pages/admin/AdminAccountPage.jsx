@@ -205,10 +205,24 @@ export default function AdminAccountPage() {
 
   // ─── Error state ───
   if (error) {
+    const isProfileMissing = error === "profile_creation_failed";
     return (
       <div className="text-center py-16 px-6">
         <AlertCircle className="w-10 h-10 text-red-400 mx-auto mb-3" />
-        <p className="text-sm text-red-600">{error}</p>
+        <p className="text-sm text-charcoal font-medium mb-1">
+          {isProfileMissing
+            ? t("admin.account.profileSetupError")
+            : t("common.error")}
+        </p>
+        <p className="text-xs text-charcoal-muted mb-6">
+          {isProfileMissing ? t("admin.account.profileSetupRetryHint") : error}
+        </p>
+        <button
+          onClick={() => refetch()}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-sage text-white text-sm font-medium hover:bg-sage/90 transition-colors"
+        >
+          {t("common.retry")}
+        </button>
       </div>
     );
   }

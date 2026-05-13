@@ -68,13 +68,25 @@ export function AuthProvider({ children }) {
 
     // Ensure user_profiles document + 'client' label exist (blocking)
     try {
-      await functions.createExecution(
+      const execution = await functions.createExecution(
         "assign-user-label",
         JSON.stringify({ action: "ensure-profile" }),
         false,
         "/",
         "POST",
       );
+      // Log if the function reported failure — doesn't block login, useUserProfile handles recovery
+      try {
+        const parsed = JSON.parse(execution.responseBody || "{}");
+        if (!parsed.ok) {
+          console.warn(
+            "[AuthContext] ensure-profile returned ok:false on login:",
+            parsed.error,
+          );
+        }
+      } catch {
+        /* ignore parse errors */
+      }
     } catch {
       /* profile may already exist or function temporarily unavailable */
     }

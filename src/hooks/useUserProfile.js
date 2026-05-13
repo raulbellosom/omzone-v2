@@ -13,14 +13,33 @@ async function fetchProfile(userId) {
     return await databases.getDocument(DB, COL, userId);
   } catch (err) {
     if (err.code === 404) {
-      // Profile doesn't exist yet — ask the server to create it, then retry
-      await functions.createExecution(
-        "assign-user-label",
-        JSON.stringify({ action: "ensure-profile" }),
-        false,
-        "/",
-        "POST",
-      );
+      // Profile doesn't exist yet — ask the server to create it, then retry once
+      let execution;
+      try {
+        execution = await functions.createExecution(
+          "assign-user-label",
+          JSON.stringify({ action: "ensure-profile" }),
+          false,
+          "/",
+          "POST",
+        );
+      } catch (execErr) {
+        throw new Error("profile_creation_failed");
+      }
+
+      // Parse function response — a successful execution doesn't mean ok:true
+      let responseOk = false;
+      try {
+        const parsed = JSON.parse(execution.responseBody || "{}");
+        responseOk = parsed.ok === true;
+      } catch {
+        /* unparseable body — treat as failure */
+      }
+
+      if (!responseOk) {
+        throw new Error("profile_creation_failed");
+      }
+
       return await databases.getDocument(DB, COL, userId);
     }
     throw err;

@@ -117,6 +117,12 @@ async function handleSignupEvent({ req, res, log, error }) {
     const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
 
     // Create user_profiles document — $id = Auth userId
+    const profilePermissions = [
+      `read("user:${userId}")`,
+      `update("user:${userId}")`,
+      `read("label:admin")`,
+      `update("label:admin")`,
+    ];
     try {
       const created = await db.createDocument(
         DB,
@@ -129,17 +135,34 @@ async function handleSignupEvent({ req, res, log, error }) {
           email: userEmail || null,
           phone: userPhone || null,
         },
-        [
-          `read("user:${userId}")`,
-          `update("user:${userId}")`,
-          `read("label:admin")`,
-          `update("label:admin")`,
-        ],
+        profilePermissions,
       );
       log(`Profile created for user ${userId} (docId=${created.$id})`);
     } catch (createErr) {
       if (createErr.code === 409) {
         log(`Profile already exists (race condition) for ${userId} — skipping`);
+      } else if (createErr.code === 400) {
+        // email/phone attributes may not be deployed yet — retry with core fields only
+        error(
+          `Profile creation with full payload failed (400: ${createErr.message}), retrying with core fields`,
+        );
+        try {
+          const created = await db.createDocument(
+            DB,
+            COLLECTION_PROFILES,
+            userId,
+            { firstName, lastName, language: "es" },
+            profilePermissions,
+          );
+          log(
+            `Profile created for user ${userId} with core fields only (docId=${created.$id})`,
+          );
+        } catch (retryErr) {
+          if (retryErr.code !== 409) throw retryErr;
+          log(
+            `Profile already exists (race condition on retry) for ${userId} — skipping`,
+          );
+        }
       } else {
         throw createErr;
       }
@@ -222,6 +245,12 @@ async function handleEnsureProfile({ req, res, log, error }) {
     const firstName = nameParts[0] || "";
     const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
 
+    const profilePermissions = [
+      `read("user:${userId}")`,
+      `update("user:${userId}")`,
+      `read("label:admin")`,
+      `update("label:admin")`,
+    ];
     try {
       const created = await db.createDocument(
         DB,
@@ -234,12 +263,7 @@ async function handleEnsureProfile({ req, res, log, error }) {
           email: userEmail || null,
           phone: userPhone || null,
         },
-        [
-          `read("user:${userId}")`,
-          `update("user:${userId}")`,
-          `read("label:admin")`,
-          `update("label:admin")`,
-        ],
+        profilePermissions,
       );
       log(
         `ensure-profile: created profile for ${userId} (docId=${created.$id}, db=${created.$databaseId}, col=${created.$collectionId})`,
@@ -260,6 +284,39 @@ async function handleEnsureProfile({ req, res, log, error }) {
         log(
           `ensure-profile: profile already exists (race condition) for ${userId}`,
         );
+      } else if (createErr.code === 400) {
+        // email/phone attributes may not be deployed yet — retry with core fields only
+        error(
+          `ensure-profile: Full payload failed (400: ${createErr.message}), retrying with core fields`,
+        );
+        try {
+          const created = await db.createDocument(
+            DB,
+            COLLECTION_PROFILES,
+            userId,
+            { firstName, lastName, language: "es" },
+            profilePermissions,
+          );
+          log(
+            `ensure-profile: created profile for ${userId} with core fields only (docId=${created.$id})`,
+          );
+          // Verify
+          try {
+            await db.getDocument(DB, COLLECTION_PROFILES, userId);
+            log(
+              `ensure-profile: verified core-fields profile exists for ${userId}`,
+            );
+          } catch (verifyErr) {
+            error(
+              `ensure-profile: CREATED (core) but verification FAILED for ${userId}: ${verifyErr.message}`,
+            );
+          }
+        } catch (retryErr) {
+          if (retryErr.code !== 409) throw retryErr;
+          log(
+            `ensure-profile: profile already exists (race condition on retry) for ${userId}`,
+          );
+        }
       } else {
         throw createErr;
       }

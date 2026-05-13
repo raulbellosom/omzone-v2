@@ -33,3 +33,8 @@ nul
 
 # Temp
 tmp-*
+tmp_*
+tmp/
+temp-*
+temp_*
+temp/
