@@ -82,7 +82,9 @@ export default function MediaManagerPage() {
           toast.error(`${file.name}: ${validationError}`);
           continue;
         }
-        const toastId = toast.loading(`${t("admin.mediaManager.uploading")} ${file.name}…`);
+        const toastId = toast.loading(
+          `${t("admin.mediaManager.uploading")} ${file.name}…`,
+        );
         try {
           await upload(file);
           toast.success(file.name, {
@@ -190,7 +192,10 @@ export default function MediaManagerPage() {
       {uploadError && (
         <Card className="p-3 border-red-200 bg-red-50 flex items-center justify-between">
           <p className="text-sm text-red-700">{uploadError}</p>
-          <button onClick={clearError} className="text-red-400 hover:text-red-600">
+          <button
+            onClick={clearError}
+            className="text-red-400 hover:text-red-600"
+          >
             <X className="h-4 w-4" />
           </button>
         </Card>
