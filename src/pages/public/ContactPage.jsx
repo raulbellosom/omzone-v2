@@ -8,7 +8,16 @@ import ContactInfo from "@/components/public/contact/ContactInfo";
 
 export default function ContactPage() {
   const { t } = useLanguage();
-  const { form, errors, status, handleChange, submit, reset } = useContactForm(t);
+  const {
+    form,
+    errors,
+    status,
+    captchaToken,
+    setCaptchaToken,
+    handleChange,
+    submit,
+    reset,
+  } = useContactForm(t);
 
   return (
     <>
@@ -30,6 +39,8 @@ export default function ContactPage() {
                 form={form}
                 errors={errors}
                 status={status}
+                captchaToken={captchaToken}
+                setCaptchaToken={setCaptchaToken}
                 handleChange={handleChange}
                 submit={submit}
                 reset={reset}

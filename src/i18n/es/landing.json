@@ -223,7 +223,8 @@
       "emailRequired": "Por favor ingresa tu correo electrónico.",
       "emailInvalid": "Por favor ingresa un correo electrónico válido.",
       "messageRequired": "Por favor ingresa un mensaje.",
-      "messageTooLong": "El mensaje no puede exceder 5,000 caracteres."
+      "messageTooLong": "El mensaje no puede exceder 5,000 caracteres.",
+      "captchaRequired": "Por favor completa el CAPTCHA para enviar tu mensaje."
     },
     "info": {
       "title": "Otras Formas de Contactarnos",

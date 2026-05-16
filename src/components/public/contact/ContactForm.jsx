@@ -1,8 +1,26 @@
+import { useRef, useEffect } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { useLanguage } from "@/hooks/useLanguage";
 import { CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import env from "@/config/env";
 
-export default function ContactForm({ form, errors, status, handleChange, submit, reset }) {
+export default function ContactForm({
+  form,
+  errors,
+  status,
+  captchaToken,
+  setCaptchaToken,
+  handleChange,
+  submit,
+  reset,
+}) {
   const { t } = useLanguage();
+  const captchaRef = useRef(null);
+
+  // Reset the captcha widget whenever the form returns to idle (after success/reset)
+  useEffect(() => {
+    if (status === "idle") captchaRef.current?.reset();
+  }, [status]);
 
   if (status === "success") {
     return (
@@ -53,7 +71,10 @@ export default function ContactForm({ form, errors, status, handleChange, submit
 
       {/* Name */}
       <div>
-        <label htmlFor="contact-name" className="block text-sm font-medium text-charcoal mb-1.5">
+        <label
+          htmlFor="contact-name"
+          className="block text-sm font-medium text-charcoal mb-1.5"
+        >
           {t("contact.form.nameLabel")} <span className="text-red-400">*</span>
         </label>
         <input
@@ -67,12 +88,17 @@ export default function ContactForm({ form, errors, status, handleChange, submit
             errors.name ? "border-red-400" : "border-sand"
           }`}
         />
-        {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
+        {errors.name && (
+          <p className="mt-1 text-xs text-red-500">{errors.name}</p>
+        )}
       </div>
 
       {/* Email */}
       <div>
-        <label htmlFor="contact-email" className="block text-sm font-medium text-charcoal mb-1.5">
+        <label
+          htmlFor="contact-email"
+          className="block text-sm font-medium text-charcoal mb-1.5"
+        >
           {t("contact.form.emailLabel")} <span className="text-red-400">*</span>
         </label>
         <input
@@ -86,12 +112,17 @@ export default function ContactForm({ form, errors, status, handleChange, submit
             errors.email ? "border-red-400" : "border-sand"
           }`}
         />
-        {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
+        {errors.email && (
+          <p className="mt-1 text-xs text-red-500">{errors.email}</p>
+        )}
       </div>
 
       {/* Subject */}
       <div>
-        <label htmlFor="contact-subject" className="block text-sm font-medium text-charcoal mb-1.5">
+        <label
+          htmlFor="contact-subject"
+          className="block text-sm font-medium text-charcoal mb-1.5"
+        >
           {t("contact.form.subjectLabel")}
         </label>
         <input
@@ -107,8 +138,12 @@ export default function ContactForm({ form, errors, status, handleChange, submit
 
       {/* Message */}
       <div>
-        <label htmlFor="contact-message" className="block text-sm font-medium text-charcoal mb-1.5">
-          {t("contact.form.messageLabel")} <span className="text-red-400">*</span>
+        <label
+          htmlFor="contact-message"
+          className="block text-sm font-medium text-charcoal mb-1.5"
+        >
+          {t("contact.form.messageLabel")}{" "}
+          <span className="text-red-400">*</span>
         </label>
         <textarea
           id="contact-message"
@@ -121,10 +156,31 @@ export default function ContactForm({ form, errors, status, handleChange, submit
             errors.message ? "border-red-400" : "border-sand"
           }`}
         />
-        {errors.message && <p className="mt-1 text-xs text-red-500">{errors.message}</p>}
+        {errors.message && (
+          <p className="mt-1 text-xs text-red-500">{errors.message}</p>
+        )}
         <p className="mt-1 text-xs text-charcoal-subtle text-right">
           {form.message.length} / 5,000
         </p>
+      </div>
+
+      {/* reCAPTCHA */}
+      <div>
+        <ReCAPTCHA
+          ref={captchaRef}
+          sitekey={env.recaptchaSiteKey}
+          onChange={(token) => {
+            setCaptchaToken(token);
+            if (errors.captcha) {
+              // clear captcha error on solve
+            }
+          }}
+          onExpired={() => setCaptchaToken(null)}
+          theme="light"
+        />
+        {errors.captcha && (
+          <p className="mt-1 text-xs text-red-500">{errors.captcha}</p>
+        )}
       </div>
 
       {/* Submit */}

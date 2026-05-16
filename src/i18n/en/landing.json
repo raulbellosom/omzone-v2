@@ -223,7 +223,8 @@
       "emailRequired": "Please enter your email.",
       "emailInvalid": "Please enter a valid email address.",
       "messageRequired": "Please enter a message.",
-      "messageTooLong": "Message cannot exceed 5,000 characters."
+      "messageTooLong": "Message cannot exceed 5,000 characters.",
+      "captchaRequired": "Please complete the CAPTCHA to send your message."
     },
     "info": {
       "title": "Other Ways to Reach Us",

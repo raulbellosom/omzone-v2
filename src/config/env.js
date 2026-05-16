@@ -117,6 +117,11 @@ const env = {
     "send-confirmation",
   functionSendReminder:
     import.meta.env.VITE_APPWRITE_FUNCTION_SEND_REMINDER || "send-reminder",
+  functionSubmitContact:
+    import.meta.env.VITE_APPWRITE_FUNCTION_SUBMIT_CONTACT || "submit-contact",
+
+  // ─── reCAPTCHA ───
+  recaptchaSiteKey: import.meta.env.VITE_RECAPTCHA_SITE_KEY || "",
 
   // ─── Feature Flags ───
   underConstruction: import.meta.env.VITE_UNDER_CONSTRUCTION === "true",

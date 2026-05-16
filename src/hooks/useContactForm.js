@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { databases, ID } from "@/lib/appwrite";
+import { functions } from "@/lib/appwrite";
 import env from "@/config/env";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -11,6 +11,7 @@ export default function useContactForm(t) {
   const [form, setForm] = useState(INITIAL_FORM);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle"); // idle | sending | success | error
+  const [captchaToken, setCaptchaToken] = useState(null);
 
   function handleChange(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -27,6 +28,7 @@ export default function useContactForm(t) {
       e.message = t("contact.validation.messageRequired");
     else if (form.message.length > MAX_MESSAGE)
       e.message = t("contact.validation.messageTooLong");
+    if (!captchaToken) e.captcha = t("contact.validation.captchaRequired");
     setErrors(e);
     return Object.keys(e).length === 0;
   }
@@ -35,19 +37,29 @@ export default function useContactForm(t) {
     if (!validate()) return;
     setStatus("sending");
     try {
-      await databases.createDocument(
-        env.appwriteDatabaseId,
-        env.collectionContactMessages,
-        ID.unique(),
-        {
+      const execution = await functions.createExecution(
+        env.functionSubmitContact,
+        JSON.stringify({
           name: form.name.trim(),
           email: form.email.trim(),
           subject: form.subject.trim() || null,
           message: form.message.trim(),
-        }
+          recaptchaToken: captchaToken,
+        }),
+        false,
+        "/",
+        "POST",
       );
+
+      const result = JSON.parse(execution.responseBody);
+
+      if (!result.ok) {
+        throw new Error(result.error?.code || "submission_failed");
+      }
+
       setStatus("success");
       setForm(INITIAL_FORM);
+      setCaptchaToken(null);
     } catch {
       setStatus("error");
     }
@@ -57,7 +69,17 @@ export default function useContactForm(t) {
     setForm(INITIAL_FORM);
     setErrors({});
     setStatus("idle");
+    setCaptchaToken(null);
   }
 
-  return { form, errors, status, handleChange, submit, reset };
+  return {
+    form,
+    errors,
+    status,
+    captchaToken,
+    setCaptchaToken,
+    handleChange,
+    submit,
+    reset,
+  };
 }
