@@ -158,6 +158,12 @@ const BookingRequestListPage = lazy(
 const BookingRequestDetailPage = lazy(
   () => import("@/pages/admin/BookingRequestDetailPage"),
 );
+const ContactMessageListPage = lazy(
+  () => import("@/pages/admin/ContactMessageListPage"),
+);
+const ContactMessageDetailPage = lazy(
+  () => import("@/pages/admin/ContactMessageDetailPage"),
+);
 
 // ─── Portal pages (chunked together) ───
 const PortalLayout = lazy(() => import("@/layouts/PortalLayout"));
@@ -366,6 +372,14 @@ export default function App() {
               <Route
                 path="booking-requests/:id"
                 element={<BookingRequestDetailPage />}
+              />
+              <Route
+                path="contact-messages"
+                element={<ContactMessageListPage />}
+              />
+              <Route
+                path="contact-messages/:id"
+                element={<ContactMessageDetailPage />}
               />
               <Route path="orders" element={<OrderListPage />} />
               <Route path="orders/:orderId" element={<OrderDetailPage />} />

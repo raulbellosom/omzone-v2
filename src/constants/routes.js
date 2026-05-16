@@ -83,6 +83,8 @@ export const ROUTES = {
   ADMIN_CLIENT_DETAIL: "/admin/clients/:userId",
   ADMIN_BOOKING_REQUESTS: "/admin/booking-requests",
   ADMIN_BOOKING_REQUEST_DETAIL: "/admin/booking-requests/:id",
+  ADMIN_CONTACT_MESSAGES: "/admin/contact-messages",
+  ADMIN_CONTACT_MESSAGE_DETAIL: "/admin/contact-messages/:id",
   ADMIN_PUBLICATIONS: "/admin/publications",
   ADMIN_PUBLICATION_NEW: "/admin/publications/new",
   ADMIN_PUBLICATION_EDIT: "/admin/publications/:id/edit",

@@ -5348,6 +5348,15 @@
           "array": false,
           "default": null,
           "format": ""
+        },
+        {
+          "key": "adminNotes",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 2000,
+          "default": null,
+          "encrypt": false
         }
       ],
       "indexes": [

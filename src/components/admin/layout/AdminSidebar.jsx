@@ -16,6 +16,7 @@ import {
   TicketCheck,
   Users,
   MessageSquare,
+  Mail,
   FileText,
   Image,
   Images as HeroImagesIcon,
@@ -83,6 +84,11 @@ const NAV_SECTIONS = [
         nameKey: "admin.sidebar.bookingRequests",
         path: ROUTES.ADMIN_BOOKING_REQUESTS,
         icon: MessageSquare,
+      },
+      {
+        nameKey: "admin.sidebar.contactMessages",
+        path: ROUTES.ADMIN_CONTACT_MESSAGES,
+        icon: Mail,
       },
       {
         nameKey: "admin.sidebar.orders",

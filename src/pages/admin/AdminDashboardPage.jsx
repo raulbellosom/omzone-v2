@@ -6,6 +6,7 @@ import {
   useRecentOrders,
   useUpcomingSlots,
 } from "@/hooks/useDashboardMetrics";
+import { useUnreadContactCount } from "@/hooks/useContactMessages";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/common/Card";
 import MetricCard from "@/components/admin/dashboard/MetricCard";
@@ -18,6 +19,7 @@ import {
   TicketCheck,
   CalendarDays,
   MessageSquare,
+  Mail,
 } from "lucide-react";
 
 function formatCurrency(amount) {
@@ -36,6 +38,7 @@ export default function AdminDashboardPage() {
   const { metrics, loading: metricsLoading } = useDashboardMetrics();
   const { orders, loading: ordersLoading } = useRecentOrders(10);
   const { slots, loading: slotsLoading } = useUpcomingSlots(5);
+  const unreadContactCount = useUnreadContactCount();
 
   const firstName = user?.name?.split(" ")[0] || "Admin";
 
@@ -83,6 +86,30 @@ export default function AdminDashboardPage() {
           icon={CalendarDays}
         />
       </div>
+
+      {/* Unread contact messages banner */}
+      {unreadContactCount > 0 && (
+        <Link to={ROUTES.ADMIN_CONTACT_MESSAGES + "?filter=unread"}>
+          <Card className="p-4 border-sky-200 bg-sky-50 hover:shadow-card-hover transition-shadow cursor-pointer">
+            <div className="flex items-center gap-3">
+              <Mail className="h-5 w-5 text-sky-600 shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-sky-900">
+                  {unreadContactCount === 1
+                    ? t("admin.dashboard.unreadContactOne")
+                    : t("admin.dashboard.unreadContactOther").replace(
+                        "{count}",
+                        unreadContactCount,
+                      )}
+                </p>
+                <p className="text-xs text-sky-700">
+                  {t("admin.dashboard.clickToReview")}
+                </p>
+              </div>
+            </div>
+          </Card>
+        </Link>
+      )}
 
       {/* Pending requests banner */}
       {metrics.pendingRequests > 0 && (
