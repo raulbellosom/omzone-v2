@@ -60,6 +60,7 @@
     "@vitejs/plugin-react": "^4.4.1",
     "node-appwrite": "^16.0.0",
     "rollup-plugin-visualizer": "^7.0.1",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4.1.0",
     "vite": "^6.4.1"
   }

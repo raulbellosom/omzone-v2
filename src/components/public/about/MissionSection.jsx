@@ -26,7 +26,7 @@ export default function MissionSection() {
           {/* Image */}
           <div className="relative overflow-hidden rounded-card">
             <img
-              src="/images/clase-de-yoga-aereo-selva-tropical.png"
+              src="/images/clase-de-yoga-aereo-selva-tropical.webp"
               alt="Wellness retreat surrounded by nature"
               className="w-full h-auto object-cover aspect-[4/3]"
               loading="lazy"

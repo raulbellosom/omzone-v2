@@ -8,7 +8,7 @@ export default function LocationSection() {
       {/* Full-bleed image */}
       <div className="relative h-[50vh] min-h-[360px] max-h-[560px]">
         <img
-          src="/images/girl-above-surf-table-on-the-ocean-inthe-sunset-in-los-arcos-puerto-vallarta.png"
+          src="/images/girl-above-surf-table-on-the-ocean-inthe-sunset-in-los-arcos-puerto-vallarta.webp"
           alt="Puerto Vallarta coastline at sunrise"
           className="h-full w-full object-cover"
           loading="lazy"

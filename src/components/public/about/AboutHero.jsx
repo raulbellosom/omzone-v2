@@ -8,7 +8,7 @@ export default function AboutHero() {
       {/* Background */}
       <div className="absolute inset-0">
         <img
-          src="/images/about-bg.png"
+          src="/images/about-bg.webp"
           alt=""
           role="presentation"
           loading="eager"

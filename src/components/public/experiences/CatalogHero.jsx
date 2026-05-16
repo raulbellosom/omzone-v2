@@ -8,7 +8,7 @@ export default function CatalogHero() {
       {/* Background */}
       <div className="absolute inset-0">
         <img
-          src="/images/experiences-bg-2.png"
+          src="/images/experiences-bg-2.webp"
           alt=""
           role="presentation"
           loading="eager"

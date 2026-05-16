@@ -8,7 +8,7 @@ export default function ContactHero() {
       {/* Background */}
       <div className="absolute inset-0">
         <img
-          src="/images/contact-bg.png"
+          src="/images/contact-bg.webp"
           alt=""
           role="presentation"
           loading="eager"
