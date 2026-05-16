@@ -87,52 +87,55 @@ export default function AdminDashboardPage() {
         />
       </div>
 
-      {/* Unread contact messages banner */}
-      {unreadContactCount > 0 && (
-        <Link to={ROUTES.ADMIN_CONTACT_MESSAGES + "?filter=unread"}>
-          <Card className="p-4 border-sky-200 bg-sky-50 hover:shadow-card-hover transition-shadow cursor-pointer">
-            <div className="flex items-center gap-3">
-              <Mail className="h-5 w-5 text-sky-600 shrink-0" />
-              <div>
-                <p className="text-sm font-medium text-sky-900">
-                  {unreadContactCount === 1
-                    ? t("admin.dashboard.unreadContactOne")
-                    : t("admin.dashboard.unreadContactOther").replace(
-                        "{count}",
-                        unreadContactCount,
-                      )}
-                </p>
-                <p className="text-xs text-sky-700">
-                  {t("admin.dashboard.clickToReview")}
-                </p>
-              </div>
-            </div>
-          </Card>
-        </Link>
-      )}
+      {/* Banners — unread contacts + pending requests */}
+      {(unreadContactCount > 0 || metrics.pendingRequests > 0) && (
+        <div className="space-y-3">
+          {unreadContactCount > 0 && (
+            <Link to={ROUTES.ADMIN_CONTACT_MESSAGES + "?filter=unread"}>
+              <Card className="p-4 border-sky-200 bg-sky-50 hover:shadow-card-hover transition-shadow cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <Mail className="h-5 w-5 text-sky-600 shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium text-sky-900">
+                      {unreadContactCount === 1
+                        ? t("admin.dashboard.unreadContactOne")
+                        : t("admin.dashboard.unreadContactOther").replace(
+                            "{count}",
+                            unreadContactCount,
+                          )}
+                    </p>
+                    <p className="text-xs text-sky-700">
+                      {t("admin.dashboard.clickToReview")}
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </Link>
+          )}
 
-      {/* Pending requests banner */}
-      {metrics.pendingRequests > 0 && (
-        <Link to={ROUTES.ADMIN_BOOKING_REQUESTS}>
-          <Card className="p-4 border-amber-200 bg-amber-50 hover:shadow-card-hover transition-shadow cursor-pointer">
-            <div className="flex items-center gap-3">
-              <MessageSquare className="h-5 w-5 text-amber-600 shrink-0" />
-              <div>
-                <p className="text-sm font-medium text-amber-900">
-                  {metrics.pendingRequests === 1
-                    ? t("admin.dashboard.pendingBookingOne")
-                    : t("admin.dashboard.pendingBookingOther").replace(
-                        "{count}",
-                        metrics.pendingRequests,
-                      )}
-                </p>
-                <p className="text-xs text-amber-700">
-                  {t("admin.dashboard.clickToReview")}
-                </p>
-              </div>
-            </div>
-          </Card>
-        </Link>
+          {metrics.pendingRequests > 0 && (
+            <Link to={ROUTES.ADMIN_BOOKING_REQUESTS}>
+              <Card className="p-4 border-amber-200 bg-amber-50 hover:shadow-card-hover transition-shadow cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <MessageSquare className="h-5 w-5 text-amber-600 shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium text-amber-900">
+                      {metrics.pendingRequests === 1
+                        ? t("admin.dashboard.pendingBookingOne")
+                        : t("admin.dashboard.pendingBookingOther").replace(
+                            "{count}",
+                            metrics.pendingRequests,
+                          )}
+                    </p>
+                    <p className="text-xs text-amber-700">
+                      {t("admin.dashboard.clickToReview")}
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </Link>
+          )}
+        </div>
       )}
 
       {/* Content grid */}

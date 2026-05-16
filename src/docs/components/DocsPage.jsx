@@ -23,20 +23,28 @@ function normalizeForId(text) {
 }
 
 // Extract headings from markdown content for TOC
+// Deduplicates IDs the same way rehype-slug does (appending -1, -2, ...)
 function extractHeadings(content) {
   if (!content) return [];
   const headingRegex = /^#{2,3}\s+(.+)$/gm;
   const headings = [];
+  const idCount = {};
   let match;
-  
+
   while ((match = headingRegex.exec(content)) !== null) {
     const text = match[1].trim();
     const level = match[0].startsWith('###') ? 3 : 2;
-    const id = normalizeForId(text);
-    
-    headings.push({ text, id, level });
+    const baseId = normalizeForId(text);
+
+    if (idCount[baseId] === undefined) {
+      idCount[baseId] = 0;
+      headings.push({ text, id: baseId, level });
+    } else {
+      idCount[baseId] += 1;
+      headings.push({ text, id: `${baseId}-${idCount[baseId]}`, level });
+    }
   }
-  
+
   return headings;
 }
 
