@@ -13,8 +13,6 @@ import { useLanguage } from "@/hooks/useLanguage";
 
 const SLOT_TYPE_OPTIONS = [
   { value: "single_session", i18nKey: "admin.slotForm.typeSingle" },
-  { value: "multi_day", i18nKey: "admin.slotForm.typeMultiDay" },
-  { value: "retreat_day", i18nKey: "admin.slotForm.typeRetreatDay" },
   { value: "private", i18nKey: "admin.slotForm.typePrivate" },
 ];
 
