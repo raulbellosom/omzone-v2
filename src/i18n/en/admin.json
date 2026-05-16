@@ -948,6 +948,8 @@
       "subtitle": "Browse and manage files across all storage buckets.",
       "upload": "Upload",
       "uploading": "Uploading…",
+      "uploadSuccess": "File uploaded successfully",
+      "uploadError": "Failed to upload file",
       "dropzone": "Drag and drop files here, or click Upload above",
       "fileName": "Name",
       "fileType": "Type",

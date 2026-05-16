@@ -5,13 +5,10 @@ import SEOHead from "@/components/common/SEOHead";
 import Button from "@/components/common/Button";
 import env from "@/config/env";
 import { useLanguage } from "@/hooks/useLanguage";
-import { getPreviewUrl } from "@/hooks/useImagePreview";
 import AboutHero from "@/components/public/about/AboutHero";
 import MissionSection from "@/components/public/about/MissionSection";
 import LocationSection from "@/components/public/about/LocationSection";
 import PhilosophySection from "@/components/public/about/PhilosophySection";
-
-const CTA_FILE_ID = "69d3de3500234a1f7eb9"; // Relajación al atardecer con yoga
 
 export default function AboutPage() {
   const { t } = useLanguage();
@@ -33,11 +30,7 @@ export default function AboutPage() {
       <section className="relative h-[45vh] min-h-[340px] max-h-[500px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src={getPreviewUrl(CTA_FILE_ID, {
-              bucketId: env.bucketPublicResources,
-              width: 1600,
-              quality: 80,
-            })}
+            src="/images/Relajacion-al-atardecer-con-yoga.png"
             alt=""
             role="presentation"
             className="h-full w-full object-cover"

@@ -1,10 +1,4 @@
 import { useLanguage } from "@/hooks/useLanguage";
-import { getResponsiveSrcSet } from "@/hooks/useImagePreview";
-import env from "@/config/env";
-
-const MISSION_WIDTHS = [400, 700, 900];
-
-const MISSION_FILE_ID = "69d3de23000d7849102e"; // Retiro de bienestar rodeado de naturaleza
 
 export default function MissionSection() {
   const { t } = useLanguage();
@@ -31,24 +25,13 @@ export default function MissionSection() {
 
           {/* Image */}
           <div className="relative overflow-hidden rounded-card">
-            {(() => {
-              const { src, srcSet, sizes } = getResponsiveSrcSet(MISSION_FILE_ID, {
-                bucketId: env.bucketPublicResources,
-                quality: 80,
-                widths: MISSION_WIDTHS,
-              });
-              return (
-                <img
-                  src={src}
-                  srcSet={srcSet}
-                  sizes={sizes}
-                  alt="Wellness retreat surrounded by nature"
-                  className="w-full h-auto object-cover aspect-[4/3]"
-                  loading="lazy"
-                  decoding="async"
-                />
-              );
-            })()}
+            <img
+              src="/images/clase-de-yoga-aereo-selva-tropical.png"
+              alt="Wellness retreat surrounded by nature"
+              className="w-full h-auto object-cover aspect-[4/3]"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         </div>
       </div>

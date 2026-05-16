@@ -1,10 +1,4 @@
 import { useLanguage } from "@/hooks/useLanguage";
-import { getResponsiveSrcSet } from "@/hooks/useImagePreview";
-import env from "@/config/env";
-
-const LOCATION_WIDTHS = [640, 1024, 1600];
-
-const LOCATION_FILE_ID = "69d3ddd100364abb45c8"; // Yoga al amanecer en Puerto Vallarta
 
 export default function LocationSection() {
   const { t } = useLanguage();
@@ -13,24 +7,13 @@ export default function LocationSection() {
     <section className="relative overflow-hidden">
       {/* Full-bleed image */}
       <div className="relative h-[50vh] min-h-[360px] max-h-[560px]">
-        {(() => {
-          const { src, srcSet, sizes } = getResponsiveSrcSet(LOCATION_FILE_ID, {
-            bucketId: env.bucketPublicResources,
-            quality: 82,
-            widths: LOCATION_WIDTHS,
-          });
-          return (
-            <img
-              src={src}
-              srcSet={srcSet}
-              sizes={sizes}
-              alt="Puerto Vallarta coastline at sunrise"
-              className="h-full w-full object-cover"
-              loading="lazy"
-              decoding="async"
-            />
-          );
-        })()}
+        <img
+          src="/images/girl-above-surf-table-on-the-ocean-inthe-sunset-in-los-arcos-puerto-vallarta.png"
+          alt="Puerto Vallarta coastline at sunrise"
+          className="h-full w-full object-cover"
+          loading="lazy"
+          decoding="async"
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-cream" />
       </div>
 

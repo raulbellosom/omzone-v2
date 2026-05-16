@@ -12,6 +12,7 @@ import BucketSelector from "@/components/admin/media/BucketSelector";
 import MediaGrid from "@/components/admin/media/MediaGrid";
 import FileDetailModal from "@/components/admin/media/FileDetailModal";
 import { Search, Upload, FolderOpen, X } from "lucide-react";
+import { toast } from "sonner";
 
 export default function MediaManagerPage() {
   const { user } = useAuth();
@@ -73,20 +74,32 @@ export default function MediaManagerPage() {
     async (fileList) => {
       if (!fileList?.length) return;
       clearError();
-      for (const file of Array.from(fileList)) {
+      const files = Array.from(fileList);
+      let successCount = 0;
+      for (const file of files) {
         const validationError = validate(file);
         if (validationError) {
+          toast.error(`${file.name}: ${validationError}`);
           continue;
         }
+        const toastId = toast.loading(`${t("admin.mediaManager.uploading")} ${file.name}…`);
         try {
           await upload(file);
-        } catch {
-          // error is set in hook state
+          toast.success(file.name, {
+            id: toastId,
+            description: t("admin.mediaManager.uploadSuccess"),
+          });
+          successCount++;
+        } catch (err) {
+          toast.error(file.name, {
+            id: toastId,
+            description: err?.message ?? t("admin.mediaManager.uploadError"),
+          });
         }
       }
-      refresh();
+      if (successCount > 0) refresh();
     },
-    [upload, validate, clearError, refresh],
+    [upload, validate, clearError, refresh, t],
   );
 
   const handleFileInputChange = (e) => {

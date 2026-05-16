@@ -1,10 +1,4 @@
 import { useLanguage } from "@/hooks/useLanguage";
-import { getResponsiveSrcSet } from "@/hooks/useImagePreview";
-import env from "@/config/env";
-
-const HERO_WIDTHS = [640, 1024, 1600];
-
-const HERO_FILE_ID = "69d3de18001b95256dfe"; // Charla tranquila en un espacio wellness
 
 export default function ContactHero() {
   const { t } = useLanguage();
@@ -13,26 +7,15 @@ export default function ContactHero() {
     <section className="relative h-[55vh] min-h-[400px] max-h-[600px] flex items-center justify-center overflow-hidden bg-charcoal">
       {/* Background */}
       <div className="absolute inset-0">
-        {(() => {
-          const { src, srcSet, sizes } = getResponsiveSrcSet(HERO_FILE_ID, {
-            bucketId: env.bucketPublicResources,
-            quality: 82,
-            widths: HERO_WIDTHS,
-          });
-          return (
-            <img
-              src={src}
-              srcSet={srcSet}
-              sizes={sizes}
-              alt=""
-              role="presentation"
-              loading="eager"
-              fetchPriority="high"
-              decoding="sync"
-              className="h-full w-full object-cover"
-            />
-          );
-        })()}
+        <img
+          src="/images/contact-bg.png"
+          alt=""
+          role="presentation"
+          loading="eager"
+          fetchPriority="high"
+          decoding="sync"
+          className="h-full w-full object-cover"
+        />
       </div>
 
       {/* Overlay */}
