@@ -12,6 +12,7 @@ dist-ssr/
 .env
 .env.local
 .env.*.local
+.env.prod
 
 # Editor
 .vscode/*
@@ -38,3 +39,4 @@ tmp/
 temp-*
 temp_*
 temp/
+

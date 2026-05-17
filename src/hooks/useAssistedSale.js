@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { functions } from "@/lib/appwrite";
 import env from "@/config/env";
 
@@ -45,15 +45,15 @@ export function useAssistedSale() {
   const [result, setResult] = useState(null);
   const [submitError, setSubmitError] = useState(null);
 
-  function setWizardField(field, value) {
+  const setWizardField = useCallback(function setWizardField(field, value) {
     setWizard((prev) => ({ ...prev, [field]: value }));
-  }
+  }, []);
 
-  function resetWizard() {
+  const resetWizard = useCallback(function resetWizard() {
     setWizard({ ...EMPTY_WIZARD });
     setResult(null);
     setSubmitError(null);
-  }
+  }, []);
 
   /**
    * Submit the assisted sale by calling the create-checkout Function.

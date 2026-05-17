@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { databases, Query } from "@/lib/appwrite";
 import { useAddonAssignments } from "@/hooks/useAddonAssignments";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -49,13 +49,17 @@ function AddonCard({ addon, selected, onToggle, t }) {
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-sm font-medium text-charcoal truncate">{addon.name}</p>
+            <p className="text-sm font-medium text-charcoal truncate">
+              {addon.name}
+            </p>
             {addon.isRequired && (
               <span className="text-[10px] uppercase tracking-wider text-sage-dark bg-sage/10 px-1.5 py-0.5 rounded-full font-medium">
                 {t("admin.assistedSale.addons.required")}
               </span>
             )}
-            <span className={`text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded-full font-medium ${badgeClass}`}>
+            <span
+              className={`text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded-full font-medium ${badgeClass}`}
+            >
               {badge}
             </span>
           </div>
@@ -80,7 +84,9 @@ function AddonCard({ addon, selected, onToggle, t }) {
             +{formatPrice(addon.effectivePrice, addon.currency)}
           </span>
           {addon.chargeQuantity > 0 && (
-            <span className="text-xs text-charcoal-subtle">× {addon.chargeQuantity}</span>
+            <span className="text-xs text-charcoal-subtle">
+              × {addon.chargeQuantity}
+            </span>
           )}
           <div
             className={cn(
@@ -116,6 +122,8 @@ export default function AddonSelectStep({ wizard, setWizardField }) {
     useAddonAssignments(wizard.experience?.$id);
   const [addons, setAddons] = useState([]);
   const [loading, setLoading] = useState(false);
+  const selectedAddonIdsRef = useRef(wizard.selectedAddonIds);
+  selectedAddonIdsRef.current = wizard.selectedAddonIds;
 
   useEffect(() => {
     if (!assignments.length) {
@@ -123,7 +131,9 @@ export default function AddonSelectStep({ wizard, setWizardField }) {
       return;
     }
     setLoading(true);
-    const addonIds = assignments.map((assignment) => assignment.addonId).filter(Boolean);
+    const addonIds = assignments
+      .map((assignment) => assignment.addonId)
+      .filter(Boolean);
     if (!addonIds.length) {
       setAddons([]);
       setLoading(false);
@@ -141,7 +151,10 @@ export default function AddonSelectStep({ wizard, setWizardField }) {
           .map((assignment) => {
             const addon = byId.get(assignment.addonId);
             if (!addon) return null;
-            const pricing = computeAddonChargeQuantity(addon.priceType, wizard.quantity);
+            const pricing = computeAddonChargeQuantity(
+              addon.priceType,
+              wizard.quantity,
+            );
             return {
               ...addon,
               isRequired: Boolean(assignment.isRequired),
@@ -152,7 +165,9 @@ export default function AddonSelectStep({ wizard, setWizardField }) {
                   : addon.basePrice,
               unsupportedPriceType:
                 Boolean(pricing.errorCode) ||
-                !ADDON_PRICE_TYPES_SUPPORTED_IN_CHECKOUT.includes(addon.priceType),
+                !ADDON_PRICE_TYPES_SUPPORTED_IN_CHECKOUT.includes(
+                  addon.priceType,
+                ),
               chargeQuantity: pricing.chargeQuantity || 0,
             };
           })
@@ -162,18 +177,20 @@ export default function AddonSelectStep({ wizard, setWizardField }) {
           .filter((addon) => addon.isRequired)
           .map((addon) => addon.$id);
         const missingRequired = requiredIds.filter(
-          (id) => !wizard.selectedAddonIds.includes(id),
+          (id) => !selectedAddonIdsRef.current.includes(id),
         );
         if (missingRequired.length) {
           setWizardField(
             "selectedAddonIds",
-            Array.from(new Set([...wizard.selectedAddonIds, ...missingRequired])),
+            Array.from(
+              new Set([...selectedAddonIdsRef.current, ...missingRequired]),
+            ),
           );
         }
       })
       .catch(() => setAddons([]))
       .finally(() => setLoading(false));
-  }, [assignments, setWizardField, wizard.quantity, wizard.selectedAddonIds]);
+  }, [assignments, setWizardField, wizard.quantity]);
 
   function toggle(addonId) {
     const addon = addons.find((item) => item.$id === addonId);
