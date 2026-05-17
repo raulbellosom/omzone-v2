@@ -65,6 +65,7 @@ import {
   Role,
 } from "node-appwrite";
 import Stripe from "stripe";
+import nodemailer from "nodemailer";
 import {
   computeAddonChargeQuantity,
   computeCheckoutConstraints,
@@ -341,6 +342,30 @@ async function sendPaymentLinkEmail({
       const data = await response.json();
       log(
         `Payment link email sent via Resend id=${data.id} to ${customerEmail} for order ${orderNumber}`,
+      );
+    } else if (provider === "smtp") {
+      const host = process.env.SMTP_HOST;
+      const port = parseInt(process.env.SMTP_PORT || "465", 10);
+      const user = process.env.SMTP_USER;
+      const pass = process.env.SMTP_PASS;
+      if (!host || !user || !pass)
+        throw new Error(
+          "SMTP credentials not configured (SMTP_HOST, SMTP_USER, SMTP_PASS)",
+        );
+      const transporter = nodemailer.createTransport({
+        host,
+        port,
+        secure: port === 465,
+        auth: { user, pass },
+      });
+      const info = await transporter.sendMail({
+        from: emailFrom,
+        to: customerEmail,
+        subject: renderedSubject,
+        html: renderedBody,
+      });
+      log(
+        `Payment link email sent via SMTP messageId=${info.messageId} to ${customerEmail} for order ${orderNumber}`,
       );
     } else {
       throw new Error(
@@ -1223,7 +1248,10 @@ export default async ({ req, res, log, error }) => {
         assignment.overridePrice != null
           ? assignment.overridePrice
           : addon.basePrice;
-      const addonPricing = computeAddonChargeQuantity(addon.priceType, quantity);
+      const addonPricing = computeAddonChargeQuantity(
+        addon.priceType,
+        quantity,
+      );
       if (addonPricing.errorCode) {
         return res.json(
           {
@@ -1332,16 +1360,18 @@ export default async ({ req, res, log, error }) => {
         effectiveMax: constraints.effectiveMax,
         effectiveAvailable: constraints.effectiveAvailable,
       },
-      addons: validatedAddons.map(({ addon, effectivePrice, chargeQuantity }) => ({
-        addonId: addon.$id,
-        name: addon.name,
-        nameEs: addon.nameEs || null,
-        addonType: addon.addonType,
-        basePrice: addon.basePrice,
-        effectivePrice,
-        chargeQuantity,
-        priceType: addon.priceType,
-      })),
+      addons: validatedAddons.map(
+        ({ addon, effectivePrice, chargeQuantity }) => ({
+          addonId: addon.$id,
+          name: addon.name,
+          nameEs: addon.nameEs || null,
+          addonType: addon.addonType,
+          basePrice: addon.basePrice,
+          effectivePrice,
+          chargeQuantity,
+          priceType: addon.priceType,
+        }),
+      ),
       quantity,
       currency,
       subtotal,

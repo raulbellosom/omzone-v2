@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, MessageCircle, Calendar, Ticket } from "lucide-react";
+import { ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
@@ -20,20 +20,6 @@ const CTA_CONFIG = {
     variant: "outline",
     action: "placeholder",
   },
-  assisted: {
-    labelKey: "experienceCTA.checkAvailability",
-    sublabelKey: "experienceCTA.checkAvailabilitySub",
-    icon: Calendar,
-    variant: "outline",
-    action: "placeholder",
-  },
-  pass: {
-    labelKey: "experienceCTA.viewPasses",
-    sublabelKey: "experienceCTA.viewPassesSub",
-    icon: Ticket,
-    variant: "outline",
-    action: "passes",
-  },
 };
 
 export default function ExperienceCTA({ experience, className, id }) {
@@ -47,10 +33,7 @@ export default function ExperienceCTA({ experience, className, id }) {
       navigate(
         `${ROUTES.CHECKOUT}?experienceId=${experience.$id}&slug=${experience.slug}`,
       );
-    } else if (config.action === "passes") {
-      navigate(`${ROUTES.PASSES}?experience=${experience.$id}`);
     }
-    // Other modes are placeholders for now
   }
 
   return (

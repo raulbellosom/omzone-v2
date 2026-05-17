@@ -41,6 +41,7 @@
  */
 
 import { Client, Databases, Query, ID } from "node-appwrite";
+import nodemailer from "nodemailer";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -137,17 +138,25 @@ async function sendViaResend({ to, from, subject, html, log }) {
 
 async function sendViaSmtp({ to, from, subject, html, log }) {
   const host = process.env.SMTP_HOST;
-  const port = parseInt(process.env.SMTP_PORT || "587", 10);
+  const port = parseInt(process.env.SMTP_PORT || "465", 10);
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
 
   if (!host || !user || !pass)
-    throw new Error("SMTP credentials not configured");
+    throw new Error(
+      "SMTP credentials not configured (SMTP_HOST, SMTP_USER, SMTP_PASS)",
+    );
 
-  throw new Error(
-    "SMTP provider requires 'nodemailer' dependency. " +
-      "Add it to package.json or switch EMAIL_PROVIDER to 'resend'.",
-  );
+  const transporter = nodemailer.createTransport({
+    host,
+    port,
+    secure: port === 465,
+    auth: { user, pass },
+  });
+
+  const info = await transporter.sendMail({ from, to, subject, html });
+  log(`Email sent via SMTP: messageId=${info.messageId} to=${to}`);
+  return info;
 }
 
 async function sendEmail({ to, from, subject, html, log }) {

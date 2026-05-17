@@ -31,8 +31,8 @@ Catálogo maestro de experiencias. Entidad central del sistema.
 | `publicNameEs`       | string(255)  | no        | Nombre público ES                                               |
 | `slug`               | string(255)  | sí        | URL slug (único)                                                |
 | `type`               | enum         | sí        | `session`, `immersion`, `retreat`, `stay`, `private`, `package` |
-| `saleMode`           | enum         | sí        | `direct`, `request`, `assisted`, `pass`                         |
-| `fulfillmentType`    | enum         | sí        | `ticket`, `booking`, `pass`, `package`                          |
+| `saleMode`           | enum         | sí        | `direct`, `request`                                             |
+| `fulfillmentType`    | enum         | sí        | `ticket`, `booking`, `package`                                  |
 | `shortDescription`   | string(500)  | no        | Resumen corto EN                                                |
 | `shortDescriptionEs` | string(500)  | no        | Resumen corto ES                                                |
 | `longDescription`    | string(5000) | no        | Descripción larga EN                                            |

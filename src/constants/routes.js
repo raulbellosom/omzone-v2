@@ -5,8 +5,6 @@ export const ROUTES = {
   EXPERIENCE: "/experiences/:slug",
   PACKAGES: "/packages",
   PACKAGE: "/packages/:slug",
-  PASSES: "/passes",
-  PASS: "/passes/:slug",
   ABOUT: "/about",
   CONTACT: "/contact",
   PRIVACY: "/privacy",
@@ -35,7 +33,6 @@ export const ROUTES = {
   PORTAL_ORDER: "/portal/orders/:id",
   PORTAL_TICKETS: "/portal/tickets",
   PORTAL_TICKET_DETAIL: "/portal/tickets/:ticketId",
-  PORTAL_PASSES: "/portal/passes",
   PORTAL_PROFILE: "/portal/profile",
 
   // Admin
@@ -60,11 +57,6 @@ export const ROUTES = {
   ADMIN_PACKAGES: "/admin/packages",
   ADMIN_PACKAGE_NEW: "/admin/packages/new",
   ADMIN_PACKAGE_EDIT: "/admin/packages/:packageId/edit",
-  ADMIN_PASSES: "/admin/passes",
-  ADMIN_PASS_NEW: "/admin/passes/new",
-  ADMIN_PASS_EDIT: "/admin/passes/:passId/edit",
-  ADMIN_USER_PASSES: "/admin/user-passes",
-  ADMIN_USER_PASS_DETAIL: "/admin/user-passes/:userPassId",
   ADMIN_SLOTS: "/admin/slots",
   ADMIN_RESOURCES: "/admin/resources",
   ADMIN_RESOURCE_NEW: "/admin/resources/new",

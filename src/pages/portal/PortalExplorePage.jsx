@@ -1,13 +1,11 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { usePublicExperiences } from "@/hooks/usePublicExperiences";
-import { usePublicPasses } from "@/hooks/usePublicPasses";
 import { usePublicPublications } from "@/hooks/usePublicPublications";
 import { useLanguage } from "@/hooks/useLanguage";
 import ExperienceCard from "@/components/public/experiences/ExperienceCard";
-import PassCard from "@/components/public/passes/PassCard";
 import PublicationCard from "@/components/public/publications/PublicationCard";
-import { ArrowRight, Compass, Sparkles, BookOpen } from "lucide-react";
+import { ArrowRight, Compass, BookOpen } from "lucide-react";
 
 function SectionHeader({ icon: Icon, title, linkTo, linkLabel, count }) {
   return (
@@ -111,7 +109,6 @@ export default function PortalExplorePage() {
     loading: loadingExp,
   } = usePublicExperiences();
 
-  const { passes, loading: loadingPasses } = usePublicPasses();
   const { publications, loading: loadingPubs } = usePublicPublications();
 
   const [expType, setExpType] = useState("");
@@ -196,27 +193,6 @@ export default function PortalExplorePage() {
           </p>
         )}
       </section>
-
-      {/* Passes section */}
-      {(loadingPasses || passes.length > 0) && (
-        <section>
-          <SectionHeader
-            icon={Sparkles}
-            title={t("portal.explore.passes")}
-            linkTo="/passes"
-            linkLabel={t("portal.explore.viewAll")}
-          />
-          {loadingPasses ? (
-            <CardSkeleton count={3} aspect="aspect-video" />
-          ) : (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {passes.slice(0, 6).map((pass) => (
-                <PassCard key={pass.$id} pass={pass} />
-              ))}
-            </div>
-          )}
-        </section>
-      )}
 
       {/* Publications section */}
       {(loadingPubs || publications.length > 0) && (

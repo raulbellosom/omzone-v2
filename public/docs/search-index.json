@@ -25395,8 +25395,8 @@
       "asignaciones ranuras."
     ],
     "content": {
-      "en": "Locations Locations are physical venues where experiences take place. Each location can contain multiple spaces. Creating a Location Navigate to Operations - Resources - Locations - New location Location Fields | Field | Type | Required | Description | |-------|------|----------|-------------| | name | string | Yes | Location name (e.g., \"Tulum Studio\") | | address | string | No | Full physical address | | coordinates | string | No | Latitude,longitude (e.g., \"20.2114,-87.4653\") | | description | text | No | Description of the location | | isActive | boolean | Yes | Whether the location is available | Address and Coordinates The address field stores the full street address for display purposes. The coordinates field (format: latitude,longitude) enables: - Map integration - Geolocation features - Distance calculations Both fields are optional but recommended for venues that serve customers. Creating a Room Navigate to Operations - Resources - Rooms - New room Room Fields | Field | Type | Required | Description | |-------|------|----------|-------------| | locationId | reference | Yes | Parent location | | name | string | Yes | Room name (e.g., \"Main Studio\") | | type | enum | No | studio, therapy_room, outdoor, pool_area, other | | capacity | integer | No | Maximum number of participants | | description | text | No | Room description | | isActive | boolean | Yes | Whether the room is available | Room Types | Type | Description | |------|-------------| | studio | General practice or class space | | therapy_room | Small space for treatments | | outdoor | Open-air space | | pool_area | Pool-adjacent space | | other | Other types of spaces | Location Hierarchy Using Locations in Slots When creating or editing a slot, you can assign: - A location (the venue) - A space (specific area within the venue) The space selection only appears after a location is selected. You must first select a location, then select the space. Location in Slot Display Slots show their assigned location and space: - Location - The venue name - Space - The specific area within the venue This helps customers understand where an experience will take place. Common Mistakes Creating spaces without selecting a location first. Spaces must belong to a location. When creating a space, you must select the parent location from the dropdown. If no locations exist, create one first. Not setting space capacity. The capacity helps prevent overbooking. Set the maximum participants based on the physical space constraints. Setting location coordinates incorrectly. The coordinates must be in \"latitude,longitude\" format (e.g., \"20.2114,-87.4653\"). Do not include spaces or other characters. Archiving a location with active spaces. If a location is no longer used, deactivate it. This cascades to all spaces under it, preventing new slot assignments. Related Pages - Slots & Agenda - Where locations and spaces are assigned - Resources - Instructors and equipment that work at locations",
-      "es": "Ubicaciones Las ubicaciones son lugares físicos donde se realizan las experiencias. Cada ubicación puede contener múltiples espacios. Crear una Ubicación Navega a Operaciones - Recursos - Ubicaciones - Nueva ubicación Campos de Ubicación | Campo | Tipo | Requerido | Descripción | |-------|------|-----------|-------------| | name | string | Sí | Nombre de la ubicación (ej., \"Estudio Tulum\") | | address | string | No | Dirección física completa | | coordinates | string | No | Latitud,longitud (ej., \"20.2114,-87.4653\") | | description | text | No | Descripción de la ubicación | | isActive | boolean | Sí | Si la ubicación está disponible | Dirección y Coordenadas El campo address almacena la dirección completa para propósitos de visualización. El campo coordinates (formato: latitud,longitud) habilita: - Integración de mapas - Funciones de geolocalización - Cálculos de distancia Ambos campos son opcionales pero recomendados para venues que sirven a clientes. Crear un Espacio Navega a Operaciones - Recursos - Espacios - Nuevo espacio  Nota interna: La colección en base de datos y el campo API se llaman rooms y roomId por razones históricas. La interfaz los muestra como Espacios. Campos de Espacio | Campo | Tipo | Requerido | Descripción | |-------|------|-----------|-------------| | locationId | reference | Sí | Ubicación padre | | name | string | Sí | Nombre del espacio (ej., \"Estudio Principal\") | | type | enum | No | studio, therapy_room, outdoor, pool_area, other | | capacity | integer | No | Máximo número de participantes | | description | text | No | Descripción del espacio | | isActive | boolean | Sí | Si el espacio está disponible | Tipos de Espacio | Tipo | Descripción | |------|-------------| | studio | Espacio general de práctica o clase | | therapy_room | Espacio pequeño para tratamientos | | outdoor | Espacio al aire libre | | pool_area | Espacio junto a la piscina | | other | Otros tipos de espacios | Jerarquía de Ubicación Usar Ubicaciones en Ranuras Al crear o editar una ranura, puedes asignar: - Una ubicación (el venue) - Un espacio (espacio específico dentro del venue) La selección de espacio solo aparece después de seleccionar una ubicación. Primero debes seleccionar una ubicación, luego seleccionar el espacio. Ubicación en Visualización de Ranura Las ranuras muestran su ubicación y espacio asignados: - Ubicación - El nombre del venue - Espacio - El área específica dentro del venue Esto ayuda a los clientes a entender dónde se realizará una experiencia. Errores Comunes Crear espacios sin seleccionar una ubicación primero. Los espacios deben pertenecer a una ubicación. Al crear un espacio, debes seleccionar la ubicación padre del dropdown. Si no existe ninguna ubicación, crea una primero. No establecer capacidad del espacio. La capacidad ayuda a prevenir sobreventa. Establece el máximo de participantes basándote en las restricciones del espacio físico. Establecer coordenadas de ubicación incorrectamente. Las coordenadas deben estar en formato \"latitud,longitud\" (ej., \"20.2114,-87.4653\"). No incluyas espacios u otros caracteres. Archivar una ubicación con espacios activos. Si una ubicación ya no se usa, descaívala. Esto se cascada a todos los espacios bajo ella, previniendo nuevas asignaciones de ranuras. Páginas Relacionadas - Ranuras y Agenda - Donde se asignan ubicaciones y salas - Recursos - Instructores y equipo que trabajan en ubicaciones"
+      "en": "Locations Locations are physical venues where experiences take place. Each location can contain multiple spaces. Creating a Location Navigate to Operations - Resources - Locations - New location Location Fields | Field         | Type    | Required | Description                                   | | ------------- | ------- | -------- | --------------------------------------------- | | name        | string  | Yes      | Location name (e.g., \"Tulum Studio\")          | | address     | string  | No       | Full physical address                         | | coordinates | string  | No       | Latitude,longitude (e.g., \"20.2114,-87.4653\") | | description | text    | No       | Description of the location                   | | isActive    | boolean | Yes      | Whether the location is available             | Address and Coordinates The address field stores the full street address for display purposes. The coordinates field (format: latitude,longitude) enables: - Map integration - Geolocation features - Distance calculations Both fields are optional but recommended for venues that serve customers. Creating a Room Navigate to Operations - Resources - Rooms - New room Room Fields | Field         | Type      | Required | Description                                               | | ------------- | --------- | -------- | --------------------------------------------------------- | | locationId  | reference | Yes      | Parent location                                           | | name        | string    | Yes      | Room name (e.g., \"Main Studio\")                           | | type        | enum      | No       | studio, therapy_room, outdoor, pool_area, other | | capacity    | integer   | No       | Maximum number of participants                            | | description | text      | No       | Room description                                          | | isActive    | boolean   | Yes      | Whether the room is available                             | Room Types | Type           | Description                     | | -------------- | ------------------------------- | | studio       | General practice or class space | | therapy_room | Small space for treatments      | | outdoor      | Open-air space                  | | pool_area    | Pool-adjacent space             | | other        | Other types of spaces           | Location Hierarchy Using Locations in Slots When creating or editing a slot, you can assign: - A location (the venue) - A space (specific area within the venue) The space selection only appears after a location is selected. You must first select a location, then select the space. Location in Slot Display Slots show their assigned location and space: - Location - The venue name - Space - The specific area within the venue This helps customers understand where an experience will take place. Common Mistakes Creating spaces without selecting a location first. Spaces must belong to a location. When creating a space, you must select the parent location from the dropdown. If no locations exist, create one first. Not setting space capacity. The capacity helps prevent overbooking. Set the maximum participants based on the physical space constraints. Setting location coordinates incorrectly. The coordinates must be in \"latitude,longitude\" format (e.g., \"20.2114,-87.4653\"). Do not include spaces or other characters. Archiving a location with active spaces. If a location is no longer used, deactivate it. This cascades to all spaces under it, preventing new slot assignments. Related Pages - Slots & Agenda - Where locations and spaces are assigned - Resources - Instructors and equipment that work at locations",
+      "es": "Ubicaciones Las ubicaciones son lugares físicos donde se realizan las experiencias. Cada ubicación puede contener múltiples espacios. Crear una Ubicación Navega a Operaciones - Recursos - Ubicaciones - Nueva ubicación Campos de Ubicación | Campo         | Tipo    | Requerido | Descripción                                   | | ------------- | ------- | --------- | --------------------------------------------- | | name        | string  | Sí        | Nombre de la ubicación (ej., \"Estudio Tulum\") | | address     | string  | No        | Dirección física completa                     | | coordinates | string  | No        | Latitud,longitud (ej., \"20.2114,-87.4653\")    | | description | text    | No        | Descripción de la ubicación                   | | isActive    | boolean | Sí        | Si la ubicación está disponible               | Dirección y Coordenadas El campo address almacena la dirección completa para propósitos de visualización. El campo coordinates (formato: latitud,longitud) habilita: - Integración de mapas - Funciones de geolocalización - Cálculos de distancia Ambos campos son opcionales pero recomendados para venues que sirven a clientes. Crear un Espacio Navega a Operaciones - Recursos - Espacios - Nuevo espacio  Nota interna: La colección en base de datos y el campo API se llaman rooms y roomId por razones históricas. La interfaz los muestra como Espacios. Campos de Espacio | Campo         | Tipo      | Requerido | Descripción                                               | | ------------- | --------- | --------- | --------------------------------------------------------- | | locationId  | reference | Sí        | Ubicación padre                                           | | name        | string    | Sí        | Nombre del espacio (ej., \"Estudio Principal\")             | | type        | enum      | No        | studio, therapy_room, outdoor, pool_area, other | | capacity    | integer   | No        | Máximo número de participantes                            | | description | text      | No        | Descripción del espacio                                   | | isActive    | boolean   | Sí        | Si el espacio está disponible                             | Tipos de Espacio | Tipo           | Descripción                         | | -------------- | ----------------------------------- | | studio       | Espacio general de práctica o clase | | therapy_room | Espacio pequeño para tratamientos   | | outdoor      | Espacio al aire libre               | | pool_area    | Espacio junto a la piscina          | | other        | Otros tipos de espacios             | Jerarquía de Ubicación Usar Ubicaciones en Ranuras Al crear o editar una ranura, puedes asignar: - Una ubicación (el venue) - Un espacio (espacio específico dentro del venue) La selección de espacio solo aparece después de seleccionar una ubicación. Primero debes seleccionar una ubicación, luego seleccionar el espacio. Ubicación en Visualización de Ranura Las ranuras muestran su ubicación y espacio asignados: - Ubicación - El nombre del venue - Espacio - El área específica dentro del venue Esto ayuda a los clientes a entender dónde se realizará una experiencia. Errores Comunes Crear espacios sin seleccionar una ubicación primero. Los espacios deben pertenecer a una ubicación. Al crear un espacio, debes seleccionar la ubicación padre del dropdown. Si no existe ninguna ubicación, crea una primero. No establecer capacidad del espacio. La capacidad ayuda a prevenir sobreventa. Establece el máximo de participantes basándote en las restricciones del espacio físico. Establecer coordenadas de ubicación incorrectamente. Las coordenadas deben estar en formato \"latitud,longitud\" (ej., \"20.2114,-87.4653\"). No incluyas espacios u otros caracteres. Archivar una ubicación con espacios activos. Si una ubicación ya no se usa, descaívala. Esto se cascada a todos los espacios bajo ella, previniendo nuevas asignaciones de ranuras. Páginas Relacionadas - Ranuras y Agenda - Donde se asignan ubicaciones y salas - Recursos - Instructores y equipo que trabajan en ubicaciones"
     },
     "headings": {
       "en": [
@@ -25426,63 +25426,63 @@
           "text": "Address and Coordinates",
           "id": "address-and-coordinates",
           "line": 20,
-          "position": 642
+          "position": 843
         },
         {
           "level": 2,
           "text": "Creating a Room",
           "id": "creating-a-room",
-          "line": 31,
-          "position": 948
+          "line": 32,
+          "position": 1150
         },
         {
           "level": 3,
           "text": "Room Fields",
           "id": "room-fields",
-          "line": 35,
-          "position": 1030
+          "line": 36,
+          "position": 1232
         },
         {
           "level": 3,
           "text": "Room Types",
           "id": "room-types",
-          "line": 46,
-          "position": 1503
+          "line": 47,
+          "position": 2058
         },
         {
           "level": 2,
           "text": "Location Hierarchy",
           "id": "location-hierarchy",
-          "line": 56,
-          "position": 1766
+          "line": 57,
+          "position": 2446
         },
         {
           "level": 2,
           "text": "Using Locations in Slots",
           "id": "using-locations-in-slots",
-          "line": 65,
-          "position": 1951
+          "line": 66,
+          "position": 2631
         },
         {
           "level": 2,
           "text": "Location in Slot Display",
           "id": "location-in-slot-display",
-          "line": 73,
-          "position": 2219
+          "line": 75,
+          "position": 2900
         },
         {
           "level": 2,
           "text": "Common Mistakes",
           "id": "common-mistakes",
-          "line": 81,
-          "position": 2446
+          "line": 84,
+          "position": 3128
         },
         {
           "level": 2,
           "text": "Related Pages",
           "id": "related-pages",
-          "line": 95,
-          "position": 3157
+          "line": 98,
+          "position": 3839
         }
       ],
       "es": [
@@ -25512,63 +25512,63 @@
           "text": "Dirección y Coordenadas",
           "id": "direcci-n-y-coordenadas",
           "line": 20,
-          "position": 677
+          "position": 877
         },
         {
           "level": 2,
           "text": "Crear un Espacio",
           "id": "crear-un-espacio",
-          "line": 31,
-          "position": 1013
+          "line": 32,
+          "position": 1214
         },
         {
           "level": 3,
           "text": "Campos de Espacio",
           "id": "campos-de-espacio",
-          "line": 37,
-          "position": 1263
+          "line": 38,
+          "position": 1464
         },
         {
           "level": 3,
           "text": "Tipos de Espacio",
           "id": "tipos-de-espacio",
-          "line": 48,
-          "position": 1762
+          "line": 49,
+          "position": 2304
         },
         {
           "level": 2,
           "text": "Jerarquía de Ubicación",
           "id": "jerarqu-a-de-ubicaci-n",
-          "line": 58,
-          "position": 2058
+          "line": 59,
+          "position": 2726
         },
         {
           "level": 2,
           "text": "Usar Ubicaciones en Ranuras",
           "id": "usar-ubicaciones-en-ranuras",
-          "line": 67,
-          "position": 2268
+          "line": 68,
+          "position": 2936
         },
         {
           "level": 2,
           "text": "Ubicación en Visualización de Ranura",
           "id": "ubicaci-n-en-visualizaci-n-de-ranura",
-          "line": 75,
-          "position": 2572
+          "line": 77,
+          "position": 3241
         },
         {
           "level": 2,
           "text": "Errores Comunes",
           "id": "errores-comunes",
-          "line": 83,
-          "position": 2833
+          "line": 86,
+          "position": 3503
         },
         {
           "level": 2,
           "text": "Páginas Relacionadas",
           "id": "p-ginas-relacionadas",
-          "line": 97,
-          "position": 3622
+          "line": 100,
+          "position": 4292
         }
       ]
     },

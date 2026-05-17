@@ -43,6 +43,7 @@
 
 import { Client, Databases, Query, Users } from "node-appwrite";
 import QRCode from "qrcode";
+import nodemailer from "nodemailer";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -199,22 +200,42 @@ async function sendViaResend({
   return data;
 }
 
-async function sendViaSmtp({ to, from, subject, html, log }) {
+async function sendViaSmtp({ to, from, subject, html, attachments = [], log }) {
   const host = process.env.SMTP_HOST;
-  const port = parseInt(process.env.SMTP_PORT || "587", 10);
+  const port = parseInt(process.env.SMTP_PORT || "465", 10);
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
 
   if (!host || !user || !pass)
-    throw new Error("SMTP credentials not configured");
+    throw new Error(
+      "SMTP credentials not configured (SMTP_HOST, SMTP_USER, SMTP_PASS)",
+    );
 
-  // Minimal SMTP via Node net/tls — for production, consider nodemailer.
-  // For now, we use a simple fetch-based SMTP relay API or fall back to error.
-  // This placeholder ensures the interface exists; add nodemailer as dep if SMTP is needed.
-  throw new Error(
-    "SMTP provider requires 'nodemailer' dependency. " +
-      "Add it to package.json or switch EMAIL_PROVIDER to 'resend'.",
-  );
+  const transporter = nodemailer.createTransport({
+    host,
+    port,
+    secure: port === 465,
+    auth: { user, pass },
+  });
+
+  // Map attachment format: Resend uses contentId, nodemailer uses cid
+  const mailAttachments = attachments.map((a) => ({
+    filename: a.filename,
+    content: Buffer.from(a.content, "base64"),
+    contentType: a.contentType,
+    cid: a.contentId || a.cid,
+  }));
+
+  const info = await transporter.sendMail({
+    from,
+    to,
+    subject,
+    html,
+    attachments: mailAttachments.length > 0 ? mailAttachments : undefined,
+  });
+
+  log(`Email sent via SMTP: messageId=${info.messageId} to=${to}`);
+  return info;
 }
 
 async function sendEmail({
@@ -237,7 +258,8 @@ async function sendEmail({
       idempotencyKey,
       log,
     });
-  if (provider === "smtp") return sendViaSmtp({ to, from, subject, html, log });
+  if (provider === "smtp")
+    return sendViaSmtp({ to, from, subject, html, attachments, log });
   throw new Error(`Unknown EMAIL_PROVIDER: ${provider}`);
 }
 

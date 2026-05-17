@@ -206,7 +206,7 @@ type → Customer expectation setting
 |-----------|-------|
 | Type | enum |
 | Required | Yes |
-| Options | direct, request, assisted, pass |
+| Options | direct, request |
 
 **Detailed Options Analysis:**
 
@@ -214,28 +214,20 @@ type → Customer expectation setting
 |------|-------------------|-------------------|-------------------|
 | `direct` | Immediate purchase | None | Yes - Stripe Checkout |
 | `request` | Customer submits request | Admin reviews and quotes | No - manual follow-up |
-| `assisted` | Admin creates order | Full wizard-driven | Yes - admin initiates |
-| `pass` | Uses existing credits | None | No - credit redemption |
 
 **Critical Relationship with `fulfillmentType`:**
 
-| Sale Mode | Valid Fulfillment Types | Invalid Combinations | Reason |
-|-----------|------------------------|---------------------|--------|
-| `direct` | ticket, booking, package | pass | Pass mode requires existing credits |
-| `request` | ticket, booking, pass, package | - | Admin quotes manually |
-| `assisted` | ticket, booking, pass, package | - | Full flexibility for admin |
-| `pass` | pass | ticket, booking, package | Pass credits are consumed, not purchased |
+| Sale Mode | Valid Fulfillment Types |
+|-----------|------------------------|
+| `direct` | ticket, booking, package |
+| `request` | ticket, booking, package |
 
 **Decision Tree for Sale Mode Selection:**
 
 ```
 Does customer purchase online without admin involvement?
-├── YES → Does customer use existing credits?
-│         ├── YES → saleMode = "pass", fulfillmentType = "pass"
-│         └── NO → saleMode = "direct", fulfillmentType = "ticket" or "booking" or "package"
-└── NO → Does customer submit request and admin quotes?
-          ├── YES → saleMode = "request", fulfillmentType = any
-          └── NO → saleMode = "assisted", fulfillmentType = any
+├── YES → saleMode = "direct", fulfillmentType = "ticket" or "booking" or "package"
+└── NO  → saleMode = "request", fulfillmentType = "ticket" or "booking" or "package"
 ```
 
 **Checkout Flow Impact:**
@@ -243,9 +235,7 @@ Does customer purchase online without admin involvement?
 | saleMode | Checkout UI Changes |
 |----------|---------------------|
 | `direct` | Full checkout with Stripe payment |
-| `request` | "Request Booking" button instead of "Book Now", no payment |
-| `assisted` | Not available for self-service (admin creates via wizard) |
-| `pass` | "Redeem Pass" button, enters pass code or selects from owned passes |
+| `request` | "Request Information" button instead of "Book Now", no payment |
 
 #### `fulfillmentType` Field
 
@@ -253,7 +243,7 @@ Does customer purchase online without admin involvement?
 |-----------|-------|
 | Type | enum |
 | Required | Yes |
-| Options | ticket, booking, pass, package |
+| Options | ticket, booking, package |
 
 **Detailed Options Analysis:**
 
@@ -261,7 +251,6 @@ Does customer purchase online without admin involvement?
 |-------------|------------------------|-------------------|-------------------|
 | `ticket` | QR-coded ticket with unique ID | Yes | Yes (validate ticket) |
 | `booking` | Confirmation email only | No | No (honor system) |
-| `pass` | Credit deducted from pass | No | Yes (consume pass) |
 | `package` | Ticket(s) for bundled items | Yes (per item) | Yes (validate tickets) |
 
 **Critical Constraints:**
@@ -276,9 +265,7 @@ Does customer purchase online without admin involvement?
 
 | Combination | Error/Issue | Why Invalid |
 |-------------|-------------|-------------|
-| saleMode="direct" + fulfillmentType="pass" | Stripe checkout doesn't handle pass redemption | Customer cannot pay AND redeem credits simultaneously |
 | fulfillmentType="ticket" + generatesTickets=false | Conflicting settings | Ticket fulfillment implies ticket generation |
-| saleMode="pass" + fulfillmentType="ticket" | Payment flow mismatch | Pass credits are consumed, not purchased with money |
 
 ---
 

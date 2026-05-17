@@ -9,7 +9,6 @@ import {
   LayoutDashboard,
   ShoppingBag,
   Ticket,
-  Sparkles,
   User,
   LogOut,
   ArrowLeft,
@@ -21,7 +20,6 @@ const NAV_ITEMS = [
   { key: "dashboard", path: ROUTES.PORTAL_DASHBOARD, icon: LayoutDashboard },
   { key: "orders", path: ROUTES.PORTAL_ORDERS, icon: ShoppingBag },
   { key: "tickets", path: ROUTES.PORTAL_TICKETS, icon: Ticket },
-  { key: "passes", path: ROUTES.PORTAL_PASSES, icon: Sparkles },
   { key: "profile", path: ROUTES.PORTAL_PROFILE, icon: User },
 ];
 

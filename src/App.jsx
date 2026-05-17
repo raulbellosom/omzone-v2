@@ -35,10 +35,6 @@ const PackageDetailPage = lazy(
   () => import("@/pages/public/PackageDetailPage"),
 );
 const PublicationPage = lazy(() => import("@/pages/public/PublicationPage"));
-const PassesListPage = lazy(() => import("@/pages/public/PassesListPage"));
-const PublicPassDetailPage = lazy(
-  () => import("@/pages/public/PassDetailPage"),
-);
 const PublicationsListPage = lazy(
   () => import("@/pages/public/PublicationsListPage"),
 );
@@ -126,13 +122,6 @@ const ClientDetailPage = lazy(() => import("@/pages/admin/ClientDetailPage"));
 const SettingsPage = lazy(() => import("@/pages/admin/SettingsPage"));
 const AdminAccountPage = lazy(() => import("@/pages/admin/AdminAccountPage"));
 const CheckInPage = lazy(() => import("@/pages/admin/CheckInPage"));
-const PassListPage = lazy(() => import("@/pages/admin/PassListPage"));
-const PassCreatePage = lazy(() => import("@/pages/admin/PassCreatePage"));
-const PassEditPage = lazy(() => import("@/pages/admin/PassEditPage"));
-const UserPassListPage = lazy(() => import("@/pages/admin/UserPassListPage"));
-const UserPassDetailPage = lazy(
-  () => import("@/pages/admin/UserPassDetailPage"),
-);
 const PackageListPage = lazy(() => import("@/pages/admin/PackageListPage"));
 const PackageCreatePage = lazy(() => import("@/pages/admin/PackageCreatePage"));
 const PackageEditPage = lazy(() => import("@/pages/admin/PackageEditPage"));
@@ -179,9 +168,6 @@ const PortalOrdersPage = lazy(() => import("@/pages/portal/PortalOrdersPage"));
 const PortalOrderDetailPage = lazy(
   () => import("@/pages/portal/PortalOrderDetailPage"),
 );
-const PortalPassesPage = lazy(() => import("@/pages/portal/PortalPassesPage"));
-const PassDetailPage = lazy(() => import("@/pages/portal/PassDetailPage"));
-const UsePassPage = lazy(() => import("@/pages/portal/UsePassPage"));
 const PortalProfilePage = lazy(
   () => import("@/pages/portal/PortalProfilePage"),
 );
@@ -238,8 +224,6 @@ export default function App() {
               element={<ExperienceDetailPage />}
             />
             <Route path="/packages/:slug" element={<PackageDetailPage />} />
-            <Route path="/passes" element={<PassesListPage />} />
-            <Route path="/passes/:slug" element={<PublicPassDetailPage />} />
             <Route path="/publications" element={<PublicationsListPage />} />
             <Route path="/p/:slug" element={<PublicationPage />} />
             <Route path="/forbidden" element={<ForbiddenPage />} />
@@ -339,14 +323,6 @@ export default function App() {
                 path="packages/:packageId/edit"
                 element={<PackageEditPage />}
               />
-              <Route path="passes" element={<PassListPage />} />
-              <Route path="passes/new" element={<PassCreatePage />} />
-              <Route path="passes/:passId/edit" element={<PassEditPage />} />
-              <Route path="user-passes" element={<UserPassListPage />} />
-              <Route
-                path="user-passes/:userPassId"
-                element={<UserPassDetailPage />}
-              />
               <Route path="slots" element={<AgendaGlobalPage />} />
               <Route path="resources" element={<ResourcesPage />} />
               <Route path="resources/new" element={<ResourceCreatePage />} />
@@ -445,9 +421,6 @@ export default function App() {
                 path="orders/:orderId"
                 element={<PortalOrderDetailPage />}
               />
-              <Route path="passes" element={<PortalPassesPage />} />
-              <Route path="passes/:userPassId" element={<PassDetailPage />} />
-              <Route path="passes/:userPassId/use" element={<UsePassPage />} />
               <Route path="profile" element={<PortalProfilePage />} />
             </Route>
           </Route>

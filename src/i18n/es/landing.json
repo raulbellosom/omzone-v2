@@ -105,8 +105,6 @@
     "allExperiences": "Todas las Experiencias",
     "bookNow": "Reservar Ahora",
     "requestInformation": "Solicitar Información",
-    "checkAvailability": "Consultar Disponibilidad",
-    "viewPasses": "Ver Pases",
     "requestBooking": "Solicitar Reserva",
     "pricing": "Precios",
     "agenda": "Agenda",
@@ -549,11 +547,7 @@
     "bookNow": "Reservar Ahora",
     "bookNowSub": "Asegura tu lugar hoy",
     "requestInfo": "Solicitar Información",
-    "requestInfoSub": "Te responderemos pronto",
-    "checkAvailability": "Consultar Disponibilidad",
-    "checkAvailabilitySub": "Habla con nuestro equipo",
-    "viewPasses": "Ver Pases Disponibles",
-    "viewPassesSub": "Usa tu pase existente"
+    "requestInfoSub": "Te responderemos pronto"
   },
   "publication": {
     "home": "Inicio",

@@ -166,14 +166,11 @@
     },
     "saleModes": {
       "direct": "Directa",
-      "request": "Por solicitud",
-      "assisted": "Asistida",
-      "pass": "Por pase"
+      "request": "Por solicitud"
     },
     "fulfillmentTypes": {
       "ticket": "Ticket",
       "booking": "Reserva",
-      "pass": "Pase",
       "package": "Paquete"
     },
     "statuses": {
@@ -1129,9 +1126,7 @@
     },
     "experienceSaleModes": {
       "direct": "Directa",
-      "request": "Por solicitud",
-      "assisted": "Asistida",
-      "pass": "Por pase"
+      "request": "Por solicitud"
     },
     "experienceActions": {
       "archiveTitle": "Archivar experiencia",

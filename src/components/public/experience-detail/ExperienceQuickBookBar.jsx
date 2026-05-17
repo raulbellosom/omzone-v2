@@ -3,26 +3,12 @@ import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   MessageCircle,
-  Calendar,
-  Ticket,
   ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
 import { useLanguage, localizedField } from "@/hooks/useLanguage";
-
-/**
- * ExperienceQuickBookBar
- *
- * Sticky bottom bar — mobile only (lg:hidden).
- * Appears after the user scrolls past the hero/fold.
- * Adapts to saleMode:
- *   - direct  → navigate to checkout
- *   - pass    → navigate to passes
- *   - request → smooth-scroll to booking request form
- *   - assisted → smooth-scroll to CTA section
- */
 
 const SALE_MODE_CONFIG = {
   direct: {
@@ -35,17 +21,6 @@ const SALE_MODE_CONFIG = {
     icon: MessageCircle,
     action: "scroll",
     scrollTarget: "booking-request-form",
-  },
-  assisted: {
-    ctaKey: "experienceCTA.checkAvailability",
-    icon: Calendar,
-    action: "scroll",
-    scrollTarget: "experience-cta-section",
-  },
-  pass: {
-    ctaKey: "experienceCTA.viewPasses",
-    icon: Ticket,
-    action: "passes",
   },
 };
 
@@ -94,8 +69,6 @@ export default function ExperienceQuickBookBar({
       navigate(
         `${ROUTES.CHECKOUT}?experienceId=${experience.$id}&slug=${experience.slug}`,
       );
-    } else if (config.action === "passes") {
-      navigate(`${ROUTES.PASSES}?experience=${experience.$id}`);
     } else if (config.action === "scroll") {
       const target = document.getElementById(config.scrollTarget);
       if (target) {

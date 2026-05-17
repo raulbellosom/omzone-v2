@@ -15,7 +15,7 @@ const TYPE_LABEL_KEYS = [
   "private",
   "package",
 ];
-const SALE_MODE_KEYS = ["direct", "request", "assisted", "pass"];
+const SALE_MODE_KEYS = ["direct", "request"];
 
 function ConfirmOverlay({
   open,

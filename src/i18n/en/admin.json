@@ -166,14 +166,11 @@
     },
     "saleModes": {
       "direct": "Direct",
-      "request": "On request",
-      "assisted": "Assisted",
-      "pass": "By pass"
+      "request": "On request"
     },
     "fulfillmentTypes": {
       "ticket": "Ticket",
       "booking": "Booking",
-      "pass": "Pass",
       "package": "Package"
     },
     "statuses": {
@@ -1129,9 +1126,7 @@
     },
     "experienceSaleModes": {
       "direct": "Direct",
-      "request": "By request",
-      "assisted": "Assisted",
-      "pass": "By pass"
+      "request": "By request"
     },
     "experienceActions": {
       "archiveTitle": "Archive experience",

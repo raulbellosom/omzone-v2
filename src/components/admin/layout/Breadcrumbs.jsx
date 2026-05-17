@@ -10,7 +10,6 @@ const SEGMENT_KEYS = {
   pricing: "admin.breadcrumbs.pricing",
   addons: "admin.breadcrumbs.addons",
   packages: "admin.breadcrumbs.packages",
-  passes: "admin.breadcrumbs.passes",
   slots: "admin.breadcrumbs.slots",
   resources: "admin.breadcrumbs.resources",
   orders: "admin.breadcrumbs.orders",

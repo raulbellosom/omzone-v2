@@ -84,11 +84,6 @@ function PricingSidebar({ tiers, experience }) {
       label: t("experienceDetail.requestInformation"),
       variant: "outline",
     },
-    assisted: {
-      label: t("experienceDetail.checkAvailability"),
-      variant: "outline",
-    },
-    pass: { label: t("experienceDetail.viewPasses"), variant: "outline" },
   };
   const cta = CTA_CONFIG[experience.saleMode] ?? CTA_CONFIG.direct;
 

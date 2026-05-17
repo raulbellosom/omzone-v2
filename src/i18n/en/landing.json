@@ -105,8 +105,6 @@
     "allExperiences": "All Experiences",
     "bookNow": "Book Now",
     "requestInformation": "Request Information",
-    "checkAvailability": "Check Availability",
-    "viewPasses": "View Passes",
     "requestBooking": "Request Booking",
     "pricing": "Pricing",
     "agenda": "Agenda",
@@ -549,11 +547,7 @@
     "bookNow": "Book Now",
     "bookNowSub": "Secure your spot today",
     "requestInfo": "Request Information",
-    "requestInfoSub": "We'll get back to you shortly",
-    "checkAvailability": "Check Availability",
-    "checkAvailabilitySub": "Speak with our team",
-    "viewPasses": "View Available Passes",
-    "viewPassesSub": "Use your existing pass"
+    "requestInfoSub": "We'll get back to you shortly"
   },
   "publication": {
     "home": "Home",
