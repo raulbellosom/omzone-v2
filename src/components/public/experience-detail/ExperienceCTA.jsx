@@ -36,10 +36,7 @@ const CTA_CONFIG = {
   },
 };
 
-export default function ExperienceCTA({
-  experience,
-  className,
-}) {
+export default function ExperienceCTA({ experience, className, id }) {
   const navigate = useNavigate();
   const { t, language } = useLanguage();
   const config = CTA_CONFIG[experience.saleMode] ?? CTA_CONFIG.direct;
@@ -58,6 +55,7 @@ export default function ExperienceCTA({
 
   return (
     <section
+      id={id}
       className={cn(
         "py-12 md:py-16 bg-sage/5 border-t border-sage/20",
         className,

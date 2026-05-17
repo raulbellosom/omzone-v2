@@ -8,7 +8,7 @@ export default function ExperienceGallery({ imageIds, alt = "", bucketId }) {
   // Single image — full width
   if (imageIds.length === 1) {
     return (
-      <section className="py-8 md:py-12">
+      <section className="py-6 md:py-8">
         <div className="rounded-2xl overflow-hidden">
           <OptimizedImage
             fileId={imageIds[0]}
@@ -26,7 +26,7 @@ export default function ExperienceGallery({ imageIds, alt = "", bucketId }) {
   // Two images — side by side on sm+
   if (imageIds.length === 2) {
     return (
-      <section className="py-8 md:py-12">
+      <section className="py-6 md:py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
           {imageIds.map((id, i) => (
             <div key={id} className="rounded-2xl overflow-hidden">
@@ -47,7 +47,7 @@ export default function ExperienceGallery({ imageIds, alt = "", bucketId }) {
 
   // 3+ images — masonry-style grid
   return (
-    <section className="py-8 md:py-12">
+    <section className="py-6 md:py-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
         {/* First image takes full width on sm+ */}
         <div className="sm:col-span-2 rounded-2xl overflow-hidden">

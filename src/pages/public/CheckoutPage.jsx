@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { ArrowLeft, ArrowRight, Loader2, AlertTriangle } from "lucide-react";
 import { useCheckout } from "@/hooks/useCheckout";
@@ -130,6 +131,10 @@ function CheckoutErrorBanner({ error, t, onDismiss }) {
 export default function CheckoutPage() {
   const { t } = useLanguage();
   const checkout = useCheckout();
+  const [searchParams] = useSearchParams();
+
+  const slug = searchParams.get("slug");
+  const backHref = slug ? `/experiences/${slug}` : ROUTES.EXPERIENCES;
 
   const {
     experience,
@@ -174,6 +179,10 @@ export default function CheckoutPage() {
     orderId,
     orderNumber,
   } = checkout;
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentStep]);
 
   if (loading) return <CheckoutSkeleton />;
   if (loadError) return <CheckoutError type={loadError} />;
@@ -240,7 +249,7 @@ export default function CheckoutPage() {
         {/* Header */}
         <div className="mb-6 md:mb-8">
           <Link
-            to={ROUTES.EXPERIENCES}
+            to={backHref}
             className="inline-flex items-center gap-1.5 text-sm text-charcoal-subtle hover:text-charcoal transition-colors group mb-4"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
@@ -300,7 +309,10 @@ export default function CheckoutPage() {
                       nextStep();
                     }
                   }}
-                  disabled={!stepValidation[currentStep] || (currentStep === 3 && submitting)}
+                  disabled={
+                    !stepValidation[currentStep] ||
+                    (currentStep === 3 && submitting)
+                  }
                   className="gap-1.5"
                 >
                   {currentStep === 3 && submitting ? (
@@ -363,7 +375,10 @@ export default function CheckoutPage() {
                     nextStep();
                   }
                 }}
-                disabled={!stepValidation[currentStep] || (currentStep === 3 && submitting)}
+                disabled={
+                  !stepValidation[currentStep] ||
+                  (currentStep === 3 && submitting)
+                }
                 className="gap-1.5"
               >
                 {currentStep === 3 && submitting ? (

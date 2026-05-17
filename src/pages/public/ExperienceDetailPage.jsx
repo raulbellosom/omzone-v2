@@ -12,6 +12,7 @@ import AddonsSection from "@/components/public/experience-detail/AddonsSection";
 import ExperienceGallery from "@/components/public/experience-detail/ExperienceGallery";
 import ExperienceCTA from "@/components/public/experience-detail/ExperienceCTA";
 import BookingRequestForm from "@/components/public/experience-detail/BookingRequestForm";
+import ExperienceQuickBookBar from "@/components/public/experience-detail/ExperienceQuickBookBar";
 import NotFoundPage from "@/pages/NotFoundPage";
 import { Button } from "@/components/common/Button";
 import { ROUTES } from "@/constants/routes";
@@ -54,7 +55,7 @@ function LongDescriptionBlock({ experience }) {
   const text = localizedField(experience, "longDescription", language);
   if (!text) return null;
   return (
-    <div className="pb-10 md:pb-14">
+    <div className="pb-4 md:pb-6">
       <div className="text-charcoal-muted leading-relaxed whitespace-pre-wrap text-base">
         {text}
       </div>
@@ -213,7 +214,7 @@ export default function ExperienceDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-dvh bg-cream pb-20 lg:pb-0">
       <SEOHead
         title={seo.title}
         description={seo.description}
@@ -258,7 +259,10 @@ export default function ExperienceDetailPage() {
             {/* Pricing full-width on mobile (hidden on lg where sidebar shows) */}
             <div className="lg:hidden mt-10">
               {experience.saleMode === "request" ? (
-                <div className="rounded-2xl border border-warm-gray-dark/30 bg-white shadow-lg p-6">
+                <div
+                  id="booking-request-form"
+                  className="rounded-2xl border border-warm-gray-dark/30 bg-white shadow-lg p-6"
+                >
                   <BookingRequestForm experience={experience} />
                 </div>
               ) : (
@@ -277,7 +281,13 @@ export default function ExperienceDetailPage() {
       </div>
 
       {/* CTA full-width */}
-      <ExperienceCTA experience={experience} />
+      <ExperienceCTA id="experience-cta-section" experience={experience} />
+
+      {/* Quick book bar — mobile sticky bottom */}
+      <ExperienceQuickBookBar
+        experience={experience}
+        pricingTiers={pricingTiers}
+      />
     </div>
   );
 }
