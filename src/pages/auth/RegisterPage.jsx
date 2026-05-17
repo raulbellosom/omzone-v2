@@ -24,8 +24,10 @@ export default function RegisterPage() {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState("");
   const [phoneError, setPhoneError] = useState("");
+  const [termsError, setTermsError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   function handleChange(e) {
@@ -48,6 +50,12 @@ export default function RegisterPage() {
       setPhoneError(t("common.phoneError"));
       return;
     }
+
+    if (!termsAccepted) {
+      setTermsError(t("auth.register.termsError"));
+      return;
+    }
+    setTermsError("");
 
     const fullName = [form.firstName.trim(), form.lastName.trim()]
       .filter(Boolean)
@@ -256,6 +264,51 @@ export default function RegisterPage() {
                 disabled={submitting}
               />
               <PasswordStrengthMeter password={form.password} />
+            </div>
+
+            {/* Terms & Conditions */}
+            <div className="space-y-1">
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  id="register-terms"
+                  checked={termsAccepted}
+                  onChange={(e) => {
+                    setTermsAccepted(e.target.checked);
+                    if (e.target.checked) setTermsError("");
+                  }}
+                  disabled={submitting}
+                  className="mt-0.5 h-4 w-4 shrink-0 rounded border-charcoal/30 text-sage accent-sage disabled:opacity-40 cursor-pointer"
+                />
+                <span className="text-sm text-charcoal-muted leading-snug">
+                  {t("auth.register.termsPrefix")}{" "}
+                  <Link
+                    to={ROUTES.TERMS}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sage-dark font-medium hover:text-sage underline underline-offset-2 transition-colors"
+                    tabIndex={submitting ? -1 : undefined}
+                  >
+                    {t("auth.register.termsLink")}
+                  </Link>{" "}
+                  {t("auth.register.termsAnd")}{" "}
+                  <Link
+                    to={ROUTES.PRIVACY}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sage-dark font-medium hover:text-sage underline underline-offset-2 transition-colors"
+                    tabIndex={submitting ? -1 : undefined}
+                  >
+                    {t("auth.register.privacyLink")}
+                  </Link>{" "}
+                  {t("auth.register.termsSuffix")}
+                </span>
+              </label>
+              {termsError && (
+                <p className="text-xs text-red-500 pl-7" role="alert">
+                  {termsError}
+                </p>
+              )}
             </div>
 
             {error && (

@@ -64,7 +64,13 @@
       "errorPasswordShort": "Password must be at least 8 characters.",
       "errorGeneric": "Something went wrong. Please try again.",
       "hasAccount": "Already have an account?",
-      "signIn": "Sign in"
+      "signIn": "Sign in",
+      "termsPrefix": "I agree to the",
+      "termsLink": "Terms & Conditions",
+      "termsAnd": "and",
+      "privacyLink": "Privacy Policy",
+      "termsSuffix": "of OMZONE",
+      "termsError": "You must accept the terms and privacy policy to continue."
     },
     "verifyPending": {
       "pageTitle": "Verify Your Email — OMZONE",
