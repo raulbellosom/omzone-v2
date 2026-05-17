@@ -277,12 +277,14 @@ export default function LocationListTab() {
                 return (
                   <tr
                     key={loc.$id}
-                    className={cn(
-                      "group border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors",
-                      isArchivedView && "opacity-60",
-                    )}
+                    className="group border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors"
                   >
-                    <td className="px-4 py-3">
+                    <td
+                      className={cn(
+                        "px-4 py-3",
+                        isArchivedView && "opacity-60",
+                      )}
+                    >
                       {isArchivedView ? (
                         <span className="font-medium text-charcoal truncate max-w-48 block">
                           {loc.name}
@@ -296,10 +298,20 @@ export default function LocationListTab() {
                         </Link>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-charcoal-subtle hidden sm:table-cell truncate max-w-64">
+                    <td
+                      className={cn(
+                        "px-4 py-3 text-charcoal-subtle hidden sm:table-cell truncate max-w-64",
+                        isArchivedView && "opacity-60",
+                      )}
+                    >
                       {loc.address ?? "—"}
                     </td>
-                    <td className="px-4 py-3 text-center">
+                    <td
+                      className={cn(
+                        "px-4 py-3 text-center",
+                        isArchivedView && "opacity-60",
+                      )}
+                    >
                       {isArchivedView ? (
                         <Badge variant="warm">
                           {t("admin.archive.archivedBadge")}

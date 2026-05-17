@@ -323,12 +323,14 @@ export default function RoomListTab() {
                 return (
                   <tr
                     key={room.$id}
-                    className={cn(
-                      "group border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors",
-                      isArchivedView && "opacity-60",
-                    )}
+                    className="group border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors"
                   >
-                    <td className="px-4 py-3">
+                    <td
+                      className={cn(
+                        "px-4 py-3",
+                        isArchivedView && "opacity-60",
+                      )}
+                    >
                       {isArchivedView ? (
                         <span className="font-medium text-charcoal truncate max-w-40 block">
                           {room.name}
@@ -342,18 +344,38 @@ export default function RoomListTab() {
                         </Link>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-charcoal-subtle truncate max-w-40">
+                    <td
+                      className={cn(
+                        "px-4 py-3 text-charcoal-subtle truncate max-w-40",
+                        isArchivedView && "opacity-60",
+                      )}
+                    >
                       {locationMap[room.locationId] ?? room.locationId}
                     </td>
-                    <td className="px-4 py-3 text-charcoal-subtle hidden lg:table-cell">
+                    <td
+                      className={cn(
+                        "px-4 py-3 text-charcoal-subtle hidden lg:table-cell",
+                        isArchivedView && "opacity-60",
+                      )}
+                    >
                       {getRoomTypeLabel(room.type)}
                     </td>
-                    <td className="px-4 py-3 text-charcoal-subtle hidden sm:table-cell">
+                    <td
+                      className={cn(
+                        "px-4 py-3 text-charcoal-subtle hidden sm:table-cell",
+                        isArchivedView && "opacity-60",
+                      )}
+                    >
                       {room.capacity
                         ? `${room.capacity} ${t("admin.resourceLists.persAbbr")}`
                         : "\u2014"}
                     </td>
-                    <td className="px-4 py-3 text-center">
+                    <td
+                      className={cn(
+                        "px-4 py-3 text-center",
+                        isArchivedView && "opacity-60",
+                      )}
+                    >
                       {isArchivedView ? (
                         <Badge variant="warm">
                           {t("admin.archive.archivedBadge")}
