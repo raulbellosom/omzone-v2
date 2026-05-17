@@ -705,7 +705,7 @@ async function seedSlots() {
   await createDoc("slots", "slot-retreat-1", {
     experienceId: "exp-retreat",
     editionId: "ed-retreat-jun",
-    slotType: "retreat_day",
+    slotType: "single_session",
     startDatetime: futureDate(14, 16, 0),
     endDatetime: futureDate(17, 12, 0),
     timezone: "America/Mexico_City",
@@ -819,7 +819,7 @@ async function seedSlots() {
   await createDoc("slots", "slot-stay-1", {
     experienceId: "exp-wellness-weekend",
     editionId: "ed-stay-may",
-    slotType: "multi_day",
+    slotType: "single_session",
     startDatetime: futureDate(6, 15, 0),
     endDatetime: futureDate(8, 12, 0),
     timezone: "America/Mexico_City",
@@ -832,7 +832,7 @@ async function seedSlots() {
   await createDoc("slots", "slot-stay-2", {
     experienceId: "exp-wellness-weekend",
     editionId: "ed-stay-may",
-    slotType: "multi_day",
+    slotType: "single_session",
     startDatetime: futureDate(13, 15, 0),
     endDatetime: futureDate(15, 12, 0),
     timezone: "America/Mexico_City",
