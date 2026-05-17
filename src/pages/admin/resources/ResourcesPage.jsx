@@ -9,13 +9,15 @@ import { useLanguage } from "@/hooks/useLanguage";
 const TABS = [
   { id: "resources", i18nKey: "admin.resources.tabResources" },
   { id: "locations", i18nKey: "admin.resources.tabLocations" },
-  { id: "rooms", i18nKey: "admin.resources.tabRooms" },
+  { id: "spaces", i18nKey: "admin.resources.tabRooms" },
 ];
 
 export default function ResourcesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useLanguage();
-  const activeTab = searchParams.get("tab") ?? "resources";
+  const rawTab = searchParams.get("tab") ?? "resources";
+  // "rooms" kept as backward-compat alias for "spaces"
+  const activeTab = rawTab === "rooms" ? "spaces" : rawTab;
 
   function setTab(id) {
     setSearchParams({ tab: id });
@@ -58,7 +60,7 @@ export default function ResourcesPage() {
       <div>
         {activeTab === "resources" && <ResourceListTab />}
         {activeTab === "locations" && <LocationListTab />}
-        {activeTab === "rooms" && <RoomListTab />}
+        {activeTab === "spaces" && <RoomListTab />}
       </div>
     </div>
   );

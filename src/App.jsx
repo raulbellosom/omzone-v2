@@ -353,6 +353,9 @@ export default function App() {
               <Route path="resources/:id/edit" element={<ResourceEditPage />} />
               <Route path="locations/new" element={<LocationCreatePage />} />
               <Route path="locations/:id/edit" element={<LocationEditPage />} />
+              <Route path="spaces/new" element={<RoomCreatePage />} />
+              <Route path="spaces/:id/edit" element={<RoomEditPage />} />
+              {/* Legacy aliases — keep for backward compat with old bookmarks */}
               <Route path="rooms/new" element={<RoomCreatePage />} />
               <Route path="rooms/:id/edit" element={<RoomEditPage />} />
               {/* Assisted sale — admin/root/operator */}

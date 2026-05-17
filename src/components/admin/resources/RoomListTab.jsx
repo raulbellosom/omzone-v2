@@ -6,9 +6,13 @@ import { Card } from "@/components/common/Card";
 import { Badge } from "@/components/common/Badge";
 import { useRooms, updateRoom } from "@/hooks/useRooms";
 import { useLocations } from "@/hooks/useLocations";
+import { useArchive } from "@/hooks/useArchive";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import AdminSelect from "@/components/common/AdminSelect";
+import ArchiveActionsMenu from "@/components/admin/ArchiveActionsMenu";
+import ConfirmHardDeleteModal from "@/components/admin/ConfirmHardDeleteModal";
+import env from "@/config/env";
 import { cn } from "@/lib/utils";
 
 const ROOM_TYPE_LABEL_KEYS = [
@@ -19,8 +23,8 @@ const ROOM_TYPE_LABEL_KEYS = [
   "other",
 ];
 
-const ROOM_NEW_ROUTE = "/admin/rooms/new";
-const ROOM_EDIT_ROUTE = "/admin/rooms/:id/edit";
+const ROOM_NEW_ROUTE = "/admin/spaces/new";
+const ROOM_EDIT_ROUTE = "/admin/spaces/:id/edit";
 
 function ActiveToggle({ isActive, onChange }) {
   return (
@@ -63,12 +67,18 @@ function RoomCard({
   room,
   locationName,
   onToggle,
+  onArchive,
+  onRestore,
+  onHardDelete,
   canAdmin,
+  canHardDelete,
+  archiving,
   t,
   roomTypeLabel,
+  isArchivedView,
 }) {
   return (
-    <Card className="p-4 space-y-3">
+    <Card className={cn("p-4 space-y-3", isArchivedView && "opacity-70")}>
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="font-medium text-charcoal truncate">{room.name}</p>
@@ -76,11 +86,15 @@ function RoomCard({
             {locationName ?? "—"}
           </p>
         </div>
-        <Badge variant={room.isActive ? "success" : "warm"}>
-          {room.isActive
-            ? t("admin.resourceLists.active")
-            : t("admin.resourceLists.inactive")}
-        </Badge>
+        {isArchivedView ? (
+          <Badge variant="warm">{t("admin.archive.archivedBadge")}</Badge>
+        ) : (
+          <Badge variant={room.isActive ? "success" : "warm"}>
+            {room.isActive
+              ? t("admin.resourceLists.active")
+              : t("admin.resourceLists.inactive")}
+          </Badge>
+        )}
       </div>
       <div className="flex items-center gap-3 text-xs text-charcoal-subtle flex-wrap">
         <span>{roomTypeLabel}</span>
@@ -94,18 +108,20 @@ function RoomCard({
         )}
       </div>
       <div className="flex items-center gap-2 pt-1 border-t border-sand flex-wrap">
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          asChild
-          className="flex-1 justify-center"
-        >
-          <Link to={ROOM_EDIT_ROUTE.replace(":id", room.$id)}>
-            <Pencil className="h-3.5 w-3.5" /> {t("admin.resourceLists.edit")}
-          </Link>
-        </Button>
-        {canAdmin && (
+        {!isArchivedView && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            asChild
+            className="flex-1 justify-center"
+          >
+            <Link to={ROOM_EDIT_ROUTE.replace(":id", room.$id)}>
+              <Pencil className="h-3.5 w-3.5" /> {t("admin.resourceLists.edit")}
+            </Link>
+          </Button>
+        )}
+        {!isArchivedView && canAdmin && (
           <div className="flex items-center gap-2 ml-auto">
             <span className="text-xs text-charcoal-subtle">
               {room.isActive
@@ -118,24 +134,41 @@ function RoomCard({
             />
           </div>
         )}
+        {(canAdmin || canHardDelete) && (
+          <div className={cn(isArchivedView ? "ml-auto" : "")}>
+            <ArchiveActionsMenu
+              document={room}
+              onArchive={onArchive}
+              onRestore={onRestore}
+              onHardDelete={onHardDelete}
+              canArchive={canAdmin}
+              canHardDelete={canHardDelete}
+              loading={archiving}
+            />
+          </div>
+        )}
       </div>
     </Card>
   );
 }
 
 export default function RoomListTab() {
-  const { isAdmin } = useAuth();
+  const { isAdmin, isRoot } = useAuth();
   const { t } = useLanguage();
   const [locationFilter, setLocationFilter] = useState("");
+  const [showArchived, setShowArchived] = useState("");
   const [actionError, setActionError] = useState(null);
+  const [hardDeleteDoc, setHardDeleteDoc] = useState(null);
+
+  const isArchivedView = showArchived === "__archived__";
 
   const getRoomTypeLabel = (typeVal) =>
     typeVal
       ? t(`admin.resourceLists.roomTypes.${typeVal}`) || typeVal
       : "\u2014";
 
-  // All locations for filter select
-  const { data: locations } = useLocations({ activeOnly: false });
+  // All locations for filter select (always include archived locations too)
+  const { data: locations } = useLocations({ includeArchived: true });
 
   const {
     data: rooms,
@@ -143,7 +176,19 @@ export default function RoomListTab() {
     loading,
     error,
     refetch,
-  } = useRooms({ locationId: locationFilter });
+  } = useRooms({ locationId: locationFilter, onlyArchived: isArchivedView });
+
+  const {
+    archive,
+    restore,
+    hardDelete,
+    loading: archiving,
+  } = useArchive(env.collectionRooms, refetch);
+
+  const ARCHIVE_OPTIONS = [
+    { value: "", label: t("admin.statuses.active") },
+    { value: "__archived__", label: t("admin.archive.archivedTab") },
+  ];
 
   // Build a map: locationId → name for display
   const locationMap = Object.fromEntries(locations.map((l) => [l.$id, l.name]));
@@ -161,10 +206,43 @@ export default function RoomListTab() {
     [refetch],
   );
 
+  const handleArchive = useCallback(
+    ({ documentId }) => archive({ documentId, cascade: false }),
+    [archive],
+  );
+
+  const handleRestore = useCallback(
+    ({ documentId }) => restore({ documentId }),
+    [restore],
+  );
+
+  const handleHardDelete = useCallback(({ document }) => {
+    setHardDeleteDoc(document);
+  }, []);
+
+  const handleHardDeleteConfirm = useCallback(
+    async (doc) => {
+      await hardDelete({
+        documentId: doc.$id,
+        confirmationId: doc.$id,
+        reason: "admin hard delete",
+      });
+      setHardDeleteDoc(null);
+    },
+    [hardDelete],
+  );
+
   return (
     <div className="space-y-4">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-3">
+        {/* Archive filter */}
+        <AdminSelect
+          value={showArchived}
+          onChange={setShowArchived}
+          options={ARCHIVE_OPTIONS}
+          fullWidth={false}
+        />
         {/* Location filter */}
         <AdminSelect
           value={locationFilter}
@@ -177,15 +255,16 @@ export default function RoomListTab() {
           fullWidth={false}
         />
 
-        <div className="ml-auto">
-          {isAdmin && (
+        {isAdmin && !isArchivedView && (
+          <div className="ml-auto">
             <Button type="button" size="sm" asChild>
               <Link to={ROOM_NEW_ROUTE}>
-                <Plus className="h-4 w-4" /> {t("admin.resourceLists.createRoom")}
+                <Plus className="h-4 w-4" />{" "}
+                {t("admin.resourceLists.createRoom")}
               </Link>
             </Button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {(error || actionError) && (
@@ -229,9 +308,11 @@ export default function RoomListTab() {
                   colSpan={6}
                   className="px-4 py-12 text-center text-sm text-charcoal-subtle"
                 >
-                  {locationFilter
-                    ? t("admin.resourceLists.noRoomsLocation")
-                    : t("admin.resourceLists.noRoomsYet")}
+                  {isArchivedView
+                    ? t("admin.resourceLists.noRoomsArchived")
+                    : locationFilter
+                      ? t("admin.resourceLists.noRoomsLocation")
+                      : t("admin.resourceLists.noRoomsYet")}
                 </td>
               </tr>
             )}
@@ -242,15 +323,24 @@ export default function RoomListTab() {
                 return (
                   <tr
                     key={room.$id}
-                    className="group border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors"
+                    className={cn(
+                      "group border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors",
+                      isArchivedView && "opacity-60",
+                    )}
                   >
                     <td className="px-4 py-3">
-                      <Link
-                        to={editUrl}
-                        className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors truncate max-w-40 block"
-                      >
-                        {room.name}
-                      </Link>
+                      {isArchivedView ? (
+                        <span className="font-medium text-charcoal truncate max-w-40 block">
+                          {room.name}
+                        </span>
+                      ) : (
+                        <Link
+                          to={editUrl}
+                          className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors truncate max-w-40 block"
+                        >
+                          {room.name}
+                        </Link>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-charcoal-subtle truncate max-w-40">
                       {locationMap[room.locationId] ?? room.locationId}
@@ -264,7 +354,11 @@ export default function RoomListTab() {
                         : "\u2014"}
                     </td>
                     <td className="px-4 py-3 text-center">
-                      {isAdmin ? (
+                      {isArchivedView ? (
+                        <Badge variant="warm">
+                          {t("admin.archive.archivedBadge")}
+                        </Badge>
+                      ) : isAdmin ? (
                         <ActiveToggle
                           isActive={room.isActive}
                           onChange={(v) => handleToggle(room.$id, v)}
@@ -277,14 +371,29 @@ export default function RoomListTab() {
                         </Badge>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-right opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
-                      <Link
-                        to={editUrl}
-                        className="inline-flex items-center justify-center h-9 w-9 rounded-lg text-charcoal-subtle hover:text-sage hover:bg-sage/10 transition-colors"
-                        title={t("admin.resourceLists.edit")}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Link>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        {!isArchivedView && (
+                          <Link
+                            to={editUrl}
+                            className="opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity inline-flex items-center justify-center h-9 w-9 rounded-lg text-charcoal-subtle hover:text-sage hover:bg-sage/10"
+                            title={t("admin.resourceLists.edit")}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Link>
+                        )}
+                        {(isAdmin || isRoot) && (
+                          <ArchiveActionsMenu
+                            document={room}
+                            onArchive={handleArchive}
+                            onRestore={handleRestore}
+                            onHardDelete={handleHardDelete}
+                            canArchive={isAdmin}
+                            canHardDelete={isRoot}
+                            loading={archiving}
+                          />
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );
@@ -310,9 +419,11 @@ export default function RoomListTab() {
         {!loading && rooms.length === 0 && (
           <Card className="p-8 text-center space-y-4">
             <p className="text-sm text-charcoal-subtle">
-              {t("admin.resourceLists.noRoomsMobile")}
+              {isArchivedView
+                ? t("admin.resourceLists.noRoomsArchived")
+                : t("admin.resourceLists.noRoomsMobile")}
             </p>
-            {isAdmin && (
+            {isAdmin && !isArchivedView && (
               <Button type="button" size="sm" asChild>
                 <Link to={ROOM_NEW_ROUTE}>
                   <Plus className="h-4 w-4" />{" "}
@@ -329,9 +440,15 @@ export default function RoomListTab() {
               room={room}
               locationName={locationMap[room.locationId]}
               onToggle={handleToggle}
+              onArchive={handleArchive}
+              onRestore={handleRestore}
+              onHardDelete={handleHardDelete}
               canAdmin={isAdmin}
+              canHardDelete={isRoot}
+              archiving={archiving}
               t={t}
               roomTypeLabel={getRoomTypeLabel(room.type)}
+              isArchivedView={isArchivedView}
             />
           ))}
       </div>
@@ -342,6 +459,15 @@ export default function RoomListTab() {
           {t("admin.resourceLists.roomCount").replace("{count}", "").trim()}
         </p>
       )}
+
+      <ConfirmHardDeleteModal
+        open={!!hardDeleteDoc}
+        document={hardDeleteDoc}
+        collectionId={env.collectionRooms}
+        loading={archiving}
+        onConfirm={handleHardDeleteConfirm}
+        onCancel={() => setHardDeleteDoc(null)}
+      />
     </div>
   );
 }

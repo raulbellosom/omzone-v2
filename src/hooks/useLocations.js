@@ -9,6 +9,7 @@ const COL = env.collectionLocations;
 export function useLocations({
   activeOnly = false,
   includeArchived = false,
+  onlyArchived = false,
   limit = 100,
   offset = 0,
 } = {}) {
@@ -26,7 +27,11 @@ export function useLocations({
         Query.offset(offset),
         Query.orderAsc("name"),
       ];
-      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
+      if (onlyArchived) {
+        queries.push(Query.isNotNull("archivedAt"));
+      } else if (!includeArchived) {
+        queries.push(Query.isNull("archivedAt"));
+      }
       if (activeOnly) queries.push(Query.equal("isActive", true));
       const res = await databases.listDocuments(DB, COL, queries);
       setData(res.documents);
@@ -36,7 +41,7 @@ export function useLocations({
     } finally {
       setLoading(false);
     }
-  }, [activeOnly, includeArchived, limit, offset]);
+  }, [activeOnly, includeArchived, onlyArchived, limit, offset]);
 
   useEffect(() => {
     fetch();

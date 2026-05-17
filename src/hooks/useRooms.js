@@ -10,6 +10,7 @@ export function useRooms({
   locationId = "",
   activeOnly = false,
   includeArchived = false,
+  onlyArchived = false,
   limit = 100,
   offset = 0,
 } = {}) {
@@ -27,7 +28,11 @@ export function useRooms({
         Query.offset(offset),
         Query.orderAsc("name"),
       ];
-      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
+      if (onlyArchived) {
+        queries.push(Query.isNotNull("archivedAt"));
+      } else if (!includeArchived) {
+        queries.push(Query.isNull("archivedAt"));
+      }
       if (locationId) queries.push(Query.equal("locationId", locationId));
       if (activeOnly) queries.push(Query.equal("isActive", true));
       const res = await databases.listDocuments(DB, COL, queries);
@@ -38,7 +43,7 @@ export function useRooms({
     } finally {
       setLoading(false);
     }
-  }, [locationId, activeOnly, includeArchived, limit, offset]);
+  }, [locationId, activeOnly, includeArchived, onlyArchived, limit, offset]);
 
   useEffect(() => {
     fetch();

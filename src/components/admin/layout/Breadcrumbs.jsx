@@ -26,6 +26,7 @@ const SEGMENT_KEYS = {
   "quick-create": "admin.breadcrumbs.new",
   locations: "admin.breadcrumbs.locations",
   rooms: "admin.breadcrumbs.rooms",
+  spaces: "admin.breadcrumbs.rooms",
   "booking-requests": "admin.breadcrumbs.bookingRequests",
   "contact-messages": "admin.breadcrumbs.contactMessages",
   sales: "admin.breadcrumbs.sales",
@@ -44,7 +45,8 @@ const SEGMENT_KEYS = {
  */
 const PATH_LINK_OVERRIDES = {
   "/admin/locations": "/admin/resources?tab=locations",
-  "/admin/rooms": "/admin/resources?tab=rooms",
+  "/admin/rooms": "/admin/resources?tab=spaces",
+  "/admin/spaces": "/admin/resources?tab=spaces",
 };
 
 /**

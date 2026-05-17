@@ -61751,10 +61751,6 @@
       {
         "slug": "experiences",
         "title": "Experiences"
-      },
-      {
-        "slug": "locations",
-        "title": "Locations"
       }
     ]
   },
@@ -61764,10 +61760,6 @@
       {
         "slug": "experiences",
         "title": "Experiences"
-      },
-      {
-        "slug": "locations",
-        "title": "Locations"
       }
     ]
   },
@@ -61777,10 +61769,6 @@
       {
         "slug": "experiences",
         "title": "Experiences"
-      },
-      {
-        "slug": "locations",
-        "title": "Locations"
       }
     ]
   },
@@ -78218,10 +78206,6 @@
       {
         "slug": "experiences",
         "title": "Experiences"
-      },
-      {
-        "slug": "locations",
-        "title": "Locations"
       }
     ]
   },
@@ -78231,10 +78215,6 @@
       {
         "slug": "experiences",
         "title": "Experiences"
-      },
-      {
-        "slug": "locations",
-        "title": "Locations"
       }
     ]
   },
@@ -78244,10 +78224,6 @@
       {
         "slug": "experiences",
         "title": "Experiences"
-      },
-      {
-        "slug": "locations",
-        "title": "Locations"
       }
     ]
   },
@@ -119245,10 +119221,6 @@
       {
         "slug": "experiences",
         "title": "Experiences"
-      },
-      {
-        "slug": "locations",
-        "title": "Locations"
       },
       {
         "slug": "tickets",
@@ -246688,10 +246660,6 @@
       {
         "slug": "introduction",
         "title": "Introduction to OMZONE Admin"
-      },
-      {
-        "slug": "locations",
-        "title": "Locations"
       }
     ]
   },
@@ -253532,6 +253500,10 @@
       {
         "slug": "introduction",
         "title": "Introduction to OMZONE Admin"
+      },
+      {
+        "slug": "locations",
+        "title": "Locations"
       }
     ]
   },
@@ -262987,6 +262959,10 @@
       {
         "slug": "introduction",
         "title": "Introduction to OMZONE Admin"
+      },
+      {
+        "slug": "locations",
+        "title": "Locations"
       }
     ]
   },
@@ -263176,6 +263152,10 @@
       {
         "slug": "introduction",
         "title": "Introduction to OMZONE Admin"
+      },
+      {
+        "slug": "locations",
+        "title": "Locations"
       }
     ]
   },
@@ -289338,7 +289318,7 @@
     ]
   },
   {
-    "term": "not setting room capacity.",
+    "term": "not setting space capacity.",
     "pages": [
       {
         "slug": "locations",
@@ -289356,7 +289336,7 @@
     ]
   },
   {
-    "term": "archiving a location with active rooms.",
+    "term": "archiving a location with active spaces.",
     "pages": [
       {
         "slug": "locations",
@@ -289733,7 +289713,7 @@
     ]
   },
   {
-    "term": "location contain multiple rooms",
+    "term": "location contain multiple spaces.",
     "pages": [
       {
         "slug": "locations",
@@ -289751,7 +289731,7 @@
     ]
   },
   {
-    "term": "contain multiple rooms",
+    "term": "contain multiple spaces.",
     "pages": [
       {
         "slug": "locations",
@@ -289760,34 +289740,7 @@
     ]
   },
   {
-    "term": "contain multiple rooms spaces.",
-    "pages": [
-      {
-        "slug": "locations",
-        "title": "Locations"
-      }
-    ]
-  },
-  {
-    "term": "multiple rooms",
-    "pages": [
-      {
-        "slug": "locations",
-        "title": "Locations"
-      }
-    ]
-  },
-  {
-    "term": "multiple rooms spaces.",
-    "pages": [
-      {
-        "slug": "locations",
-        "title": "Locations"
-      }
-    ]
-  },
-  {
-    "term": "rooms spaces.",
+    "term": "multiple spaces.",
     "pages": [
       {
         "slug": "locations",
@@ -290285,7 +290238,7 @@
     ]
   },
   {
-    "term": "room studio\")",
+    "term": "space studio\")",
     "pages": [
       {
         "slug": "locations",
@@ -290294,7 +290247,7 @@
     ]
   },
   {
-    "term": "room room\")",
+    "term": "space room\")",
     "pages": [
       {
         "slug": "locations",
@@ -290303,7 +290256,7 @@
     ]
   },
   {
-    "term": "room terrace\")",
+    "term": "space terrace\")",
     "pages": [
       {
         "slug": "locations",
@@ -290366,7 +290319,7 @@
     ]
   },
   {
-    "term": "room selection",
+    "term": "space selection",
     "pages": [
       {
         "slug": "locations",
@@ -290375,7 +290328,7 @@
     ]
   },
   {
-    "term": "room selection appears",
+    "term": "space selection appears",
     "pages": [
       {
         "slug": "locations",
@@ -290384,7 +290337,7 @@
     ]
   },
   {
-    "term": "room selection appears location",
+    "term": "space selection appears location",
     "pages": [
       {
         "slug": "locations",
@@ -290537,7 +290490,7 @@
     ]
   },
   {
-    "term": "select location, select room.",
+    "term": "select location, select space.",
     "pages": [
       {
         "slug": "locations",
@@ -290555,7 +290508,7 @@
     ]
   },
   {
-    "term": "location, select room.",
+    "term": "location, select space.",
     "pages": [
       {
         "slug": "locations",
@@ -290564,7 +290517,7 @@
     ]
   },
   {
-    "term": "select room.",
+    "term": "select space.",
     "pages": [
       {
         "slug": "locations",
@@ -290618,7 +290571,7 @@
     ]
   },
   {
-    "term": "show assigned location room:",
+    "term": "show assigned location space:",
     "pages": [
       {
         "slug": "locations",
@@ -290636,7 +290589,7 @@
     ]
   },
   {
-    "term": "assigned location room:",
+    "term": "assigned location space:",
     "pages": [
       {
         "slug": "locations",
@@ -290645,7 +290598,7 @@
     ]
   },
   {
-    "term": "location room:",
+    "term": "location space:",
     "pages": [
       {
         "slug": "locations",
@@ -290726,7 +290679,7 @@
     ]
   },
   {
-    "term": "rooms belong",
+    "term": "spaces belong",
     "pages": [
       {
         "slug": "locations",
@@ -290735,7 +290688,7 @@
     ]
   },
   {
-    "term": "rooms belong location.",
+    "term": "spaces belong location.",
     "pages": [
       {
         "slug": "locations",
@@ -290744,7 +290697,7 @@
     ]
   },
   {
-    "term": "rooms belong location. creating",
+    "term": "spaces belong location. creating",
     "pages": [
       {
         "slug": "locations",
@@ -290771,7 +290724,7 @@
     ]
   },
   {
-    "term": "belong location. creating room,",
+    "term": "belong location. creating space,",
     "pages": [
       {
         "slug": "locations",
@@ -290789,7 +290742,7 @@
     ]
   },
   {
-    "term": "location. creating room,",
+    "term": "location. creating space,",
     "pages": [
       {
         "slug": "locations",
@@ -290798,7 +290751,7 @@
     ]
   },
   {
-    "term": "location. creating room, select",
+    "term": "location. creating space, select",
     "pages": [
       {
         "slug": "locations",
@@ -290807,7 +290760,7 @@
     ]
   },
   {
-    "term": "creating room,",
+    "term": "creating space,",
     "pages": [
       {
         "slug": "locations",
@@ -290816,7 +290769,7 @@
     ]
   },
   {
-    "term": "creating room, select",
+    "term": "creating space, select",
     "pages": [
       {
         "slug": "locations",
@@ -290825,7 +290778,7 @@
     ]
   },
   {
-    "term": "creating room, select parent",
+    "term": "creating space, select parent",
     "pages": [
       {
         "slug": "locations",
@@ -290834,7 +290787,7 @@
     ]
   },
   {
-    "term": "room, select",
+    "term": "space, select",
     "pages": [
       {
         "slug": "locations",
@@ -290843,7 +290796,7 @@
     ]
   },
   {
-    "term": "room, select parent",
+    "term": "space, select parent",
     "pages": [
       {
         "slug": "locations",
@@ -290852,7 +290805,7 @@
     ]
   },
   {
-    "term": "room, select parent location",
+    "term": "space, select parent location",
     "pages": [
       {
         "slug": "locations",
@@ -291374,7 +291327,7 @@
     ]
   },
   {
-    "term": "used, deactivate cascades rooms",
+    "term": "used, deactivate cascades spaces",
     "pages": [
       {
         "slug": "locations",
@@ -291392,7 +291345,7 @@
     ]
   },
   {
-    "term": "deactivate cascades rooms",
+    "term": "deactivate cascades spaces",
     "pages": [
       {
         "slug": "locations",
@@ -291401,7 +291354,7 @@
     ]
   },
   {
-    "term": "deactivate cascades rooms preventing",
+    "term": "deactivate cascades spaces preventing",
     "pages": [
       {
         "slug": "locations",
@@ -291410,7 +291363,7 @@
     ]
   },
   {
-    "term": "cascades rooms",
+    "term": "cascades spaces",
     "pages": [
       {
         "slug": "locations",
@@ -291419,7 +291372,7 @@
     ]
   },
   {
-    "term": "cascades rooms preventing",
+    "term": "cascades spaces preventing",
     "pages": [
       {
         "slug": "locations",
@@ -291428,7 +291381,7 @@
     ]
   },
   {
-    "term": "cascades rooms preventing slot",
+    "term": "cascades spaces preventing slot",
     "pages": [
       {
         "slug": "locations",
@@ -291437,7 +291390,7 @@
     ]
   },
   {
-    "term": "rooms preventing",
+    "term": "spaces preventing",
     "pages": [
       {
         "slug": "locations",
@@ -291446,7 +291399,7 @@
     ]
   },
   {
-    "term": "rooms preventing slot",
+    "term": "spaces preventing slot",
     "pages": [
       {
         "slug": "locations",
@@ -291455,7 +291408,7 @@
     ]
   },
   {
-    "term": "rooms preventing slot assignments.",
+    "term": "spaces preventing slot assignments.",
     "pages": [
       {
         "slug": "locations",
@@ -291513,7 +291466,7 @@
     ]
   },
   {
-    "term": "operaciones -> recursos -> salas -> nueva sala",
+    "term": "rooms",
     "pages": [
       {
         "slug": "locations",
@@ -291522,7 +291475,7 @@
     ]
   },
   {
-    "term": "no establecer capacidad de sala.",
+    "term": "roomid",
     "pages": [
       {
         "slug": "locations",
@@ -291531,7 +291484,34 @@
     ]
   },
   {
-    "term": "archivar una ubicación con salas activas.",
+    "term": "nota interna:",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "espacios",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "no establecer capacidad del espacio.",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "archivar una ubicación con espacios activos.",
     "pages": [
       {
         "slug": "locations",
@@ -291567,7 +291547,7 @@
     ]
   },
   {
-    "term": "descripción de la sala",
+    "term": "descripción del espacio",
     "pages": [
       {
         "slug": "locations",
@@ -291576,7 +291556,7 @@
     ]
   },
   {
-    "term": "### tipos de sala",
+    "term": "### tipos de espacio",
     "pages": [
       {
         "slug": "locations",
@@ -291670,7 +291650,7 @@
     ]
   },
   {
-    "term": "crear una sala",
+    "term": "crear un espacio",
     "pages": [
       {
         "slug": "locations",
@@ -291679,7 +291659,7 @@
     ]
   },
   {
-    "term": "campos de sala",
+    "term": "campos de espacio",
     "pages": [
       {
         "slug": "locations",
@@ -291688,7 +291668,7 @@
     ]
   },
   {
-    "term": "tipos de sala",
+    "term": "tipos de espacio",
     "pages": [
       {
         "slug": "locations",
@@ -291997,7 +291977,7 @@
     ]
   },
   {
-    "term": "puede contener múltiples salas",
+    "term": "puede contener múltiples espacios.",
     "pages": [
       {
         "slug": "locations",
@@ -292015,7 +291995,7 @@
     ]
   },
   {
-    "term": "contener múltiples salas",
+    "term": "contener múltiples espacios.",
     "pages": [
       {
         "slug": "locations",
@@ -292024,34 +292004,7 @@
     ]
   },
   {
-    "term": "contener múltiples salas espacios.",
-    "pages": [
-      {
-        "slug": "locations",
-        "title": "Locations"
-      }
-    ]
-  },
-  {
-    "term": "múltiples salas",
-    "pages": [
-      {
-        "slug": "locations",
-        "title": "Locations"
-      }
-    ]
-  },
-  {
-    "term": "múltiples salas espacios.",
-    "pages": [
-      {
-        "slug": "locations",
-        "title": "Locations"
-      }
-    ]
-  },
-  {
-    "term": "salas espacios.",
+    "term": "múltiples espacios.",
     "pages": [
       {
         "slug": "locations",
@@ -292580,7 +292533,7 @@
     ]
   },
   {
-    "term": "navega operaciones recursos salas",
+    "term": "navega operaciones recursos espacios",
     "pages": [
       {
         "slug": "locations",
@@ -292589,7 +292542,7 @@
     ]
   },
   {
-    "term": "operaciones recursos salas",
+    "term": "operaciones recursos espacios",
     "pages": [
       {
         "slug": "locations",
@@ -292598,7 +292551,7 @@
     ]
   },
   {
-    "term": "operaciones recursos salas nueva",
+    "term": "operaciones recursos espacios nuevo",
     "pages": [
       {
         "slug": "locations",
@@ -292607,7 +292560,7 @@
     ]
   },
   {
-    "term": "recursos salas",
+    "term": "recursos espacios",
     "pages": [
       {
         "slug": "locations",
@@ -292616,7 +292569,7 @@
     ]
   },
   {
-    "term": "recursos salas nueva",
+    "term": "recursos espacios nuevo",
     "pages": [
       {
         "slug": "locations",
@@ -292625,7 +292578,7 @@
     ]
   },
   {
-    "term": "recursos salas nueva sala",
+    "term": "recursos espacios nuevo espacio",
     "pages": [
       {
         "slug": "locations",
@@ -292634,7 +292587,7 @@
     ]
   },
   {
-    "term": "salas nueva",
+    "term": "espacios nuevo",
     "pages": [
       {
         "slug": "locations",
@@ -292643,7 +292596,7 @@
     ]
   },
   {
-    "term": "salas nueva sala",
+    "term": "espacios nuevo espacio",
     "pages": [
       {
         "slug": "locations",
@@ -292652,7 +292605,7 @@
     ]
   },
   {
-    "term": "nueva sala",
+    "term": "nuevo espacio",
     "pages": [
       {
         "slug": "locations",
@@ -292688,7 +292641,7 @@
     ]
   },
   {
-    "term": "sala principal\")",
+    "term": "espacio principal\")",
     "pages": [
       {
         "slug": "locations",
@@ -292697,7 +292650,7 @@
     ]
   },
   {
-    "term": "sala meditación\")",
+    "term": "espacio meditación\")",
     "pages": [
       {
         "slug": "locations",
@@ -292706,7 +292659,7 @@
     ]
   },
   {
-    "term": "sala aire",
+    "term": "espacio aire",
     "pages": [
       {
         "slug": "locations",
@@ -292715,7 +292668,7 @@
     ]
   },
   {
-    "term": "sala aire libre\")",
+    "term": "espacio aire libre\")",
     "pages": [
       {
         "slug": "locations",
@@ -292814,7 +292767,7 @@
     ]
   },
   {
-    "term": "selección sala",
+    "term": "selección espacio",
     "pages": [
       {
         "slug": "locations",
@@ -292823,7 +292776,7 @@
     ]
   },
   {
-    "term": "selección sala solo",
+    "term": "selección espacio solo",
     "pages": [
       {
         "slug": "locations",
@@ -292832,7 +292785,7 @@
     ]
   },
   {
-    "term": "selección sala solo aparece",
+    "term": "selección espacio solo aparece",
     "pages": [
       {
         "slug": "locations",
@@ -292841,7 +292794,7 @@
     ]
   },
   {
-    "term": "sala solo",
+    "term": "espacio solo",
     "pages": [
       {
         "slug": "locations",
@@ -292850,7 +292803,7 @@
     ]
   },
   {
-    "term": "sala solo aparece",
+    "term": "espacio solo aparece",
     "pages": [
       {
         "slug": "locations",
@@ -292859,7 +292812,7 @@
     ]
   },
   {
-    "term": "sala solo aparece después",
+    "term": "espacio solo aparece después",
     "pages": [
       {
         "slug": "locations",
@@ -293102,7 +293055,7 @@
     ]
   },
   {
-    "term": "ubicación, luego seleccionar sala.",
+    "term": "ubicación, luego seleccionar espacio.",
     "pages": [
       {
         "slug": "locations",
@@ -293120,7 +293073,7 @@
     ]
   },
   {
-    "term": "luego seleccionar sala.",
+    "term": "luego seleccionar espacio.",
     "pages": [
       {
         "slug": "locations",
@@ -293129,7 +293082,7 @@
     ]
   },
   {
-    "term": "seleccionar sala.",
+    "term": "seleccionar espacio.",
     "pages": [
       {
         "slug": "locations",
@@ -293156,7 +293109,7 @@
     ]
   },
   {
-    "term": "ranuras muestran ubicación sala",
+    "term": "ranuras muestran ubicación espacio",
     "pages": [
       {
         "slug": "locations",
@@ -293174,7 +293127,7 @@
     ]
   },
   {
-    "term": "muestran ubicación sala",
+    "term": "muestran ubicación espacio",
     "pages": [
       {
         "slug": "locations",
@@ -293183,7 +293136,7 @@
     ]
   },
   {
-    "term": "muestran ubicación sala asignadas:",
+    "term": "muestran ubicación espacio asignados:",
     "pages": [
       {
         "slug": "locations",
@@ -293192,7 +293145,7 @@
     ]
   },
   {
-    "term": "ubicación sala asignadas:",
+    "term": "ubicación espacio asignados:",
     "pages": [
       {
         "slug": "locations",
@@ -293201,7 +293154,7 @@
     ]
   },
   {
-    "term": "sala asignadas:",
+    "term": "espacio asignados:",
     "pages": [
       {
         "slug": "locations",
@@ -293349,7 +293302,7 @@
     ]
   },
   {
-    "term": "salas deben",
+    "term": "espacios deben",
     "pages": [
       {
         "slug": "locations",
@@ -293358,7 +293311,7 @@
     ]
   },
   {
-    "term": "salas deben pertenecer",
+    "term": "espacios deben pertenecer",
     "pages": [
       {
         "slug": "locations",
@@ -293367,7 +293320,7 @@
     ]
   },
   {
-    "term": "salas deben pertenecer ubicación.",
+    "term": "espacios deben pertenecer ubicación.",
     "pages": [
       {
         "slug": "locations",
@@ -293421,7 +293374,7 @@
     ]
   },
   {
-    "term": "pertenecer ubicación. crear sala,",
+    "term": "pertenecer ubicación. crear espacio,",
     "pages": [
       {
         "slug": "locations",
@@ -293439,7 +293392,7 @@
     ]
   },
   {
-    "term": "ubicación. crear sala,",
+    "term": "ubicación. crear espacio,",
     "pages": [
       {
         "slug": "locations",
@@ -293448,7 +293401,7 @@
     ]
   },
   {
-    "term": "ubicación. crear sala, debes",
+    "term": "ubicación. crear espacio, debes",
     "pages": [
       {
         "slug": "locations",
@@ -293457,7 +293410,7 @@
     ]
   },
   {
-    "term": "crear sala,",
+    "term": "crear espacio,",
     "pages": [
       {
         "slug": "locations",
@@ -293466,7 +293419,7 @@
     ]
   },
   {
-    "term": "crear sala, debes",
+    "term": "crear espacio, debes",
     "pages": [
       {
         "slug": "locations",
@@ -293475,7 +293428,7 @@
     ]
   },
   {
-    "term": "crear sala, debes seleccionar",
+    "term": "crear espacio, debes seleccionar",
     "pages": [
       {
         "slug": "locations",
@@ -293484,7 +293437,7 @@
     ]
   },
   {
-    "term": "sala, debes",
+    "term": "espacio, debes",
     "pages": [
       {
         "slug": "locations",
@@ -293493,7 +293446,7 @@
     ]
   },
   {
-    "term": "sala, debes seleccionar",
+    "term": "espacio, debes seleccionar",
     "pages": [
       {
         "slug": "locations",
@@ -293502,7 +293455,7 @@
     ]
   },
   {
-    "term": "sala, debes seleccionar ubicación",
+    "term": "espacio, debes seleccionar ubicación",
     "pages": [
       {
         "slug": "locations",
@@ -294130,7 +294083,7 @@
     ]
   },
   {
-    "term": "ubicación usa, desactívala.",
+    "term": "ubicación usa, descaívala.",
     "pages": [
       {
         "slug": "locations",
@@ -294139,7 +294092,7 @@
     ]
   },
   {
-    "term": "ubicación usa, desactívala. esto",
+    "term": "ubicación usa, descaívala. esto",
     "pages": [
       {
         "slug": "locations",
@@ -294148,7 +294101,7 @@
     ]
   },
   {
-    "term": "usa, desactívala.",
+    "term": "usa, descaívala.",
     "pages": [
       {
         "slug": "locations",
@@ -294157,7 +294110,7 @@
     ]
   },
   {
-    "term": "usa, desactívala. esto",
+    "term": "usa, descaívala. esto",
     "pages": [
       {
         "slug": "locations",
@@ -294166,7 +294119,7 @@
     ]
   },
   {
-    "term": "usa, desactívala. esto cascada",
+    "term": "usa, descaívala. esto cascada",
     "pages": [
       {
         "slug": "locations",
@@ -294175,7 +294128,7 @@
     ]
   },
   {
-    "term": "desactívala. esto",
+    "term": "descaívala. esto",
     "pages": [
       {
         "slug": "locations",
@@ -294184,7 +294137,7 @@
     ]
   },
   {
-    "term": "desactívala. esto cascada",
+    "term": "descaívala. esto cascada",
     "pages": [
       {
         "slug": "locations",
@@ -294193,7 +294146,7 @@
     ]
   },
   {
-    "term": "desactívala. esto cascada todas",
+    "term": "descaívala. esto cascada todos",
     "pages": [
       {
         "slug": "locations",
@@ -294211,7 +294164,7 @@
     ]
   },
   {
-    "term": "esto cascada todas",
+    "term": "esto cascada todos",
     "pages": [
       {
         "slug": "locations",
@@ -294220,7 +294173,7 @@
     ]
   },
   {
-    "term": "esto cascada todas salas",
+    "term": "esto cascada todos espacios",
     "pages": [
       {
         "slug": "locations",
@@ -294229,7 +294182,7 @@
     ]
   },
   {
-    "term": "cascada todas",
+    "term": "cascada todos",
     "pages": [
       {
         "slug": "locations",
@@ -294238,7 +294191,7 @@
     ]
   },
   {
-    "term": "cascada todas salas",
+    "term": "cascada todos espacios",
     "pages": [
       {
         "slug": "locations",
@@ -294247,7 +294200,7 @@
     ]
   },
   {
-    "term": "cascada todas salas bajo",
+    "term": "cascada todos espacios bajo",
     "pages": [
       {
         "slug": "locations",
@@ -294256,7 +294209,7 @@
     ]
   },
   {
-    "term": "todas salas",
+    "term": "todos espacios",
     "pages": [
       {
         "slug": "locations",
@@ -294265,7 +294218,7 @@
     ]
   },
   {
-    "term": "todas salas bajo",
+    "term": "todos espacios bajo",
     "pages": [
       {
         "slug": "locations",
@@ -294274,7 +294227,7 @@
     ]
   },
   {
-    "term": "todas salas bajo ella,",
+    "term": "todos espacios bajo ella,",
     "pages": [
       {
         "slug": "locations",
@@ -294283,7 +294236,7 @@
     ]
   },
   {
-    "term": "salas bajo",
+    "term": "espacios bajo",
     "pages": [
       {
         "slug": "locations",
@@ -294292,7 +294245,7 @@
     ]
   },
   {
-    "term": "salas bajo ella,",
+    "term": "espacios bajo ella,",
     "pages": [
       {
         "slug": "locations",
@@ -294301,7 +294254,7 @@
     ]
   },
   {
-    "term": "salas bajo ella, previniendo",
+    "term": "espacios bajo ella, previniendo",
     "pages": [
       {
         "slug": "locations",
@@ -294458,7 +294411,7 @@
     ]
   },
   {
-    "term": "multiple rooms spaces. creating",
+    "term": "contain multiple spaces. creating",
     "pages": [
       {
         "slug": "locations",
@@ -294467,7 +294420,7 @@
     ]
   },
   {
-    "term": "rooms spaces. creating",
+    "term": "multiple spaces. creating",
     "pages": [
       {
         "slug": "locations",
@@ -294476,7 +294429,7 @@
     ]
   },
   {
-    "term": "rooms spaces. creating location",
+    "term": "multiple spaces. creating location",
     "pages": [
       {
         "slug": "locations",
@@ -297056,7 +297009,7 @@
     ]
   },
   {
-    "term": "assign: location venue) room",
+    "term": "assign: location venue) space",
     "pages": [
       {
         "slug": "locations",
@@ -297065,7 +297018,7 @@
     ]
   },
   {
-    "term": "location venue) room",
+    "term": "location venue) space",
     "pages": [
       {
         "slug": "locations",
@@ -297074,7 +297027,7 @@
     ]
   },
   {
-    "term": "location venue) room space",
+    "term": "location venue) space area",
     "pages": [
       {
         "slug": "locations",
@@ -297083,7 +297036,7 @@
     ]
   },
   {
-    "term": "venue) room",
+    "term": "venue) space",
     "pages": [
       {
         "slug": "locations",
@@ -297092,7 +297045,7 @@
     ]
   },
   {
-    "term": "venue) room space",
+    "term": "venue) space area",
     "pages": [
       {
         "slug": "locations",
@@ -297101,7 +297054,7 @@
     ]
   },
   {
-    "term": "venue) room space within",
+    "term": "venue) space area within",
     "pages": [
       {
         "slug": "locations",
@@ -297110,7 +297063,7 @@
     ]
   },
   {
-    "term": "room space within venue)",
+    "term": "space area",
     "pages": [
       {
         "slug": "locations",
@@ -297119,7 +297072,7 @@
     ]
   },
   {
-    "term": "space within venue)",
+    "term": "space area within",
     "pages": [
       {
         "slug": "locations",
@@ -297128,7 +297081,34 @@
     ]
   },
   {
-    "term": "space within venue) room",
+    "term": "space area within venue)",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "area within",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "area within venue)",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "area within venue) space",
     "pages": [
       {
         "slug": "locations",
@@ -297146,7 +297126,7 @@
     ]
   },
   {
-    "term": "within venue) room",
+    "term": "within venue) space",
     "pages": [
       {
         "slug": "locations",
@@ -297155,7 +297135,7 @@
     ]
   },
   {
-    "term": "within venue) room selection",
+    "term": "within venue) space selection",
     "pages": [
       {
         "slug": "locations",
@@ -297164,7 +297144,7 @@
     ]
   },
   {
-    "term": "venue) room selection",
+    "term": "venue) space selection",
     "pages": [
       {
         "slug": "locations",
@@ -297173,7 +297153,7 @@
     ]
   },
   {
-    "term": "venue) room selection appears",
+    "term": "venue) space selection appears",
     "pages": [
       {
         "slug": "locations",
@@ -297182,7 +297162,7 @@
     ]
   },
   {
-    "term": "location, select room. location",
+    "term": "location, select space. location",
     "pages": [
       {
         "slug": "locations",
@@ -297191,7 +297171,7 @@
     ]
   },
   {
-    "term": "select room. location",
+    "term": "select space. location",
     "pages": [
       {
         "slug": "locations",
@@ -297200,7 +297180,7 @@
     ]
   },
   {
-    "term": "select room. location slot",
+    "term": "select space. location slot",
     "pages": [
       {
         "slug": "locations",
@@ -297209,7 +297189,7 @@
     ]
   },
   {
-    "term": "room. location",
+    "term": "space. location",
     "pages": [
       {
         "slug": "locations",
@@ -297218,7 +297198,7 @@
     ]
   },
   {
-    "term": "room. location slot",
+    "term": "space. location slot",
     "pages": [
       {
         "slug": "locations",
@@ -297227,7 +297207,7 @@
     ]
   },
   {
-    "term": "room. location slot display",
+    "term": "space. location slot display",
     "pages": [
       {
         "slug": "locations",
@@ -297317,7 +297297,7 @@
     ]
   },
   {
-    "term": "assigned location room: location",
+    "term": "assigned location space: location",
     "pages": [
       {
         "slug": "locations",
@@ -297326,7 +297306,7 @@
     ]
   },
   {
-    "term": "location room: location",
+    "term": "location space: location",
     "pages": [
       {
         "slug": "locations",
@@ -297335,7 +297315,7 @@
     ]
   },
   {
-    "term": "location room: location venue",
+    "term": "location space: location venue",
     "pages": [
       {
         "slug": "locations",
@@ -297344,7 +297324,7 @@
     ]
   },
   {
-    "term": "room: location",
+    "term": "space: location",
     "pages": [
       {
         "slug": "locations",
@@ -297353,7 +297333,7 @@
     ]
   },
   {
-    "term": "room: location venue",
+    "term": "space: location venue",
     "pages": [
       {
         "slug": "locations",
@@ -297362,7 +297342,7 @@
     ]
   },
   {
-    "term": "room: location venue name",
+    "term": "space: location venue name",
     "pages": [
       {
         "slug": "locations",
@@ -297389,7 +297369,7 @@
     ]
   },
   {
-    "term": "location venue name room",
+    "term": "location venue name space",
     "pages": [
       {
         "slug": "locations",
@@ -297407,7 +297387,7 @@
     ]
   },
   {
-    "term": "venue name room",
+    "term": "venue name space",
     "pages": [
       {
         "slug": "locations",
@@ -297416,7 +297396,7 @@
     ]
   },
   {
-    "term": "venue name room specific",
+    "term": "venue name space specific",
     "pages": [
       {
         "slug": "locations",
@@ -297425,7 +297405,7 @@
     ]
   },
   {
-    "term": "name room",
+    "term": "name space",
     "pages": [
       {
         "slug": "locations",
@@ -297434,7 +297414,7 @@
     ]
   },
   {
-    "term": "name room specific",
+    "term": "name space specific",
     "pages": [
       {
         "slug": "locations",
@@ -297443,7 +297423,7 @@
     ]
   },
   {
-    "term": "name room specific space",
+    "term": "name space specific area",
     "pages": [
       {
         "slug": "locations",
@@ -297452,7 +297432,7 @@
     ]
   },
   {
-    "term": "room specific space",
+    "term": "space specific",
     "pages": [
       {
         "slug": "locations",
@@ -297461,7 +297441,7 @@
     ]
   },
   {
-    "term": "room specific space within",
+    "term": "space specific area",
     "pages": [
       {
         "slug": "locations",
@@ -297470,7 +297450,7 @@
     ]
   },
   {
-    "term": "specific space",
+    "term": "space specific area within",
     "pages": [
       {
         "slug": "locations",
@@ -297479,7 +297459,7 @@
     ]
   },
   {
-    "term": "specific space within",
+    "term": "specific area",
     "pages": [
       {
         "slug": "locations",
@@ -297488,7 +297468,7 @@
     ]
   },
   {
-    "term": "specific space within venue",
+    "term": "specific area within",
     "pages": [
       {
         "slug": "locations",
@@ -297497,7 +297477,7 @@
     ]
   },
   {
-    "term": "space within venue",
+    "term": "specific area within venue",
     "pages": [
       {
         "slug": "locations",
@@ -297506,7 +297486,16 @@
     ]
   },
   {
-    "term": "space within venue helps",
+    "term": "area within venue",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "area within venue helps",
     "pages": [
       {
         "slug": "locations",
@@ -297623,7 +297612,7 @@
     ]
   },
   {
-    "term": "common mistakes creating rooms",
+    "term": "common mistakes creating spaces",
     "pages": [
       {
         "slug": "locations",
@@ -297632,7 +297621,7 @@
     ]
   },
   {
-    "term": "mistakes creating rooms",
+    "term": "mistakes creating spaces",
     "pages": [
       {
         "slug": "locations",
@@ -297641,7 +297630,7 @@
     ]
   },
   {
-    "term": "mistakes creating rooms without",
+    "term": "mistakes creating spaces without",
     "pages": [
       {
         "slug": "locations",
@@ -297650,7 +297639,7 @@
     ]
   },
   {
-    "term": "creating rooms",
+    "term": "creating spaces",
     "pages": [
       {
         "slug": "locations",
@@ -297659,7 +297648,7 @@
     ]
   },
   {
-    "term": "creating rooms without",
+    "term": "creating spaces without",
     "pages": [
       {
         "slug": "locations",
@@ -297668,7 +297657,7 @@
     ]
   },
   {
-    "term": "creating rooms without selecting",
+    "term": "creating spaces without selecting",
     "pages": [
       {
         "slug": "locations",
@@ -297677,7 +297666,7 @@
     ]
   },
   {
-    "term": "rooms without",
+    "term": "spaces without",
     "pages": [
       {
         "slug": "locations",
@@ -297686,7 +297675,7 @@
     ]
   },
   {
-    "term": "rooms without selecting",
+    "term": "spaces without selecting",
     "pages": [
       {
         "slug": "locations",
@@ -297695,7 +297684,7 @@
     ]
   },
   {
-    "term": "rooms without selecting location",
+    "term": "spaces without selecting location",
     "pages": [
       {
         "slug": "locations",
@@ -297740,7 +297729,7 @@
     ]
   },
   {
-    "term": "selecting location first. rooms",
+    "term": "selecting location first. spaces",
     "pages": [
       {
         "slug": "locations",
@@ -297758,7 +297747,7 @@
     ]
   },
   {
-    "term": "location first. rooms",
+    "term": "location first. spaces",
     "pages": [
       {
         "slug": "locations",
@@ -297767,7 +297756,7 @@
     ]
   },
   {
-    "term": "location first. rooms belong",
+    "term": "location first. spaces belong",
     "pages": [
       {
         "slug": "locations",
@@ -297776,7 +297765,7 @@
     ]
   },
   {
-    "term": "first. rooms",
+    "term": "first. spaces",
     "pages": [
       {
         "slug": "locations",
@@ -297785,7 +297774,7 @@
     ]
   },
   {
-    "term": "first. rooms belong",
+    "term": "first. spaces belong",
     "pages": [
       {
         "slug": "locations",
@@ -297794,7 +297783,7 @@
     ]
   },
   {
-    "term": "first. rooms belong location.",
+    "term": "first. spaces belong location.",
     "pages": [
       {
         "slug": "locations",
@@ -297821,7 +297810,7 @@
     ]
   },
   {
-    "term": "create first. setting room",
+    "term": "create first. setting space",
     "pages": [
       {
         "slug": "locations",
@@ -297839,7 +297828,7 @@
     ]
   },
   {
-    "term": "first. setting room",
+    "term": "first. setting space",
     "pages": [
       {
         "slug": "locations",
@@ -297848,7 +297837,7 @@
     ]
   },
   {
-    "term": "first. setting room capacity.",
+    "term": "first. setting space capacity.",
     "pages": [
       {
         "slug": "locations",
@@ -297857,7 +297846,7 @@
     ]
   },
   {
-    "term": "setting room",
+    "term": "setting space",
     "pages": [
       {
         "slug": "locations",
@@ -297866,7 +297855,7 @@
     ]
   },
   {
-    "term": "setting room capacity.",
+    "term": "setting space capacity.",
     "pages": [
       {
         "slug": "locations",
@@ -297875,7 +297864,7 @@
     ]
   },
   {
-    "term": "setting room capacity. capacity",
+    "term": "setting space capacity. capacity",
     "pages": [
       {
         "slug": "locations",
@@ -297884,7 +297873,7 @@
     ]
   },
   {
-    "term": "room capacity.",
+    "term": "space capacity.",
     "pages": [
       {
         "slug": "locations",
@@ -297893,7 +297882,7 @@
     ]
   },
   {
-    "term": "room capacity. capacity",
+    "term": "space capacity. capacity",
     "pages": [
       {
         "slug": "locations",
@@ -297902,7 +297891,7 @@
     ]
   },
   {
-    "term": "room capacity. capacity helps",
+    "term": "space capacity. capacity helps",
     "pages": [
       {
         "slug": "locations",
@@ -298163,7 +298152,7 @@
     ]
   },
   {
-    "term": "archiving location active rooms.",
+    "term": "archiving location active spaces.",
     "pages": [
       {
         "slug": "locations",
@@ -298181,7 +298170,7 @@
     ]
   },
   {
-    "term": "location active rooms.",
+    "term": "location active spaces.",
     "pages": [
       {
         "slug": "locations",
@@ -298190,7 +298179,7 @@
     ]
   },
   {
-    "term": "location active rooms. location",
+    "term": "location active spaces. location",
     "pages": [
       {
         "slug": "locations",
@@ -298199,7 +298188,7 @@
     ]
   },
   {
-    "term": "active rooms.",
+    "term": "active spaces.",
     "pages": [
       {
         "slug": "locations",
@@ -298208,7 +298197,7 @@
     ]
   },
   {
-    "term": "active rooms. location",
+    "term": "active spaces. location",
     "pages": [
       {
         "slug": "locations",
@@ -298217,7 +298206,7 @@
     ]
   },
   {
-    "term": "active rooms. location longer",
+    "term": "active spaces. location longer",
     "pages": [
       {
         "slug": "locations",
@@ -298226,7 +298215,7 @@
     ]
   },
   {
-    "term": "rooms. location",
+    "term": "spaces. location",
     "pages": [
       {
         "slug": "locations",
@@ -298235,7 +298224,7 @@
     ]
   },
   {
-    "term": "rooms. location longer",
+    "term": "spaces. location longer",
     "pages": [
       {
         "slug": "locations",
@@ -298244,7 +298233,7 @@
     ]
   },
   {
-    "term": "rooms. location longer used,",
+    "term": "spaces. location longer used,",
     "pages": [
       {
         "slug": "locations",
@@ -298377,7 +298366,7 @@
     ]
   },
   {
-    "term": "slots agenda locations rooms",
+    "term": "slots agenda locations spaces",
     "pages": [
       {
         "slug": "locations",
@@ -298395,7 +298384,7 @@
     ]
   },
   {
-    "term": "agenda locations rooms",
+    "term": "agenda locations spaces",
     "pages": [
       {
         "slug": "locations",
@@ -298404,7 +298393,7 @@
     ]
   },
   {
-    "term": "agenda locations rooms assigned",
+    "term": "agenda locations spaces assigned",
     "pages": [
       {
         "slug": "locations",
@@ -298413,7 +298402,7 @@
     ]
   },
   {
-    "term": "locations rooms",
+    "term": "locations spaces",
     "pages": [
       {
         "slug": "locations",
@@ -298422,7 +298411,7 @@
     ]
   },
   {
-    "term": "locations rooms assigned",
+    "term": "locations spaces assigned",
     "pages": [
       {
         "slug": "locations",
@@ -298431,7 +298420,7 @@
     ]
   },
   {
-    "term": "locations rooms assigned resources",
+    "term": "locations spaces assigned resources",
     "pages": [
       {
         "slug": "locations",
@@ -298440,7 +298429,7 @@
     ]
   },
   {
-    "term": "rooms assigned",
+    "term": "spaces assigned",
     "pages": [
       {
         "slug": "locations",
@@ -298449,7 +298438,7 @@
     ]
   },
   {
-    "term": "rooms assigned resources",
+    "term": "spaces assigned resources",
     "pages": [
       {
         "slug": "locations",
@@ -298458,7 +298447,7 @@
     ]
   },
   {
-    "term": "rooms assigned resources instructors",
+    "term": "spaces assigned resources instructors",
     "pages": [
       {
         "slug": "locations",
@@ -298602,7 +298591,7 @@
     ]
   },
   {
-    "term": "múltiples salas espacios. crear",
+    "term": "contener múltiples espacios. crear",
     "pages": [
       {
         "slug": "locations",
@@ -298611,7 +298600,7 @@
     ]
   },
   {
-    "term": "salas espacios. crear",
+    "term": "múltiples espacios. crear",
     "pages": [
       {
         "slug": "locations",
@@ -298620,7 +298609,7 @@
     ]
   },
   {
-    "term": "salas espacios. crear ubicación",
+    "term": "múltiples espacios. crear ubicación",
     "pages": [
       {
         "slug": "locations",
@@ -299684,7 +299673,7 @@
     ]
   },
   {
-    "term": "sirven clientes. crear sala",
+    "term": "sirven clientes. crear espacio",
     "pages": [
       {
         "slug": "locations",
@@ -299702,7 +299691,7 @@
     ]
   },
   {
-    "term": "clientes. crear sala",
+    "term": "clientes. crear espacio",
     "pages": [
       {
         "slug": "locations",
@@ -299711,7 +299700,7 @@
     ]
   },
   {
-    "term": "clientes. crear sala navega",
+    "term": "clientes. crear espacio navega",
     "pages": [
       {
         "slug": "locations",
@@ -299720,7 +299709,7 @@
     ]
   },
   {
-    "term": "crear sala",
+    "term": "crear espacio",
     "pages": [
       {
         "slug": "locations",
@@ -299729,7 +299718,7 @@
     ]
   },
   {
-    "term": "crear sala navega",
+    "term": "crear espacio navega",
     "pages": [
       {
         "slug": "locations",
@@ -299738,7 +299727,7 @@
     ]
   },
   {
-    "term": "crear sala navega operaciones",
+    "term": "crear espacio navega operaciones",
     "pages": [
       {
         "slug": "locations",
@@ -299747,7 +299736,7 @@
     ]
   },
   {
-    "term": "sala navega",
+    "term": "espacio navega",
     "pages": [
       {
         "slug": "locations",
@@ -299756,7 +299745,7 @@
     ]
   },
   {
-    "term": "sala navega operaciones",
+    "term": "espacio navega operaciones",
     "pages": [
       {
         "slug": "locations",
@@ -299765,7 +299754,7 @@
     ]
   },
   {
-    "term": "sala navega operaciones recursos",
+    "term": "espacio navega operaciones recursos",
     "pages": [
       {
         "slug": "locations",
@@ -299774,7 +299763,7 @@
     ]
   },
   {
-    "term": "salas nueva sala campos",
+    "term": "espacios nuevo espacio nota",
     "pages": [
       {
         "slug": "locations",
@@ -299783,7 +299772,7 @@
     ]
   },
   {
-    "term": "nueva sala campos",
+    "term": "nuevo espacio nota",
     "pages": [
       {
         "slug": "locations",
@@ -299792,7 +299781,7 @@
     ]
   },
   {
-    "term": "nueva sala campos sala",
+    "term": "nuevo espacio nota interna:",
     "pages": [
       {
         "slug": "locations",
@@ -299801,7 +299790,7 @@
     ]
   },
   {
-    "term": "sala campos",
+    "term": "espacio nota",
     "pages": [
       {
         "slug": "locations",
@@ -299810,7 +299799,7 @@
     ]
   },
   {
-    "term": "sala campos sala",
+    "term": "espacio nota interna:",
     "pages": [
       {
         "slug": "locations",
@@ -299819,7 +299808,7 @@
     ]
   },
   {
-    "term": "sala campos sala campo",
+    "term": "espacio nota interna: colección",
     "pages": [
       {
         "slug": "locations",
@@ -299828,7 +299817,7 @@
     ]
   },
   {
-    "term": "campos sala",
+    "term": "nota interna: colección",
     "pages": [
       {
         "slug": "locations",
@@ -299837,7 +299826,7 @@
     ]
   },
   {
-    "term": "campos sala campo",
+    "term": "nota interna: colección base",
     "pages": [
       {
         "slug": "locations",
@@ -299846,7 +299835,7 @@
     ]
   },
   {
-    "term": "campos sala campo tipo",
+    "term": "interna: colección",
     "pages": [
       {
         "slug": "locations",
@@ -299855,7 +299844,7 @@
     ]
   },
   {
-    "term": "sala campo",
+    "term": "interna: colección base",
     "pages": [
       {
         "slug": "locations",
@@ -299864,7 +299853,7 @@
     ]
   },
   {
-    "term": "sala campo tipo",
+    "term": "interna: colección base datos",
     "pages": [
       {
         "slug": "locations",
@@ -299873,7 +299862,406 @@
     ]
   },
   {
-    "term": "sala campo tipo requerido",
+    "term": "colección base",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "colección base datos",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "colección base datos campo",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "base datos",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      },
+      {
+        "slug": "glossary",
+        "title": "Glossary"
+      },
+      {
+        "slug": "troubleshooting",
+        "title": "Troubleshooting"
+      },
+      {
+        "slug": "settings",
+        "title": "Settings"
+      }
+    ]
+  },
+  {
+    "term": "base datos campo",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "base datos campo llaman",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "datos campo",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "datos campo llaman",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "datos campo llaman rooms",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "campo llaman",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "campo llaman rooms",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "campo llaman rooms roomid",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "llaman rooms",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "llaman rooms roomid",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "llaman rooms roomid razones",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "rooms roomid",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "rooms roomid razones",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "rooms roomid razones históricas.",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "roomid razones",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "roomid razones históricas.",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "roomid razones históricas. interfaz",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "razones históricas.",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "razones históricas. interfaz",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "razones históricas. interfaz muestra",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "históricas. interfaz",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "históricas. interfaz muestra",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "históricas. interfaz muestra como",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "interfaz muestra",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "interfaz muestra como",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "interfaz muestra como espacios.",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "muestra como espacios.",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "muestra como espacios. campos",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "como espacios.",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "como espacios. campos",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "como espacios. campos espacio",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "espacios. campos",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "espacios. campos espacio",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "espacios. campos espacio campo",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "campos espacio",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "campos espacio campo",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "campos espacio campo tipo",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "espacio campo",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "espacio campo tipo",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "espacio campo tipo requerido",
     "pages": [
       {
         "slug": "locations",
@@ -300026,7 +300414,7 @@
     ]
   },
   {
-    "term": "name string nombre sala",
+    "term": "name string nombre espacio",
     "pages": [
       {
         "slug": "locations",
@@ -300035,7 +300423,7 @@
     ]
   },
   {
-    "term": "string nombre sala",
+    "term": "string nombre espacio",
     "pages": [
       {
         "slug": "locations",
@@ -300044,7 +300432,7 @@
     ]
   },
   {
-    "term": "string nombre sala principal\")",
+    "term": "string nombre espacio principal\")",
     "pages": [
       {
         "slug": "locations",
@@ -300053,7 +300441,7 @@
     ]
   },
   {
-    "term": "nombre sala",
+    "term": "nombre espacio",
     "pages": [
       {
         "slug": "locations",
@@ -300062,7 +300450,7 @@
     ]
   },
   {
-    "term": "nombre sala principal\")",
+    "term": "nombre espacio principal\")",
     "pages": [
       {
         "slug": "locations",
@@ -300071,7 +300459,7 @@
     ]
   },
   {
-    "term": "nombre sala principal\") type",
+    "term": "nombre espacio principal\") type",
     "pages": [
       {
         "slug": "locations",
@@ -300080,7 +300468,7 @@
     ]
   },
   {
-    "term": "sala principal\") type",
+    "term": "espacio principal\") type",
     "pages": [
       {
         "slug": "locations",
@@ -300089,7 +300477,7 @@
     ]
   },
   {
-    "term": "sala principal\") type enum",
+    "term": "espacio principal\") type enum",
     "pages": [
       {
         "slug": "locations",
@@ -300233,7 +300621,7 @@
     ]
   },
   {
-    "term": "description text descripción sala",
+    "term": "description text descripción espacio",
     "pages": [
       {
         "slug": "locations",
@@ -300242,7 +300630,7 @@
     ]
   },
   {
-    "term": "text descripción sala",
+    "term": "text descripción espacio",
     "pages": [
       {
         "slug": "locations",
@@ -300251,7 +300639,7 @@
     ]
   },
   {
-    "term": "text descripción sala isactive",
+    "term": "text descripción espacio isactive",
     "pages": [
       {
         "slug": "locations",
@@ -300260,7 +300648,7 @@
     ]
   },
   {
-    "term": "descripción sala",
+    "term": "descripción espacio",
     "pages": [
       {
         "slug": "locations",
@@ -300269,7 +300657,7 @@
     ]
   },
   {
-    "term": "descripción sala isactive",
+    "term": "descripción espacio isactive",
     "pages": [
       {
         "slug": "locations",
@@ -300278,7 +300666,7 @@
     ]
   },
   {
-    "term": "descripción sala isactive boolean",
+    "term": "descripción espacio isactive boolean",
     "pages": [
       {
         "slug": "locations",
@@ -300287,7 +300675,7 @@
     ]
   },
   {
-    "term": "sala isactive",
+    "term": "espacio isactive",
     "pages": [
       {
         "slug": "locations",
@@ -300296,7 +300684,7 @@
     ]
   },
   {
-    "term": "sala isactive boolean",
+    "term": "espacio isactive boolean",
     "pages": [
       {
         "slug": "locations",
@@ -300305,7 +300693,7 @@
     ]
   },
   {
-    "term": "sala isactive boolean sala",
+    "term": "espacio isactive boolean espacio",
     "pages": [
       {
         "slug": "locations",
@@ -300314,7 +300702,7 @@
     ]
   },
   {
-    "term": "isactive boolean sala",
+    "term": "isactive boolean espacio",
     "pages": [
       {
         "slug": "locations",
@@ -300323,7 +300711,7 @@
     ]
   },
   {
-    "term": "isactive boolean sala está",
+    "term": "isactive boolean espacio está",
     "pages": [
       {
         "slug": "locations",
@@ -300332,7 +300720,7 @@
     ]
   },
   {
-    "term": "boolean sala",
+    "term": "boolean espacio",
     "pages": [
       {
         "slug": "locations",
@@ -300341,7 +300729,7 @@
     ]
   },
   {
-    "term": "boolean sala está",
+    "term": "boolean espacio está",
     "pages": [
       {
         "slug": "locations",
@@ -300350,7 +300738,7 @@
     ]
   },
   {
-    "term": "boolean sala está disponible",
+    "term": "boolean espacio está disponible",
     "pages": [
       {
         "slug": "locations",
@@ -300359,7 +300747,7 @@
     ]
   },
   {
-    "term": "sala está",
+    "term": "espacio está",
     "pages": [
       {
         "slug": "locations",
@@ -300368,7 +300756,7 @@
     ]
   },
   {
-    "term": "sala está disponible",
+    "term": "espacio está disponible",
     "pages": [
       {
         "slug": "locations",
@@ -300377,7 +300765,7 @@
     ]
   },
   {
-    "term": "sala está disponible tipos",
+    "term": "espacio está disponible tipos",
     "pages": [
       {
         "slug": "locations",
@@ -300395,7 +300783,7 @@
     ]
   },
   {
-    "term": "está disponible tipos sala",
+    "term": "está disponible tipos espacio",
     "pages": [
       {
         "slug": "locations",
@@ -300413,7 +300801,7 @@
     ]
   },
   {
-    "term": "disponible tipos sala",
+    "term": "disponible tipos espacio",
     "pages": [
       {
         "slug": "locations",
@@ -300422,7 +300810,7 @@
     ]
   },
   {
-    "term": "disponible tipos sala tipo",
+    "term": "disponible tipos espacio tipo",
     "pages": [
       {
         "slug": "locations",
@@ -300431,7 +300819,7 @@
     ]
   },
   {
-    "term": "tipos sala",
+    "term": "tipos espacio",
     "pages": [
       {
         "slug": "locations",
@@ -300440,7 +300828,7 @@
     ]
   },
   {
-    "term": "tipos sala tipo",
+    "term": "tipos espacio tipo",
     "pages": [
       {
         "slug": "locations",
@@ -300449,7 +300837,7 @@
     ]
   },
   {
-    "term": "tipos sala tipo descripción",
+    "term": "tipos espacio tipo descripción",
     "pages": [
       {
         "slug": "locations",
@@ -300458,7 +300846,7 @@
     ]
   },
   {
-    "term": "sala tipo",
+    "term": "espacio tipo",
     "pages": [
       {
         "slug": "locations",
@@ -300467,7 +300855,7 @@
     ]
   },
   {
-    "term": "sala tipo descripción",
+    "term": "espacio tipo descripción",
     "pages": [
       {
         "slug": "locations",
@@ -300476,7 +300864,7 @@
     ]
   },
   {
-    "term": "sala tipo descripción studio",
+    "term": "espacio tipo descripción studio",
     "pages": [
       {
         "slug": "locations",
@@ -300819,15 +301207,6 @@
   },
   {
     "term": "outdoor espacio aire libre",
-    "pages": [
-      {
-        "slug": "locations",
-        "title": "Locations"
-      }
-    ]
-  },
-  {
-    "term": "espacio aire",
     "pages": [
       {
         "slug": "locations",
@@ -301277,7 +301656,7 @@
     ]
   },
   {
-    "term": "asignar: ubicación venue) sala",
+    "term": "asignar: ubicación venue) espacio",
     "pages": [
       {
         "slug": "locations",
@@ -301295,7 +301674,7 @@
     ]
   },
   {
-    "term": "ubicación venue) sala",
+    "term": "ubicación venue) espacio",
     "pages": [
       {
         "slug": "locations",
@@ -301304,7 +301683,7 @@
     ]
   },
   {
-    "term": "ubicación venue) sala específico",
+    "term": "ubicación venue) espacio específico",
     "pages": [
       {
         "slug": "locations",
@@ -301313,7 +301692,7 @@
     ]
   },
   {
-    "term": "venue) sala",
+    "term": "venue) espacio",
     "pages": [
       {
         "slug": "locations",
@@ -301322,7 +301701,7 @@
     ]
   },
   {
-    "term": "venue) sala específico",
+    "term": "venue) espacio específico",
     "pages": [
       {
         "slug": "locations",
@@ -301331,7 +301710,7 @@
     ]
   },
   {
-    "term": "venue) sala específico dentro",
+    "term": "venue) espacio específico dentro",
     "pages": [
       {
         "slug": "locations",
@@ -301340,25 +301719,7 @@
     ]
   },
   {
-    "term": "sala específico",
-    "pages": [
-      {
-        "slug": "locations",
-        "title": "Locations"
-      }
-    ]
-  },
-  {
-    "term": "sala específico dentro",
-    "pages": [
-      {
-        "slug": "locations",
-        "title": "Locations"
-      }
-    ]
-  },
-  {
-    "term": "sala específico dentro venue)",
+    "term": "espacio específico dentro venue)",
     "pages": [
       {
         "slug": "locations",
@@ -301403,7 +301764,7 @@
     ]
   },
   {
-    "term": "dentro venue) selección sala",
+    "term": "dentro venue) selección espacio",
     "pages": [
       {
         "slug": "locations",
@@ -301421,7 +301782,7 @@
     ]
   },
   {
-    "term": "venue) selección sala",
+    "term": "venue) selección espacio",
     "pages": [
       {
         "slug": "locations",
@@ -301430,7 +301791,7 @@
     ]
   },
   {
-    "term": "venue) selección sala solo",
+    "term": "venue) selección espacio solo",
     "pages": [
       {
         "slug": "locations",
@@ -301439,7 +301800,7 @@
     ]
   },
   {
-    "term": "luego seleccionar sala. ubicación",
+    "term": "luego seleccionar espacio. ubicación",
     "pages": [
       {
         "slug": "locations",
@@ -301448,7 +301809,7 @@
     ]
   },
   {
-    "term": "seleccionar sala. ubicación",
+    "term": "seleccionar espacio. ubicación",
     "pages": [
       {
         "slug": "locations",
@@ -301457,7 +301818,7 @@
     ]
   },
   {
-    "term": "seleccionar sala. ubicación visualización",
+    "term": "seleccionar espacio. ubicación visualización",
     "pages": [
       {
         "slug": "locations",
@@ -301466,7 +301827,7 @@
     ]
   },
   {
-    "term": "sala. ubicación",
+    "term": "espacio. ubicación",
     "pages": [
       {
         "slug": "locations",
@@ -301475,7 +301836,7 @@
     ]
   },
   {
-    "term": "sala. ubicación visualización",
+    "term": "espacio. ubicación visualización",
     "pages": [
       {
         "slug": "locations",
@@ -301484,7 +301845,7 @@
     ]
   },
   {
-    "term": "sala. ubicación visualización ranura",
+    "term": "espacio. ubicación visualización ranura",
     "pages": [
       {
         "slug": "locations",
@@ -301574,7 +301935,7 @@
     ]
   },
   {
-    "term": "ubicación sala asignadas: ubicación",
+    "term": "ubicación espacio asignados: ubicación",
     "pages": [
       {
         "slug": "locations",
@@ -301583,7 +301944,7 @@
     ]
   },
   {
-    "term": "sala asignadas: ubicación",
+    "term": "espacio asignados: ubicación",
     "pages": [
       {
         "slug": "locations",
@@ -301592,7 +301953,7 @@
     ]
   },
   {
-    "term": "sala asignadas: ubicación nombre",
+    "term": "espacio asignados: ubicación nombre",
     "pages": [
       {
         "slug": "locations",
@@ -301601,7 +301962,7 @@
     ]
   },
   {
-    "term": "asignadas: ubicación",
+    "term": "asignados: ubicación",
     "pages": [
       {
         "slug": "locations",
@@ -301610,7 +301971,7 @@
     ]
   },
   {
-    "term": "asignadas: ubicación nombre",
+    "term": "asignados: ubicación nombre",
     "pages": [
       {
         "slug": "locations",
@@ -301619,7 +301980,7 @@
     ]
   },
   {
-    "term": "asignadas: ubicación nombre venue",
+    "term": "asignados: ubicación nombre venue",
     "pages": [
       {
         "slug": "locations",
@@ -301646,7 +302007,7 @@
     ]
   },
   {
-    "term": "ubicación nombre venue sala",
+    "term": "ubicación nombre venue espacio",
     "pages": [
       {
         "slug": "locations",
@@ -301664,7 +302025,7 @@
     ]
   },
   {
-    "term": "nombre venue sala",
+    "term": "nombre venue espacio",
     "pages": [
       {
         "slug": "locations",
@@ -301673,7 +302034,7 @@
     ]
   },
   {
-    "term": "nombre venue sala espacio",
+    "term": "nombre venue espacio específica",
     "pages": [
       {
         "slug": "locations",
@@ -301682,7 +302043,7 @@
     ]
   },
   {
-    "term": "venue sala",
+    "term": "venue espacio",
     "pages": [
       {
         "slug": "locations",
@@ -301691,7 +302052,7 @@
     ]
   },
   {
-    "term": "venue sala espacio",
+    "term": "venue espacio específica",
     "pages": [
       {
         "slug": "locations",
@@ -301700,7 +302061,7 @@
     ]
   },
   {
-    "term": "venue sala espacio específico",
+    "term": "venue espacio específica dentro",
     "pages": [
       {
         "slug": "locations",
@@ -301709,7 +302070,7 @@
     ]
   },
   {
-    "term": "espacio específico dentro venue",
+    "term": "espacio específica",
     "pages": [
       {
         "slug": "locations",
@@ -301718,7 +302079,7 @@
     ]
   },
   {
-    "term": "específico dentro venue",
+    "term": "espacio específica dentro",
     "pages": [
       {
         "slug": "locations",
@@ -301727,7 +302088,25 @@
     ]
   },
   {
-    "term": "específico dentro venue esto",
+    "term": "espacio específica dentro venue",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "específica dentro venue",
+    "pages": [
+      {
+        "slug": "locations",
+        "title": "Locations"
+      }
+    ]
+  },
+  {
+    "term": "específica dentro venue esto",
     "pages": [
       {
         "slug": "locations",
@@ -301817,7 +302196,7 @@
     ]
   },
   {
-    "term": "errores comunes crear salas",
+    "term": "errores comunes crear espacios",
     "pages": [
       {
         "slug": "locations",
@@ -301826,7 +302205,7 @@
     ]
   },
   {
-    "term": "comunes crear salas",
+    "term": "comunes crear espacios",
     "pages": [
       {
         "slug": "locations",
@@ -301835,7 +302214,7 @@
     ]
   },
   {
-    "term": "comunes crear salas seleccionar",
+    "term": "comunes crear espacios seleccionar",
     "pages": [
       {
         "slug": "locations",
@@ -301844,7 +302223,7 @@
     ]
   },
   {
-    "term": "crear salas",
+    "term": "crear espacios",
     "pages": [
       {
         "slug": "locations",
@@ -301853,7 +302232,7 @@
     ]
   },
   {
-    "term": "crear salas seleccionar",
+    "term": "crear espacios seleccionar",
     "pages": [
       {
         "slug": "locations",
@@ -301862,7 +302241,7 @@
     ]
   },
   {
-    "term": "crear salas seleccionar ubicación",
+    "term": "crear espacios seleccionar ubicación",
     "pages": [
       {
         "slug": "locations",
@@ -301871,7 +302250,7 @@
     ]
   },
   {
-    "term": "salas seleccionar",
+    "term": "espacios seleccionar",
     "pages": [
       {
         "slug": "locations",
@@ -301880,7 +302259,7 @@
     ]
   },
   {
-    "term": "salas seleccionar ubicación",
+    "term": "espacios seleccionar ubicación",
     "pages": [
       {
         "slug": "locations",
@@ -301889,7 +302268,7 @@
     ]
   },
   {
-    "term": "salas seleccionar ubicación primero.",
+    "term": "espacios seleccionar ubicación primero.",
     "pages": [
       {
         "slug": "locations",
@@ -301907,7 +302286,7 @@
     ]
   },
   {
-    "term": "seleccionar ubicación primero. salas",
+    "term": "seleccionar ubicación primero. espacios",
     "pages": [
       {
         "slug": "locations",
@@ -301925,7 +302304,7 @@
     ]
   },
   {
-    "term": "ubicación primero. salas",
+    "term": "ubicación primero. espacios",
     "pages": [
       {
         "slug": "locations",
@@ -301934,7 +302313,7 @@
     ]
   },
   {
-    "term": "ubicación primero. salas deben",
+    "term": "ubicación primero. espacios deben",
     "pages": [
       {
         "slug": "locations",
@@ -301943,7 +302322,7 @@
     ]
   },
   {
-    "term": "primero. salas",
+    "term": "primero. espacios",
     "pages": [
       {
         "slug": "locations",
@@ -301952,7 +302331,7 @@
     ]
   },
   {
-    "term": "primero. salas deben",
+    "term": "primero. espacios deben",
     "pages": [
       {
         "slug": "locations",
@@ -301961,7 +302340,7 @@
     ]
   },
   {
-    "term": "primero. salas deben pertenecer",
+    "term": "primero. espacios deben pertenecer",
     "pages": [
       {
         "slug": "locations",
@@ -302015,7 +302394,7 @@
     ]
   },
   {
-    "term": "primero. establecer capacidad sala.",
+    "term": "primero. establecer capacidad espacio.",
     "pages": [
       {
         "slug": "locations",
@@ -302033,7 +302412,7 @@
     ]
   },
   {
-    "term": "establecer capacidad sala.",
+    "term": "establecer capacidad espacio.",
     "pages": [
       {
         "slug": "locations",
@@ -302042,7 +302421,7 @@
     ]
   },
   {
-    "term": "establecer capacidad sala. capacidad",
+    "term": "establecer capacidad espacio. capacidad",
     "pages": [
       {
         "slug": "locations",
@@ -302051,7 +302430,7 @@
     ]
   },
   {
-    "term": "capacidad sala.",
+    "term": "capacidad espacio.",
     "pages": [
       {
         "slug": "locations",
@@ -302060,7 +302439,7 @@
     ]
   },
   {
-    "term": "capacidad sala. capacidad",
+    "term": "capacidad espacio. capacidad",
     "pages": [
       {
         "slug": "locations",
@@ -302069,7 +302448,7 @@
     ]
   },
   {
-    "term": "capacidad sala. capacidad ayuda",
+    "term": "capacidad espacio. capacidad ayuda",
     "pages": [
       {
         "slug": "locations",
@@ -302078,7 +302457,7 @@
     ]
   },
   {
-    "term": "sala. capacidad",
+    "term": "espacio. capacidad",
     "pages": [
       {
         "slug": "locations",
@@ -302087,7 +302466,7 @@
     ]
   },
   {
-    "term": "sala. capacidad ayuda",
+    "term": "espacio. capacidad ayuda",
     "pages": [
       {
         "slug": "locations",
@@ -302096,7 +302475,7 @@
     ]
   },
   {
-    "term": "sala. capacidad ayuda prevenir",
+    "term": "espacio. capacidad ayuda prevenir",
     "pages": [
       {
         "slug": "locations",
@@ -302312,7 +302691,7 @@
     ]
   },
   {
-    "term": "caracteres. archivar ubicación salas",
+    "term": "caracteres. archivar ubicación espacios",
     "pages": [
       {
         "slug": "locations",
@@ -302330,7 +302709,7 @@
     ]
   },
   {
-    "term": "archivar ubicación salas",
+    "term": "archivar ubicación espacios",
     "pages": [
       {
         "slug": "locations",
@@ -302339,7 +302718,7 @@
     ]
   },
   {
-    "term": "archivar ubicación salas activas.",
+    "term": "archivar ubicación espacios activos.",
     "pages": [
       {
         "slug": "locations",
@@ -302348,7 +302727,7 @@
     ]
   },
   {
-    "term": "ubicación salas",
+    "term": "ubicación espacios",
     "pages": [
       {
         "slug": "locations",
@@ -302357,7 +302736,7 @@
     ]
   },
   {
-    "term": "ubicación salas activas.",
+    "term": "ubicación espacios activos.",
     "pages": [
       {
         "slug": "locations",
@@ -302366,7 +302745,7 @@
     ]
   },
   {
-    "term": "ubicación salas activas. ubicación",
+    "term": "ubicación espacios activos. ubicación",
     "pages": [
       {
         "slug": "locations",
@@ -302375,7 +302754,7 @@
     ]
   },
   {
-    "term": "salas activas.",
+    "term": "espacios activos.",
     "pages": [
       {
         "slug": "locations",
@@ -302384,7 +302763,7 @@
     ]
   },
   {
-    "term": "salas activas. ubicación",
+    "term": "espacios activos. ubicación",
     "pages": [
       {
         "slug": "locations",
@@ -302393,7 +302772,7 @@
     ]
   },
   {
-    "term": "salas activas. ubicación usa,",
+    "term": "espacios activos. ubicación usa,",
     "pages": [
       {
         "slug": "locations",
@@ -302402,7 +302781,7 @@
     ]
   },
   {
-    "term": "activas. ubicación",
+    "term": "activos. ubicación",
     "pages": [
       {
         "slug": "locations",
@@ -302411,7 +302790,7 @@
     ]
   },
   {
-    "term": "activas. ubicación usa,",
+    "term": "activos. ubicación usa,",
     "pages": [
       {
         "slug": "locations",
@@ -302420,7 +302799,7 @@
     ]
   },
   {
-    "term": "activas. ubicación usa, desactívala.",
+    "term": "activos. ubicación usa, descaívala.",
     "pages": [
       {
         "slug": "locations",
@@ -341689,23 +342068,6 @@
       {
         "slug": "glossary",
         "title": "Glossary"
-      }
-    ]
-  },
-  {
-    "term": "base datos",
-    "pages": [
-      {
-        "slug": "glossary",
-        "title": "Glossary"
-      },
-      {
-        "slug": "troubleshooting",
-        "title": "Troubleshooting"
-      },
-      {
-        "slug": "settings",
-        "title": "Settings"
       }
     ]
   },

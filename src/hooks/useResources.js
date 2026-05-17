@@ -11,6 +11,7 @@ export function useResources({
   type = "",
   search = "",
   includeArchived = false,
+  onlyArchived = false,
   limit = 50,
   offset = 0,
 } = {}) {
@@ -28,7 +29,11 @@ export function useResources({
         Query.offset(offset),
         Query.orderAsc("name"),
       ];
-      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
+      if (onlyArchived) {
+        queries.push(Query.isNotNull("archivedAt"));
+      } else if (!includeArchived) {
+        queries.push(Query.isNull("archivedAt"));
+      }
       if (activeOnly) queries.push(Query.equal("isActive", true));
       if (type) queries.push(Query.equal("type", type));
       if (search) queries.push(Query.search("name", search));
@@ -40,7 +45,7 @@ export function useResources({
     } finally {
       setLoading(false);
     }
-  }, [activeOnly, type, search, includeArchived, limit, offset]);
+  }, [activeOnly, type, search, includeArchived, onlyArchived, limit, offset]);
 
   useEffect(() => {
     fetch();

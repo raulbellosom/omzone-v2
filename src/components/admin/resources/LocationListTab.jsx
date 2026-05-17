@@ -5,8 +5,13 @@ import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 import { Badge } from "@/components/common/Badge";
 import { useLocations, updateLocation } from "@/hooks/useLocations";
+import { useArchive } from "@/hooks/useArchive";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
+import AdminSelect from "@/components/common/AdminSelect";
+import ArchiveActionsMenu from "@/components/admin/ArchiveActionsMenu";
+import ConfirmHardDeleteModal from "@/components/admin/ConfirmHardDeleteModal";
+import env from "@/config/env";
 import { cn } from "@/lib/utils";
 
 const LOCATION_NEW_ROUTE = "/admin/locations/new";
@@ -51,9 +56,21 @@ function SkeletonRow() {
   );
 }
 
-function LocationCard({ location, onToggle, canAdmin, navigate, t }) {
+function LocationCard({
+  location,
+  onToggle,
+  onArchive,
+  onRestore,
+  onHardDelete,
+  canAdmin,
+  canHardDelete,
+  archiving,
+  navigate,
+  t,
+  isArchivedView,
+}) {
   return (
-    <Card className="p-4 space-y-3">
+    <Card className={cn("p-4 space-y-3", isArchivedView && "opacity-70")}>
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="font-medium text-charcoal truncate">{location.name}</p>
@@ -63,25 +80,31 @@ function LocationCard({ location, onToggle, canAdmin, navigate, t }) {
             </p>
           )}
         </div>
-        <Badge variant={location.isActive ? "success" : "warm"}>
-          {location.isActive
-            ? t("admin.resourceLists.active")
-            : t("admin.resourceLists.inactive")}
-        </Badge>
+        {isArchivedView ? (
+          <Badge variant="warm">{t("admin.archive.archivedBadge")}</Badge>
+        ) : (
+          <Badge variant={location.isActive ? "success" : "warm"}>
+            {location.isActive
+              ? t("admin.resourceLists.active")
+              : t("admin.resourceLists.inactive")}
+          </Badge>
+        )}
       </div>
       <div className="flex items-center gap-2 pt-1 border-t border-sand flex-wrap">
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() =>
-            navigate(LOCATION_EDIT_ROUTE.replace(":id", location.$id))
-          }
-          className="flex-1 justify-center"
-        >
-          <Pencil className="h-3.5 w-3.5" /> {t("admin.resourceLists.edit")}
-        </Button>
-        {canAdmin && (
+        {!isArchivedView && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() =>
+              navigate(LOCATION_EDIT_ROUTE.replace(":id", location.$id))
+            }
+            className="flex-1 justify-center"
+          >
+            <Pencil className="h-3.5 w-3.5" /> {t("admin.resourceLists.edit")}
+          </Button>
+        )}
+        {canAdmin && !isArchivedView && (
           <div className="flex items-center gap-2 ml-auto">
             <span className="text-xs text-charcoal-subtle">
               {location.isActive
@@ -94,6 +117,19 @@ function LocationCard({ location, onToggle, canAdmin, navigate, t }) {
             />
           </div>
         )}
+        {(canAdmin || canHardDelete) && (
+          <div className={cn(isArchivedView ? "ml-auto" : "")}>
+            <ArchiveActionsMenu
+              document={location}
+              onArchive={onArchive}
+              onRestore={onRestore}
+              onHardDelete={onHardDelete}
+              canArchive={canAdmin}
+              canHardDelete={canHardDelete}
+              loading={archiving}
+            />
+          </div>
+        )}
       </div>
     </Card>
   );
@@ -101,11 +137,29 @@ function LocationCard({ location, onToggle, canAdmin, navigate, t }) {
 
 export default function LocationListTab() {
   const navigate = useNavigate();
-  const { isAdmin } = useAuth();
+  const { isAdmin, isRoot } = useAuth();
   const { t } = useLanguage();
+  const [showArchived, setShowArchived] = useState("");
   const [actionError, setActionError] = useState(null);
+  const [hardDeleteDoc, setHardDeleteDoc] = useState(null);
 
-  const { data, total, loading, error, refetch } = useLocations();
+  const isArchivedView = showArchived === "__archived__";
+
+  const { data, total, loading, error, refetch } = useLocations({
+    onlyArchived: isArchivedView,
+  });
+
+  const {
+    archive,
+    restore,
+    hardDelete,
+    loading: archiving,
+  } = useArchive(env.collectionLocations, refetch);
+
+  const ARCHIVE_OPTIONS = [
+    { value: "", label: t("admin.statuses.active") },
+    { value: "__archived__", label: t("admin.archive.archivedTab") },
+  ];
 
   const handleToggle = useCallback(
     async (id, newValue) => {
@@ -120,23 +174,58 @@ export default function LocationListTab() {
     [refetch],
   );
 
+  const handleArchive = useCallback(
+    ({ documentId }) => archive({ documentId, cascade: false }),
+    [archive],
+  );
+
+  const handleRestore = useCallback(
+    ({ documentId }) => restore({ documentId }),
+    [restore],
+  );
+
+  const handleHardDelete = useCallback(({ document }) => {
+    setHardDeleteDoc(document);
+  }, []);
+
+  const handleHardDeleteConfirm = useCallback(
+    async (doc) => {
+      await hardDelete({
+        documentId: doc.$id,
+        confirmationId: doc.$id,
+        reason: "admin hard delete",
+      });
+      setHardDeleteDoc(null);
+    },
+    [hardDelete],
+  );
+
   return (
     <div className="space-y-4">
       {/* Toolbar */}
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center gap-3">
+        <AdminSelect
+          value={showArchived}
+          onChange={setShowArchived}
+          options={ARCHIVE_OPTIONS}
+          fullWidth={false}
+        />
         <p className="text-sm text-charcoal-subtle">
           {!loading &&
+            total > 0 &&
             `${total} ${total === 1 ? t("admin.resourceLists.locationCount").replace("{count}", "1").replace("1 ", "") : t("admin.resourceLists.locationCount").replace("{count}", total)}`}
         </p>
-        {isAdmin && (
-          <Button
-            type="button"
-            size="sm"
-            onClick={() => navigate(LOCATION_NEW_ROUTE)}
-          >
-            <Plus className="h-4 w-4" />{" "}
-            {t("admin.resourceLists.createLocation")}
-          </Button>
+        {isAdmin && !isArchivedView && (
+          <div className="ml-auto">
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => navigate(LOCATION_NEW_ROUTE)}
+            >
+              <Plus className="h-4 w-4" />{" "}
+              {t("admin.resourceLists.createLocation")}
+            </Button>
+          </div>
         )}
       </div>
 
@@ -175,7 +264,9 @@ export default function LocationListTab() {
                   colSpan={4}
                   className="px-4 py-12 text-center text-sm text-charcoal-subtle"
                 >
-                  {t("admin.resourceLists.noLocationsYet")}
+                  {isArchivedView
+                    ? t("admin.resourceLists.noLocationsArchived")
+                    : t("admin.resourceLists.noLocationsYet")}
                 </td>
               </tr>
             )}
@@ -186,21 +277,34 @@ export default function LocationListTab() {
                 return (
                   <tr
                     key={loc.$id}
-                    className="group border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors"
+                    className={cn(
+                      "group border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors",
+                      isArchivedView && "opacity-60",
+                    )}
                   >
                     <td className="px-4 py-3">
-                      <Link
-                        to={editUrl}
-                        className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors truncate max-w-48 block"
-                      >
-                        {loc.name}
-                      </Link>
+                      {isArchivedView ? (
+                        <span className="font-medium text-charcoal truncate max-w-48 block">
+                          {loc.name}
+                        </span>
+                      ) : (
+                        <Link
+                          to={editUrl}
+                          className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors truncate max-w-48 block"
+                        >
+                          {loc.name}
+                        </Link>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-charcoal-subtle hidden sm:table-cell truncate max-w-64">
                       {loc.address ?? "—"}
                     </td>
                     <td className="px-4 py-3 text-center">
-                      {isAdmin ? (
+                      {isArchivedView ? (
+                        <Badge variant="warm">
+                          {t("admin.archive.archivedBadge")}
+                        </Badge>
+                      ) : isAdmin ? (
                         <ActiveToggle
                           isActive={loc.isActive}
                           onChange={(v) => handleToggle(loc.$id, v)}
@@ -213,14 +317,29 @@ export default function LocationListTab() {
                         </Badge>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-right opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
-                      <Link
-                        to={editUrl}
-                        className="inline-flex items-center justify-center h-9 w-9 rounded-lg text-charcoal-subtle hover:text-sage hover:bg-sage/10 transition-colors"
-                        title={t("admin.resourceLists.edit")}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Link>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        {!isArchivedView && (
+                          <Link
+                            to={editUrl}
+                            className="opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity inline-flex items-center justify-center h-9 w-9 rounded-lg text-charcoal-subtle hover:text-sage hover:bg-sage/10"
+                            title={t("admin.resourceLists.edit")}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Link>
+                        )}
+                        {(isAdmin || isRoot) && (
+                          <ArchiveActionsMenu
+                            document={loc}
+                            onArchive={handleArchive}
+                            onRestore={handleRestore}
+                            onHardDelete={handleHardDelete}
+                            canArchive={isAdmin}
+                            canHardDelete={isRoot}
+                            loading={archiving}
+                          />
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );
@@ -246,9 +365,11 @@ export default function LocationListTab() {
         {!loading && data.length === 0 && (
           <Card className="p-8 text-center space-y-4">
             <p className="text-sm text-charcoal-subtle">
-              {t("admin.resourceLists.noLocationsMobile")}
+              {isArchivedView
+                ? t("admin.resourceLists.noLocationsArchived")
+                : t("admin.resourceLists.noLocationsMobile")}
             </p>
-            {isAdmin && (
+            {isAdmin && !isArchivedView && (
               <Button
                 type="button"
                 size="sm"
@@ -266,12 +387,27 @@ export default function LocationListTab() {
               key={loc.$id}
               location={loc}
               onToggle={handleToggle}
+              onArchive={handleArchive}
+              onRestore={handleRestore}
+              onHardDelete={handleHardDelete}
               canAdmin={isAdmin}
+              canHardDelete={isRoot}
+              archiving={archiving}
               navigate={navigate}
               t={t}
+              isArchivedView={isArchivedView}
             />
           ))}
       </div>
+
+      <ConfirmHardDeleteModal
+        open={!!hardDeleteDoc}
+        document={hardDeleteDoc}
+        collectionId={env.collectionLocations}
+        loading={archiving}
+        onConfirm={handleHardDeleteConfirm}
+        onCancel={() => setHardDeleteDoc(null)}
+      />
     </div>
   );
 }

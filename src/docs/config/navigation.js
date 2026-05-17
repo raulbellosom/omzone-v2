@@ -6,15 +6,33 @@ export const docsNavigation = {
   gettingStarted: {
     title: { en: "Getting Started", es: "Primeros Pasos" },
     order: 1,
-    pages: [{ slug: "introduction", title: { en: "Introduction", es: "Introduccion" }, order: 1 }],
+    pages: [
+      {
+        slug: "introduction",
+        title: { en: "Introduction", es: "Introduccion" },
+        order: 1,
+      },
+    ],
   },
   catalog: {
     title: { en: "Catalog", es: "Catalogo" },
     order: 2,
     pages: [
-      { slug: "experiences", title: { en: "Experiences", es: "Experiencias" }, order: 1 },
-      { slug: "editions", title: { en: "Editions", es: "Ediciones" }, order: 2 },
-      { slug: "pricing-tiers", title: { en: "Pricing Tiers", es: "Niveles de Precio" }, order: 3 },
+      {
+        slug: "experiences",
+        title: { en: "Experiences", es: "Experiencias" },
+        order: 1,
+      },
+      {
+        slug: "editions",
+        title: { en: "Editions", es: "Ediciones" },
+        order: 2,
+      },
+      {
+        slug: "pricing-tiers",
+        title: { en: "Pricing Tiers", es: "Niveles de Precio" },
+        order: 3,
+      },
       { slug: "addons", title: { en: "Addons", es: "Complementos" }, order: 4 },
       { slug: "packages", title: { en: "Packages", es: "Paquetes" }, order: 5 },
       { slug: "passes", title: { en: "Passes", es: "Pases" }, order: 6 },
@@ -24,10 +42,26 @@ export const docsNavigation = {
     title: { en: "Operations", es: "Operaciones" },
     order: 3,
     pages: [
-      { slug: "slots", title: { en: "Slots & Agenda", es: "Horarios y Agenda" }, order: 1 },
-      { slug: "resources", title: { en: "Resources", es: "Recursos" }, order: 2 },
-      { slug: "locations", title: { en: "Locations & Rooms", es: "Ubicaciones y Salas" }, order: 3 },
-      { slug: "booking-requests", title: { en: "Booking Requests", es: "Solicitudes de Reserva" }, order: 4 },
+      {
+        slug: "slots",
+        title: { en: "Slots & Agenda", es: "Horarios y Agenda" },
+        order: 1,
+      },
+      {
+        slug: "resources",
+        title: { en: "Resources", es: "Recursos" },
+        order: 2,
+      },
+      {
+        slug: "locations",
+        title: { en: "Locations & Spaces", es: "Ubicaciones y Espacios" },
+        order: 3,
+      },
+      {
+        slug: "booking-requests",
+        title: { en: "Booking Requests", es: "Solicitudes de Reserva" },
+        order: 4,
+      },
     ],
   },
   sales: {
@@ -35,15 +69,27 @@ export const docsNavigation = {
     order: 4,
     pages: [
       { slug: "orders", title: { en: "Orders", es: "Ordenes" }, order: 1 },
-      { slug: "assisted-sale", title: { en: "Assisted Sale", es: "Venta Asistida" }, order: 2 },
+      {
+        slug: "assisted-sale",
+        title: { en: "Assisted Sale", es: "Venta Asistida" },
+        order: 2,
+      },
     ],
   },
   content: {
     title: { en: "Content", es: "Contenido" },
     order: 5,
     pages: [
-      { slug: "publications", title: { en: "Publications", es: "Publicaciones" }, order: 1 },
-      { slug: "sections", title: { en: "Sections", es: "Secciones" }, order: 2 },
+      {
+        slug: "publications",
+        title: { en: "Publications", es: "Publicaciones" },
+        order: 1,
+      },
+      {
+        slug: "sections",
+        title: { en: "Sections", es: "Secciones" },
+        order: 2,
+      },
     ],
   },
   system: {
@@ -53,7 +99,11 @@ export const docsNavigation = {
       { slug: "tickets", title: { en: "Tickets", es: "Tickets" }, order: 1 },
       { slug: "clients", title: { en: "Clients", es: "Clientes" }, order: 2 },
       { slug: "media", title: { en: "Media", es: "Multimedia" }, order: 3 },
-      { slug: "settings", title: { en: "Settings", es: "Configuracion" }, order: 4 },
+      {
+        slug: "settings",
+        title: { en: "Settings", es: "Configuracion" },
+        order: 4,
+      },
     ],
   },
   reference: {
@@ -62,9 +112,21 @@ export const docsNavigation = {
     pages: [
       { slug: "glossary", title: { en: "Glossary", es: "Glosario" }, order: 1 },
       { slug: "flows", title: { en: "Flows", es: "Flujos" }, order: 2 },
-      { slug: "reservation-playbooks", title: { en: "Reservation Playbooks", es: "Playbooks de Reservas" }, order: 3 },
-      { slug: "known-limitations", title: { en: "Known Limitations", es: "Limitaciones Conocidas" }, order: 4 },
-      { slug: "troubleshooting", title: { en: "Troubleshooting", es: "Solucion de Problemas" }, order: 5 },
+      {
+        slug: "reservation-playbooks",
+        title: { en: "Reservation Playbooks", es: "Playbooks de Reservas" },
+        order: 3,
+      },
+      {
+        slug: "known-limitations",
+        title: { en: "Known Limitations", es: "Limitaciones Conocidas" },
+        order: 4,
+      },
+      {
+        slug: "troubleshooting",
+        title: { en: "Troubleshooting", es: "Solucion de Problemas" },
+        order: 5,
+      },
     ],
   },
 };
