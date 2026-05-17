@@ -53,10 +53,16 @@ export default function Navbar() {
     <header
       className={`fixed top-0 left-0 w-full z-40 h-16 flex items-center px-4 sm:px-5 md:px-6 transition-all duration-300 ${
         isTransparent
-          ? "bg-transparent border-b border-transparent"
+          ? "border-b border-transparent"
           : "bg-white/80 backdrop-blur-md border-b border-warm-gray-dark/40"
       }`}
     >
+      {isTransparent && (
+        <div
+          className="absolute top-0 left-0 w-full h-40 -z-10 pointer-events-none bg-linear-to-b from-black/30 to-transparent"
+          aria-hidden="true"
+        />
+      )}
       {/* Logo */}
       <Link
         to={ROUTES.HOME}

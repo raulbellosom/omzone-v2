@@ -3787,7 +3787,7 @@
     ],
     "content": {
       "en": "Editions Editions represent specific versions or installments of an experience, each with its own date range, registration window, and capacity. Use editions when you need multiple date-bound iterations of the same experience template. When to Use Editions Editions are ideal for: - Retreats with specific start/end dates (e.g., \"Spring Retreat 2026\") - Seasonal programs with limited enrollment windows - Multi-session programs where each installment has different logistics - Limited-capacity events with registration cutoffs Not all experiences need editions. If an experience is a recurring session with ongoing availability, you may only need slots without editions. Creating an Edition Navigate to Catalog - Experiences - [Experience Name] - Editions - New edition Identity Section | Field | Type | Required | Description | |-------|------|----------|-------------| | name | string | Yes | Edition name (e.g., \"Summer Retreat 2026\") | | nameEs | string | No | Spanish edition name | | description | text | No | English description for this specific edition | | descriptionEs | text | No | Spanish description | Dates Section | Field | Type | Required | Description | |-------|------|----------|-------------| | startDate | datetime | No | When this edition begins | | endDate | datetime | No | When this edition ends | | registrationOpens | datetime | No | When registration becomes available | | registrationCloses | datetime | No | When registration closes (must be before startDate) | Capacity and Status Section | Field | Type | Required | Description | |-------|------|----------|-------------| | capacity | integer | No | Maximum participants for this edition (leave empty for unlimited) | | status | enum | Yes | draft, open, closed, completed, cancelled | | heroImageId | file | No | Edition-specific cover image (optional override) | Edition Status Values | Status | Meaning | |--------|---------| | draft | Edition exists but not accepting registrations | | open | Registration is live | | closed | Registration is closed | | completed | Edition has concluded | | cancelled | Edition was cancelled | Edition Workflow Registration Windows Use registrationOpens and registrationCloses to create time-bound enrollment periods: - registrationOpens - Date when customers can start booking this edition - registrationCloses - Date when booking is no longer allowed (typically before the experience starts) If registrationCloses is not set, registration remains open until the edition begins. Capacity Management The edition capacity is separate from slot capacities. Use edition capacity for: - Overall enrollment limits for the edition - Coordinating with external capacity (venue, partners) - Marketing limited-availability offers Slot capacities within an edition should not exceed the edition capacity. Linking Pricing to Editions When creating Pricing Tiers, you can optionally link them to a specific edition. This allows different pricing for different date ranges of the same experience. For example: - \"Early Bird\" pricing tier linked to \"Spring Retreat 2026\" edition - \"Regular\" pricing tier linked to \"Summer Retreat 2026\" edition Common Mistakes Setting endDate before startDate. The end date must be after the start date. The form will show an error if this is violated. Setting registrationCloses after the startDate. Registration close date should be before the experience begins to allow preparation time. Creating editions when slots alone would suffice. Editions add complexity. If you only need date-based scheduling, consider using slots with editionId to reference an optional edition rather than creating multiple full editions. Forgetting to set capacity. If an edition has no capacity limit, it relies entirely on individual slot capacities. If you need an overall enrollment cap, set the edition capacity. Related Pages - Experiences - Parent entity for editions - Pricing Tiers - Linking pricing to specific editions - Slots & Agenda - Creating availability within editions",
-      "es": "Ediciones Las ediciones representan versiones o entregas específicas de una experiencia, cada una con su propio rango de fechas, ventana de registro y capacidad. Usa ediciones cuando necesites múltiples iteraciones vinculadas a fechas de la misma plantilla de experiencia. Cuándo Usar Ediciones Las ediciones son ideales para: - Retiros con fechas de inicio/fin específicas (ej., \"Retiro de Primavera 2026\") - Programas estacionales con ventanas de inscripción limitadas - Programas de múltiples sesiones donde cada entrega tiene logística diferente - Eventos de capacidad limitada con cortes de registro No todas las experiencias necesitan ediciones. Si una experiencia es una sesión recurrente con disponibilidad continua, solo necesitas horarios sin ediciones. Crear una Edición Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Ediciones - Nueva edición Sección de Identidad | Campo | Tipo | Requerido | Descripción | |-------|------|-----------|-------------| | name | string | Sí | Nombre de la edición (ej., \"Retiro de Verano 2026\") | | nameEs | string | No | Nombre de la edición en español | | description | text | No | Descripción en inglés para esta edición específica | | descriptionEs | text | No | Descripción en español | Sección de Fechas | Campo | Tipo | Requerido | Descripción | |-------|------|-----------|-------------| | startDate | datetime | No | Cuándo comienza esta edición | | endDate | datetime | No | Cuándo termina esta edición | | registrationOpens | datetime | No | Cuándo se habilita el registro | | registrationCloses | datetime | No | Cuándo se cierra el registro (debe ser antes de startDate) | Sección de Capacidad y Estado | Campo | Tipo | Requerido | Descripción | |-------|------|-----------|-------------| | capacity | integer | No | Máximo de participantes para esta edición (dejar vacío para ilimitado) | | status | enum | Sí | draft, open, closed, completed, cancelled | | heroImageId | file | No | Imagen de portada específica de la edición (anulación opcional) | Valores de Estado de Edición | Estado | Significado | |--------|-------------| | draft | La edición existe pero no acepta registros | | open | El registro está activo | | closed | El registro está cerrado | | completed | La edición ha concluido | | cancelled | La edición fue cancelada | Flujo de Trabajo de Ediciones Ventanas de Registro Usa registrationOpens y registrationCloses para crear períodos de inscripción vinculados al tiempo: - registrationOpens - Fecha cuando los clientes pueden comenzar a reservar esta edición - registrationCloses - Fecha cuando ya no se permite la reserva (típicamente antes de que comience la experiencia) Si registrationCloses no está establecido, el registro permanece abierto hasta que comience la edición. Gestión de Capacidad La capacity de la edición es separada de las capacidades de las ranuras. Usa la capacidad de edición para: - Límites de inscripción generales para la edición - Coordinar con capacidad externa (sede, socios) - Comercializar ofertas de disponibilidad limitada Las capacidades de las ranuras dentro de una edición no deben exceder la capacidad de la edición. Vincular Precios a Ediciones Al crear Niveles de Precio, puedes opcionalmente vinculalos a una edición específica. Esto permite diferentes precios para diferentes rangos de fechas de la misma experiencia. Por ejemplo: - Nivel de precio \"Reserva Temprana\" vinculado a la edición \"Retiro de Primavera 2026\" - Nivel de precio \"Regular\" vinculado a la edición \"Retiro de Verano 2026\" Errores Comunes Establecer endDate antes de startDate. La fecha de fin debe ser posterior a la fecha de inicio. El formulario mostrará un error si esto se viola. Establecer registrationCloses después de startDate. La fecha de cierre del registro debe ser antes de que comience la experiencia para permitir tiempo de preparación. Crear ediciones cuando solo las ranuras serían suficientes. Las ediciones agregan complejidad. Si solo necesitas programación basada en fechas, considera usar ranuras con editionId para referenciar una edición opcional en lugar de crear múltiples ediciones completas. Olvidar establecer la capacidad. Si una edición no tiene límite de capacidad, depende entièrement de las capacidades de las ranuras individuales. Si necesitas un tope de inscripción general, establece la capacidad de la edición. Páginas Relacionadas - Experiencias - Entidad padre para las ediciones - Niveles de Precio - Vincular precios a ediciones específicas - Ranuras y Agenda - Crear disponibilidad dentro de ediciones"
+      "es": "Ediciones Las ediciones representan versiones o entregas específicas de una experiencia, cada una con su propio rango de fechas, ventana de registro y capacidad. Usa ediciones cuando necesites múltiples iteraciones vinculadas a fechas de la misma plantilla de experiencia. Cuándo Usar Ediciones Las ediciones son ideales para: - Retiros con fechas de inicio/fin específicas (ej., \"Retiro de Primavera 2026\") - Programas estacionales con ventanas de inscripción limitadas - Programas de múltiples sesiones donde cada entrega tiene logística diferente - Eventos de capacidad limitada con cortes de registro No todas las experiencias necesitan ediciones. Si una experiencia es una sesión recurrente con disponibilidad continua, solo necesitas horarios sin ediciones. Crear una Edición Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Ediciones - Nueva edición Sección de Identidad | Campo           | Tipo   | Requerido | Descripción                                         | | --------------- | ------ | --------- | --------------------------------------------------- | | name          | string | Sí        | Nombre de la edición (ej., \"Retiro de Verano 2026\") | | nameEs        | string | No        | Nombre de la edición en español                     | | description   | text   | No        | Descripción en inglés para esta edición específica  | | descriptionEs | text   | No        | Descripción en español                              | Sección de Fechas | Campo                | Tipo     | Requerido | Descripción                                                | | -------------------- | -------- | --------- | ---------------------------------------------------------- | | startDate          | datetime | No        | Cuándo comienza esta edición                               | | endDate            | datetime | No        | Cuándo termina esta edición                                | | registrationOpens  | datetime | No        | Cuándo se habilita el registro                             | | registrationCloses | datetime | No        | Cuándo se cierra el registro (debe ser antes de startDate) | Sección de Capacidad y Estado | Campo         | Tipo    | Requerido | Descripción                                                            | | ------------- | ------- | --------- | ---------------------------------------------------------------------- | | capacity    | integer | No        | Máximo de participantes para esta edición (dejar vacío para ilimitado) | | status      | enum    | Sí        | draft, open, closed, completed, cancelled                    | | heroImageId | file    | No        | Imagen de portada específica de la edición (anulación opcional)        | Valores de Estado de Edición | Estado      | Significado                                | | ----------- | ------------------------------------------ | | draft     | La edición existe pero no acepta registros | | open      | El registro está activo                    | | closed    | El registro está cerrado                   | | completed | La edición ha concluido                    | | cancelled | La edición fue cancelada                   | Flujo de Trabajo de Ediciones Ventanas de Registro Usa registrationOpens y registrationCloses para crear períodos de inscripción vinculados al tiempo: - registrationOpens - Fecha cuando los clientes pueden comenzar a reservar esta edición - registrationCloses - Fecha cuando ya no se permite la reserva (típicamente antes de que comience la experiencia) Si registrationCloses no está establecido, el registro permanece abierto hasta que comience la edición. Gestión de Capacidad La capacity de la edición es separada de las capacidades de las ranuras. Usa la capacidad de edición para: - Límites de inscripción generales para la edición - Coordinar con capacidad externa (sede, socios) - Comercializar ofertas de disponibilidad limitada Las capacidades de las ranuras dentro de una edición no deben exceder la capacidad de la edición. Vincular Precios a Ediciones Al crear Niveles de Precio, puedes opcionalmente vinculalos a una edición específica. Esto permite diferentes precios para diferentes rangos de fechas de la misma experiencia. Por ejemplo: - Nivel de precio \"Reserva Temprana\" vinculado a la edición \"Retiro de Primavera 2026\" - Nivel de precio \"Regular\" vinculado a la edición \"Retiro de Verano 2026\" Errores Comunes Establecer endDate antes de startDate. La fecha de fin debe ser posterior a la fecha de inicio. El formulario mostrará un error si esto se viola. Establecer registrationCloses después de startDate. La fecha de cierre del registro debe ser antes de que comience la experiencia para permitir tiempo de preparación. Crear ediciones cuando solo las ranuras serían suficientes. Las ediciones agregan complejidad. Si solo necesitas programación basada en fechas, considera usar ranuras con editionId para referenciar una edición opcional en lugar de crear múltiples ediciones completas. Olvidar establecer la capacidad. Si una edición no tiene límite de capacidad, depende entièrement de las capacidades de las ranuras individuales. Si necesitas un tope de inscripción general, establece la capacidad de la edición. Páginas Relacionadas - Experiencias - Entidad padre para las ediciones - Niveles de Precio - Vincular precios a ediciones específicas - Ranuras y Agenda - Crear disponibilidad dentro de ediciones"
     },
     "headings": {
       "en": [
@@ -3902,78 +3902,78 @@
           "level": 2,
           "text": "Crear una Edición",
           "id": "crear-una-edici-n",
-          "line": 16,
-          "position": 791
+          "line": 17,
+          "position": 792
         },
         {
           "level": 3,
           "text": "Sección de Identidad",
           "id": "secci-n-de-identidad",
-          "line": 20,
-          "position": 909
+          "line": 21,
+          "position": 910
         },
         {
           "level": 3,
           "text": "Sección de Fechas",
           "id": "secci-n-de-fechas",
-          "line": 29,
-          "position": 1302
+          "line": 30,
+          "position": 1507
         },
         {
           "level": 3,
           "text": "Sección de Capacidad y Estado",
           "id": "secci-n-de-capacidad-y-estado",
-          "line": 38,
-          "position": 1710
+          "line": 39,
+          "position": 2185
         },
         {
           "level": 2,
           "text": "Valores de Estado de Edición",
           "id": "valores-de-estado-de-edici-n",
-          "line": 46,
-          "position": 2110
+          "line": 47,
+          "position": 2786
         },
         {
           "level": 2,
           "text": "Flujo de Trabajo de Ediciones",
           "id": "flujo-de-trabajo-de-ediciones",
-          "line": 56,
-          "position": 2413
+          "line": 57,
+          "position": 3247
         },
         {
           "level": 3,
           "text": "Ventanas de Registro",
           "id": "ventanas-de-registro",
-          "line": 65,
-          "position": 2545
+          "line": 66,
+          "position": 3379
         },
         {
           "level": 2,
           "text": "Gestión de Capacidad",
           "id": "gesti-n-de-capacidad",
-          "line": 74,
-          "position": 2991
+          "line": 75,
+          "position": 3825
         },
         {
           "level": 2,
           "text": "Vincular Precios a Ediciones",
           "id": "vincular-precios-a-ediciones",
-          "line": 83,
-          "position": 3376
+          "line": 85,
+          "position": 4211
         },
         {
           "level": 2,
           "text": "Errores Comunes",
           "id": "errores-comunes",
-          "line": 91,
-          "position": 3793
+          "line": 94,
+          "position": 4629
         },
         {
           "level": 2,
           "text": "Páginas Relacionadas",
           "id": "p-ginas-relacionadas",
-          "line": 105,
-          "position": 4645
+          "line": 108,
+          "position": 5481
         }
       ]
     },
@@ -16508,8 +16508,6 @@
         "draft",
         "archived",
         "experienceid",
-        "| no visible al público; en preparación |\n|",
-        "| en vivo y visible al público |\n|",
         "capa editorial",
         "separación de dominio:",
         "contenido → publicaciones",
@@ -16986,8 +16984,6 @@
       "draft",
       "archived",
       "experienceid",
-      "| no visible al público; en preparación |\n|",
-      "| en vivo y visible al público |\n|",
       "capa editorial",
       "separación de dominio:",
       "contenido → publicaciones",
@@ -17233,7 +17229,7 @@
     ],
     "content": {
       "en": "Publications Publications are the editorial layer for OMZONE content, providing the public-facing narrative, marketing copy, and SEO-optimized pages that drive organic traffic. They exist separately from the commercial layer (experiences, pricing, slots) and serve purely as marketing content. Publications vs Experiences | Aspect | Publications | Experiences | |--------|--------------|-------------| | Purpose | Editorial, SEO, marketing narrative | Commercial, pricing, availability | | Content | Titles, descriptions, images, landing page content | Pricing tiers, slots, capacity, fulfillment | | Status | draft, published, archived | draft, published, paused, archived | | Pricing | No pricing fields | Pricing tiers with price types | | Scheduling | No scheduling | Slots and availability | | Linking | Can link to an Experience via experienceId | Referenced by Publication |  Domain separation: Publications and Experiences are separate entities. A Publication can link to an Experience (via the experienceId field), but changes to one do not automatically affect the other. This separation allows editorial content to remain stable while commercial details change. When to Use Publications Create a Publication for: | Use Case | Description | |----------|-------------| | SEO Landing Pages | Optimized pages targeting specific keywords | | Blog Posts | Editorial content, wellness articles, news | | Experience Highlights | Curated featured experiences with narrative | | Institutional Pages | About, terms, privacy, refund policies | | FAQ Pages | Structured frequently asked questions | Publication Categories | Category | Use Case | Description | |----------|----------|-------------| | landing | Main landing pages | Primary entry points for campaigns | | blog | Blog posts | Articles, news, wellness tips | | highlight | Featured content | Curated experiences with editorial narrative | | institutional | About, policies | Company info, legal pages | | faq | FAQ pages | Structured question/answer content | Creating a Publication 1. Navigate to Content → Publications 2. Click Create New 3. Select the Category (landing, blog, highlight, institutional, faq) 4. Fill in the details 5. Add sections for modular content 6. Set status to published when ready Publication Fields Core Fields | Field | Type | Description | |-------|------|-------------| | Title | string | Publication title (supports i18n) | | Slug | string | URL slug (unique per category) | | Category | enum | landing, blog, highlight, institutional, faq | | Excerpt | string | Short description (max 200 characters) | | Description | string | Full content description (supports i18n) | | Status | enum | draft, published, archived | Experience Link | Field | Type | Description | |-------|------|-------------| | Experience | relation | Optional link to an Experience | When an experienceId is set, the Publication can display related experience information while maintaining separate editorial control. Images | Field | Type | Description | |-------|------|-------------| | Thumbnail | file | Main image for listing pages | | Hero Image | file | Full-width header image | | Gallery | files | Additional images for gallery sections | SEO | Field | Type | Description | |-------|------|-------------| | SEO Title | string | Override title for search engines (max 60 chars) | | SEO Description | string | Meta description (max 160 chars) | | Canonical URL | string | Preferred URL for duplicate content | | Index | boolean | Allow search engine indexing | | Follow | boolean | Allow search engine following | Tags | Field | Type | Description | |-------|------|-------------| | Tags | string[] | Array of tag names for categorization | Publication Status Lifecycle | Status | Description | |--------|-------------| | draft | Not visible to public; in preparation | | published | Live and visible to public | | paused | Temporarily unavailable (can resume) | | archived | Permanently removed from public view | Publication Tabs | Tab | Description | |-----|-------------| | Details | Core fields, experience link, images | | Sections | Modular content blocks for the page body | | SEO | Search engine optimization settings | | Preview | Desktop/mobile preview of published content | Common Mistakes - Confusing with Experience: Publications contain no pricing or scheduling. Always create the Experience first, then optionally create a Publication to provide editorial narrative. - Duplicate slugs: Slugs must be unique within each category. Using the same slug in different categories is allowed. - Missing SEO fields: Even internal publications benefit from SEO metadata for consistency and future proofing. - Not linking experience: For landing pages about specific experiences, always link the experienceId to maintain proper domain relationships. - Publishing before sections: A published Publication with no sections displays an empty page. Add meaningful sections before publishing. Related Pages - Sections — Modular content blocks for publications - Experiences — Commercial layer linked by publications - Tags — Categorization for publications and experiences",
-      "es": "Publicaciones Las publicaciones son la capa editorial para el contenido de OMZONE, proporcionando la narrativa para el público, copy de marketing y páginas optimizadas para SEO que impulsan el tráfico orgánico. Existen separadamente de la capa comercial (experiencias, precios, horarios) y sirven puramente como contenido de marketing. Publicaciones vs Experiencias | Aspecto | Publicaciones | Experiencias | |---------|----------------|--------------| | Propósito | Editorial, SEO, narrativa de marketing | Comercial, precios, disponibilidad | | Contenido | Títulos, descripciones, imágenes, contenido de landing page | Niveles de precio, horarios, capacidad, tipo de entrega | | Estado | Borrador, Publicado, Archivado | Borrador, Publicado, Pausado, Archivado | | Precios | Sin campos de precio | Niveles de precio con tipos de precio | | Programación | Sin programación | Horarios y disponibilidad | | Vinculación | Puede vincular a una Experiencia | Referenciada por Publicación |  Separación de dominio: Las Publicaciones y las Experiencias son entidades separadas. Una Publicación puede vincular a una Experiencia, pero los cambios en una no afectan automáticamente a la otra. Esta separación permite que el contenido editorial permanezca estable mientras los detalles comerciales cambian. Cuándo Usar Publicaciones Crea una Publicación para: | Caso de Uso | Descripción | |-------------|-------------| | Páginas de Landing SEO | Páginas optimizadas apuntando a keywords específicas | | Posts de Blog | Contenido editorial, artículos de bienestar, noticias | | Destacados de Experiencia | Experiencias curadas con narrativa editorial | | Páginas Institucionales | Acerca de, términos, privacidad, políticas de reembolso | | Páginas FAQ | Preguntas frecuentes estructuradas | Categorías de Publicación | Categoría | Caso de Uso | Descripción | |-----------|-------------|-------------| | landing | Páginas de landing principales | Puntos de entrada principales para campañas | | blog | Posts de blog | Artículos, noticias, consejos de bienestar | | highlight | Contenido destacado | Experiencias curadas con narrativa editorial | | institutional | Acerca de, políticas | Info de la empresa, páginas legales | | faq | Páginas FAQ | Contenido estructurado de preguntas/respuestas | Crear una Publicación 1. Navega a Contenido → Publicaciones 2. Haz clic en Crear Nueva 3. Selecciona la Categoría (landing, blog, highlight, institutional, faq) 4. Llena los detalles 5. Agrega secciones para contenido modular 6. Establece el estado en published cuando esté listo Campos de Publicación Campos Principales | Campo | Tipo | Descripción | |-------|------|-------------| | Título | string | Título de la publicación (soporta i18n) | | Slug | string | Slug de URL (único por categoría) | | Categoría | enum | landing, blog, highlight, institutional, faq | | Extracto | string | Descripción corta (máx 200 caracteres) | | Descripción | string | Descripción de contenido completo (soporta i18n) | | Estado | enum | draft, published, archived | Vinculación a Experiencia | Campo | Tipo | Descripción | |-------|------|-------------| | Experiencia | relation | Vinculación opcional a una Experiencia | Cuando se establece un experienceId, la Publicación puede mostrar información relacionada de la experiencia mientras mantiene control editorial separado. Imágenes | Campo | Tipo | Descripción | |-------|------|-------------| | Miniatura | file | Imagen principal para páginas de listado | | Imagen Hero | file | Imagen de encabezado de ancho completo | | Galería | files | Imágenes adicionales para secciones de galería | SEO | Campo | Tipo | Descripción | |-------|------|-------------| | Título SEO | string | Título override para motores de búsqueda (máx 60 caracteres) | | Descripción SEO | string | Meta descripción (máx 160 caracteres) | | URL Canónica | string | URL preferida para contenido duplicado | | Indexar | boolean | Permitir indexación de motores de búsqueda | | Seguir | boolean | Permitir seguimiento de motores de búsqueda | Etiquetas | Campo | Tipo | Descripción | |-------|------|-------------| | Etiquetas | string[] | Array de nombres de etiquetas para categorización | Ciclo de Vida del Estado de Publicación | Estado | Descripción | |--------|-------------| | draft | No visible al público; en preparación | | published | En vivo y visible al público | | paused | Temporalmente no disponible (puede reanudarse) | | archived | Removido permanentemente de la vista pública | Pestañas de Publicación | Pestaña | Descripción | |---------|-------------| | Detalles | Campos principales, vínculo de experiencia, imágenes | | Secciones | Bloques de contenido modular para el cuerpo de la página | | SEO | Configuración de optimización para motores de búsqueda | | Vista Previa | Vista previa desktop/móvil del contenido publicado | Errores Comunes - Confundir con Experiencia: Las Publicaciones no contienen precios ni programación. Siempre crea primero la Experiencia, luego opcionalmente crea una Publicación para proporcionar narrativa editorial. - Slugs duplicados: Los slugs deben ser únicos dentro de cada categoría. Usar el mismo slug en diferentes categorías está permitido. - Olvidar campos SEO: Incluso las publicaciones internas se benefician de metadatos SEO para consistencia y preparación futura. - No vincular experiencia: Para páginas de landing sobre experiencias específicas, siempre vincula el experienceId para mantener relaciones de dominio apropiadas. - Publicar antes de secciones: Una Publicación publicada sin secciones muestra una página vacía. Agrega secciones significativas antes de publicar. Páginas Relacionadas - Secciones — Bloques de contenido modular para publicaciones - Experiencias — Capa comercial vinculada por publicaciones - Etiquetas — Categorización para publicaciones y experiencias"
+      "es": "Publicaciones Las publicaciones son la capa editorial para el contenido de OMZONE, proporcionando la narrativa para el público, copy de marketing y páginas optimizadas para SEO que impulsan el tráfico orgánico. Existen separadamente de la capa comercial (experiencias, precios, horarios) y sirven puramente como contenido de marketing. Publicaciones vs Experiencias | Aspecto      | Publicaciones                                               | Experiencias                                            | | ------------ | ----------------------------------------------------------- | ------------------------------------------------------- | | Propósito    | Editorial, SEO, narrativa de marketing                      | Comercial, precios, disponibilidad                      | | Contenido    | Títulos, descripciones, imágenes, contenido de landing page | Niveles de precio, horarios, capacidad, tipo de entrega | | Estado       | Borrador, Publicado, Archivado                              | Borrador, Publicado, Pausado, Archivado                 | | Precios      | Sin campos de precio                                        | Niveles de precio con tipos de precio                   | | Programación | Sin programación                                            | Horarios y disponibilidad                               | | Vinculación  | Puede vincular a una Experiencia                            | Referenciada por Publicación                            |  Separación de dominio: Las Publicaciones y las Experiencias son entidades separadas. Una Publicación puede vincular a una Experiencia, pero los cambios en una no afectan automáticamente a la otra. Esta separación permite que el contenido editorial permanezca estable mientras los detalles comerciales cambian. Cuándo Usar Publicaciones Crea una Publicación para: | Caso de Uso               | Descripción                                             | | ------------------------- | ------------------------------------------------------- | | Páginas de Landing SEO    | Páginas optimizadas apuntando a keywords específicas    | | Posts de Blog             | Contenido editorial, artículos de bienestar, noticias   | | Destacados de Experiencia | Experiencias curadas con narrativa editorial            | | Páginas Institucionales   | Acerca de, términos, privacidad, políticas de reembolso | | Páginas FAQ               | Preguntas frecuentes estructuradas                      | Categorías de Publicación | Categoría       | Caso de Uso                    | Descripción                                    | | --------------- | ------------------------------ | ---------------------------------------------- | | landing       | Páginas de landing principales | Puntos de entrada principales para campañas    | | blog          | Posts de blog                  | Artículos, noticias, consejos de bienestar     | | highlight     | Contenido destacado            | Experiencias curadas con narrativa editorial   | | institutional | Acerca de, políticas           | Info de la empresa, páginas legales            | | faq           | Páginas FAQ                    | Contenido estructurado de preguntas/respuestas | Crear una Publicación 1. Navega a Contenido → Publicaciones 2. Haz clic en Crear Nueva 3. Selecciona la Categoría (landing, blog, highlight, institutional, faq) 4. Llena los detalles 5. Agrega secciones para contenido modular 6. Establece el estado en published cuando esté listo Campos de Publicación Campos Principales | Campo       | Tipo   | Descripción                                            | | ----------- | ------ | ------------------------------------------------------ | | Título      | string | Título de la publicación (soporta i18n)                | | Slug        | string | Slug de URL (único por categoría)                      | | Categoría   | enum   | landing, blog, highlight, institutional, faq | | Extracto    | string | Descripción corta (máx 200 caracteres)                 | | Descripción | string | Descripción de contenido completo (soporta i18n)       | | Estado      | enum   | draft, published, archived                       | Vinculación a Experiencia | Campo       | Tipo     | Descripción                            | | ----------- | -------- | -------------------------------------- | | Experiencia | relation | Vinculación opcional a una Experiencia | Cuando se establece un experienceId, la Publicación puede mostrar información relacionada de la experiencia mientras mantiene control editorial separado. Imágenes | Campo       | Tipo  | Descripción                                    | | ----------- | ----- | ---------------------------------------------- | | Miniatura   | file  | Imagen principal para páginas de listado       | | Imagen Hero | file  | Imagen de encabezado de ancho completo         | | Galería     | files | Imágenes adicionales para secciones de galería | SEO | Campo           | Tipo    | Descripción                                                  | | --------------- | ------- | ------------------------------------------------------------ | | Título SEO      | string  | Título override para motores de búsqueda (máx 60 caracteres) | | Descripción SEO | string  | Meta descripción (máx 160 caracteres)                        | | URL Canónica    | string  | URL preferida para contenido duplicado                       | | Indexar         | boolean | Permitir indexación de motores de búsqueda                   | | Seguir          | boolean | Permitir seguimiento de motores de búsqueda                  | Etiquetas | Campo     | Tipo     | Descripción                                       | | --------- | -------- | ------------------------------------------------- | | Etiquetas | string[] | Array de nombres de etiquetas para categorización | Ciclo de Vida del Estado de Publicación | Estado      | Descripción                                    | | ----------- | ---------------------------------------------- | | draft     | No visible al público; en preparación          | | published | En vivo y visible al público                   | | paused    | Temporalmente no disponible (puede reanudarse) | | archived  | Removido permanentemente de la vista pública   | Pestañas de Publicación | Pestaña      | Descripción                                              | | ------------ | -------------------------------------------------------- | | Detalles     | Campos principales, vínculo de experiencia, imágenes     | | Secciones    | Bloques de contenido modular para el cuerpo de la página | | SEO          | Configuración de optimización para motores de búsqueda   | | Vista Previa | Vista previa desktop/móvil del contenido publicado       | Errores Comunes - Confundir con Experiencia: Las Publicaciones no contienen precios ni programación. Siempre crea primero la Experiencia, luego opcionalmente crea una Publicación para proporcionar narrativa editorial. - Slugs duplicados: Los slugs deben ser únicos dentro de cada categoría. Usar el mismo slug en diferentes categorías está permitido. - Olvidar campos SEO: Incluso las publicaciones internas se benefician de metadatos SEO para consistencia y preparación futura. - No vincular experiencia: Para páginas de landing sobre experiencias específicas, siempre vincula el experienceId para mantener relaciones de dominio apropiadas. - Publicar antes de secciones: Una Publicación publicada sin secciones muestra una página vacía. Agrega secciones significativas antes de publicar. Páginas Relacionadas - Secciones — Bloques de contenido modular para publicaciones - Experiencias — Capa comercial vinculada por publicaciones - Etiquetas — Categorización para publicaciones y experiencias"
     },
     "headings": {
       "en": [
@@ -17363,91 +17359,91 @@
           "text": "Cuándo Usar Publicaciones",
           "id": "cu-ndo-usar-publicaciones",
           "line": 19,
-          "position": 1317
+          "position": 1793
         },
         {
           "level": 2,
           "text": "Categorías de Publicación",
           "id": "categor-as-de-publicaci-n",
           "line": 31,
-          "position": 1808
+          "position": 2468
         },
         {
           "level": 2,
           "text": "Crear una Publicación",
           "id": "crear-una-publicaci-n",
           "line": 41,
-          "position": 2327
+          "position": 3213
         },
         {
           "level": 2,
           "text": "Campos de Publicación",
           "id": "campos-de-publicaci-n",
           "line": 50,
-          "position": 2626
+          "position": 3512
         },
         {
           "level": 3,
           "text": "Campos Principales",
           "id": "campos-principales",
           "line": 52,
-          "position": 2652
+          "position": 3538
         },
         {
           "level": 3,
           "text": "Vinculación a Experiencia",
           "id": "vinculaci-n-a-experiencia",
           "line": 63,
-          "position": 3125
+          "position": 4219
         },
         {
           "level": 3,
           "text": "Imágenes",
           "id": "im-genes",
           "line": 71,
-          "position": 3444
+          "position": 4612
         },
         {
           "level": 3,
           "text": "SEO",
           "id": "seo",
           "line": 79,
-          "position": 3718
+          "position": 4992
         },
         {
           "level": 3,
           "text": "Etiquetas",
           "id": "etiquetas",
           "line": 89,
-          "position": 4147
+          "position": 5653
         },
         {
           "level": 2,
           "text": "Ciclo de Vida del Estado de Publicación",
           "id": "ciclo-de-vida-del-estado-de-publicaci-n",
           "line": 95,
-          "position": 4302
+          "position": 5900
         },
         {
           "level": 2,
           "text": "Pestañas de Publicación",
           "id": "pesta-as-de-publicaci-n",
           "line": 110,
-          "position": 4695
+          "position": 6410
         },
         {
           "level": 2,
           "text": "Errores Comunes",
           "id": "errores-comunes",
           "line": 119,
-          "position": 5052
+          "position": 6895
         },
         {
           "level": 2,
           "text": "Páginas Relacionadas",
           "id": "p-ginas-relacionadas",
           "line": 127,
-          "position": 5869
+          "position": 7712
         }
       ]
     },
@@ -21553,7 +21549,7 @@
     ],
     "content": {
       "en": "Introduction to OMZONE Admin The OMZONE Admin panel is your control center for managing the entire wellness platform. From here you control catalog offerings, scheduling, sales, editorial content, and system configuration. Accessing the Admin Panel Access the admin panel by navigating to /admin after logging in. You must have one of the following labels assigned to your account: | Label | Display Name | Access Level | |-------|--------------|--------------| | root | Admin | Full system access, invisible in listings | | admin | Admin | Full access to all admin features | | operator | Operator | Scheduled access to operations and sales | | client | Client | Portal access only, no admin |  Important: The root label is invisible across the platform. Root users never appear in client or order listings, and root is never displayed as a role name. When displaying roles, always use \"Admin\" for both root and admin labels. Admin Navigation Structure The sidebar contains seven main sections: General - Dashboard (/admin/dashboard) - Overview of orders, revenue, upcoming slots, and pending requests - My Account (/admin/account) - Profile and security settings Catalog - Experiences (/admin/experiences) - Core wellness offerings (sessions, immersions, retreats, stays) - Addons (/admin/addons) - Optional extras that can be attached to experiences - Packages (/admin/packages) - Bundled experiences with fixed pricing - Passes (/admin/passes) - Consumable credit passes for repeat visits Operations - Agenda (/admin/agenda) - Global view of all scheduled slots across experiences - Resources (/admin/resources) - Instructors, facilitators, therapists, equipment, locations, and rooms Sales - Requests (/admin/booking-requests) - Incoming booking inquiries for experiences with saleMode: request - Orders (/admin/orders) - All customer purchases across all channels - Tickets (/admin/tickets) - Validatable tickets with QR codes for check-in - Clients (/admin/clients) - Registered customer accounts Content - Publications (/admin/publications) - Editorial and landing page content - Media (/admin/media) - File manager for all buckets System - Settings (/admin/settings) - Notification templates and system configuration Core Concept: Publications vs Experiences A fundamental distinction in OMZONE: | Aspect | Experience | Publication | |--------|------------|-------------| | Purpose | Operational, commercial | Editorial, SEO, narrative | | Contains | Pricing tiers, editions, slots | Sections with content blocks | | Visibility | Availability and booking | Landing pages and blog | | Links to | Addons, slots, resources | Experience via experienceId |  Key Rule: Pricing tiers belong to Experiences, not Publications. Do not add pricing to a Publication. A Publication can link to an Experience, but they are separate entities. When to Create Each Create an Experience when: - You want to sell a wellness offering - You need pricing and availability management - You want customers to book or request booking Create a Publication when: - You need a landing page for SEO - You want editorial narrative content - You need blog posts, institutional pages, or FAQs Standard Workflow: Adding a New Experience Follow this sequence when setting up a new experience: Step 1: Create the Experience Navigate to Catalog - Experiences - New experience Fill in the core fields: - Name - Internal identifier (not visible to customers) - Public name (EN/ES) - Customer-facing name in both languages - Slug - URL-friendly identifier (auto-generated from public name) - Type - session, immersion, retreat, stay, private, or package - Sale mode - direct (book now), request (inquiry required), assisted (admin creates order), pass (credit-based) - Fulfillment - ticket (generates QR), booking (no ticket), pass (credit redemption), package (bundle) Configure behavior toggles: - Requires slot - Enable if specific date/time selection is needed - Generates tickets - Enable to create QR-coded tickets on purchase - Allows multiple attendees - Enable for group bookings with min/max quantity Step 2: Add Editions (Optional) For experiences with multiple date ranges or versions: Navigate to Catalog - Experiences - [Experience Name] - Editions - New edition Editions allow: - Different date ranges with startDate and endDate - Registration windows with registrationOpens and registrationCloses - Edition-specific capacity limits - Edition-specific cover images Step 3: Add Pricing Tiers Navigate to Catalog - Experiences - [Experience Name] - Pricing - New tier Pricing tier fields: - Name (EN/ES) - Tier label (e.g., \"Early Bird\", \"General Admission\") - Price type - fixed, per-person, per-group, from, quote - Base price - Numeric price value - Currency - Three-letter code (e.g., MXN, USD) - Badge - Optional label like \"Popular\" or \"Bestseller\" - Highlighted - Show as featured tier - Edition - Optional link to a specific edition Step 4: Add Slots (If Required) Navigate to Catalog - Experiences - [Experience Name] - Slots - New slot Slot fields: - Slot type - single_session, multi_day, retreat_day, private - Start/End datetime - Date and time with timezone - Capacity - Maximum participants - Location - Physical location (from predefined locations) - Room - Specific room within the location - Status - draft, published, full, cancelled For recurring slots, use Quick Create to generate multiple slots based on a pattern. Step 5: Assign Resources (Optional) Navigate to Catalog - Experiences - [Experience Name] - Slots - [Slot Name] - Resources Resources can be assigned to slots with roles: - Lead - Primary instructor or facilitator - Assistant - Supporting teacher or helper - Support - Technical or logistical support - Equipment - Equipment being used Step 6: Assign Addons (Optional) Navigate to Catalog - Experiences - [Experience Name] - Addons - Assign addon Addons can be: - Required - Automatically included with the experience - Default - Pre-selected during checkout - Optional - Available but not pre-selected Step 7: Create Publication (Optional) Only create a Publication if you need editorial content visible to the public: Navigate to Content - Publications - New publication Publication fields: - Title (EN/ES) - Public-facing title - Slug - URL identifier - Category - landing, blog, highlight, institutional, faq - Experience - Optional link to an Experience (does not transfer pricing or slots) Publication sections are built using modular content blocks: - hero, text, gallery, highlights, faq, itinerary, testimonials, inclusions, restrictions, cta, video Experience Status Lifecycle | Status | Visibility | Booking | |--------|------------|---------| | draft | Admin only | Not available | | published | Public catalog | Available for booking | | archived | Admin only | Not available, can be reactivated | Sale Mode Behaviors | Sale Mode | Customer Action | Admin Action | |-----------|-----------------|--------------| | direct | Book and pay immediately | Review completed orders | | request | Submit inquiry with details | Review request, quote price, convert to order | | assisted | Contact admin directly | Use Assisted Sale wizard to create order | | pass | Use existing pass credits | Monitor pass consumption | Fulfillment Types | Fulfillment | Generates Ticket | Notes | |-------------|-------------------|-------| | ticket | Yes - QR code | Full check-in workflow | | booking | No | Simple confirmation only | | pass | No | Credit-based redemption | | package | Yes - one per package | Bundle redemption | Roles and Permissions Summary | Action | Root | Admin | Operator | Client | |--------|------|-------|----------|--------| | Create Experiences | Yes | Yes | No | No | | Edit Experiences | Yes | Yes | No | No | | Create Slots | Yes | Yes | Yes | No | | View Orders | Yes | Yes | Yes | Own only | | Create Assisted Sales | Yes | Yes | No | No | | Manage Resources | Yes | Yes | No | No | | View Tickets | Yes | Yes | Yes | Own only | | Check-in Tickets | Yes | Yes | Yes | No | | Edit Publications | Yes | Yes | No | No | | Access Settings | Yes | Yes | No | No | Getting Help If you need assistance: - Use the sidebar navigation to browse documentation sections - Check the Reference - Glossary for terminology definitions - Review Reference - Troubleshooting for common error solutions",
-      "es": "Introducción al Admin de OMZONE El panel de OMZONE Admin es tu centro de control para gestionar toda la plataforma de bienestar. Desde aquí controlas ofertas del catálogo, programación, ventas, contenido editorial y configuración del sistema. Acceder al Panel de Admin Accede al panel de admin navegando a /admin después de iniciar sesión. Debes tener uno de los siguientes labels asignados a tu cuenta: | Label | Nombre a Mostrar | Nivel de Acceso | |-------|------------------|----------------| | root | Admin | Acceso completo al sistema, invisible en listados | | admin | Admin | Acceso completo a todas las funciones de admin | | operator | Operador | Acceso programado a operaciones y ventas | | client | Cliente | Acceso solo al portal, sin admin |  Importante: El label root es invisible en toda la plataforma. Los usuarios root nunca aparecen en listados de clientes u órdenes, y root nunca se muestra como nombre de rol. Al mostrar roles, siempre usa \"Admin\" para ambos labels root y admin. Estructura de Navegación del Admin La barra lateral contiene siete secciones principales: General - Dashboard (/admin/dashboard) - Resumen de órdenes, ingresos, próximos horarios y solicitudes pendientes - Mi Cuenta (/admin/account) - Perfil y configuración de seguridad Catálogo - Experiencias (/admin/experiences) - Ofertas principales de bienestar (sesiones, inmersiones, retiros, estadías) - Complementos (/admin/addons) - Extras opcionales que pueden adjuntarse a experiencias - Paquetes (/admin/packages) - Experiencias打包adas con precio fijo - Pases (/admin/passes) - Pases de crédito consumibles para visitas repetidas Operaciones - Agenda (/admin/agenda) - Vista global de todos los horarios programados en todas las experiencias - Recursos (/admin/resources) - Instructores, facilitadores, terapeutas, equipos, ubicaciones y salas Ventas - Solicitudes (/admin/booking-requests) - Consultas de reserva entrantes para experiencias en modo \"Por solicitud\" - Órdenes (/admin/orders) - Todas las compras de clientes en todos los canales - Tickets (/admin/tickets) - Tickets validables con códigos QR para check-in - Clientes (/admin/clients) - Cuentas de clientes registradas Contenido - Publicaciones (/admin/publications) - Contenido editorial y de páginas de landing - Medios (/admin/media) - Gestor de archivos para todos los buckets Sistema - Configuración (/admin/settings) - Plantillas de notificación y configuración del sistema Concepto Principal: Publicaciones vs Experiencias Una distinción fundamental en OMZONE: | Aspecto | Experiencia | Publicación | |---------|------------|-------------| | Propósito | Operacional, comercial | Editorial, SEO, narrativa | | Contiene | Niveles de precio, ediciones, horarios | Secciones con bloques de contenido | | Visibilidad | Disponibilidad y reserva | Páginas de landing y blog | | Se vincula a | Complementos, horarios, recursos | Experiencia vía su publicación |  Regla Clave: Los niveles de precio pertenecen a las Experiencias, no a las Publicaciones. No agregues precios a una Publicación. Una Publicación puede vincular a una Experiencia, pero son entidades separadas. Cuándo Crear Cada Una Crea una Experiencia cuando: - Quieres vender una oferta de bienestar - Necesitas gestión de precios y disponibilidad - Quieres que los clientes reserven o soliciten reserva Crea una Publicación cuando: - Necesitas una página de landing para SEO - Quieres contenido de narrativa editorial - Necesitas posts de blog, páginas institucionales o FAQs Flujo de Trabajo Estándar: Agregar una Nueva Experiencia Sigue esta secuencia cuando configures una nueva experiencia: Paso 1: Crear la Experiencia Navega a Catálogo - Experiencias - Nueva experiencia Llena los campos principales: - Nombre interno - Solo para ti, el cliente no lo ve - Nombre público (EN/ES) - El nombre que verá el cliente en ambos idiomas - Slug (URL) - Dirección web de la experiencia (se genera automáticamente) - Tipo - Sesión, Inmersión, Retiro, Estancia, Privada o Paquete - Modo de venta - Directa (pago inmediato), Por solicitud (confirmas tú), Asistida (el admin crea la orden), Por pase (requiere pase activo) - Tipo de entrega - Ticket (genera código QR), Reserva (sin ticket), Pase, Paquete Configura los comportamientos: - Requiere selección de horario - Activar si el cliente debe elegir una fecha/hora específica - Genera tickets después de la compra - Activar para crear tickets con código QR al comprar - Permite múltiples asistentes - Activar para compras grupales con cantidad mín/máx Paso 2: Agregar Ediciones (Opcional) Para experiencias con múltiples rangos de fechas o versiones: Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Ediciones - Nueva edición Las Ediciones permiten: - Diferentes rangos de fechas con startDate y endDate - Ventanas de registro con registrationOpens y registrationCloses - Límites de capacidad específicos por edición - Imágenes de portada específicas por edición Paso 3: Agregar Niveles de Precio Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Precios - Nuevo nivel Campos del nivel de precio: - Nombre (EN/ES) - Cómo aparece este precio al cliente (ej., \"Early Bird\", \"Precio Regular\") - Tipo de precio - Precio fijo, Por persona, Por grupo, Desde, Cotización - Precio base - El monto en números - Moneda - MXN o USD - Badge - Etiqueta opcional como \"Más popular\" o \"¡Solo por hoy!\" - Destacado - Mostrarlo resaltado visualmente - Edición - Vinculación opcional a una edición específica Paso 4: Agregar Horarios (Si se Requiere) Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Horarios - Nuevo horario Campos del horario: - Tipo de horario - Sesión individual, Multi-día, Día de retiro, Privado - Fecha y hora de inicio/fin - Fecha, hora y zona horaria - Capacidad - Máximo de participantes - Ubicación - Espacio físico donde ocurre - Sala - Sala específica dentro de la ubicación - Estado - Borrador (no visible) o Publicado (disponible para reservar) Para horarios recurrentes, usa Creación Rápida para generar múltiples horarios con un patrón. Paso 5: Asignar Recursos (Opcional) Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Horarios - [Nombre de Horario] - Recursos Los recursos pueden asignarse a horarios con roles: - Principal - Instructor o facilitador principal - Asistente - Maestro o помощник secundario - Soporte - Soporte técnico o logístico - Equipo - Equipo being utilizado Paso 6: Asignar Complementos (Opcional) Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Complementos - Asignar complemento Los complementos pueden ser: - Requeridos - Incluidos automáticamente con la experiencia - Por defecto - Pre-seleccionados durante el checkout - Opcionales - Disponibles pero no pre-seleccionados Paso 7: Crear Publicación (Opcional) Solo crea una Publicación si necesitas contenido editorial visible al público: Navega a Contenido - Publicaciones - Nueva publicación Campos de la publicación: - Título (EN/ES) - Título para el público - Slug - Identificador de URL - Categoría - landing, blog, highlight, institutional, faq - Experiencia - Vinculación opcional a una Experiencia (no transfiere precios ni horarios) Las secciones de publicación se construyen usando bloques de contenido modular: - hero, text, gallery, highlights, faq, itinerary, testimonials, inclusions, restrictions, cta, video Ciclo de Vida del Estado de Experiencia Borrador → Publicada → Archivada | Estado | Visibilidad | Reserva | |--------|-------------|--------| | Borrador | Solo el equipo de admin | No disponible | | Publicada | Catálogo público | Disponible para reservar | | Archivada | Solo el equipo de admin | No disponible, puede reactivarse | Comportamientos del Modo de Venta | Modo de Venta | Acción del Cliente | Acción del Admin | |---------------|--------------------|-------------------| | Directa | Reservar y pagar inmediatamente | Revisar órdenes completadas | | Por solicitud | Enviar consulta con detalles | Revisar solicitud, cotizar precio, convertir a orden | | Asistida | Contactar al admin directamente | Usar Venta Asistida para crear la orden | | Por pase | Usar créditos de su pase activo | Monitorear consumo de pases | Tipos de Entrega | Tipo de entrega | Genera Ticket | Notas | |-----------------|----------------|-------| | Ticket | Sí — código QR | El cliente recibe un ticket escaneable para check-in | | Reserva | No | Solo confirmación de reserva | | Pase | No | Se descuenta del pase del cliente | | Paquete | Sí — uno por paquete | Redención de paquete | Resumen de Roles y Permisos | Acción | Root | Admin | Operador | Cliente | |--------|------|-------|----------|---------| | Crear Experiencias | Sí | Sí | No | No | | Editar Experiencias | Sí | Sí | No | No | | Crear Horarios | Sí | Sí | Sí | No | | Ver Órdenes | Sí | Sí | Sí | Solo propias | | Crear Ventas Asistidas | Sí | Sí | No | No | | Gestionar Recursos | Sí | Sí | No | No | | Ver Tickets | Sí | Sí | Sí | Solo propios | | Check-in de Tickets | Sí | Sí | Sí | No | | Editar Publicaciones | Sí | Sí | No | No | | Acceder a Configuración | Sí | Sí | No | No | Obtener Ayuda Si necesitas asistencia: - Usa la navegación de la barra lateral para explorar secciones de documentación - Consulta Referencia - Glosario para definiciones de terminología - Revisa Referencia - Solución de Problemas para soluciones de errores comunes"
+      "es": "Introducción al Admin de OMZONE El panel de OMZONE Admin es tu centro de control para gestionar toda la plataforma de bienestar. Desde aquí controlas ofertas del catálogo, programación, ventas, contenido editorial y configuración del sistema. Acceder al Panel de Admin Accede al panel de admin navegando a /admin después de iniciar sesión. Debes tener uno de los siguientes labels asignados a tu cuenta: | Label      | Nombre a Mostrar | Nivel de Acceso                                   | | ---------- | ---------------- | ------------------------------------------------- | | root     | Admin            | Acceso completo al sistema, invisible en listados | | admin    | Admin            | Acceso completo a todas las funciones de admin    | | operator | Operador         | Acceso programado a operaciones y ventas          | | client   | Cliente          | Acceso solo al portal, sin admin                  |  Importante: El label root es invisible en toda la plataforma. Los usuarios root nunca aparecen en listados de clientes u órdenes, y root nunca se muestra como nombre de rol. Al mostrar roles, siempre usa \"Admin\" para ambos labels root y admin. Estructura de Navegación del Admin La barra lateral contiene siete secciones principales: General - Dashboard (/admin/dashboard) - Resumen de órdenes, ingresos, próximos horarios y solicitudes pendientes - Mi Cuenta (/admin/account) - Perfil y configuración de seguridad Catálogo - Experiencias (/admin/experiences) - Ofertas principales de bienestar (sesiones, inmersiones, retiros, estadías) - Complementos (/admin/addons) - Extras opcionales que pueden adjuntarse a experiencias - Paquetes (/admin/packages) - Experiencias打包adas con precio fijo - Pases (/admin/passes) - Pases de crédito consumibles para visitas repetidas Operaciones - Agenda (/admin/agenda) - Vista global de todos los horarios programados en todas las experiencias - Recursos (/admin/resources) - Instructores, facilitadores, terapeutas, equipos, ubicaciones y salas Ventas - Solicitudes (/admin/booking-requests) - Consultas de reserva entrantes para experiencias en modo \"Por solicitud\" - Órdenes (/admin/orders) - Todas las compras de clientes en todos los canales - Tickets (/admin/tickets) - Tickets validables con códigos QR para check-in - Clientes (/admin/clients) - Cuentas de clientes registradas Contenido - Publicaciones (/admin/publications) - Contenido editorial y de páginas de landing - Medios (/admin/media) - Gestor de archivos para todos los buckets Sistema - Configuración (/admin/settings) - Plantillas de notificación y configuración del sistema Concepto Principal: Publicaciones vs Experiencias Una distinción fundamental en OMZONE: | Aspecto          | Experiencia                            | Publicación                        | | ---------------- | -------------------------------------- | ---------------------------------- | | Propósito    | Operacional, comercial                 | Editorial, SEO, narrativa          | | Contiene     | Niveles de precio, ediciones, horarios | Secciones con bloques de contenido | | Visibilidad  | Disponibilidad y reserva               | Páginas de landing y blog          | | Se vincula a | Complementos, horarios, recursos       | Experiencia vía su publicación     |  Regla Clave: Los niveles de precio pertenecen a las Experiencias, no a las Publicaciones. No agregues precios a una Publicación. Una Publicación puede vincular a una Experiencia, pero son entidades separadas. Cuándo Crear Cada Una Crea una Experiencia cuando: - Quieres vender una oferta de bienestar - Necesitas gestión de precios y disponibilidad - Quieres que los clientes reserven o soliciten reserva Crea una Publicación cuando: - Necesitas una página de landing para SEO - Quieres contenido de narrativa editorial - Necesitas posts de blog, páginas institucionales o FAQs Flujo de Trabajo Estándar: Agregar una Nueva Experiencia Sigue esta secuencia cuando configures una nueva experiencia: Paso 1: Crear la Experiencia Navega a Catálogo - Experiencias - Nueva experiencia Llena los campos principales: - Nombre interno - Solo para ti, el cliente no lo ve - Nombre público (EN/ES) - El nombre que verá el cliente en ambos idiomas - Slug (URL) - Dirección web de la experiencia (se genera automáticamente) - Tipo - Sesión, Inmersión, Retiro, Estancia, Privada o Paquete - Modo de venta - Directa (pago inmediato), Por solicitud (confirmas tú), Asistida (el admin crea la orden), Por pase (requiere pase activo) - Tipo de entrega - Ticket (genera código QR), Reserva (sin ticket), Pase, Paquete Configura los comportamientos: - Requiere selección de horario - Activar si el cliente debe elegir una fecha/hora específica - Genera tickets después de la compra - Activar para crear tickets con código QR al comprar - Permite múltiples asistentes - Activar para compras grupales con cantidad mín/máx Paso 2: Agregar Ediciones (Opcional) Para experiencias con múltiples rangos de fechas o versiones: Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Ediciones - Nueva edición Las Ediciones permiten: - Diferentes rangos de fechas con startDate y endDate - Ventanas de registro con registrationOpens y registrationCloses - Límites de capacidad específicos por edición - Imágenes de portada específicas por edición Paso 3: Agregar Niveles de Precio Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Precios - Nuevo nivel Campos del nivel de precio: - Nombre (EN/ES) - Cómo aparece este precio al cliente (ej., \"Early Bird\", \"Precio Regular\") - Tipo de precio - Precio fijo, Por persona, Por grupo, Desde, Cotización - Precio base - El monto en números - Moneda - MXN o USD - Badge - Etiqueta opcional como \"Más popular\" o \"¡Solo por hoy!\" - Destacado - Mostrarlo resaltado visualmente - Edición - Vinculación opcional a una edición específica Paso 4: Agregar Horarios (Si se Requiere) Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Horarios - Nuevo horario Campos del horario: - Tipo de horario - Sesión individual, Multi-día, Día de retiro, Privado - Fecha y hora de inicio/fin - Fecha, hora y zona horaria - Capacidad - Máximo de participantes - Ubicación - Espacio físico donde ocurre - Sala - Sala específica dentro de la ubicación - Estado - Borrador (no visible) o Publicado (disponible para reservar) Para horarios recurrentes, usa Creación Rápida para generar múltiples horarios con un patrón. Paso 5: Asignar Recursos (Opcional) Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Horarios - [Nombre de Horario] - Recursos Los recursos pueden asignarse a horarios con roles: - Principal - Instructor o facilitador principal - Asistente - Maestro o помощник secundario - Soporte - Soporte técnico o logístico - Equipo - Equipo being utilizado Paso 6: Asignar Complementos (Opcional) Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Complementos - Asignar complemento Los complementos pueden ser: - Requeridos - Incluidos automáticamente con la experiencia - Por defecto - Pre-seleccionados durante el checkout - Opcionales - Disponibles pero no pre-seleccionados Paso 7: Crear Publicación (Opcional) Solo crea una Publicación si necesitas contenido editorial visible al público: Navega a Contenido - Publicaciones - Nueva publicación Campos de la publicación: - Título (EN/ES) - Título para el público - Slug - Identificador de URL - Categoría - landing, blog, highlight, institutional, faq - Experiencia - Vinculación opcional a una Experiencia (no transfiere precios ni horarios) Las secciones de publicación se construyen usando bloques de contenido modular: - hero, text, gallery, highlights, faq, itinerary, testimonials, inclusions, restrictions, cta, video Ciclo de Vida del Estado de Experiencia Borrador → Publicada → Archivada | Estado        | Visibilidad             | Reserva                          | | ------------- | ----------------------- | -------------------------------- | | Borrador  | Solo el equipo de admin | No disponible                    | | Publicada | Catálogo público        | Disponible para reservar         | | Archivada | Solo el equipo de admin | No disponible, puede reactivarse | Comportamientos del Modo de Venta | Modo de Venta     | Acción del Cliente              | Acción del Admin                                     | | ----------------- | ------------------------------- | ---------------------------------------------------- | | Directa       | Reservar y pagar inmediatamente | Revisar órdenes completadas                          | | Por solicitud | Enviar consulta con detalles    | Revisar solicitud, cotizar precio, convertir a orden | | Asistida      | Contactar al admin directamente | Usar Venta Asistida para crear la orden              | | Por pase      | Usar créditos de su pase activo | Monitorear consumo de pases                          | Tipos de Entrega | Tipo de entrega | Genera Ticket        | Notas                                                | | --------------- | -------------------- | ---------------------------------------------------- | | Ticket      | Sí — código QR       | El cliente recibe un ticket escaneable para check-in | | Reserva     | No                   | Solo confirmación de reserva                         | | Pase        | No                   | Se descuenta del pase del cliente                    | | Paquete     | Sí — uno por paquete | Redención de paquete                                 | Resumen de Roles y Permisos | Acción                  | Root | Admin | Operador | Cliente      | | ----------------------- | ---- | ----- | -------- | ------------ | | Crear Experiencias      | Sí   | Sí    | No       | No           | | Editar Experiencias     | Sí   | Sí    | No       | No           | | Crear Horarios          | Sí   | Sí    | Sí       | No           | | Ver Órdenes             | Sí   | Sí    | Sí       | Solo propias | | Crear Ventas Asistidas  | Sí   | Sí    | No       | No           | | Gestionar Recursos      | Sí   | Sí    | No       | No           | | Ver Tickets             | Sí   | Sí    | Sí       | Solo propios | | Check-in de Tickets     | Sí   | Sí    | Sí       | No           | | Editar Publicaciones    | Sí   | Sí    | No       | No           | | Acceder a Configuración | Sí   | Sí    | No       | No           | Obtener Ayuda Si necesitas asistencia: - Usa la navegación de la barra lateral para explorar secciones de documentación - Consulta Referencia - Glosario para definiciones de terminología - Revisa Referencia - Solución de Problemas para soluciones de errores comunes"
     },
     "headings": {
       "en": [
@@ -21746,154 +21742,154 @@
           "text": "Estructura de Navegación del Admin",
           "id": "estructura-de-navegaci-n-del-admin",
           "line": 19,
-          "position": 1030
+          "position": 1186
         },
         {
           "level": 3,
           "text": "General",
           "id": "general",
           "line": 23,
-          "position": 1125
+          "position": 1281
         },
         {
           "level": 3,
           "text": "Catálogo",
           "id": "cat-logo",
-          "line": 27,
-          "position": 1323
+          "line": 28,
+          "position": 1480
         },
         {
           "level": 3,
           "text": "Operaciones",
           "id": "operaciones",
-          "line": 33,
-          "position": 1707
+          "line": 35,
+          "position": 1865
         },
         {
           "level": 3,
           "text": "Ventas",
           "id": "ventas",
-          "line": 37,
-          "position": 1938
+          "line": 40,
+          "position": 2097
         },
         {
           "level": 3,
           "text": "Contenido",
           "id": "contenido",
-          "line": 43,
-          "position": 2307
+          "line": 47,
+          "position": 2467
         },
         {
           "level": 3,
           "text": "Sistema",
           "id": "sistema",
-          "line": 47,
-          "position": 2486
+          "line": 52,
+          "position": 2647
         },
         {
           "level": 2,
           "text": "Concepto Principal: Publicaciones vs Experiencias",
           "id": "concepto-principal-publicaciones-vs-experiencias",
-          "line": 50,
-          "position": 2596
+          "line": 56,
+          "position": 2758
         },
         {
           "level": 3,
           "text": "Cuándo Crear Cada Una",
           "id": "cu-ndo-crear-cada-una",
-          "line": 63,
-          "position": 3319
+          "line": 69,
+          "position": 3666
         },
         {
           "level": 2,
           "text": "Flujo de Trabajo Estándar: Agregar una Nueva Experiencia",
           "id": "flujo-de-trabajo-est-ndar-agregar-una-nueva-experiencia",
-          "line": 75,
-          "position": 3703
+          "line": 83,
+          "position": 4052
         },
         {
           "level": 3,
           "text": "Paso 1: Crear la Experiencia",
           "id": "paso-1-crear-la-experiencia",
-          "line": 79,
-          "position": 3827
+          "line": 87,
+          "position": 4176
         },
         {
           "level": 3,
           "text": "Paso 2: Agregar Ediciones (Opcional)",
           "id": "paso-2-agregar-ediciones-opcional",
-          "line": 96,
-          "position": 4780
+          "line": 106,
+          "position": 5131
         },
         {
           "level": 3,
           "text": "Paso 3: Agregar Niveles de Precio",
           "id": "paso-3-agregar-niveles-de-precio",
-          "line": 108,
-          "position": 5227
+          "line": 119,
+          "position": 5579
         },
         {
           "level": 3,
           "text": "Paso 4: Agregar Horarios (Si se Requiere)",
           "id": "paso-4-agregar-horarios-si-se-requiere",
-          "line": 121,
-          "position": 5809
+          "line": 133,
+          "position": 6162
         },
         {
           "level": 3,
           "text": "Paso 5: Asignar Recursos (Opcional)",
           "id": "paso-5-asignar-recursos-opcional",
-          "line": 135,
-          "position": 6426
+          "line": 148,
+          "position": 6780
         },
         {
           "level": 3,
           "text": "Paso 6: Asignar Complementos (Opcional)",
           "id": "paso-6-asignar-complementos-opcional",
-          "line": 145,
-          "position": 6816
+          "line": 159,
+          "position": 7171
         },
         {
           "level": 3,
           "text": "Paso 7: Crear Publicación (Opcional)",
           "id": "paso-7-crear-publicaci-n-opcional",
-          "line": 154,
-          "position": 7175
+          "line": 169,
+          "position": 7531
         },
         {
           "level": 2,
           "text": "Ciclo de Vida del Estado de Experiencia",
           "id": "ciclo-de-vida-del-estado-de-experiencia",
-          "line": 169,
-          "position": 7839
+          "line": 186,
+          "position": 8197
         },
         {
           "level": 2,
           "text": "Comportamientos del Modo de Venta",
           "id": "comportamientos-del-modo-de-venta",
-          "line": 179,
-          "position": 8189
+          "line": 196,
+          "position": 8671
         },
         {
           "level": 2,
           "text": "Tipos de Entrega",
           "id": "tipos-de-entrega",
-          "line": 188,
-          "position": 8707
+          "line": 205,
+          "position": 9376
         },
         {
           "level": 2,
           "text": "Resumen de Roles y Permisos",
           "id": "resumen-de-roles-y-permisos",
-          "line": 197,
-          "position": 9073
+          "line": 214,
+          "position": 9986
         },
         {
           "level": 2,
           "text": "Obtener Ayuda",
           "id": "obtener-ayuda",
-          "line": 212,
-          "position": 9645
+          "line": 229,
+          "position": 10847
         }
       ]
     },
