@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -5,7 +6,13 @@ import {
   useDashboardMetrics,
   useRecentOrders,
   useUpcomingSlots,
+  monthRange,
 } from "@/hooks/useDashboardMetrics";
+import {
+  useDashboardCharts,
+  getAutoGranularity,
+  getAvailableGranularities,
+} from "@/hooks/useDashboardCharts";
 import { useUnreadContactCount } from "@/hooks/useContactMessages";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/common/Card";
@@ -13,6 +20,11 @@ import MetricCard from "@/components/admin/dashboard/MetricCard";
 import RecentOrdersTable from "@/components/admin/dashboard/RecentOrdersTable";
 import UpcomingSlotsCard from "@/components/admin/dashboard/UpcomingSlotsCard";
 import QuickActions from "@/components/admin/dashboard/QuickActions";
+import DateRangeFilter from "@/components/admin/dashboard/DateRangeFilter";
+import GranularityFilter from "@/components/admin/dashboard/GranularityFilter";
+import RevenueOverTimeChart from "@/components/admin/dashboard/RevenueOverTimeChart";
+import OrdersByStatusChart from "@/components/admin/dashboard/OrdersByStatusChart";
+import OrdersVolumeChart from "@/components/admin/dashboard/OrdersVolumeChart";
 import {
   ShoppingCart,
   DollarSign,
@@ -22,36 +34,86 @@ import {
   Mail,
 } from "lucide-react";
 
-function formatCurrency(amount) {
+function formatAmount(value, currency) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "MXN",
+    currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(amount);
+  }).format(value);
+}
+
+function RevenueValue({ revenuesByCurrency, loading }) {
+  if (loading) return <span>…</span>;
+  const entries = Object.entries(revenuesByCurrency);
+  if (entries.length === 0) {
+    return <span className="text-charcoal-muted text-lg">—</span>;
+  }
+  return (
+    <div className="space-y-0.5">
+      {entries.map(([currency, amount]) => (
+        <div
+          key={currency}
+          className="flex items-baseline gap-1.5 leading-tight"
+        >
+          <span className="text-2xl font-semibold text-charcoal">
+            {formatAmount(amount, currency)}
+          </span>
+          <span className="text-xs text-charcoal-muted font-normal">
+            {currency}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export default function AdminDashboardPage() {
   const { user, isAdmin, isRoot } = useAuth();
   const { t } = useLanguage();
   const canSeeRevenue = isAdmin || isRoot;
-  const { metrics, loading: metricsLoading } = useDashboardMetrics();
-  const { orders, loading: ordersLoading } = useRecentOrders(10);
+
+  const [dateRange, setDateRange] = useState(monthRange);
+  const [granularity, setGranularity] = useState(() =>
+    getAutoGranularity(monthRange().start, monthRange().end),
+  );
+
+  // Auto-reset granularity to the best default when the date range changes
+  useEffect(() => {
+    if (dateRange?.start && dateRange?.end) {
+      setGranularity(getAutoGranularity(dateRange.start, dateRange.end));
+    }
+  }, [dateRange?.start, dateRange?.end]);
+
+  const availableGranularities =
+    dateRange?.start && dateRange?.end
+      ? getAvailableGranularities(dateRange.start, dateRange.end)
+      : ["day"];
+
+  const { metrics, loading: metricsLoading } = useDashboardMetrics(dateRange);
+  const { orders, loading: ordersLoading } = useRecentOrders(10, dateRange);
   const { slots, loading: slotsLoading } = useUpcomingSlots(5);
   const unreadContactCount = useUnreadContactCount();
+  const { data: chartData, loading: chartsLoading } = useDashboardCharts(
+    dateRange,
+    granularity,
+  );
 
   const firstName = user?.name?.split(" ")[0] || "Admin";
 
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-display font-semibold text-charcoal">
-          {t("admin.dashboard.welcome").replace("{name}", firstName)}
-        </h1>
-        <p className="text-charcoal-muted mt-0.5">
-          {t("admin.dashboard.subtitle")}
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-display font-semibold text-charcoal">
+            {t("admin.dashboard.welcome").replace("{name}", firstName)}
+          </h1>
+          <p className="text-charcoal-muted mt-0.5">
+            {t("admin.dashboard.subtitle")}
+          </p>
+        </div>
+        <DateRangeFilter value={dateRange} onChange={setDateRange} />
       </div>
 
       {/* Quick actions */}
@@ -61,16 +123,22 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         <MetricCard
           title={t("admin.dashboard.ordersTitle")}
-          value={metricsLoading ? "…" : metrics.ordersMonth}
+          value={metricsLoading ? "…" : metrics.ordersCount}
           description={t("admin.dashboard.ordersDesc")}
           icon={ShoppingCart}
         />
         {canSeeRevenue && (
           <MetricCard
             title={t("admin.dashboard.revenueTitle")}
-            value={metricsLoading ? "…" : formatCurrency(metrics.revenueMonth)}
+            value={
+              <RevenueValue
+                revenuesByCurrency={metrics.revenuesByCurrency}
+                loading={metricsLoading}
+              />
+            }
             description={t("admin.dashboard.revenueDesc")}
             icon={DollarSign}
+            className="col-span-1"
           />
         )}
         <MetricCard
@@ -135,6 +203,39 @@ export default function AdminDashboardPage() {
               </Card>
             </Link>
           )}
+        </div>
+      )}
+
+      {/* Analytics charts — admin/root only */}
+      {canSeeRevenue && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
+              {t("admin.dashboard.analytics.title")}
+            </h2>
+            <GranularityFilter
+              value={granularity}
+              onChange={setGranularity}
+              available={availableGranularities}
+            />
+          </div>
+          <RevenueOverTimeChart
+            data={chartData.revenueByDay}
+            currencies={chartData.currencies}
+            loading={chartsLoading}
+            granularity={granularity}
+          />
+          <div className="grid sm:grid-cols-2 gap-4">
+            <OrdersByStatusChart
+              data={chartData.ordersByStatus}
+              loading={chartsLoading}
+            />
+            <OrdersVolumeChart
+              data={chartData.orderCountByDay}
+              loading={chartsLoading}
+              granularity={granularity}
+            />
+          </div>
         </div>
       )}
 

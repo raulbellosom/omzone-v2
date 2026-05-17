@@ -81,7 +81,35 @@
       "viewAll": "View all",
       "createExperience": "Create Experience",
       "viewAgenda": "View Agenda",
-      "newSale": "New Sale"
+      "newSale": "New Sale",
+      "filter": {
+        "today": "Today",
+        "thisWeek": "This Week",
+        "thisMonth": "This Month",
+        "last30": "Last 30 Days",
+        "last3m": "Last 3 Months",
+        "thisYear": "This Year"
+      },
+      "granularity": {
+        "day": "Day",
+        "week": "Week",
+        "month": "Month"
+      },
+      "analytics": {
+        "title": "Analytics",
+        "revenueOverTime": "Revenue Over Time",
+        "ordersByStatus": "Orders by Status",
+        "ordersVolume": "Order Volume",
+        "totalOrders": "orders total",
+        "noData": "No data for this period",
+        "status": {
+          "pending": "Pending",
+          "paid": "Paid",
+          "confirmed": "Confirmed",
+          "cancelled": "Cancelled",
+          "refunded": "Refunded"
+        }
+      }
     },
     "recentOrders": {
       "order": "Order",

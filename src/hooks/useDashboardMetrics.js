@@ -11,7 +11,7 @@ const COL_EXPERIENCES = env.collectionExperiences;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function monthRange() {
+export function monthRange() {
   const now = new Date();
   const start = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
   return { start: start.toISOString(), end: now.toISOString() };
@@ -25,10 +25,14 @@ function weekAheadISO() {
 
 // ─── Metric cards hook ────────────────────────────────────────────────────────
 
-export function useDashboardMetrics() {
+export function useDashboardMetrics(dateRange) {
+  const defaultRange = monthRange();
+  const rangeStart = dateRange?.start ?? defaultRange.start;
+  const rangeEnd = dateRange?.end ?? defaultRange.end;
+
   const [metrics, setMetrics] = useState({
-    ordersMonth: 0,
-    revenueMonth: 0,
+    ordersCount: 0,
+    revenuesByCurrency: {},
     activeTickets: 0,
     upcomingSlots: 0,
     pendingRequests: 0,
@@ -39,26 +43,24 @@ export function useDashboardMetrics() {
     let cancelled = false;
     async function fetch() {
       setLoading(true);
-      const { start } = monthRange();
-      const now = new Date().toISOString();
 
       try {
         const [ordersRes, ticketsRes, slotsRes, requestsRes] =
           await Promise.all([
-            // Orders this month (paid/confirmed) — up to 100 to aggregate
+            // Orders in selected range — up to 500 to aggregate
             databases.listDocuments(DB, COL_ORDERS, [
-              Query.greaterThanEqual("$createdAt", start),
-              Query.lessThanEqual("$createdAt", now),
-              Query.limit(100),
+              Query.greaterThanEqual("$createdAt", rangeStart),
+              Query.lessThanEqual("$createdAt", rangeEnd),
+              Query.limit(500),
             ]),
             // Active tickets
             databases.listDocuments(DB, COL_TICKETS, [
               Query.equal("status", "valid"),
               Query.limit(1),
             ]),
-            // Upcoming slots (7 days)
+            // Upcoming slots (7 days ahead from now — independent of dateRange)
             databases.listDocuments(DB, COL_SLOTS, [
-              Query.greaterThanEqual("startDatetime", now),
+              Query.greaterThanEqual("startDatetime", new Date().toISOString()),
               Query.lessThanEqual("startDatetime", weekAheadISO()),
               Query.equal("status", "published"),
               Query.limit(1),
@@ -76,14 +78,17 @@ export function useDashboardMetrics() {
         const paidOrders = ordersRes.documents.filter(
           (o) => o.status === "paid" || o.status === "confirmed",
         );
-        const revenue = paidOrders.reduce(
-          (sum, o) => sum + (o.totalAmount || 0),
-          0,
-        );
+
+        // Group revenue by currency
+        const revenuesByCurrency = paidOrders.reduce((acc, o) => {
+          const cur = (o.currency || "MXN").toUpperCase();
+          acc[cur] = (acc[cur] || 0) + (o.totalAmount || 0);
+          return acc;
+        }, {});
 
         setMetrics({
-          ordersMonth: paidOrders.length,
-          revenueMonth: revenue,
+          ordersCount: paidOrders.length,
+          revenuesByCurrency,
           activeTickets: ticketsRes.total,
           upcomingSlots: slotsRes.total,
           pendingRequests: requestsRes.total,
@@ -98,24 +103,28 @@ export function useDashboardMetrics() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [rangeStart, rangeEnd]);
 
   return { metrics, loading };
 }
 
 // ─── Recent orders hook ───────────────────────────────────────────────────────
 
-export function useRecentOrders(limit = 10) {
+export function useRecentOrders(limit = 10, dateRange) {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
+    const queries = [Query.orderDesc("$createdAt"), Query.limit(limit)];
+    if (dateRange?.start) {
+      queries.push(Query.greaterThanEqual("$createdAt", dateRange.start));
+    }
+    if (dateRange?.end) {
+      queries.push(Query.lessThanEqual("$createdAt", dateRange.end));
+    }
     databases
-      .listDocuments(DB, COL_ORDERS, [
-        Query.orderDesc("$createdAt"),
-        Query.limit(limit),
-      ])
+      .listDocuments(DB, COL_ORDERS, queries)
       .then((res) => {
         if (!cancelled) setOrders(res.documents);
       })
@@ -126,7 +135,7 @@ export function useRecentOrders(limit = 10) {
     return () => {
       cancelled = true;
     };
-  }, [limit]);
+  }, [limit, dateRange?.start, dateRange?.end]);
 
   return { orders, loading };
 }
