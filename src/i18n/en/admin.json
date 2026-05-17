@@ -54,7 +54,9 @@
       "sales": "Sales",
       "userPasses": "User Passes",
       "sections": "Sections",
-      "checkin": "Check-in"
+      "checkin": "Check-in",
+      "heroSlides": "Hero Slides",
+      "account": "Account"
     },
     "topbar": {
       "openMenu": "Open menu"

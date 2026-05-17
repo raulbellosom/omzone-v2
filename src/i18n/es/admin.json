@@ -54,7 +54,9 @@
       "sales": "Ventas",
       "userPasses": "Pases asignados",
       "sections": "Secciones",
-      "checkin": "Check-in"
+      "checkin": "Check-in",
+      "heroSlides": "Hero del Home",
+      "account": "Mi cuenta"
     },
     "topbar": {
       "openMenu": "Abrir menú"

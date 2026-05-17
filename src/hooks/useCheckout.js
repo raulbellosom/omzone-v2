@@ -122,8 +122,13 @@ export function useCheckout() {
           const addonIds = assignments.map((a) => a.addonId).filter(Boolean);
           if (addonIds.length > 0) {
             try {
-              addonsData = await fetchDocumentsByIds(env.collectionAddons, addonIds);
-              addonsData = addonsData.filter((addon) => addon.status === "active");
+              addonsData = await fetchDocumentsByIds(
+                env.collectionAddons,
+                addonIds,
+              );
+              addonsData = addonsData.filter(
+                (addon) => addon.status === "active",
+              );
             } catch {
               addonsData = [];
             }
@@ -151,7 +156,9 @@ export function useCheckout() {
         const locationMap = new Map(locations.map((doc) => [doc.$id, doc]));
         const roomMap = new Map(rooms.map((doc) => [doc.$id, doc]));
         const slotsData = rawSlots.map((slot) => {
-          const location = slot.locationId ? locationMap.get(slot.locationId) : null;
+          const location = slot.locationId
+            ? locationMap.get(slot.locationId)
+            : null;
           const room = slot.roomId ? roomMap.get(slot.roomId) : null;
           return {
             ...slot,
@@ -168,7 +175,10 @@ export function useCheckout() {
           setAddons(addonsData);
           setAddonAssignments(assignments);
 
-          if (initialTierId && tiers.some((tier) => tier.$id === initialTierId)) {
+          if (
+            initialTierId &&
+            tiers.some((tier) => tier.$id === initialTierId)
+          ) {
             setSelectedTierId(initialTierId);
           } else if (tiers.length === 1) {
             setSelectedTierId(tiers[0].$id);
@@ -277,9 +287,14 @@ export function useCheckout() {
   const enrichedAddons = useMemo(() => {
     return addons
       .map((addon) => {
-        const assignment = addonAssignments.find((item) => item.addonId === addon.$id);
+        const assignment = addonAssignments.find(
+          (item) => item.addonId === addon.$id,
+        );
         if (!assignment) return null;
-        const addonPricing = computeAddonChargeQuantity(addon.priceType, quantity);
+        const addonPricing = computeAddonChargeQuantity(
+          addon.priceType,
+          quantity,
+        );
         return {
           ...addon,
           isRequired: assignment?.isRequired || false,
@@ -298,7 +313,8 @@ export function useCheckout() {
   }, [addons, addonAssignments, quantity]);
 
   const selectedAddons = useMemo(
-    () => enrichedAddons.filter((addon) => selectedAddonIds.includes(addon.$id)),
+    () =>
+      enrichedAddons.filter((addon) => selectedAddonIds.includes(addon.$id)),
     [enrichedAddons, selectedAddonIds],
   );
 
@@ -359,8 +375,14 @@ export function useCheckout() {
     if (!customerName.trim()) return false;
     if (!customerEmail.trim()) return false;
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) return false;
+    // Phone is optional, but if provided the local part must be >= 8 digits
+    if (customerPhone.trim()) {
+      const spaceIdx = customerPhone.indexOf(" ");
+      const localPart = spaceIdx >= 0 ? customerPhone.slice(spaceIdx + 1) : "";
+      if (localPart.replace(/\D/g, "").length < 8) return false;
+    }
     return true;
-  }, [customerName, customerEmail]);
+  }, [customerName, customerEmail, customerPhone]);
 
   const stepValidation = [isStep0Valid, isStep1Valid, isStep2Valid, true, true];
 

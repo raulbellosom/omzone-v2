@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { Input } from "@/components/common/Input";
 import PhoneInput from "@/components/common/PhoneInput";
 import { useLanguage } from "@/hooks/useLanguage";
-import { isValidPhone } from "@/lib/utils";
 
 export default function CustomerInfoStep({
   customerName,
@@ -15,12 +13,14 @@ export default function CustomerInfoStep({
   const { t } = useLanguage();
   const emailValid =
     !customerEmail.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail);
-  const [phoneTouched, setPhoneTouched] = useState(false);
-  const phoneValid = isValidPhone(customerPhone);
 
-  function handlePhoneBlur() {
-    setPhoneTouched(true);
-  }
+  // Validate local number length directly (>= 8 digits required when provided)
+  const phoneValid = (() => {
+    if (!customerPhone.trim()) return true; // optional
+    const spaceIdx = customerPhone.indexOf(" ");
+    const localPart = spaceIdx >= 0 ? customerPhone.slice(spaceIdx + 1) : "";
+    return localPart.replace(/\D/g, "").length >= 8;
+  })();
 
   return (
     <div className="space-y-5">
@@ -81,13 +81,9 @@ export default function CustomerInfoStep({
           <PhoneInput
             id="checkout-phone"
             value={customerPhone}
-            onChange={(val) => {
-              setCustomerPhone(val);
-              if (!val.trim()) setPhoneTouched(false);
-            }}
-            onBlur={handlePhoneBlur}
+            onChange={setCustomerPhone}
           />
-          {phoneTouched && !phoneValid && (
+          {!phoneValid && (
             <p className="text-xs text-red-500 mt-1">
               {t("common.phoneError")}
             </p>

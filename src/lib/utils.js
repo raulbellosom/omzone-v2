@@ -6,21 +6,17 @@ export function cn(...inputs) {
 }
 
 /**
- * E.164-ish phone regex: must start with '+', country code (1-3 digits),
- * then 6-14 digits. Allows spaces/dashes for readability.
- * Appwrite Auth requires the '+' prefix with country code.
+ * Validates a phone in E.164 format.
+ * Strips spaces and dashes first, then checks: '+' + 8–15 digits
+ * (1–3 country code digits + 7–12 national digits, per ITU-T E.164).
  *
  * Valid:   +52 55 1234 5678, +1-555-123-4567, +525512345678
- * Invalid: 5512345678, 044 55 1234 5678, (55) 1234-5678
- */
-const PHONE_E164 = /^\+\d{1,3}[\s-]?\d[\d\s-]{5,13}$/;
-
-/**
- * Returns true if `value` is a valid phone with country prefix, or empty/null.
+ * Invalid: 5512345678, +52 1234, +52 123, (55) 1234-5678
  */
 export function isValidPhone(value) {
   if (!value || !value.trim()) return true; // optional — empty is valid
-  return PHONE_E164.test(value.trim());
+  const clean = value.trim().replace(/[\s-]/g, "");
+  return /^\+\d{8,15}$/.test(clean);
 }
 
 /**

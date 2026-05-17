@@ -113,8 +113,8 @@ export default function PhoneInput({
   }
 
   function handleLocalChange(e) {
-    // Allow digits and spaces only
-    const raw = e.target.value.replace(/[^\d\s]/g, "");
+    // Digits only, max 10
+    const raw = e.target.value.replace(/\D/g, "").slice(0, 10);
     userTyping.current = true;
     setLocalNumber(raw);
     emit(country.dialCode, raw);
@@ -255,10 +255,12 @@ export default function PhoneInput({
       <input
         id={id}
         type="tel"
+        inputMode="numeric"
         value={localNumber}
         onChange={handleLocalChange}
         onBlur={onBlur}
-        placeholder="55 1234 5678"
+        placeholder="5512345678"
+        maxLength={10}
         disabled={disabled}
         autoComplete="tel-national"
         className={cn(
