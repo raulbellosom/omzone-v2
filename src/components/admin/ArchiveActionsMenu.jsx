@@ -59,27 +59,50 @@ export default function ArchiveActionsMenu({
     <>
       {/* Confirm overlay for archive/restore */}
       {confirm && confirm !== "hardDelete" && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setConfirm(null)}
           />
-          <div className="relative bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4 space-y-4">
-            <h3 className="text-base font-semibold text-charcoal">
-              {confirm === "archive"
-                ? t("admin.archive.archiveTitle")
-                : t("admin.archive.restoreTitle")}
-            </h3>
-            <p className="text-sm text-charcoal-subtle">
-              {confirm === "archive"
-                ? t("admin.archive.archiveDesc")
-                : t("admin.archive.restoreDesc")}
-            </p>
-            <div className="flex justify-end gap-3">
+          <div className="relative bg-white rounded-2xl shadow-2xl p-7 max-w-sm w-full space-y-5">
+            {/* Icon */}
+            <div className="flex justify-center">
+              <div
+                className={
+                  confirm === "archive"
+                    ? "flex items-center justify-center w-14 h-14 rounded-2xl bg-amber-50 border border-amber-100"
+                    : "flex items-center justify-center w-14 h-14 rounded-2xl bg-sage/10 border border-sage/20"
+                }
+              >
+                {confirm === "archive" ? (
+                  <Archive className="h-7 w-7 text-amber-500" />
+                ) : (
+                  <RotateCcw className="h-7 w-7 text-sage" />
+                )}
+              </div>
+            </div>
+
+            {/* Text */}
+            <div className="text-center space-y-2">
+              <h3 className="text-base font-semibold text-charcoal">
+                {confirm === "archive"
+                  ? t("admin.archive.archiveTitle")
+                  : t("admin.archive.restoreTitle")}
+              </h3>
+              <p className="text-sm text-charcoal-subtle leading-relaxed">
+                {confirm === "archive"
+                  ? t("admin.archive.archiveDesc")
+                  : t("admin.archive.restoreDesc")}
+              </p>
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-3">
               <Button
                 type="button"
-                variant="ghost"
+                variant="outline"
                 size="sm"
+                className="flex-1"
                 onClick={() => setConfirm(null)}
               >
                 {t("common.cancel")}
@@ -87,6 +110,7 @@ export default function ArchiveActionsMenu({
               <Button
                 type="button"
                 size="sm"
+                className="flex-1"
                 disabled={loading}
                 onClick={handleConfirm}
               >
@@ -117,17 +141,13 @@ export default function ArchiveActionsMenu({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           {canArchive && !isArchived && (
-            <DropdownMenuItem
-              onSelect={() => setConfirm("archive")}
-            >
+            <DropdownMenuItem onSelect={() => setConfirm("archive")}>
               <Archive className="h-4 w-4 text-charcoal-subtle shrink-0" />
               {t("admin.archive.archive")}
             </DropdownMenuItem>
           )}
           {canArchive && isArchived && (
-            <DropdownMenuItem
-              onSelect={() => setConfirm("restore")}
-            >
+            <DropdownMenuItem onSelect={() => setConfirm("restore")}>
               <RotateCcw className="h-4 w-4 text-sage shrink-0" />
               {t("admin.archive.restore")}
             </DropdownMenuItem>
