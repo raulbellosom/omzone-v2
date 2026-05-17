@@ -1,9 +1,15 @@
-import { useEffect, useState } from 'react';
-import { useDocsTOC } from './DocsTOCContext';
+import { useEffect, useState } from "react";
+import { useDocsTOC } from "./DocsTOCContext";
 
-export default function DocsTableOfContents() {
+const tocLabels = {
+  en: { title: "On this page", empty: "No headings" },
+  es: { title: "En esta página", empty: "Sin secciones" },
+};
+
+export default function DocsTableOfContents({ lang = "en" }) {
+  const labels = tocLabels[lang] ?? tocLabels.en;
   const { headings } = useDocsTOC();
-  const [activeId, setActiveId] = useState('');
+  const [activeId, setActiveId] = useState("");
 
   useEffect(() => {
     if (!headings?.length) return;
@@ -16,7 +22,7 @@ export default function DocsTableOfContents() {
           }
         });
       },
-      { rootMargin: '-20% 0% -80% 0%' }
+      { rootMargin: "-20% 0% -80% 0%" },
     );
 
     headings.forEach(({ id }) => {
@@ -28,25 +34,23 @@ export default function DocsTableOfContents() {
   }, [headings]);
 
   if (!headings?.length) {
-    return (
-      <div className="text-xs text-stone-400">No headings</div>
-    );
+    return <div className="text-xs text-stone-400">{labels.empty}</div>;
   }
 
   return (
     <nav>
       <h4 className="text-xs font-semibold text-stone-400 uppercase mb-3">
-        On this page
+        {labels.title}
       </h4>
       <ul className="space-y-2">
         {headings.map(({ text, id, level }) => (
-          <li key={id} style={{ paddingLeft: level === 3 ? '12px' : '0' }}>
+          <li key={id} style={{ paddingLeft: level === 3 ? "12px" : "0" }}>
             <a
               href={`#${id}`}
               className={`block text-sm py-1 border-l-2 transition-colors ${
                 activeId === id
-                  ? 'border-stone-600 text-stone-900'
-                  : 'border-transparent text-stone-500 hover:text-stone-900'
+                  ? "border-stone-600 text-stone-900"
+                  : "border-transparent text-stone-500 hover:text-stone-900"
               }`}
             >
               {text}

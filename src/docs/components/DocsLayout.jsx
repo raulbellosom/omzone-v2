@@ -1,14 +1,14 @@
-import { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import DocsSidebar from './DocsSidebar';
-import DocsTopbar from './DocsTopbar';
-import DocsBreadcrumbs from './DocsBreadcrumbs';
-import DocsMobileDrawer from './DocsMobileDrawer';
-import DocsMobileTOC from './DocsMobileTOC';
-import DocsBackToTop from './DocsBackToTop';
-import DocsTableOfContents from './DocsTableOfContents';
+import { useState, useRef } from "react";
+import { Link } from "react-router-dom";
+import DocsSidebar from "./DocsSidebar";
+import DocsTopbar from "./DocsTopbar";
+import DocsBreadcrumbs from "./DocsBreadcrumbs";
+import DocsMobileDrawer from "./DocsMobileDrawer";
+import DocsMobileTOC from "./DocsMobileTOC";
+import DocsBackToTop from "./DocsBackToTop";
+import DocsTableOfContents from "./DocsTableOfContents";
 
-export default function DocsLayout({ children, currentPage, lang = 'en' }) {
+export default function DocsLayout({ children, currentPage, lang = "en" }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileTOCOpen, setMobileTOCOpen] = useState(false);
   const mainContentRef = useRef(null);
@@ -16,11 +16,11 @@ export default function DocsLayout({ children, currentPage, lang = 'en' }) {
   return (
     <div className="h-screen flex flex-col overflow-hidden min-w-0">
       {/* Top Bar - sticky within the layout */}
-      <DocsTopbar 
-        onMenuClick={() => setMobileOpen(true)} 
+      <DocsTopbar
+        onMenuClick={() => setMobileOpen(true)}
         onTOCClick={() => setMobileTOCOpen(true)}
-        lang={lang} 
-        className="shrink-0" 
+        lang={lang}
+        className="shrink-0"
       />
 
       <div className="flex flex-1 overflow-hidden min-w-0">
@@ -30,24 +30,29 @@ export default function DocsLayout({ children, currentPage, lang = 'en' }) {
         </aside>
 
         {/* Mobile Drawer */}
-        <DocsMobileDrawer 
-          open={mobileOpen} 
+        <DocsMobileDrawer
+          open={mobileOpen}
           onClose={() => setMobileOpen(false)}
           currentPage={currentPage}
           lang={lang}
         />
 
         {/* Mobile TOC Drawer */}
-        <DocsMobileTOC 
-          open={mobileTOCOpen} 
+        <DocsMobileTOC
+          open={mobileTOCOpen}
           onClose={() => setMobileTOCOpen(false)}
+          lang={lang}
         />
 
         {/* Main Content - scrollable */}
-        <main ref={mainContentRef} className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden">
+        <main
+          ref={mainContentRef}
+          className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden"
+        >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-20 sm:pt-10 pb-12">
             <DocsBreadcrumbs currentPage={currentPage} lang={lang} />
-            <article className="max-w-none text-stone-700 
+            <article
+              className="max-w-none text-stone-700 
               text-base leading-relaxed
               [&_h2]:font-serif [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-stone-800 [&_h2]:mt-10 [&_h2]:mb-4
               [&_h3]:font-serif [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-stone-800 [&_h3]:mt-8 [&_h3]:mb-3
@@ -66,7 +71,8 @@ export default function DocsLayout({ children, currentPage, lang = 'en' }) {
               [&_blockquote]:border-l-4 [&_blockquote]:border-stone-300 [&_blockquote]:italic [&_blockquote]:pl-4 [&_blockquote]:my-4
               [&_hr]:border-0 [&_hr]:border-t [&_hr]:border-stone-300 [&_hr]:my-8
               [&_img]:rounded-lg [&_img]:my-4
-              [&_h2:first-child]:mt-0 [&_h3:first-child]:mt-0">
+              [&_h2:first-child]:mt-0 [&_h3:first-child]:mt-0"
+            >
               {children}
             </article>
           </div>
@@ -75,7 +81,7 @@ export default function DocsLayout({ children, currentPage, lang = 'en' }) {
         {/* Right Sidebar - sticky within the layout */}
         <aside className="hidden lg:block w-56 xl:w-64 border-l border-stone-200 bg-white shrink-0 overflow-y-auto min-w-0">
           <div className="px-4 py-4">
-            <DocsTableOfContents />
+            <DocsTableOfContents lang={lang} />
           </div>
         </aside>
       </div>
