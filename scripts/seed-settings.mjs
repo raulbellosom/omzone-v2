@@ -10,8 +10,10 @@
 import { Client, Databases } from "node-appwrite";
 
 const client = new Client()
-  .setEndpoint("https://aprod.racoondevs.com/v1")
-  .setProject("omzone-dev")
+  .setEndpoint(
+    process.env.APPWRITE_ENDPOINT || "https://aprod.racoondevs.com/v1",
+  )
+  .setProject(process.env.APPWRITE_PROJECT_ID || "omzone-dev")
   .setKey(process.env.APPWRITE_API_KEY);
 
 const db = new Databases(client);

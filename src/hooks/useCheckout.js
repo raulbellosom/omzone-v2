@@ -336,7 +336,7 @@ export function useCheckout() {
     return base + addonsSum;
   }, [selectedTier, quantity, selectedAddons]);
 
-  const currency = selectedTier?.currency || "MXN";
+  const currency = selectedTier?.currency || pricingTiers[0]?.currency || "MXN";
 
   const toggleAddon = useCallback(
     (addonId) => {
