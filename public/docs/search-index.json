@@ -1893,8 +1893,8 @@
       "complementos seleccionados"
     ],
     "content": {
-      "en": "Addons Addons are optional extras that customers can add to their experience booking. Examples include airport transfers, meal packages, equipment rentals, accommodation upgrades, and spa services. Addon Structure There are two concepts: 1. Addon (standalone) - The addon definition with name, description, type, and base pricing 2. Addon Assignment - The link between an addon and a specific experience, with optional overrides Creating an Addon Navigate to Catalog - Addons - New addon Identity Section | Field | Type | Required | Description | |-------|------|----------|-------------| | name | string | Yes | Addon name (e.g., \"Airport Transfer\") | | nameEs | string | No | Spanish name | | slug | string | Yes | URL-friendly identifier (auto-generated, can be edited) | | description | text | No | English description of the addon | | descriptionEs | text | No | Spanish description | Type and Price Section | Field | Type | Required | Description | |-------|------|----------|-------------| | addonType | enum | Yes | service, transport, food, accommodation, equipment, other | | priceType | enum | Yes | fixed, per-person, per-day, per-unit, quote | | basePrice | double | Yes | Base price value | | currency | string | Yes | Three-letter currency code | Addon Types: | Type | Use Case | |------|----------| | service | Spa treatment, massage, private session | | transport | Airport pickup, shuttle service | | food | Meal package, catering, welcome dinner | | accommodation | Room upgrade, lodging extension | | equipment | Yoga mat rental, props, gear | | other | Anything not covered above | Price Types: | Type | Description | |------|-------------| | fixed | Single price regardless of context | | per-person | Per individual attendee | | per-day | Per day of the experience | | per-unit | Per unit/item | | quote | Custom quote required | Checkout Scope Note Catalog supports all addon priceType values listed above. Direct checkout and assisted sale currently support only: - fixed - per-person In this phase, direct/assisted checkout blocks: - per-day - per-unit - quote Use booking-request/quoted flows for scenarios that need unsupported direct-checkout types. Options Section | Field | Type | Required | Description | |-------|------|----------|-------------| | isStandalone | boolean | Yes | Can be sold independently (not linked to an experience) | | isPublic | boolean | Yes | Visible to customers on the public site | | followsMainDuration | boolean | No | Automatically extend if the main experience duration changes | | maxQuantity | integer | No | Maximum units per booking (leave empty for unlimited) | Status Section | Field | Type | Required | Description | |-------|------|----------|-------------| | status | enum | Yes | active, inactive | | sortOrder | integer | No | Display order in listings | Assigning Addons to Experiences Navigate to Catalog - Experiences - [Experience Name] - Addons - Assign addon Assignment Options | Field | Type | Description | |-------|------|-------------| | addonId | reference | The addon to assign | | editionId | reference | Optional - link to specific edition | | isRequired | boolean | Automatically included (customer cannot opt out) | | isDefault | boolean | Pre-selected during checkout | | overridePrice | double | Optional - different price than base price | | sortOrder | integer | Display order in the addon list | Assignment Behavior | Required | Default | Behavior | |----------|---------|----------| | No | No | Optional addon, customer chooses | | Yes | No | Required addon, included automatically, cannot remove | | No | Yes | Pre-selected but customer can deselect | | Yes | Yes | Required AND pre-selected | Standalone vs Experience-Linked Addons Standalone addons (isStandalone: true): - Can be purchased separately via direct link or search - Useful for add-ons customers might want without booking an experience first - Example: \"Equipment Rental\" that any visitor can add Experience-linked addons (isStandalone: false): - Only available when booking a specific experience - Appear during the checkout flow for that experience - Example: \"Sunset Dinner\" only available when booking \"Retreat Week\" Common Mistakes Creating addons without checking the experience sale mode. Addons are attached to experiences. Ensure the experience exists and has the correct sale mode before assigning addons. Setting isRequired without understanding the impact. Required addons are automatically included and the customer cannot remove them. Use this for mandatory fees like environmental fees or insurance. Forgetting to set isPublic. If isPublic is false, the addon will not appear in customer-facing interfaces even if assigned to an experience. Not setting an override price when needed. If an experience needs a different price than the base addon price, use overridePrice on the assignment. Otherwise, the base price applies. Addon Workflow in Checkout When a customer books an experience with assigned addons: 1. Customer selects pricing tier 2. If slot is required, customer selects slot 3. Addon selection appears (optional addons shown) 4. Required addons are automatically included 5. Default addons are pre-selected but can be removed 6. Customer can add optional addons 7. Total is calculated including all selected addons Related Pages - Experiences - The parent entity for addon assignments - Assisted Sale - Addons in the manual sale workflow - Reservation Playbooks - Real checkout and assisted-sale addon examples - Experiences - Core offerings that addons attach to",
-      "es": "Complementos Los complementos son extras opcionales que los clientes pueden agregar a su reserva de experiencia. Ejemplos incluyen traslados al aeropuerto, paquetes de comidas, alquiler de equipos, mejoras de alojamiento y servicios de spa. Estructura de los Complementos Hay dos conceptos: 1. Complemento (independiente) - La definición del complemento con nombre, descripción, tipo y precio base 2. Asignación de Complemento - El vínculo entre un complemento y una experiencia específica, con anulaciones opcionales Crear un Complemento Navega a Catálogo - Complementos - Nuevo complemento Sección de Identidad | Campo | Tipo | Requerido | Descripción | |-------|------|-----------|-------------| | name | string | Sí | Nombre del complemento (ej., \"Traslado al Aeropuerto\") | | nameEs | string | No | Nombre en español | | slug | string | Sí | Identificador amigable para URL (auto-generado, editable) | | description | text | No | Descripción en inglés del complemento | | descriptionEs | text | No | Descripción en español | Sección de Tipo y Precio | Campo | Tipo | Requerido | Descripción | |-------|------|-----------|-------------| | addonType | enum | Sí | service, transport, food, accommodation, equipment, other | | priceType | enum | Sí | fixed, per-person, per-day, per-unit, quote | | basePrice | double | Sí | Valor del precio base | | currency | string | Sí | Código de moneda de tres letras | Tipos de Complemento: | Tipo | Caso de Uso | |------|-------------| | service | Tratamiento de spa, masaje, sesión privada | | transport | Recogida en aeropuerto, servicio de shuttle | | food | Paquete de comidas, catering, cena de bienvenida | | accommodation | Mejora de habitación, extensión de alojamiento | | equipment | Alquiler de colchoneta de yoga, props, equipo | | other | Cualquier cosa no cubierta arriba | Tipos de Precio: | Tipo | Descripción | |------|-------------| | fixed | Precio único sin importar el contexto | | per-person | Por asistente individual | | per-day | Por día de la experiencia | | per-unit | Por unidad/artículo | | quote | Requiere cotización personalizada | Nota de Alcance en Checkout El catálogo permite todos los priceType listados arriba. En checkout directo y venta asistida, en esta fase solo se soporta: - fixed - per-person En esta fase, checkout directo/asistido bloquea: - per-day - per-unit - quote Para esos casos usa flujos de solicitud/cotización. Sección de Opciones | Campo | Tipo | Requerido | Descripción | |-------|------|-----------|-------------| | isStandalone | boolean | Sí | Puede venderse de forma independiente (no vinculado a una experiencia) | | isPublic | boolean | Sí | Visible para los clientes en el sitio público | | followsMainDuration | boolean | No | Extender automáticamente si cambia la duración de la experiencia principal | | maxQuantity | integer | No | Cantidad máxima por reserva (dejar vacío para ilimitado) | Sección de Estado | Campo | Tipo | Requerido | Descripción | |-------|------|-----------|-------------| | status | enum | Sí | active, inactive | | sortOrder | integer | No | Orden de visualización en los listados | Asignar Complementos a Experiencias Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Complementos - Asignar complemento Opciones de Asignación | Campo | Tipo | Descripción | |-------|------|-------------| | addonId | reference | El complemento a asignar | | editionId | reference | Opcional - vincular a una edición específica | | isRequired | boolean | Incluido automáticamente (el cliente no puede optar por no incluirlo) | | isDefault | boolean | Pre-seleccionado durante el checkout | | overridePrice | double | Opcional - precio diferente al precio base | | sortOrder | integer | Orden de visualización en la lista de complementos | Comportamiento de la Asignación | Requerido | Por Defecto | Comportamiento | |-----------|-------------|----------------| | No | No | Complemento opcional, el cliente elige | | Sí | No | Complemento requerido, incluido automáticamente, no puede removerse | | No | Sí | Pre-seleccionado pero el cliente puede deseleccionarlo | | Sí | Sí | Requerido Y pre-seleccionado | Complementos Independientes vs Vinculados a Experiencia Complementos independientes (isStandalone: true): - Pueden comprarse separadamente mediante enlace directo o búsqueda - Útiles para complementos que los clientes podrían querer sin reservar una experiencia primero - Ejemplo: \"Alquiler de Equipo\" que cualquier visitante puede agregar Complementos vinculados a experiencia (isStandalone: false): - Solo disponibles al reservar una experiencia específica - Aparecen durante el flujo de checkout de esa experiencia - Ejemplo: \"Cena al Atardecer\" solo disponible al reservar \"Semana de Retiro\" Errores Comunes Crear complementos sin verificar el modo de venta de la experiencia. Los complementos se adjuntan a experiencias. Asegúrate de que la experiencia exista y tenga el modo de venta correcto antes de asignar complementos. Establecer isRequired sin entender el impacto. Los complementos requeridos se incluyen automáticamente y el cliente no puede removerlos. Usa esto para tarifas obligatorias como cuotas ambientales o seguros. Olvidar establecer isPublic. Si isPublic es false, el complemento no aparecerá en las interfaces para clientes incluso si está asignado a una experiencia. No establecer un precio de anulación cuando es necesario. Si una experiencia necesita un precio diferente al precio base del complemento, usa overridePrice en la asignación. De lo contrario, se aplica el precio base. Flujo de Complementos en el Checkout Cuando un cliente reserva una experiencia con complementos asignados: 1. El cliente selecciona el nivel de precio 2. Si se requiere ranura, el cliente selecciona la ranura 3. Aparece la selección de complementos (complementos opcionales mostrados) 4. Los complementos requeridos se incluyen automáticamente 5. Los complementos por defecto están pre-seleccionados pero pueden removerse 6. El cliente puede agregar complementos opcionales 7. El total se calcula incluyendo todos los complementos seleccionados Páginas Relacionadas - Experiencias - La entidad padre para las asignaciones de complementos - Venta Asistida - Complementos en el flujo de venta manual - Playbooks de Reservas - Casos reales de addons en checkout y venta asistida - Experiencias - Ofertas principales a las que se adjuntan los addons"
+      "en": "Addons Addons are optional extras that customers can add to their experience booking. Examples include airport transfers, meal packages, equipment rentals, accommodation upgrades, and spa services. Addon Structure There are two concepts: 1. Addon (standalone) - The addon definition with name, description, type, and base pricing 2. Addon Assignment - The link between an addon and a specific experience, with optional overrides Creating an Addon Navigate to Catalog - Addons - New addon Identity Section | Field           | Type   | Required | Description                                             | | --------------- | ------ | -------- | ------------------------------------------------------- | | name          | string | Yes      | Addon name (e.g., \"Airport Transfer\")                   | | nameEs        | string | No       | Spanish name                                            | | slug          | string | Yes      | URL-friendly identifier (auto-generated, can be edited) | | description   | text   | No       | English description of the addon                        | | descriptionEs | text   | No       | Spanish description                                     | Type and Price Section | Field       | Type   | Required | Description                                                           | | ----------- | ------ | -------- | --------------------------------------------------------------------- | | addonType | enum   | Yes      | service, transport, food, accommodation, equipment, other | | priceType | enum   | Yes      | fixed, per-person, per-day, per-unit, quote                 | | basePrice | double | Yes      | Base price value                                                      | | currency  | string | Yes      | Three-letter currency code                                            | Addon Types: | Type            | Use Case                                | | --------------- | --------------------------------------- | | service       | Spa treatment, massage, private session | | transport     | Airport pickup, shuttle service         | | food          | Meal package, catering, welcome dinner  | | accommodation | Room upgrade, lodging extension         | | equipment     | Yoga mat rental, props, gear            | | other         | Anything not covered above              | Price Types: | Type         | Description                        | | ------------ | ---------------------------------- | | fixed      | Single price regardless of context | | per-person | Per individual attendee            | | per-day    | Per day of the experience          | | per-unit   | Per unit/item                      | | quote      | Custom quote required              | Checkout Scope Note Catalog supports all addon priceType values listed above. Direct checkout and assisted sale currently support only: - fixed - per-person In this phase, direct/assisted checkout blocks: - per-day - per-unit - quote Use booking-request/quoted flows for scenarios that need unsupported direct-checkout types. Options Section | Field                 | Type    | Required | Description                                                  | | --------------------- | ------- | -------- | ------------------------------------------------------------ | | isStandalone        | boolean | Yes      | Can be sold independently (not linked to an experience)      | | isPublic            | boolean | Yes      | Visible to customers on the public site                      | | followsMainDuration | boolean | No       | Automatically extend if the main experience duration changes | | maxQuantity         | integer | No       | Maximum units per booking (leave empty for unlimited)        | Status Section | Field       | Type    | Required | Description               | | ----------- | ------- | -------- | ------------------------- | | status    | enum    | Yes      | active, inactive      | | sortOrder | integer | No       | Display order in listings | Assigning Addons to Experiences Navigate to Catalog - Experiences - [Experience Name] - Addons - Assign addon Assignment Options | Field           | Type      | Description                                      | | --------------- | --------- | ------------------------------------------------ | | addonId       | reference | The addon to assign                              | | editionId     | reference | Optional - link to specific edition              | | isRequired    | boolean   | Automatically included (customer cannot opt out) | | isDefault     | boolean   | Pre-selected during checkout                     | | overridePrice | double    | Optional - different price than base price       | | sortOrder     | integer   | Display order in the addon list                  | Assignment Behavior | Required | Default | Behavior                                              | | -------- | ------- | ----------------------------------------------------- | | No       | No      | Optional addon, customer chooses                      | | Yes      | No      | Required addon, included automatically, cannot remove | | No       | Yes     | Pre-selected but customer can deselect                | | Yes      | Yes     | Required AND pre-selected                             | Standalone vs Experience-Linked Addons Standalone addons (isStandalone: true): - Can be purchased separately via direct link or search - Useful for add-ons customers might want without booking an experience first - Example: \"Equipment Rental\" that any visitor can add Experience-linked addons (isStandalone: false): - Only available when booking a specific experience - Appear during the checkout flow for that experience - Example: \"Sunset Dinner\" only available when booking \"Retreat Week\" Common Mistakes Creating addons without checking the experience sale mode. Addons are attached to experiences. Ensure the experience exists and has the correct sale mode before assigning addons. Setting isRequired without understanding the impact. Required addons are automatically included and the customer cannot remove them. Use this for mandatory fees like environmental fees or insurance. Forgetting to set isPublic. If isPublic is false, the addon will not appear in customer-facing interfaces even if assigned to an experience. Not setting an override price when needed. If an experience needs a different price than the base addon price, use overridePrice on the assignment. Otherwise, the base price applies. Addon Workflow in Checkout When a customer books an experience with assigned addons: 1. Customer selects pricing tier 2. If slot is required, customer selects slot 3. Addon selection appears (optional addons shown) 4. Required addons are automatically included 5. Default addons are pre-selected but can be removed 6. Customer can add optional addons 7. Total is calculated including all selected addons Related Pages - Experiences - The parent entity for addon assignments - Assisted Sale - Addons in the manual sale workflow - Reservation Playbooks - Real checkout and assisted-sale addon examples - Experiences - Core offerings that addons attach to",
+      "es": "Complementos Los complementos son extras opcionales que los clientes pueden agregar a su reserva de experiencia. Ejemplos incluyen traslados al aeropuerto, paquetes de comidas, alquiler de equipos, mejoras de alojamiento y servicios de spa. Estructura de los Complementos Hay dos conceptos: 1. Complemento (independiente) - La definición del complemento con nombre, descripción, tipo y precio base 2. Asignación de Complemento - El vínculo entre un complemento y una experiencia específica, con anulaciones opcionales Crear un Complemento Navega a Catálogo - Complementos - Nuevo complemento Sección de Identidad | Campo           | Tipo   | Requerido | Descripción                                               | | --------------- | ------ | --------- | --------------------------------------------------------- | | name          | string | Sí        | Nombre del complemento (ej., \"Traslado al Aeropuerto\")    | | nameEs        | string | No        | Nombre en español                                         | | slug          | string | Sí        | Identificador amigable para URL (auto-generado, editable) | | description   | text   | No        | Descripción en inglés del complemento                     | | descriptionEs | text   | No        | Descripción en español                                    | Sección de Tipo y Precio | Campo       | Tipo   | Requerido | Descripción                                                           | | ----------- | ------ | --------- | --------------------------------------------------------------------- | | addonType | enum   | Sí        | service, transport, food, accommodation, equipment, other | | priceType | enum   | Sí        | fixed, per-person, per-day, per-unit, quote                 | | basePrice | double | Sí        | Valor del precio base                                                 | | currency  | string | Sí        | Código de moneda de tres letras                                       | Tipos de Complemento: | Tipo            | Caso de Uso                                      | | --------------- | ------------------------------------------------ | | service       | Tratamiento de spa, masaje, sesión privada       | | transport     | Recogida en aeropuerto, servicio de shuttle      | | food          | Paquete de comidas, catering, cena de bienvenida | | accommodation | Mejora de habitación, extensión de alojamiento   | | equipment     | Alquiler de colchoneta de yoga, props, equipo    | | other         | Cualquier cosa no cubierta arriba                | Tipos de Precio: | Tipo         | Descripción                           | | ------------ | ------------------------------------- | | fixed      | Precio único sin importar el contexto | | per-person | Por asistente individual              | | per-day    | Por día de la experiencia             | | per-unit   | Por unidad/artículo                   | | quote      | Requiere cotización personalizada     | Nota de Alcance en Checkout El catálogo permite todos los priceType listados arriba. En checkout directo y venta asistida, en esta fase solo se soporta: - fixed - per-person En esta fase, checkout directo/asistido bloquea: - per-day - per-unit - quote Para esos casos usa flujos de solicitud/cotización. Sección de Opciones | Campo                 | Tipo    | Requerido | Descripción                                                                | | --------------------- | ------- | --------- | -------------------------------------------------------------------------- | | isStandalone        | boolean | Sí        | Puede venderse de forma independiente (no vinculado a una experiencia)     | | isPublic            | boolean | Sí        | Visible para los clientes en el sitio público                              | | followsMainDuration | boolean | No        | Extender automáticamente si cambia la duración de la experiencia principal | | maxQuantity         | integer | No        | Cantidad máxima por reserva (dejar vacío para ilimitado)                   | Sección de Estado | Campo       | Tipo    | Requerido | Descripción                            | | ----------- | ------- | --------- | -------------------------------------- | | status    | enum    | Sí        | active, inactive                   | | sortOrder | integer | No        | Orden de visualización en los listados | Asignar Complementos a Experiencias Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Complementos - Asignar complemento Opciones de Asignación | Campo           | Tipo      | Descripción                                                           | | --------------- | --------- | --------------------------------------------------------------------- | | addonId       | reference | El complemento a asignar                                              | | editionId     | reference | Opcional - vincular a una edición específica                          | | isRequired    | boolean   | Incluido automáticamente (el cliente no puede optar por no incluirlo) | | isDefault     | boolean   | Pre-seleccionado durante el checkout                                  | | overridePrice | double    | Opcional - precio diferente al precio base                            | | sortOrder     | integer   | Orden de visualización en la lista de complementos                    | Comportamiento de la Asignación | Requerido | Por Defecto | Comportamiento                                                      | | --------- | ----------- | ------------------------------------------------------------------- | | No        | No          | Complemento opcional, el cliente elige                              | | Sí        | No          | Complemento requerido, incluido automáticamente, no puede removerse | | No        | Sí          | Pre-seleccionado pero el cliente puede deseleccionarlo              | | Sí        | Sí          | Requerido Y pre-seleccionado                                        | Complementos Independientes vs Vinculados a Experiencia Complementos independientes (isStandalone: true): - Pueden comprarse separadamente mediante enlace directo o búsqueda - Útiles para complementos que los clientes podrían querer sin reservar una experiencia primero - Ejemplo: \"Alquiler de Equipo\" que cualquier visitante puede agregar Complementos vinculados a experiencia (isStandalone: false): - Solo disponibles al reservar una experiencia específica - Aparecen durante el flujo de checkout de esa experiencia - Ejemplo: \"Cena al Atardecer\" solo disponible al reservar \"Semana de Retiro\" Errores Comunes Crear complementos sin verificar el modo de venta de la experiencia. Los complementos se adjuntan a experiencias. Asegúrate de que la experiencia exista y tenga el modo de venta correcto antes de asignar complementos. Establecer isRequired sin entender el impacto. Los complementos requeridos se incluyen automáticamente y el cliente no puede removerlos. Usa esto para tarifas obligatorias como cuotas ambientales o seguros. Olvidar establecer isPublic. Si isPublic es false, el complemento no aparecerá en las interfaces para clientes incluso si está asignado a una experiencia. No establecer un precio de anulación cuando es necesario. Si una experiencia necesita un precio diferente al precio base del complemento, usa overridePrice en la asignación. De lo contrario, se aplica el precio base. Flujo de Complementos en el Checkout Cuando un cliente reserva una experiencia con complementos asignados: 1. El cliente selecciona el nivel de precio 2. Si se requiere ranura, el cliente selecciona la ranura 3. Aparece la selección de complementos (complementos opcionales mostrados) 4. Los complementos requeridos se incluyen automáticamente 5. Los complementos por defecto están pre-seleccionados pero pueden removerse 6. El cliente puede agregar complementos opcionales 7. El total se calcula incluyendo todos los complementos seleccionados Páginas Relacionadas - Experiencias - La entidad padre para las asignaciones de complementos - Venta Asistida - Complementos en el flujo de venta manual - Playbooks de Reservas - Casos reales de addons en checkout y venta asistida - Experiencias - Ofertas principales a las que se adjuntan los addons"
     },
     "headings": {
       "en": [
@@ -1916,92 +1916,92 @@
           "level": 2,
           "text": "Creating an Addon",
           "id": "creating-an-addon",
-          "line": 12,
-          "position": 447
+          "line": 13,
+          "position": 448
         },
         {
           "level": 3,
           "text": "Identity Section",
           "id": "identity-section",
-          "line": 16,
-          "position": 517
+          "line": 17,
+          "position": 518
         },
         {
           "level": 3,
           "text": "Type and Price Section",
           "id": "type-and-price-section",
-          "line": 26,
-          "position": 935
+          "line": 27,
+          "position": 1227
         },
         {
           "level": 3,
           "text": "Checkout Scope Note",
           "id": "checkout-scope-note",
-          "line": 56,
-          "position": 1968
+          "line": 57,
+          "position": 2816
         },
         {
           "level": 3,
           "text": "Options Section",
           "id": "options-section",
-          "line": 71,
-          "position": 2315
+          "line": 74,
+          "position": 3165
         },
         {
           "level": 3,
           "text": "Status Section",
           "id": "status-section",
-          "line": 80,
-          "position": 2780
+          "line": 83,
+          "position": 3847
         },
         {
           "level": 2,
           "text": "Assigning Addons to Experiences",
           "id": "assigning-addons-to-experiences",
-          "line": 87,
-          "position": 2993
+          "line": 90,
+          "position": 4128
         },
         {
           "level": 3,
           "text": "Assignment Options",
           "id": "assignment-options",
-          "line": 91,
-          "position": 3116
+          "line": 94,
+          "position": 4251
         },
         {
           "level": 3,
           "text": "Assignment Behavior",
           "id": "assignment-behavior",
-          "line": 102,
-          "position": 3586
+          "line": 105,
+          "position": 4940
         },
         {
           "level": 2,
           "text": "Standalone vs Experience-Linked Addons",
           "id": "standalone-vs-experience-linked-addons",
-          "line": 111,
-          "position": 3892
+          "line": 114,
+          "position": 5440
         },
         {
           "level": 2,
           "text": "Common Mistakes",
           "id": "common-mistakes",
-          "line": 123,
-          "position": 4402
+          "line": 128,
+          "position": 5952
         },
         {
           "level": 2,
           "text": "Addon Workflow in Checkout",
           "id": "addon-workflow-in-checkout",
-          "line": 137,
-          "position": 5152
+          "line": 142,
+          "position": 6702
         },
         {
           "level": 2,
           "text": "Related Pages",
           "id": "related-pages",
-          "line": 149,
-          "position": 5562
+          "line": 154,
+          "position": 7112
         }
       ],
       "es": [
@@ -2023,92 +2023,92 @@
           "level": 2,
           "text": "Crear un Complemento",
           "id": "crear-un-complemento",
-          "line": 12,
-          "position": 536
+          "line": 13,
+          "position": 537
         },
         {
           "level": 3,
           "text": "Sección de Identidad",
           "id": "secci-n-de-identidad",
-          "line": 16,
-          "position": 621
+          "line": 17,
+          "position": 622
         },
         {
           "level": 3,
           "text": "Sección de Tipo y Precio",
           "id": "secci-n-de-tipo-y-precio",
-          "line": 26,
-          "position": 1075
+          "line": 27,
+          "position": 1356
         },
         {
           "level": 3,
           "text": "Nota de Alcance en Checkout",
           "id": "nota-de-alcance-en-checkout",
-          "line": 56,
-          "position": 2223
+          "line": 57,
+          "position": 3059
         },
         {
           "level": 3,
           "text": "Sección de Opciones",
           "id": "secci-n-de-opciones",
-          "line": 71,
-          "position": 2548
+          "line": 74,
+          "position": 3386
         },
         {
           "level": 3,
           "text": "Sección de Estado",
           "id": "secci-n-de-estado",
-          "line": 80,
-          "position": 3055
+          "line": 83,
+          "position": 4162
         },
         {
           "level": 2,
           "text": "Asignar Complementos a Experiencias",
           "id": "asignar-complementos-a-experiencias",
-          "line": 87,
-          "position": 3285
+          "line": 90,
+          "position": 4502
         },
         {
           "level": 3,
           "text": "Opciones de Asignación",
           "id": "opciones-de-asignaci-n",
-          "line": 91,
-          "position": 3430
+          "line": 94,
+          "position": 4647
         },
         {
           "level": 3,
           "text": "Comportamiento de la Asignación",
           "id": "comportamiento-de-la-asignaci-n",
-          "line": 102,
-          "position": 3966
+          "line": 105,
+          "position": 5508
         },
         {
           "level": 2,
           "text": "Complementos Independientes vs Vinculados a Experiencia",
           "id": "complementos-independientes-vs-vinculados-a-experiencia",
-          "line": 111,
-          "position": 4341
+          "line": 114,
+          "position": 6134
         },
         {
           "level": 2,
           "text": "Errores Comunes",
           "id": "errores-comunes",
-          "line": 123,
-          "position": 4955
+          "line": 128,
+          "position": 6750
         },
         {
           "level": 2,
           "text": "Flujo de Complementos en el Checkout",
           "id": "flujo-de-complementos-en-el-checkout",
-          "line": 137,
-          "position": 5800
+          "line": 142,
+          "position": 7595
         },
         {
           "level": 2,
           "text": "Páginas Relacionadas",
           "id": "p-ginas-relacionadas",
-          "line": 149,
-          "position": 6351
+          "line": 154,
+          "position": 8146
         }
       ]
     },
@@ -17985,9 +17985,7 @@
         "cta",
         "video",
         "draft -> published -> archived",
-        "| admin only | not available |\n|",
-        "| public catalog | available for booking |\n|",
-        "| yes - qr code | full check-in workflow |\n|",
+        "| yes - qr code    | full check-in workflow   |\n|",
         "important:",
         "dashboard",
         "my account",
@@ -18927,9 +18925,7 @@
       "cta",
       "video",
       "draft -> published -> archived",
-      "| admin only | not available |\n|",
-      "| public catalog | available for booking |\n|",
-      "| yes - qr code | full check-in workflow |\n|",
+      "| yes - qr code    | full check-in workflow   |\n|",
       "important:",
       "dashboard",
       "my account",
@@ -19800,7 +19796,7 @@
       "necesitas asistencia:"
     ],
     "content": {
-      "en": "Introduction to OMZONE Admin The OMZONE Admin panel is your control center for managing the entire wellness platform. From here you control catalog offerings, scheduling, sales, editorial content, and system configuration. Accessing the Admin Panel Access the admin panel by navigating to /admin after logging in. You must have one of the following labels assigned to your account: | Label | Display Name | Access Level | |-------|--------------|--------------| | root | Admin | Full system access, invisible in listings | | admin | Admin | Full access to all admin features | | operator | Operator | Scheduled access to operations and sales | | client | Client | Portal access only, no admin |  Important: The root label is invisible across the platform. Root users never appear in client or order listings, and root is never displayed as a role name. When displaying roles, always use \"Admin\" for both root and admin labels. Admin Navigation Structure The sidebar contains seven main sections: General - Dashboard (/admin/dashboard) - Overview of orders, revenue, upcoming slots, and pending requests - My Account (/admin/account) - Profile and security settings Catalog - Experiences (/admin/experiences) - Core wellness offerings (sessions, immersions, retreats, stays) - Addons (/admin/addons) - Optional extras that can be attached to experiences Operations - Agenda (/admin/agenda) - Global view of all scheduled slots across experiences - Resources (/admin/resources) - Instructors, facilitators, therapists, equipment, locations, and rooms Sales - Requests (/admin/booking-requests) - Incoming booking inquiries for experiences with saleMode: request - Orders (/admin/orders) - All customer purchases across all channels - Tickets (/admin/tickets) - Validatable tickets with QR codes for check-in - Clients (/admin/clients) - Registered customer accounts Content - Publications (/admin/publications) - Editorial and landing page content - Media (/admin/media) - File manager for all buckets System - Settings (/admin/settings) - Notification templates and system configuration Core Concept: Publications vs Experiences A fundamental distinction in OMZONE: | Aspect | Experience | Publication | |--------|------------|-------------| | Purpose | Operational, commercial | Editorial, SEO, narrative | | Contains | Pricing tiers, editions, slots | Sections with content blocks | | Visibility | Availability and booking | Landing pages and blog | | Links to | Addons, slots, resources | Experience via experienceId |  Key Rule: Pricing tiers belong to Experiences, not Publications. Do not add pricing to a Publication. A Publication can link to an Experience, but they are separate entities. When to Create Each Create an Experience when: - You want to sell a wellness offering - You need pricing and availability management - You want customers to book or request booking Create a Publication when: - You need a landing page for SEO - You want editorial narrative content - You need blog posts, institutional pages, or FAQs Standard Workflow: Adding a New Experience Follow this sequence when setting up a new experience: Step 1: Create the Experience Navigate to Catalog - Experiences - New experience Fill in the core fields: - Name - Internal identifier (not visible to customers) - Public name (EN/ES) - Customer-facing name in both languages - Slug - URL-friendly identifier (auto-generated from public name) - Type - session, immersion, retreat, stay, or private - Sale mode - direct (book now), request (inquiry required), assisted (admin creates order), pass (credit-based) - Fulfillment - ticket (generates QR), booking (no ticket) Configure behavior toggles: - Requires slot - Enable if specific date/time selection is needed - Generates tickets - Enable to create QR-coded tickets on purchase - Allows multiple attendees - Enable for group bookings with min/max quantity Step 2: Add Editions (Optional) For experiences with multiple date ranges or versions: Navigate to Catalog - Experiences - [Experience Name] - Editions - New edition Editions allow: - Different date ranges with startDate and endDate - Registration windows with registrationOpens and registrationCloses - Edition-specific capacity limits - Edition-specific cover images Step 3: Add Pricing Tiers Navigate to Catalog - Experiences - [Experience Name] - Pricing - New tier Pricing tier fields: - Name (EN/ES) - Tier label (e.g., \"Early Bird\", \"General Admission\") - Price type - fixed, per-person, per-group, from, quote - Base price - Numeric price value - Currency - Three-letter code (e.g., MXN, USD) - Badge - Optional label like \"Popular\" or \"Bestseller\" - Highlighted - Show as featured tier - Edition - Optional link to a specific edition Step 4: Add Slots (If Required) Navigate to Catalog - Experiences - [Experience Name] - Slots - New slot Slot fields: - Slot type - single_session, multi_day, retreat_day, private - Start/End datetime - Date and time with timezone - Capacity - Maximum participants - Location - Physical location (from predefined locations) - Room - Specific room within the location - Status - draft, published, full, cancelled For recurring slots, use Quick Create to generate multiple slots based on a pattern. Step 5: Assign Resources (Optional) Navigate to Catalog - Experiences - [Experience Name] - Slots - [Slot Name] - Resources Resources can be assigned to slots with roles: - Lead - Primary instructor or facilitator - Assistant - Supporting teacher or helper - Support - Technical or logistical support - Equipment - Equipment being used Step 6: Assign Addons (Optional) Navigate to Catalog - Experiences - [Experience Name] - Addons - Assign addon Addons can be: - Required - Automatically included with the experience - Default - Pre-selected during checkout - Optional - Available but not pre-selected Step 7: Create Publication (Optional) Only create a Publication if you need editorial content visible to the public: Navigate to Content - Publications - New publication Publication fields: - Title (EN/ES) - Public-facing title - Slug - URL identifier - Category - landing, blog, highlight, institutional, faq - Experience - Optional link to an Experience (does not transfer pricing or slots) Publication sections are built using modular content blocks: - hero, text, gallery, highlights, faq, itinerary, testimonials, inclusions, restrictions, cta, video Experience Status Lifecycle | Status | Visibility | Booking | |--------|------------|---------| | draft | Admin only | Not available | | published | Public catalog | Available for booking | | archived | Admin only | Not available, can be reactivated | Sale Mode Behaviors | Sale Mode | Customer Action | Admin Action | |-----------|-----------------|--------------| | direct | Book and pay immediately | Review completed orders | | request | Submit inquiry with details | Review request, quote price, convert to order | | assisted | Contact admin directly | Use Assisted Sale wizard to create order | | pass | Use existing pass credits | Monitor pass consumption | Fulfillment Types | Fulfillment | Generates Ticket | Notes | |-------------|-------------------|-------| | ticket | Yes - QR code | Full check-in workflow | | booking | No | Simple confirmation only | Roles and Permissions Summary | Action | Root | Admin | Operator | Client | |--------|------|-------|----------|--------| | Create Experiences | Yes | Yes | No | No | | Edit Experiences | Yes | Yes | No | No | | Create Slots | Yes | Yes | Yes | No | | View Orders | Yes | Yes | Yes | Own only | | Create Assisted Sales | Yes | Yes | No | No | | Manage Resources | Yes | Yes | No | No | | View Tickets | Yes | Yes | Yes | Own only | | Check-in Tickets | Yes | Yes | Yes | No | | Edit Publications | Yes | Yes | No | No | | Access Settings | Yes | Yes | No | No | Getting Help If you need assistance: - Use the sidebar navigation to browse documentation sections - Check the Reference - Glossary for terminology definitions - Review Reference - Troubleshooting for common error solutions",
+      "en": "Introduction to OMZONE Admin The OMZONE Admin panel is your control center for managing the entire wellness platform. From here you control catalog offerings, scheduling, sales, editorial content, and system configuration. Accessing the Admin Panel Access the admin panel by navigating to /admin after logging in. You must have one of the following labels assigned to your account: | Label      | Display Name | Access Level                              | | ---------- | ------------ | ----------------------------------------- | | root     | Admin        | Full system access, invisible in listings | | admin    | Admin        | Full access to all admin features         | | operator | Operator     | Scheduled access to operations and sales  | | client   | Client       | Portal access only, no admin              |  Important: The root label is invisible across the platform. Root users never appear in client or order listings, and root is never displayed as a role name. When displaying roles, always use \"Admin\" for both root and admin labels. Admin Navigation Structure The sidebar contains seven main sections: General - Dashboard (/admin/dashboard) - Overview of orders, revenue, upcoming slots, and pending requests - My Account (/admin/account) - Profile and security settings Catalog - Experiences (/admin/experiences) - Core wellness offerings (sessions, immersions, retreats, stays) - Addons (/admin/addons) - Optional extras that can be attached to experiences Operations - Agenda (/admin/agenda) - Global view of all scheduled slots across experiences - Resources (/admin/resources) - Instructors, facilitators, therapists, equipment, locations, and rooms Sales - Requests (/admin/booking-requests) - Incoming booking inquiries for experiences with saleMode: request - Orders (/admin/orders) - All customer purchases across all channels - Tickets (/admin/tickets) - Validatable tickets with QR codes for check-in - Clients (/admin/clients) - Registered customer accounts Content - Publications (/admin/publications) - Editorial and landing page content - Media (/admin/media) - File manager for all buckets System - Settings (/admin/settings) - Notification templates and system configuration Core Concept: Publications vs Experiences A fundamental distinction in OMZONE: | Aspect         | Experience                     | Publication                   | | -------------- | ------------------------------ | ----------------------------- | | Purpose    | Operational, commercial        | Editorial, SEO, narrative     | | Contains   | Pricing tiers, editions, slots | Sections with content blocks  | | Visibility | Availability and booking       | Landing pages and blog        | | Links to   | Addons, slots, resources       | Experience via experienceId |  Key Rule: Pricing tiers belong to Experiences, not Publications. Do not add pricing to a Publication. A Publication can link to an Experience, but they are separate entities. When to Create Each Create an Experience when: - You want to sell a wellness offering - You need pricing and availability management - You want customers to book or request booking Create a Publication when: - You need a landing page for SEO - You want editorial narrative content - You need blog posts, institutional pages, or FAQs Standard Workflow: Adding a New Experience Follow this sequence when setting up a new experience: Step 1: Create the Experience Navigate to Catalog - Experiences - New experience Fill in the core fields: - Name - Internal identifier (not visible to customers) - Public name (EN/ES) - Customer-facing name in both languages - Slug - URL-friendly identifier (auto-generated from public name) - Type - session, immersion, retreat, stay, or private - Sale mode - direct (book now), request (inquiry required), assisted (admin creates order), pass (credit-based) - Fulfillment - ticket (generates QR), booking (no ticket) Configure behavior toggles: - Requires slot - Enable if specific date/time selection is needed - Generates tickets - Enable to create QR-coded tickets on purchase - Allows multiple attendees - Enable for group bookings with min/max quantity Step 2: Add Editions (Optional) For experiences with multiple date ranges or versions: Navigate to Catalog - Experiences - [Experience Name] - Editions - New edition Editions allow: - Different date ranges with startDate and endDate - Registration windows with registrationOpens and registrationCloses - Edition-specific capacity limits - Edition-specific cover images Step 3: Add Pricing Tiers Navigate to Catalog - Experiences - [Experience Name] - Pricing - New tier Pricing tier fields: - Name (EN/ES) - Tier label (e.g., \"Early Bird\", \"General Admission\") - Price type - fixed, per-person, per-group, from, quote - Base price - Numeric price value - Currency - Three-letter code (e.g., MXN, USD) - Badge - Optional label like \"Popular\" or \"Bestseller\" - Highlighted - Show as featured tier - Edition - Optional link to a specific edition Step 4: Add Slots (If Required) Navigate to Catalog - Experiences - [Experience Name] - Slots - New slot Slot fields: - Slot type - single_session, multi_day, retreat_day, private - Start/End datetime - Date and time with timezone - Capacity - Maximum participants - Location - Physical location (from predefined locations) - Room - Specific room within the location - Status - draft, published, full, cancelled For recurring slots, use Quick Create to generate multiple slots based on a pattern. Step 5: Assign Resources (Optional) Navigate to Catalog - Experiences - [Experience Name] - Slots - [Slot Name] - Resources Resources can be assigned to slots with roles: - Lead - Primary instructor or facilitator - Assistant - Supporting teacher or helper - Support - Technical or logistical support - Equipment - Equipment being used Step 6: Assign Addons (Optional) Navigate to Catalog - Experiences - [Experience Name] - Addons - Assign addon Addons can be: - Required - Automatically included with the experience - Default - Pre-selected during checkout - Optional - Available but not pre-selected Step 7: Create Publication (Optional) Only create a Publication if you need editorial content visible to the public: Navigate to Content - Publications - New publication Publication fields: - Title (EN/ES) - Public-facing title - Slug - URL identifier - Category - landing, blog, highlight, institutional, faq - Experience - Optional link to an Experience (does not transfer pricing or slots) Publication sections are built using modular content blocks: - hero, text, gallery, highlights, faq, itinerary, testimonials, inclusions, restrictions, cta, video Experience Status Lifecycle | Status      | Visibility     | Booking                           | | ----------- | -------------- | --------------------------------- | | draft     | Admin only     | Not available                     | | published | Public catalog | Available for booking             | | archived  | Admin only     | Not available, can be reactivated | Sale Mode Behaviors | Sale Mode  | Customer Action             | Admin Action                                  | | ---------- | --------------------------- | --------------------------------------------- | | direct   | Book and pay immediately    | Review completed orders                       | | request  | Submit inquiry with details | Review request, quote price, convert to order | | assisted | Contact admin directly      | Use Assisted Sale wizard to create order      | | pass     | Use existing pass credits   | Monitor pass consumption                      | Fulfillment Types | Fulfillment | Generates Ticket | Notes                    | | ----------- | ---------------- | ------------------------ | | ticket    | Yes - QR code    | Full check-in workflow   | | booking   | No               | Simple confirmation only | Roles and Permissions Summary | Action                | Root | Admin | Operator | Client   | | --------------------- | ---- | ----- | -------- | -------- | | Create Experiences    | Yes  | Yes   | No       | No       | | Edit Experiences      | Yes  | Yes   | No       | No       | | Create Slots          | Yes  | Yes   | Yes      | No       | | View Orders           | Yes  | Yes   | Yes      | Own only | | Create Assisted Sales | Yes  | Yes   | No       | No       | | Manage Resources      | Yes  | Yes   | No       | No       | | View Tickets          | Yes  | Yes   | Yes      | Own only | | Check-in Tickets      | Yes  | Yes   | Yes      | No       | | Edit Publications     | Yes  | Yes   | No       | No       | | Access Settings       | Yes  | Yes   | No       | No       | Getting Help If you need assistance: - Use the sidebar navigation to browse documentation sections - Check the Reference - Glossary for terminology definitions - Review Reference - Troubleshooting for common error solutions",
       "es": "Introducción al Admin de OMZONE El panel de OMZONE Admin es tu centro de control para gestionar toda la plataforma de bienestar. Desde aquí controlas ofertas del catálogo, programación, ventas, contenido editorial y configuración del sistema. Acceder al Panel de Admin Accede al panel de admin navegando a /admin después de iniciar sesión. Debes tener uno de los siguientes labels asignados a tu cuenta: | Label      | Nombre a Mostrar | Nivel de Acceso                                   | | ---------- | ---------------- | ------------------------------------------------- | | root     | Admin            | Acceso completo al sistema, invisible en listados | | admin    | Admin            | Acceso completo a todas las funciones de admin    | | operator | Operador         | Acceso programado a operaciones y ventas          | | client   | Cliente          | Acceso solo al portal, sin admin                  |  Importante: El label root es invisible en toda la plataforma. Los usuarios root nunca aparecen en listados de clientes u órdenes, y root nunca se muestra como nombre de rol. Al mostrar roles, siempre usa \"Admin\" para ambos labels root y admin. Estructura de Navegación del Admin La barra lateral contiene siete secciones principales: General - Dashboard (/admin/dashboard) - Resumen de órdenes, ingresos, próximos horarios y solicitudes pendientes - Mi Cuenta (/admin/account) - Perfil y configuración de seguridad Catálogo - Experiencias (/admin/experiences) - Ofertas principales de bienestar (sesiones, inmersiones, retiros, estadías) - Complementos (/admin/addons) - Extras opcionales que pueden adjuntarse a experiencias Operaciones - Agenda (/admin/agenda) - Vista global de todos los horarios programados en todas las experiencias - Recursos (/admin/resources) - Instructores, facilitadores, terapeutas, equipos, ubicaciones y salas Ventas - Solicitudes (/admin/booking-requests) - Consultas de reserva entrantes para experiencias en modo \"Por solicitud\" - Órdenes (/admin/orders) - Todas las compras de clientes en todos los canales - Tickets (/admin/tickets) - Tickets validables con códigos QR para check-in - Clientes (/admin/clients) - Cuentas de clientes registradas Contenido - Publicaciones (/admin/publications) - Contenido editorial y de páginas de landing - Medios (/admin/media) - Gestor de archivos para todos los buckets Sistema - Configuración (/admin/settings) - Plantillas de notificación y configuración del sistema Concepto Principal: Publicaciones vs Experiencias Una distinción fundamental en OMZONE: | Aspecto          | Experiencia                            | Publicación                        | | ---------------- | -------------------------------------- | ---------------------------------- | | Propósito    | Operacional, comercial                 | Editorial, SEO, narrativa          | | Contiene     | Niveles de precio, ediciones, horarios | Secciones con bloques de contenido | | Visibilidad  | Disponibilidad y reserva               | Páginas de landing y blog          | | Se vincula a | Complementos, horarios, recursos       | Experiencia vía su publicación     |  Regla Clave: Los niveles de precio pertenecen a las Experiencias, no a las Publicaciones. No agregues precios a una Publicación. Una Publicación puede vincular a una Experiencia, pero son entidades separadas. Cuándo Crear Cada Una Crea una Experiencia cuando: - Quieres vender una oferta de bienestar - Necesitas gestión de precios y disponibilidad - Quieres que los clientes reserven o soliciten reserva Crea una Publicación cuando: - Necesitas una página de landing para SEO - Quieres contenido de narrativa editorial - Necesitas posts de blog, páginas institucionales o FAQs Flujo de Trabajo Estándar: Agregar una Nueva Experiencia Sigue esta secuencia cuando configures una nueva experiencia: Paso 1: Crear la Experiencia Navega a Catálogo - Experiencias - Nueva experiencia Llena los campos principales: - Nombre interno - Solo para ti, el cliente no lo ve - Nombre público (EN/ES) - El nombre que verá el cliente en ambos idiomas - Slug (URL) - Dirección web de la experiencia (se genera automáticamente) - Tipo - Sesión, Inmersión, Retiro, Estancia, Privada o Paquete - Modo de venta - Directa (pago inmediato), Por solicitud (confirmas tú), Asistida (el admin crea la orden), Por pase (requiere pase activo) - Tipo de entrega - Ticket (genera código QR), Reserva (sin ticket), Pase, Paquete Configura los comportamientos: - Requiere selección de horario - Activar si el cliente debe elegir una fecha/hora específica - Genera tickets después de la compra - Activar para crear tickets con código QR al comprar - Permite múltiples asistentes - Activar para compras grupales con cantidad mín/máx Paso 2: Agregar Ediciones (Opcional) Para experiencias con múltiples rangos de fechas o versiones: Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Ediciones - Nueva edición Las Ediciones permiten: - Diferentes rangos de fechas con startDate y endDate - Ventanas de registro con registrationOpens y registrationCloses - Límites de capacidad específicos por edición - Imágenes de portada específicas por edición Paso 3: Agregar Niveles de Precio Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Precios - Nuevo nivel Campos del nivel de precio: - Nombre (EN/ES) - Cómo aparece este precio al cliente (ej., \"Early Bird\", \"Precio Regular\") - Tipo de precio - Precio fijo, Por persona, Por grupo, Desde, Cotización - Precio base - El monto en números - Moneda - MXN o USD - Badge - Etiqueta opcional como \"Más popular\" o \"¡Solo por hoy!\" - Destacado - Mostrarlo resaltado visualmente - Edición - Vinculación opcional a una edición específica Paso 4: Agregar Horarios (Si se Requiere) Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Horarios - Nuevo horario Campos del horario: - Tipo de horario - Sesión individual, Multi-día, Día de retiro, Privado - Fecha y hora de inicio/fin - Fecha, hora y zona horaria - Capacidad - Máximo de participantes - Ubicación - Espacio físico donde ocurre - Sala - Sala específica dentro de la ubicación - Estado - Borrador (no visible) o Publicado (disponible para reservar) Para horarios recurrentes, usa Creación Rápida para generar múltiples horarios con un patrón. Paso 5: Asignar Recursos (Opcional) Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Horarios - [Nombre de Horario] - Recursos Los recursos pueden asignarse a horarios con roles: - Principal - Instructor o facilitador principal - Asistente - Maestro o помощник secundario - Soporte - Soporte técnico o logístico - Equipo - Equipo being utilizado Paso 6: Asignar Complementos (Opcional) Navega a Catálogo - Experiencias - [Nombre de Experiencia] - Complementos - Asignar complemento Los complementos pueden ser: - Requeridos - Incluidos automáticamente con la experiencia - Por defecto - Pre-seleccionados durante el checkout - Opcionales - Disponibles pero no pre-seleccionados Paso 7: Crear Publicación (Opcional) Solo crea una Publicación si necesitas contenido editorial visible al público: Navega a Contenido - Publicaciones - Nueva publicación Campos de la publicación: - Título (EN/ES) - Título para el público - Slug - Identificador de URL - Categoría - landing, blog, highlight, institutional, faq - Experiencia - Vinculación opcional a una Experiencia (no transfiere precios ni horarios) Las secciones de publicación se construyen usando bloques de contenido modular: - hero, text, gallery, highlights, faq, itinerary, testimonials, inclusions, restrictions, cta, video Ciclo de Vida del Estado de Experiencia Borrador → Publicada → Archivada | Estado        | Visibilidad             | Reserva                          | | ------------- | ----------------------- | -------------------------------- | | Borrador  | Solo el equipo de admin | No disponible                    | | Publicada | Catálogo público        | Disponible para reservar         | | Archivada | Solo el equipo de admin | No disponible, puede reactivarse | Comportamientos del Modo de Venta | Modo de Venta     | Acción del Cliente              | Acción del Admin                                     | | ----------------- | ------------------------------- | ---------------------------------------------------- | | Directa       | Reservar y pagar inmediatamente | Revisar órdenes completadas                          | | Por solicitud | Enviar consulta con detalles    | Revisar solicitud, cotizar precio, convertir a orden | | Asistida      | Contactar al admin directamente | Usar Venta Asistida para crear la orden              | | Por pase      | Usar créditos de su pase activo | Monitorear consumo de pases                          | Tipos de Entrega | Tipo de entrega | Genera Ticket        | Notas                                                | | --------------- | -------------------- | ---------------------------------------------------- | | Ticket      | Sí — código QR       | El cliente recibe un ticket escaneable para check-in | | Reserva     | No                   | Solo confirmación de reserva                         | | Pase        | No                   | Se descuenta del pase del cliente                    | | Paquete     | Sí — uno por paquete | Redención de paquete                                 | Resumen de Roles y Permisos | Acción                  | Root | Admin | Operador | Cliente      | | ----------------------- | ---- | ----- | -------- | ------------ | | Crear Experiencias      | Sí   | Sí    | No       | No           | | Editar Experiencias     | Sí   | Sí    | No       | No           | | Crear Horarios          | Sí   | Sí    | Sí       | No           | | Ver Órdenes             | Sí   | Sí    | Sí       | Solo propias | | Crear Ventas Asistidas  | Sí   | Sí    | No       | No           | | Gestionar Recursos      | Sí   | Sí    | No       | No           | | Ver Tickets             | Sí   | Sí    | Sí       | Solo propios | | Check-in de Tickets     | Sí   | Sí    | Sí       | No           | | Editar Publicaciones    | Sí   | Sí    | No       | No           | | Acceder a Configuración | Sí   | Sí    | No       | No           | Obtener Ayuda Si necesitas asistencia: - Usa la navegación de la barra lateral para explorar secciones de documentación - Consulta Referencia - Glosario para definiciones de terminología - Revisa Referencia - Solución de Problemas para soluciones de errores comunes"
     },
     "headings": {
@@ -19824,154 +19820,154 @@
           "text": "Admin Navigation Structure",
           "id": "admin-navigation-structure",
           "line": 19,
-          "position": 956
+          "position": 1079
         },
         {
           "level": 3,
           "text": "General",
           "id": "general",
           "line": 23,
-          "position": 1030
+          "position": 1153
         },
         {
           "level": 3,
           "text": "Catalog",
           "id": "catalog",
-          "line": 27,
-          "position": 1216
+          "line": 28,
+          "position": 1340
         },
         {
           "level": 3,
           "text": "Operations",
           "id": "operations",
-          "line": 31,
-          "position": 1421
+          "line": 33,
+          "position": 1546
         },
         {
           "level": 3,
           "text": "Sales",
           "id": "sales",
-          "line": 35,
-          "position": 1634
+          "line": 38,
+          "position": 1760
         },
         {
           "level": 3,
           "text": "Content",
           "id": "content",
-          "line": 41,
-          "position": 1980
+          "line": 45,
+          "position": 2107
         },
         {
           "level": 3,
           "text": "System",
           "id": "system",
-          "line": 45,
-          "position": 2133
+          "line": 50,
+          "position": 2261
         },
         {
           "level": 2,
           "text": "Core Concept: Publications vs Experiences",
           "id": "core-concept-publications-vs-experiences",
-          "line": 48,
-          "position": 2230
+          "line": 54,
+          "position": 2359
         },
         {
           "level": 3,
           "text": "When to Create Each",
           "id": "when-to-create-each",
-          "line": 61,
-          "position": 2875
+          "line": 67,
+          "position": 3134
         },
         {
           "level": 2,
           "text": "Standard Workflow: Adding a New Experience",
           "id": "standard-workflow-adding-a-new-experience",
-          "line": 73,
-          "position": 3223
+          "line": 81,
+          "position": 3484
         },
         {
           "level": 3,
           "text": "Step 1: Create the Experience",
           "id": "step-1-create-the-experience",
-          "line": 77,
-          "position": 3326
+          "line": 85,
+          "position": 3587
         },
         {
           "level": 3,
           "text": "Step 2: Add Editions (Optional)",
           "id": "step-2-add-editions-optional",
-          "line": 94,
-          "position": 4158
+          "line": 104,
+          "position": 4421
         },
         {
           "level": 3,
           "text": "Step 3: Add Pricing Tiers",
           "id": "step-3-add-pricing-tiers",
-          "line": 106,
-          "position": 4551
+          "line": 117,
+          "position": 4815
         },
         {
           "level": 3,
           "text": "Step 4: Add Slots (If Required)",
           "id": "step-4-add-slots-if-required",
-          "line": 119,
-          "position": 5078
+          "line": 131,
+          "position": 5343
         },
         {
           "level": 3,
           "text": "Step 5: Assign Resources (Optional)",
           "id": "step-5-assign-resources-optional",
-          "line": 133,
-          "position": 5635
+          "line": 146,
+          "position": 5901
         },
         {
           "level": 3,
           "text": "Step 6: Assign Addons (Optional)",
           "id": "step-6-assign-addons-optional",
-          "line": 143,
-          "position": 6003
+          "line": 157,
+          "position": 6270
         },
         {
           "level": 3,
           "text": "Step 7: Create Publication (Optional)",
           "id": "step-7-create-publication-optional",
-          "line": 152,
-          "position": 6297
+          "line": 167,
+          "position": 6565
         },
         {
           "level": 2,
           "text": "Experience Status Lifecycle",
           "id": "experience-status-lifecycle",
-          "line": 167,
-          "position": 6916
+          "line": 184,
+          "position": 7186
         },
         {
           "level": 2,
           "text": "Sale Mode Behaviors",
           "id": "sale-mode-behaviors",
-          "line": 179,
-          "position": 7219
+          "line": 196,
+          "position": 7604
         },
         {
           "level": 2,
           "text": "Fulfillment Types",
           "id": "fulfillment-types",
-          "line": 188,
-          "position": 7645
+          "line": 205,
+          "position": 8187
         },
         {
           "level": 2,
           "text": "Roles and Permissions Summary",
           "id": "roles-and-permissions-summary",
-          "line": 195,
-          "position": 7855
+          "line": 212,
+          "position": 8458
         },
         {
           "level": 2,
           "text": "Getting Help",
           "id": "getting-help",
-          "line": 210,
-          "position": 8422
+          "line": 227,
+          "position": 9249
         }
       ],
       "es": [
@@ -30615,8 +30611,8 @@
       "notas internas."
     ],
     "content": {
-      "en": "Glossary This glossary defines the key terms and concepts used throughout the OMZONE platform. A Addon Optional extras that enhance a booking. Addons can be required (automatically included), default (pre-selected but removable), or optional (available to add). | Type | Behavior | |------|----------| | service | Spa treatments, therapy sessions | | transport | Airport transfers, transportation | | food | Meals, catering | | accommodation | Hotel nights, lodging | | equipment | Rental gear, materials | | other | Miscellaneous extras | Agenda The operational layer containing slots, resources, and locations that define when and where experiences are available. Assisted Sale Admin-created order on behalf of a customer. Used for phone bookings, in-person sales, complimentary reservations, and corporate bookings. B Booking Request Inquiry for experiences with saleMode: request that require admin review and approval before confirmation. Customers submit requests which operators review, quote pricing, and approve or reject. | Status | Description | |--------|-------------| | pending | Awaiting review | | reviewing | Under admin review | | approved | Approved with quoted price | | rejected | Declined by admin | | converted | Converted to assisted sale order | C Client Customer account with portal access. Clients can view orders, download tickets, manage passes, and update their profile. Collection Appwrite database table. Collections contain documents with typed attributes. Content The editorial layer containing publications and sections. Publications provide the public-facing narrative and SEO content separate from commercial operations. D Domain Separation OMZONE architectural principle separating concerns: | Layer | Contents | Purpose | |-------|----------|---------| | Editorial | Publications, Sections, Tags | SEO, marketing narrative | | Commercial | Experiences, Editions, Pricing Tiers, Addons | Pricing, operations | | Agenda | Slots, Resources, Locations | Scheduling, capacity | | Transactional | Orders, Tickets, Pass Consumptions | Immutable purchase records | | User | User Profiles, Activity Logs | Accounts, audit | E Edition Time-based variation of an Experience with its own date range, capacity, and pricing. Editions allow the same experience to run multiple times (e.g., \"Spring 2026\", \"Summer 2026\"). | Field | Description | |-------|-------------| | Name | Edition identifier | | Start Date | Edition beginning | | End Date | Edition end | | Registration Start | When registration opens | | Registration End | When registration closes | | Capacity | Max attendees | | Status | draft, open, closed, completed, cancelled | Experience Core offering available for booking. The commercial unit with pricing, availability, and fulfillment rules. | Type | Description | |------|-------------| | session | Single session (e.g., yoga class) | | immersion | Extended session (e.g., sound bath) | | retreat | Multi-day program | | stay | Accommodation-based experience | | private | Private booking | Experience Tabs | Tab | Description | |-----|-------------| | Details | Core fields, classification, images | | Pricing Tiers | Price points and edition pricing | | Slots | Availability scheduling | | Addons | Addon assignments | | Publications | Linked publications | | SEO | Search engine settings | F Fulfillment Type Defines how the booking is delivered. | Type | Description | |------|-------------| | ticket | Generates QR code tickets for check-in | | booking | Confirmed reservation without tickets | G Ghost User Root-level Appwrite users that should be excluded from listings. The root label identifies ghost users. L Label Appwrite permission label attached to users for role-based access control. | Label | Access | |-------|--------| | root | Full system (invisible) | | admin | Admin panel access | | operator | Limited admin access | | client | Client portal access | O Order Customer purchase containing one or more line items. Orders store frozen snapshots of pricing and experience data for historical accuracy. | Status | Description | |--------|-------------| | pending | Awaiting payment | | paid | Payment confirmed | | confirmed | Fulfillment started | | completed | All items consumed | | cancelled | Order cancelled | | refunded | Payment refunded | Order Line Item Single item in an order with frozen snapshot data: | Field | Description | |-------|-------------| | Item Type | experience, addon | | Item ID | Reference to purchased item | | Snapshot | Frozen data at purchase time | | Quantity | Units purchased | | Unit Price | Price at purchase time | | Subtotal | Line total | P Pass Subscription allowing multiple bookings within a validity period. Passes have credits that are consumed when used. | Status | Description | |--------|-------------| | active | Valid and usable | | exhausted | All credits consumed | | expired | Past validity period | | cancelled | Manually cancelled | Pass Consumption Record of pass credit usage when a booking uses pass credits. | Field | Description | |-------|-------------| | User Pass ID | Parent pass reference | | Order ID | Associated order | | Credits Consumed | Number of credits used | | Role | Usage context | Pricing Tier Price point for an Experience. Tiers can be edition-specific and support multiple price types. | Price Type | Description | |------------|-------------| | fixed | Flat rate regardless of attendees | | perPerson | Rate multiplied by number of people | | perGroup | Rate for entire group | | from | Starting price for variable pricing | | quote | Custom price entered by operator | Publication Editorial/SEO content layer for the public website. Publications exist separately from Experiences and provide the narrative, images, and SEO content. | Category | Use Case | |----------|----------| | landing | Primary landing pages | | blog | Editorial articles | | highlight | Featured content | | institutional | About, policies | | faq | FAQ pages | R Resource Person or equipment assigned to slots for availability and capacity management. | Type | Description | |------|-------------| | instructor | Lead teacher/facilitator | | facilitator | Support facilitator | | therapist | Therapy provider | | equipment | Equipment resource | Resource Assignment Role Role of an assigned resource within a slot: | Role | Description | |------|-------------| | lead | Primary assigned person | | assistant | Support person | | support | Additional support | | equipment | Equipment provision | Role Label-based permission determining access level. See Label. S Sale Mode How customers purchase the experience. | Mode | Description | |------|-------------| | direct | Immediate purchase | | request | Requires booking request approval | | assisted | Admin-assisted phone/in-person sale | | pass | Requires active pass | Section Modular content block within a Publication. | Type | Description | |------|-------------| | hero | Full-width header | | text | Rich text content | | gallery | Image grid | | highlights | Featured experiences | | faq | Accordion Q&A | | itinerary | Day-by-day schedule | | testimonials | Customer quotes | | inclusions | Included items list | | restrictions | Exclusions list | | cta | Call-to-action | | video | Embedded video | Slot Specific date/time instance when an Experience is available for booking. | Type | Description | |------|-------------| | singleSession | One-time session | | multiDay | Multiple consecutive days | | retreatDay | Day within a retreat | | private | Private booking | | Status | Description | |--------|-------------| | draft | Not yet published | | published | Available for booking | | full | At capacity | | cancelled | Cancelled | Snapshot JSON copy of price/experience data stored at purchase time. Snapshots ensure historical accuracy regardless of future changes. System Information Platform status and version data displayed in admin for monitoring. T Ticket Booking confirmation with QR code for check-in validation. Tickets are generated for experiences with fulfillmentType: ticket. | Status | Description | |--------|-------------| | pending | Awaiting confirmation | | confirmed | Valid and ready | | used | Checked in | | cancelled | Ticket cancelled | | expired | Past slot date | Ticket Validation Process of verifying ticket authenticity and eligibility for check-in. Validates: - Ticket exists and is valid - Status is confirmed - Order payment is paid or confirmed - Slot date/time matches - Not already checked in U User Pass Pass purchased and activated by a client. Links the pass definition to the purchasing user. User Profile Extended profile data for Appwrite users including name, phone, preferences, and internal notes.",
-      "es": "Glosario Este glosario define los términos y conceptos clave utilizados en toda la plataforma OMZONE. A Addon Extras opcionales que mejoran una reservación. Los addons pueden ser requeridos (incluidos automáticamente), predeterminados (pre-seleccionados pero removibles), u opcionales (disponibles para agregar). | Tipo | Comportamiento | |------|----------------| | service | Tratamientos de spa, sesiones de terapia | | transport | Traslados al aeropuerto, transporte | | food | Comidas, catering | | accommodation | Noches de hotel, alojamiento | | equipment | Equipo de alquiler, materiales | | other | Extras diversos | Agenda La capa operacional que contiene slots, recursos y ubicaciones que definen cuándo y dónde están disponibles las experiencias. Venta Asistida Pedido creado por admin en nombre de un cliente. Usado para reservas por teléfono, ventas en persona, reservaciones complimentary y reservas corporativas. B Solicitud de Reserva Consulta para experiencias con saleMode: request que requieren revisión y aprobación del admin antes de la confirmación. Los clientes envían solicitudes que los operadores revisan, cotizan precios y aprueban o rechazan. | Estado | Descripción | |--------|-------------| | pending | Esperando revisión | | reviewing | Bajo revisión del admin | | approved | Aprobado con precio cotizado | | rejected | Rechazado por el admin | | converted | Convertido a pedido de venta asistida | C Cliente Cuenta de cliente con acceso al portal. Los clientes pueden ver pedidos, descargar tickets, gestionar pases y actualizar su perfil. Colección Tabla de base de datos de Appwrite. Las colecciones contienen documentos con atributos tipados. Contenido La capa editorial que contiene publicaciones y secciones. Las publicaciones proporcionan la narrativa pública y contenido SEO separado de las operaciones comerciales. D Separación de Dominio Principio arquitectónico de OMZONE que separa preocupaciones: | Capa | Contenido | Propósito | |------|-----------|-----------| | Editorial | Publicaciones, Secciones, Etiquetas | SEO, narrativa de marketing | | Comercial | Experiencias, Ediciones, Niveles de Precio, Addons | Precios, operaciones | | Agenda | Slots, Recursos, Ubicaciones | Programación, capacidad | | Transaccional | Pedidos, Tickets, Consumos de Pase | Registros de compra inmutables | | Usuario | Perfiles de Usuario, Registros de Actividad | Cuentas, auditoría | E Edición Variación basada en tiempo de una Experiencia con su propio rango de fechas, capacidad y precios. Las ediciones permiten que la misma experiencia se ejecute múltiples veces (ej. \"Primavera 2026\", \"Verano 2026\"). | Campo | Descripción | |-------|-------------| | Nombre | Identificador de la edición | | Fecha de Inicio | Inicio de la edición | | Fecha de Fin | Fin de la edición | | Inicio de Registro | Cuando abre el registro | | Fin de Registro | Cuando cierra el registro | | Capacidad | Máx. asistentes | | Estado | draft, open, closed, completed, cancelled | Experiencia Oferta central disponible para reservación. La unidad comercial con precios, disponibilidad y reglas de cumplimiento. | Tipo | Descripción | |------|-------------| | session | Sesión única (ej. clase de yoga) | | immersion | Sesión extendida (ej. baño de sonido) | | retreat | Programa de múltiples días | | stay | Experiencia basada en alojamiento | | private | Reservación privada | Pestañas de Experiencia | Pestaña | Descripción | |---------|-------------| | Detalles | Campos principales, clasificación, imágenes | | Niveles de Precio | Puntos de precio y precios por edición | | Slots | Programación de disponibilidad | | Addons | Asignaciones de addons | | Publicaciones | Publicaciones vinculadas | | SEO | Configuración de motores de búsqueda | F Tipo de Cumplimiento Define cómo se entrega la reservación. | Tipo | Descripción | |------|-------------| | ticket | Genera tickets con código QR para check-in | | booking | Reservación confirmada sin tickets | G Usuario Fantasma Usuarios de Appwrite a nivel root que deben ser excluidos de los listados. La etiqueta root identifica a los usuarios fantasma. L Etiqueta Etiqueta de permiso de Appwrite adjunta a usuarios para control de acceso basado en roles. | Etiqueta | Acceso | |----------|--------| | root | Sistema completo (invisible) | | admin | Acceso al panel de admin | | operator | Acceso limitado de admin | | client | Acceso al portal de clientes | O Pedido Compra de cliente que contiene uno o más artículos de línea. Los pedidos almacenan instantáneas congeladas de datos de precios y experiencias para precisión histórica. | Estado | Descripción | |--------|-------------| | pending | Esperando pago | | paid | Pago confirmado | | confirmed | Cumplimiento iniciado | | completed | Todos los artículos consumidos | | cancelled | Pedido cancelado | | refunded | Pago reembolsado | Artículo de Línea del Pedido Artículo individual en un pedido con datos de instantánea congelada: | Campo | Descripción | |-------|-------------| | Tipo de Artículo | experience, addon | | ID del Artículo | Referencia al artículo comprado | | Instantánea | Datos congelados al momento de la compra | | Cantidad | Unidades compradas | | Precio Unitario | Precio al momento de la compra | | Subtotal | Total de la línea | P Pase Suscripción que permite múltiples reservaciones dentro de un período de validez. Los pases tienen créditos que se consumen cuando se usan. | Estado | Descripción | |--------|-------------| | active | Válido y usable | | exhausted | Todos los créditos consumidos | | expired | Período de validez pasado | | cancelled | Cancelado manualmente | Consumo de Pase Registro del uso de crédito de pase cuando una reservación usa créditos de pase. | Campo | Descripción | |-------|-------------| | ID del Pase de Usuario | Referencia al pase padre | | ID del Pedido | Pedido asociado | | Créditos Consumidos | Número de créditos usados | | Rol | Contexto de uso | Nivel de Precio Punto de precio para una Experiencia. Los niveles pueden ser específicos por edición y soportar múltiples tipos de precio. | Tipo de Precio | Descripción | |----------------|-------------| | fixed | Tarifa plana independiente de los asistentes | | perPerson | Tarifa multiplicada por el número de personas | | perGroup | Tarifa para todo el grupo | | from | Precio inicial para precio variable | | quote | Precio personalizado ingresado por el operador | Publicación Capa de contenido editorial/SEO para el sitio web público. Las publicaciones existen separadamente de las Experiencias y proporcionan la narrativa, imágenes y contenido SEO. | Categoría | Caso de Uso | |-----------|-------------| | landing | Páginas de destino principales | | blog | Artículos editoriales | | highlight | Contenido destacado | | institutional | Acerca de, políticas | | faq | Páginas de preguntas frecuentes | R Recurso Persona o equipo asignado a slots para gestión de disponibilidad y capacidad. | Tipo | Descripción | |------|-------------| | instructor | Maestro/facilitador principal | | facilitator | Facilitador de apoyo | | therapist | Proveedor de terapia | | equipment | Recurso de equipo | Rol de Asignación de Recurso Rol de un recurso asignado dentro de un slot: | Rol | Descripción | |-----|-------------| | lead | Persona asignada principal | | assistant | Persona de apoyo | | support | Soporte adicional | | equipment | Provisión de equipo | Rol Permiso basado en etiquetas que determina el nivel de acceso. Ver Etiqueta. S Modo de Venta Cómo los clientes compran la experiencia. | Modo | Descripción | |------|-------------| | direct | Compra inmediata | | request | Requiere aprobación de solicitud de reserva | | assisted | Venta por teléfono/en persona asistida por admin | | pass | Requiere pase activo | Sección Bloque de contenido modular dentro de una Publicación. | Tipo | Descripción | |------|-------------| | hero | Encabezado de ancho completo | | text | Contenido de texto rico | | gallery | Cuadrícula de imágenes | | highlights | Experiencias destacadas | | faq | Acordeón de preguntas y respuestas | | itinerary | Programa día por día | | testimonials | Citas de clientes | | inclusions | Lista de elementos incluidos | | restrictions | Lista de exclusiones | | cta | Llamada a la acción | | video | Video embebido | Slot Instancia de fecha/hora específica cuando una Experiencia está disponible para reservación. | Tipo | Descripción | |------|-------------| | singleSession | Sesión única | | multiDay | Múltiples días consecutivos | | retreatDay | Día dentro de un retiro | | private | Reservación privada | | Estado | Descripción | |--------|-------------| | draft | No publicado aún | | published | Disponible para reservación | | full | En capacidad máxima | | cancelled | Cancelado | Instantánea Copia JSON de datos de precio/experiencia almacenada al momento de la compra. Las instantáneas aseguran precisión histórica independientemente de cambios futuros. Información del Sistema Estado de la plataforma y datos de versión mostrados en admin para monitoreo. T Ticket Confirmación de reservación con código QR para validación de check-in. Los tickets se generan para experiencias con fulfillmentType: ticket. | Estado | Descripción | |--------|-------------| | pending | Esperando confirmación | | confirmed | Válido y listo | | used | Check-in realizado | | cancelled | Ticket cancelado | | expired | Fecha del slot pasada | Validación de Ticket Proceso de verificar autenticidad y elegibilidad del ticket para check-in. Valida: - El ticket existe y es válido - El estado es confirmed - El pago del pedido es paid o confirmed - La fecha/hora del slot coincide - No se ha hecho check-in previamente U Pase de Usuario Pase comprado y activado por un cliente. Vincula la definición del pase al usuario comprador. Perfil de Usuario Datos de perfil extendidos para usuarios de Appwrite incluyendo nombre, teléfono, preferencias y notas internas."
+      "en": "Glossary This glossary defines the key terms and concepts used throughout the OMZONE platform. A Addon Optional extras that enhance a booking. Addons can be required (automatically included), default (pre-selected but removable), or optional (available to add). | Type            | Behavior                          | | --------------- | --------------------------------- | | service       | Spa treatments, therapy sessions  | | transport     | Airport transfers, transportation | | food          | Meals, catering                   | | accommodation | Hotel nights, lodging             | | equipment     | Rental gear, materials            | | other         | Miscellaneous extras              | Agenda The operational layer containing slots, resources, and locations that define when and where experiences are available. Assisted Sale Admin-created order on behalf of a customer. Used for phone bookings, in-person sales, complimentary reservations, and corporate bookings. B Booking Request Inquiry for experiences with saleMode: request that require admin review and approval before confirmation. Customers submit requests which operators review, quote pricing, and approve or reject. | Status      | Description                      | | ----------- | -------------------------------- | | pending   | Awaiting review                  | | reviewing | Under admin review               | | approved  | Approved with quoted price       | | rejected  | Declined by admin                | | converted | Converted to assisted sale order | C Client Customer account with portal access. Clients can view orders, download tickets, manage passes, and update their profile. Collection Appwrite database table. Collections contain documents with typed attributes. Content The editorial layer containing publications and sections. Publications provide the public-facing narrative and SEO content separate from commercial operations. D Domain Separation OMZONE architectural principle separating concerns: | Layer         | Contents                                     | Purpose                    | | ------------- | -------------------------------------------- | -------------------------- | | Editorial     | Publications, Sections, Tags                 | SEO, marketing narrative   | | Commercial    | Experiences, Editions, Pricing Tiers, Addons | Pricing, operations        | | Agenda        | Slots, Resources, Locations                  | Scheduling, capacity       | | Transactional | Orders, Tickets, Pass Consumptions           | Immutable purchase records | | User          | User Profiles, Activity Logs                 | Accounts, audit            | E Edition Time-based variation of an Experience with its own date range, capacity, and pricing. Editions allow the same experience to run multiple times (e.g., \"Spring 2026\", \"Summer 2026\"). | Field              | Description                                         | | ------------------ | --------------------------------------------------- | | Name               | Edition identifier                                  | | Start Date         | Edition beginning                                   | | End Date           | Edition end                                         | | Registration Start | When registration opens                             | | Registration End   | When registration closes                            | | Capacity           | Max attendees                                       | | Status             | draft, open, closed, completed, cancelled | Experience Core offering available for booking. The commercial unit with pricing, availability, and fulfillment rules. | Type        | Description                         | | ----------- | ----------------------------------- | | session   | Single session (e.g., yoga class)   | | immersion | Extended session (e.g., sound bath) | | retreat   | Multi-day program                   | | stay      | Accommodation-based experience      | | private   | Private booking                     | Experience Tabs | Tab           | Description                         | | ------------- | ----------------------------------- | | Details       | Core fields, classification, images | | Pricing Tiers | Price points and edition pricing    | | Slots         | Availability scheduling             | | Addons        | Addon assignments                   | | Publications  | Linked publications                 | | SEO           | Search engine settings              | F Fulfillment Type Defines how the booking is delivered. | Type      | Description                            | | --------- | -------------------------------------- | | ticket  | Generates QR code tickets for check-in | | booking | Confirmed reservation without tickets  | G Ghost User Root-level Appwrite users that should be excluded from listings. The root label identifies ghost users. L Label Appwrite permission label attached to users for role-based access control. | Label      | Access                  | | ---------- | ----------------------- | | root     | Full system (invisible) | | admin    | Admin panel access      | | operator | Limited admin access    | | client   | Client portal access    | O Order Customer purchase containing one or more line items. Orders store frozen snapshots of pricing and experience data for historical accuracy. | Status      | Description         | | ----------- | ------------------- | | pending   | Awaiting payment    | | paid      | Payment confirmed   | | confirmed | Fulfillment started | | completed | All items consumed  | | cancelled | Order cancelled     | | refunded  | Payment refunded    | Order Line Item Single item in an order with frozen snapshot data: | Field      | Description                  | | ---------- | ---------------------------- | | Item Type  | experience, addon        | | Item ID    | Reference to purchased item  | | Snapshot   | Frozen data at purchase time | | Quantity   | Units purchased              | | Unit Price | Price at purchase time       | | Subtotal   | Line total                   | P Pass Subscription allowing multiple bookings within a validity period. Passes have credits that are consumed when used. | Status      | Description          | | ----------- | -------------------- | | active    | Valid and usable     | | exhausted | All credits consumed | | expired   | Past validity period | | cancelled | Manually cancelled   | Pass Consumption Record of pass credit usage when a booking uses pass credits. | Field            | Description            | | ---------------- | ---------------------- | | User Pass ID     | Parent pass reference  | | Order ID         | Associated order       | | Credits Consumed | Number of credits used | | Role             | Usage context          | Pricing Tier Price point for an Experience. Tiers can be edition-specific and support multiple price types. | Price Type  | Description                         | | ----------- | ----------------------------------- | | fixed     | Flat rate regardless of attendees   | | perPerson | Rate multiplied by number of people | | perGroup  | Rate for entire group               | | from      | Starting price for variable pricing | | quote     | Custom price entered by operator    | Publication Editorial/SEO content layer for the public website. Publications exist separately from Experiences and provide the narrative, images, and SEO content. | Category        | Use Case              | | --------------- | --------------------- | | landing       | Primary landing pages | | blog          | Editorial articles    | | highlight     | Featured content      | | institutional | About, policies       | | faq           | FAQ pages             | R Resource Person or equipment assigned to slots for availability and capacity management. | Type          | Description              | | ------------- | ------------------------ | | instructor  | Lead teacher/facilitator | | facilitator | Support facilitator      | | therapist   | Therapy provider         | | equipment   | Equipment resource       | Resource Assignment Role Role of an assigned resource within a slot: | Role        | Description             | | ----------- | ----------------------- | | lead      | Primary assigned person | | assistant | Support person          | | support   | Additional support      | | equipment | Equipment provision     | Role Label-based permission determining access level. See Label. S Sale Mode How customers purchase the experience. | Mode       | Description                         | | ---------- | ----------------------------------- | | direct   | Immediate purchase                  | | request  | Requires booking request approval   | | assisted | Admin-assisted phone/in-person sale | | pass     | Requires active pass                | Section Modular content block within a Publication. | Type           | Description          | | -------------- | -------------------- | | hero         | Full-width header    | | text         | Rich text content    | | gallery      | Image grid           | | highlights   | Featured experiences | | faq          | Accordion Q&A        | | itinerary    | Day-by-day schedule  | | testimonials | Customer quotes      | | inclusions   | Included items list  | | restrictions | Exclusions list      | | cta          | Call-to-action       | | video        | Embedded video       | Slot Specific date/time instance when an Experience is available for booking. | Type            | Description               | | --------------- | ------------------------- | | singleSession | One-time session          | | multiDay      | Multiple consecutive days | | retreatDay    | Day within a retreat      | | private       | Private booking           | | Status      | Description           | | ----------- | --------------------- | | draft     | Not yet published     | | published | Available for booking | | full      | At capacity           | | cancelled | Cancelled             | Snapshot JSON copy of price/experience data stored at purchase time. Snapshots ensure historical accuracy regardless of future changes. System Information Platform status and version data displayed in admin for monitoring. T Ticket Booking confirmation with QR code for check-in validation. Tickets are generated for experiences with fulfillmentType: ticket. | Status      | Description           | | ----------- | --------------------- | | pending   | Awaiting confirmation | | confirmed | Valid and ready       | | used      | Checked in            | | cancelled | Ticket cancelled      | | expired   | Past slot date        | Ticket Validation Process of verifying ticket authenticity and eligibility for check-in. Validates: - Ticket exists and is valid - Status is confirmed - Order payment is paid or confirmed - Slot date/time matches - Not already checked in U User Pass Pass purchased and activated by a client. Links the pass definition to the purchasing user. User Profile Extended profile data for Appwrite users including name, phone, preferences, and internal notes.",
+      "es": "Glosario Este glosario define los términos y conceptos clave utilizados en toda la plataforma OMZONE. A Addon Extras opcionales que mejoran una reservación. Los addons pueden ser requeridos (incluidos automáticamente), predeterminados (pre-seleccionados pero removibles), u opcionales (disponibles para agregar). | Tipo            | Comportamiento                           | | --------------- | ---------------------------------------- | | service       | Tratamientos de spa, sesiones de terapia | | transport     | Traslados al aeropuerto, transporte      | | food          | Comidas, catering                        | | accommodation | Noches de hotel, alojamiento             | | equipment     | Equipo de alquiler, materiales           | | other         | Extras diversos                          | Agenda La capa operacional que contiene slots, recursos y ubicaciones que definen cuándo y dónde están disponibles las experiencias. Venta Asistida Pedido creado por admin en nombre de un cliente. Usado para reservas por teléfono, ventas en persona, reservaciones complimentary y reservas corporativas. B Solicitud de Reserva Consulta para experiencias con saleMode: request que requieren revisión y aprobación del admin antes de la confirmación. Los clientes envían solicitudes que los operadores revisan, cotizan precios y aprueban o rechazan. | Estado      | Descripción                           | | ----------- | ------------------------------------- | | pending   | Esperando revisión                    | | reviewing | Bajo revisión del admin               | | approved  | Aprobado con precio cotizado          | | rejected  | Rechazado por el admin                | | converted | Convertido a pedido de venta asistida | C Cliente Cuenta de cliente con acceso al portal. Los clientes pueden ver pedidos, descargar tickets, gestionar pases y actualizar su perfil. Colección Tabla de base de datos de Appwrite. Las colecciones contienen documentos con atributos tipados. Contenido La capa editorial que contiene publicaciones y secciones. Las publicaciones proporcionan la narrativa pública y contenido SEO separado de las operaciones comerciales. D Separación de Dominio Principio arquitectónico de OMZONE que separa preocupaciones: | Capa          | Contenido                                          | Propósito                      | | ------------- | -------------------------------------------------- | ------------------------------ | | Editorial     | Publicaciones, Secciones, Etiquetas                | SEO, narrativa de marketing    | | Comercial     | Experiencias, Ediciones, Niveles de Precio, Addons | Precios, operaciones           | | Agenda        | Slots, Recursos, Ubicaciones                       | Programación, capacidad        | | Transaccional | Pedidos, Tickets, Consumos de Pase                 | Registros de compra inmutables | | Usuario       | Perfiles de Usuario, Registros de Actividad        | Cuentas, auditoría             | E Edición Variación basada en tiempo de una Experiencia con su propio rango de fechas, capacidad y precios. Las ediciones permiten que la misma experiencia se ejecute múltiples veces (ej. \"Primavera 2026\", \"Verano 2026\"). | Campo              | Descripción                                         | | ------------------ | --------------------------------------------------- | | Nombre             | Identificador de la edición                         | | Fecha de Inicio    | Inicio de la edición                                | | Fecha de Fin       | Fin de la edición                                   | | Inicio de Registro | Cuando abre el registro                             | | Fin de Registro    | Cuando cierra el registro                           | | Capacidad          | Máx. asistentes                                     | | Estado             | draft, open, closed, completed, cancelled | Experiencia Oferta central disponible para reservación. La unidad comercial con precios, disponibilidad y reglas de cumplimiento. | Tipo        | Descripción                           | | ----------- | ------------------------------------- | | session   | Sesión única (ej. clase de yoga)      | | immersion | Sesión extendida (ej. baño de sonido) | | retreat   | Programa de múltiples días            | | stay      | Experiencia basada en alojamiento     | | private   | Reservación privada                   | Pestañas de Experiencia | Pestaña           | Descripción                                 | | ----------------- | ------------------------------------------- | | Detalles          | Campos principales, clasificación, imágenes | | Niveles de Precio | Puntos de precio y precios por edición      | | Slots             | Programación de disponibilidad              | | Addons            | Asignaciones de addons                      | | Publicaciones     | Publicaciones vinculadas                    | | SEO               | Configuración de motores de búsqueda        | F Tipo de Cumplimiento Define cómo se entrega la reservación. | Tipo      | Descripción                                | | --------- | ------------------------------------------ | | ticket  | Genera tickets con código QR para check-in | | booking | Reservación confirmada sin tickets         | G Usuario Fantasma Usuarios de Appwrite a nivel root que deben ser excluidos de los listados. La etiqueta root identifica a los usuarios fantasma. L Etiqueta Etiqueta de permiso de Appwrite adjunta a usuarios para control de acceso basado en roles. | Etiqueta   | Acceso                       | | ---------- | ---------------------------- | | root     | Sistema completo (invisible) | | admin    | Acceso al panel de admin     | | operator | Acceso limitado de admin     | | client   | Acceso al portal de clientes | O Pedido Compra de cliente que contiene uno o más artículos de línea. Los pedidos almacenan instantáneas congeladas de datos de precios y experiencias para precisión histórica. | Estado      | Descripción                    | | ----------- | ------------------------------ | | pending   | Esperando pago                 | | paid      | Pago confirmado                | | confirmed | Cumplimiento iniciado          | | completed | Todos los artículos consumidos | | cancelled | Pedido cancelado               | | refunded  | Pago reembolsado               | Artículo de Línea del Pedido Artículo individual en un pedido con datos de instantánea congelada: | Campo            | Descripción                              | | ---------------- | ---------------------------------------- | | Tipo de Artículo | experience, addon                    | | ID del Artículo  | Referencia al artículo comprado          | | Instantánea      | Datos congelados al momento de la compra | | Cantidad         | Unidades compradas                       | | Precio Unitario  | Precio al momento de la compra           | | Subtotal         | Total de la línea                        | P Pase Suscripción que permite múltiples reservaciones dentro de un período de validez. Los pases tienen créditos que se consumen cuando se usan. | Estado      | Descripción                   | | ----------- | ----------------------------- | | active    | Válido y usable               | | exhausted | Todos los créditos consumidos | | expired   | Período de validez pasado     | | cancelled | Cancelado manualmente         | Consumo de Pase Registro del uso de crédito de pase cuando una reservación usa créditos de pase. | Campo                  | Descripción               | | ---------------------- | ------------------------- | | ID del Pase de Usuario | Referencia al pase padre  | | ID del Pedido          | Pedido asociado           | | Créditos Consumidos    | Número de créditos usados | | Rol                    | Contexto de uso           | Nivel de Precio Punto de precio para una Experiencia. Los niveles pueden ser específicos por edición y soportar múltiples tipos de precio. | Tipo de Precio | Descripción                                    | | -------------- | ---------------------------------------------- | | fixed        | Tarifa plana independiente de los asistentes   | | perPerson    | Tarifa multiplicada por el número de personas  | | perGroup     | Tarifa para todo el grupo                      | | from         | Precio inicial para precio variable            | | quote        | Precio personalizado ingresado por el operador | Publicación Capa de contenido editorial/SEO para el sitio web público. Las publicaciones existen separadamente de las Experiencias y proporcionan la narrativa, imágenes y contenido SEO. | Categoría       | Caso de Uso                     | | --------------- | ------------------------------- | | landing       | Páginas de destino principales  | | blog          | Artículos editoriales           | | highlight     | Contenido destacado             | | institutional | Acerca de, políticas            | | faq           | Páginas de preguntas frecuentes | R Recurso Persona o equipo asignado a slots para gestión de disponibilidad y capacidad. | Tipo          | Descripción                   | | ------------- | ----------------------------- | | instructor  | Maestro/facilitador principal | | facilitator | Facilitador de apoyo          | | therapist   | Proveedor de terapia          | | equipment   | Recurso de equipo             | Rol de Asignación de Recurso Rol de un recurso asignado dentro de un slot: | Rol         | Descripción                | | ----------- | -------------------------- | | lead      | Persona asignada principal | | assistant | Persona de apoyo           | | support   | Soporte adicional          | | equipment | Provisión de equipo        | Rol Permiso basado en etiquetas que determina el nivel de acceso. Ver Etiqueta. S Modo de Venta Cómo los clientes compran la experiencia. | Modo       | Descripción                                      | | ---------- | ------------------------------------------------ | | direct   | Compra inmediata                                 | | request  | Requiere aprobación de solicitud de reserva      | | assisted | Venta por teléfono/en persona asistida por admin | | pass     | Requiere pase activo                             | Sección Bloque de contenido modular dentro de una Publicación. | Tipo           | Descripción                        | | -------------- | ---------------------------------- | | hero         | Encabezado de ancho completo       | | text         | Contenido de texto rico            | | gallery      | Cuadrícula de imágenes             | | highlights   | Experiencias destacadas            | | faq          | Acordeón de preguntas y respuestas | | itinerary    | Programa día por día               | | testimonials | Citas de clientes                  | | inclusions   | Lista de elementos incluidos       | | restrictions | Lista de exclusiones               | | cta          | Llamada a la acción                | | video        | Video embebido                     | Slot Instancia de fecha/hora específica cuando una Experiencia está disponible para reservación. | Tipo            | Descripción                 | | --------------- | --------------------------- | | singleSession | Sesión única                | | multiDay      | Múltiples días consecutivos | | retreatDay    | Día dentro de un retiro     | | private       | Reservación privada         | | Estado      | Descripción                 | | ----------- | --------------------------- | | draft     | No publicado aún            | | published | Disponible para reservación | | full      | En capacidad máxima         | | cancelled | Cancelado                   | Instantánea Copia JSON de datos de precio/experiencia almacenada al momento de la compra. Las instantáneas aseguran precisión histórica independientemente de cambios futuros. Información del Sistema Estado de la plataforma y datos de versión mostrados en admin para monitoreo. T Ticket Confirmación de reservación con código QR para validación de check-in. Los tickets se generan para experiencias con fulfillmentType: ticket. | Estado      | Descripción            | | ----------- | ---------------------- | | pending   | Esperando confirmación | | confirmed | Válido y listo         | | used      | Check-in realizado     | | cancelled | Ticket cancelado       | | expired   | Fecha del slot pasada  | Validación de Ticket Proceso de verificar autenticidad y elegibilidad del ticket para check-in. Valida: - El ticket existe y es válido - El estado es confirmed - El pago del pedido es paid o confirmed - La fecha/hora del slot coincide - No se ha hecho check-in previamente U Pase de Usuario Pase comprado y activado por un cliente. Vincula la definición del pase al usuario comprador. Perfil de Usuario Datos de perfil extendidos para usuarios de Appwrite incluyendo nombre, teléfono, preferencias y notas internas."
     },
     "headings": {
       "en": [
@@ -30646,308 +30642,308 @@
           "text": "Agenda",
           "id": "agenda",
           "line": 21,
-          "position": 568
+          "position": 726
         },
         {
           "level": 3,
           "text": "Assisted Sale",
           "id": "assisted-sale",
           "line": 25,
-          "position": 700
+          "position": 858
         },
         {
           "level": 2,
           "text": "B",
           "id": "b",
           "line": 29,
-          "position": 859
+          "position": 1017
         },
         {
           "level": 3,
           "text": "Booking Request",
           "id": "booking-request",
           "line": 31,
-          "position": 865
+          "position": 1023
         },
         {
           "level": 2,
           "text": "C",
           "id": "c",
           "line": 43,
-          "position": 1334
+          "position": 1600
         },
         {
           "level": 3,
           "text": "Client",
           "id": "client",
           "line": 45,
-          "position": 1340
+          "position": 1606
         },
         {
           "level": 3,
           "text": "Collection",
           "id": "collection",
           "line": 49,
-          "position": 1474
+          "position": 1740
         },
         {
           "level": 3,
           "text": "Content",
           "id": "content",
           "line": 53,
-          "position": 1569
+          "position": 1835
         },
         {
           "level": 2,
           "text": "D",
           "id": "d",
           "line": 57,
-          "position": 1743
+          "position": 2009
         },
         {
           "level": 3,
           "text": "Domain Separation",
           "id": "domain-separation",
           "line": 59,
-          "position": 1749
+          "position": 2015
         },
         {
           "level": 2,
           "text": "E",
           "id": "e",
           "line": 71,
-          "position": 2250
+          "position": 2750
         },
         {
           "level": 3,
           "text": "Edition",
           "id": "edition",
           "line": 73,
-          "position": 2256
+          "position": 2756
         },
         {
           "level": 3,
           "text": "Experience",
           "id": "experience",
           "line": 87,
-          "position": 2783
+          "position": 3645
         },
         {
           "level": 3,
           "text": "Experience Tabs",
           "id": "experience-tabs",
           "line": 99,
-          "position": 3169
+          "position": 4149
         },
         {
           "level": 2,
           "text": "F",
           "id": "f",
           "line": 110,
-          "position": 3477
+          "position": 4619
         },
         {
           "level": 3,
           "text": "Fulfillment Type",
           "id": "fulfillment-type",
           "line": 112,
-          "position": 3483
+          "position": 4625
         },
         {
           "level": 2,
           "text": "G",
           "id": "g",
           "line": 121,
-          "position": 3699
+          "position": 4907
         },
         {
           "level": 3,
           "text": "Ghost User",
           "id": "ghost-user",
           "line": 123,
-          "position": 3705
+          "position": 4913
         },
         {
           "level": 2,
           "text": "L",
           "id": "l",
           "line": 127,
-          "position": 3828
+          "position": 5036
         },
         {
           "level": 3,
           "text": "Label",
           "id": "label",
           "line": 129,
-          "position": 3834
+          "position": 5042
         },
         {
           "level": 2,
           "text": "O",
           "id": "o",
           "line": 140,
-          "position": 4104
+          "position": 5376
         },
         {
           "level": 3,
           "text": "Order",
           "id": "order",
           "line": 142,
-          "position": 4110
+          "position": 5382
         },
         {
           "level": 3,
           "text": "Order Line Item",
           "id": "order-line-item",
           "line": 155,
-          "position": 4519
+          "position": 5838
         },
         {
           "level": 2,
           "text": "P",
           "id": "p",
           "line": 168,
-          "position": 4862
+          "position": 6280
         },
         {
           "level": 3,
           "text": "Pass",
           "id": "pass",
           "line": 170,
-          "position": 4868
+          "position": 6286
         },
         {
           "level": 3,
           "text": "Pass Consumption",
           "id": "pass-consumption",
           "line": 181,
-          "position": 5190
+          "position": 6647
         },
         {
           "level": 3,
           "text": "Pricing Tier",
           "id": "pricing-tier",
           "line": 192,
-          "position": 5468
+          "position": 7009
         },
         {
           "level": 3,
           "text": "Publication",
           "id": "publication",
           "line": 204,
-          "position": 5878
+          "position": 7502
         },
         {
           "level": 2,
           "text": "R",
           "id": "r",
           "line": 216,
-          "position": 6261
+          "position": 7980
         },
         {
           "level": 3,
           "text": "Resource",
           "id": "resource",
           "line": 218,
-          "position": 6267
+          "position": 7986
         },
         {
           "level": 3,
           "text": "Resource Assignment Role",
           "id": "resource-assignment-role",
           "line": 229,
-          "position": 6565
+          "position": 8352
         },
         {
           "level": 3,
           "text": "Role",
           "id": "role",
           "line": 240,
-          "position": 6830
+          "position": 8680
         },
         {
           "level": 2,
           "text": "S",
           "id": "s",
           "line": 244,
-          "position": 6901
+          "position": 8751
         },
         {
           "level": 3,
           "text": "Sale Mode",
           "id": "sale-mode",
           "line": 246,
-          "position": 6907
+          "position": 8757
         },
         {
           "level": 3,
           "text": "Section",
           "id": "section",
           "line": 257,
-          "position": 7180
+          "position": 9131
         },
         {
           "level": 3,
           "text": "Slot",
           "id": "slot",
           "line": 275,
-          "position": 7647
+          "position": 9736
         },
         {
           "level": 3,
           "text": "Snapshot",
           "id": "snapshot",
           "line": 293,
-          "position": 8108
+          "position": 10350
         },
         {
           "level": 3,
           "text": "System Information",
           "id": "system-information",
           "line": 297,
-          "position": 8250
+          "position": 10492
         },
         {
           "level": 2,
           "text": "T",
           "id": "t",
           "line": 301,
-          "position": 8343
+          "position": 10585
         },
         {
           "level": 3,
           "text": "Ticket",
           "id": "ticket",
           "line": 303,
-          "position": 8349
+          "position": 10591
         },
         {
           "level": 3,
           "text": "Ticket Validation",
           "id": "ticket-validation",
           "line": 315,
-          "position": 8704
+          "position": 11014
         },
         {
           "level": 2,
           "text": "U",
           "id": "u",
-          "line": 324,
-          "position": 8954
+          "line": 325,
+          "position": 11265
         },
         {
           "level": 3,
           "text": "User Pass",
           "id": "user-pass",
-          "line": 326,
-          "position": 8960
+          "line": 327,
+          "position": 11271
         },
         {
           "level": 3,
           "text": "User Profile",
           "id": "user-profile",
-          "line": 330,
-          "position": 9068
+          "line": 331,
+          "position": 11379
         }
       ],
       "es": [
@@ -30977,308 +30973,308 @@
           "text": "Agenda",
           "id": "agenda",
           "line": 21,
-          "position": 653
+          "position": 833
         },
         {
           "level": 3,
           "text": "Venta Asistida",
           "id": "venta-asistida",
           "line": 25,
-          "position": 792
+          "position": 972
         },
         {
           "level": 2,
           "text": "B",
           "id": "b",
           "line": 29,
-          "position": 968
+          "position": 1148
         },
         {
           "level": 3,
           "text": "Solicitud de Reserva",
           "id": "solicitud-de-reserva",
           "line": 31,
-          "position": 974
+          "position": 1154
         },
         {
           "level": 2,
           "text": "C",
           "id": "c",
           "line": 43,
-          "position": 1493
+          "position": 1796
         },
         {
           "level": 3,
           "text": "Cliente",
           "id": "cliente",
           "line": 45,
-          "position": 1499
+          "position": 1802
         },
         {
           "level": 3,
           "text": "Colección",
           "id": "colecci-n",
           "line": 49,
-          "position": 1645
+          "position": 1948
         },
         {
           "level": 3,
           "text": "Contenido",
           "id": "contenido",
           "line": 53,
-          "position": 1757
+          "position": 2060
         },
         {
           "level": 2,
           "text": "D",
           "id": "d",
           "line": 57,
-          "position": 1940
+          "position": 2243
         },
         {
           "level": 3,
           "text": "Separación de Dominio",
           "id": "separaci-n-de-dominio",
           "line": 59,
-          "position": 1946
+          "position": 2249
         },
         {
           "level": 2,
           "text": "E",
           "id": "e",
           "line": 71,
-          "position": 2510
+          "position": 3068
         },
         {
           "level": 3,
           "text": "Edición",
           "id": "edici-n",
           "line": 73,
-          "position": 2516
+          "position": 3074
         },
         {
           "level": 3,
           "text": "Experiencia",
           "id": "experiencia",
           "line": 87,
-          "position": 3106
+          "position": 3994
         },
         {
           "level": 3,
           "text": "Pestañas de Experiencia",
           "id": "pesta-as-de-experiencia",
           "line": 99,
-          "position": 3520
+          "position": 4523
         },
         {
           "level": 2,
           "text": "F",
           "id": "f",
           "line": 110,
-          "position": 3895
+          "position": 5097
         },
         {
           "level": 3,
           "text": "Tipo de Cumplimiento",
           "id": "tipo-de-cumplimiento",
           "line": 112,
-          "position": 3901
+          "position": 5103
         },
         {
           "level": 2,
           "text": "G",
           "id": "g",
           "line": 121,
-          "position": 4123
+          "position": 5406
         },
         {
           "level": 3,
           "text": "Usuario Fantasma",
           "id": "usuario-fantasma",
           "line": 123,
-          "position": 4129
+          "position": 5412
         },
         {
           "level": 2,
           "text": "L",
           "id": "l",
           "line": 127,
-          "position": 4282
+          "position": 5565
         },
         {
           "level": 3,
           "text": "Etiqueta",
           "id": "etiqueta",
           "line": 129,
-          "position": 4288
+          "position": 5571
         },
         {
           "level": 2,
           "text": "O",
           "id": "o",
           "line": 140,
-          "position": 4606
+          "position": 5954
         },
         {
           "level": 3,
           "text": "Pedido",
           "id": "pedido",
           "line": 142,
-          "position": 4612
+          "position": 5960
         },
         {
           "level": 3,
           "text": "Artículo de Línea del Pedido",
           "id": "art-culo-de-l-nea-del-pedido",
           "line": 155,
-          "position": 5062
+          "position": 6534
         },
         {
           "level": 2,
           "text": "P",
           "id": "p",
           "line": 168,
-          "position": 5493
+          "position": 7151
         },
         {
           "level": 3,
           "text": "Pase",
           "id": "pase",
           "line": 170,
-          "position": 5499
+          "position": 7157
         },
         {
           "level": 3,
           "text": "Consumo de Pase",
           "id": "consumo-de-pase",
           "line": 181,
-          "position": 5861
+          "position": 7596
         },
         {
           "level": 3,
           "text": "Nivel de Precio",
           "id": "nivel-de-precio",
           "line": 192,
-          "position": 6181
+          "position": 8030
         },
         {
           "level": 3,
           "text": "Publicación",
           "id": "publicaci-n",
           "line": 204,
-          "position": 6669
+          "position": 8652
         },
         {
           "level": 2,
           "text": "R",
           "id": "r",
           "line": 216,
-          "position": 7125
+          "position": 9223
         },
         {
           "level": 3,
           "text": "Recurso",
           "id": "recurso",
           "line": 218,
-          "position": 7131
+          "position": 9229
         },
         {
           "level": 3,
           "text": "Rol de Asignación de Recurso",
           "id": "rol-de-asignaci-n-de-recurso",
           "line": 229,
-          "position": 7435
+          "position": 9622
         },
         {
           "level": 3,
           "text": "Rol",
           "id": "rol",
           "line": 240,
-          "position": 7708
+          "position": 9974
         },
         {
           "level": 2,
           "text": "S",
           "id": "s",
           "line": 244,
-          "position": 7794
+          "position": 10060
         },
         {
           "level": 3,
           "text": "Modo de Venta",
           "id": "modo-de-venta",
           "line": 246,
-          "position": 7800
+          "position": 10066
         },
         {
           "level": 3,
           "text": "Sección",
           "id": "secci-n",
           "line": 257,
-          "position": 8101
+          "position": 10525
         },
         {
           "level": 3,
           "text": "Slot",
           "id": "slot",
           "line": 275,
-          "position": 8654
+          "position": 11323
         },
         {
           "level": 3,
           "text": "Instantánea",
           "id": "instant-nea",
           "line": 293,
-          "position": 9152
+          "position": 12004
         },
         {
           "level": 3,
           "text": "Información del Sistema",
           "id": "informaci-n-del-sistema",
           "line": 297,
-          "position": 9333
+          "position": 12185
         },
         {
           "level": 2,
           "text": "T",
           "id": "t",
           "line": 301,
-          "position": 9441
+          "position": 12293
         },
         {
           "level": 3,
           "text": "Ticket",
           "id": "ticket",
           "line": 303,
-          "position": 9447
+          "position": 12299
         },
         {
           "level": 3,
           "text": "Validación de Ticket",
           "id": "validaci-n-de-ticket",
           "line": 315,
-          "position": 9831
+          "position": 12743
         },
         {
           "level": 2,
           "text": "U",
           "id": "u",
-          "line": 324,
-          "position": 10116
+          "line": 325,
+          "position": 13029
         },
         {
           "level": 3,
           "text": "Pase de Usuario",
           "id": "pase-de-usuario",
-          "line": 326,
-          "position": 10122
+          "line": 327,
+          "position": 13035
         },
         {
           "level": 3,
           "text": "Perfil de Usuario",
           "id": "perfil-de-usuario",
-          "line": 330,
-          "position": 10238
+          "line": 331,
+          "position": 13151
         }
       ]
     },

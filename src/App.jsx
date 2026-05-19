@@ -408,6 +408,7 @@ export default function App() {
                 path="orders/:orderId"
                 element={<PortalOrderDetailPage />}
               />
+
               <Route path="profile" element={<PortalProfilePage />} />
             </Route>
           </Route>

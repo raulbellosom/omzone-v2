@@ -6,7 +6,6 @@ import UserAvatar from "@/components/common/UserAvatar";
 import { ROUTES } from "@/constants/routes";
 import {
   Ticket,
-  Sparkles,
   ShoppingBag,
   Calendar,
   ArrowRight,
@@ -80,8 +79,8 @@ function DashboardSkeleton() {
   return (
     <div className="animate-pulse space-y-6">
       <div className="h-8 w-48 bg-warm-gray/40 rounded-lg" />
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {[1, 2, 3].map((i) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {[1, 2].map((i) => (
           <div key={i} className="h-20 bg-warm-gray/30 rounded-2xl" />
         ))}
       </div>
@@ -111,7 +110,7 @@ export default function PortalDashboardPage() {
     "there";
   const photoId = profile?.photoId || null;
   const hasActivity =
-    data.activeTickets > 0 || data.activePasses > 0 || data.recentOrders > 0;
+    data.activeTickets > 0 || data.recentOrders > 0;
 
   return (
     <div className="space-y-8">
@@ -135,20 +134,13 @@ export default function PortalDashboardPage() {
       )}
 
       {/* Activity stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <StatCard
           icon={Ticket}
           label="Tickets activos"
           value={data.activeTickets}
           to={ROUTES.PORTAL_TICKETS}
           color="sage"
-        />
-        <StatCard
-          icon={Sparkles}
-          label="Pases activos"
-          value={data.activePasses}
-          to={ROUTES.PORTAL_PASSES}
-          color="amber"
         />
         <StatCard
           icon={ShoppingBag}
@@ -210,7 +202,7 @@ export default function PortalDashboardPage() {
           <h2 className="font-display text-lg font-semibold text-charcoal mb-3">
             Acceso rápido
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {[
               { label: "Mis Tickets", to: ROUTES.PORTAL_TICKETS, icon: Ticket },
               {
@@ -218,7 +210,6 @@ export default function PortalDashboardPage() {
                 to: ROUTES.PORTAL_ORDERS,
                 icon: ShoppingBag,
               },
-              { label: "Mis Pases", to: ROUTES.PORTAL_PASSES, icon: Sparkles },
               { label: "Mi Perfil", to: ROUTES.PORTAL_PROFILE, icon: User },
             ].map((link) => (
               <Link

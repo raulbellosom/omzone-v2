@@ -33,6 +33,9 @@ export const ROUTES = {
   PORTAL_ORDER: "/portal/orders/:id",
   PORTAL_TICKETS: "/portal/tickets",
   PORTAL_TICKET_DETAIL: "/portal/tickets/:ticketId",
+  PORTAL_PASSES: "/portal/passes",
+  PORTAL_PASS_DETAIL: "/portal/passes/:userPassId",
+  PORTAL_PASS_USE: "/portal/passes/:userPassId/use",
   PORTAL_PROFILE: "/portal/profile",
 
   // Admin

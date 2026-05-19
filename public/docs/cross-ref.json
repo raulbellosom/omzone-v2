@@ -210124,25 +210124,7 @@
     ]
   },
   {
-    "term": "| admin only | not available |\n|",
-    "pages": [
-      {
-        "slug": "introduction",
-        "title": "Introduction to OMZONE Admin"
-      }
-    ]
-  },
-  {
-    "term": "| public catalog | available for booking |\n|",
-    "pages": [
-      {
-        "slug": "introduction",
-        "title": "Introduction to OMZONE Admin"
-      }
-    ]
-  },
-  {
-    "term": "| yes - qr code | full check-in workflow |\n|",
+    "term": "| yes - qr code    | full check-in workflow   |\n|",
     "pages": [
       {
         "slug": "introduction",

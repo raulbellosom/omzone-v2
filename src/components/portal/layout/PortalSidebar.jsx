@@ -1,8 +1,5 @@
-import { NavLink, useLocation } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { useUserProfile } from "@/hooks/useUserProfile";
+import { NavLink } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
-import UserAvatar from "@/components/common/UserAvatar";
 import { ROUTES } from "@/constants/routes";
 import {
   Compass,
@@ -10,9 +7,6 @@ import {
   ShoppingBag,
   Ticket,
   User,
-  LogOut,
-  ArrowLeft,
-  X,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -24,116 +18,45 @@ const NAV_ITEMS = [
 ];
 
 /**
- * Portal sidebar — desktop: persistent, mobile: overlay sheet.
+ * Portal sidebar — desktop only (lg+). Navigation links only.
+ * User info, logout, and back-to-site are handled by the shared Navbar.
  */
-export default function PortalSidebar({ open, onClose }) {
-  const { user, logout } = useAuth();
-  const { profile } = useUserProfile();
+export default function PortalSidebar() {
   const { t } = useLanguage();
 
-  const displayName =
-    (profile?.firstName
-      ? `${profile.firstName} ${profile.lastName ?? ""}`.trim()
-      : null) ||
-    user?.name ||
-    user?.email?.split("@")[0] ||
-    "User";
-  const photoId = profile?.photoId || null;
-
-  const handleLogout = async () => {
-    await logout();
-  };
-
   return (
-    <>
-      {/* Mobile backdrop */}
-      {open && (
-        <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden"
-          onClick={onClose}
-        />
-      )}
+    <aside className="hidden lg:flex flex-col w-56 xl:w-60 shrink-0 sticky top-16 h-[calc(100dvh-4rem)] bg-white border-r border-warm-gray-dark/15 overflow-y-auto">
+      {/* Section label */}
+      <div className="px-5 pt-6 pb-3">
+        <p className="text-[10px] font-semibold text-charcoal-muted uppercase tracking-widest">
+          Mi Portal
+        </p>
+      </div>
 
-      {/* Sidebar */}
-      <aside
-        className={`
-          fixed top-0 left-0 h-full z-50 bg-white border-r border-warm-gray-dark/20
-          w-72 max-w-[75vw] sm:max-w-[80vw] flex flex-col
-          transition-transform duration-300 ease-out
-          lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 lg:z-auto
-          ${open ? "translate-x-0" : "-translate-x-full"}
-        `}
-      >
-        {/* Header — user info */}
-        <div className="p-5 border-b border-warm-gray-dark/10">
-          <div className="flex items-center justify-between mb-4 lg:hidden">
-            <span className="font-display text-sm font-semibold text-charcoal tracking-wider uppercase">
-              {t("portal.sidebar.myPortal")}
-            </span>
-            <button
-              onClick={onClose}
-              className="p-1.5 rounded-lg hover:bg-warm-gray/30 transition-colors"
-            >
-              <X className="w-5 h-5 text-charcoal-muted" />
-            </button>
-          </div>
-          <div className="flex items-center gap-3">
-            <UserAvatar name={displayName} photoId={photoId} size="lg" />
-            <div className="min-w-0">
-              <p className="font-display text-sm font-semibold text-charcoal truncate">
-                {displayName}
-              </p>
-              <p className="text-xs text-charcoal-muted truncate">
-                {user?.email}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 p-3 overflow-y-auto">
-          <ul className="space-y-1">
-            {NAV_ITEMS.map((item) => (
-              <li key={item.path}>
-                <NavLink
-                  to={item.path}
-                  end={item.end}
-                  onClick={onClose}
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                      isActive
-                        ? "bg-sage/10 text-sage"
-                        : "text-charcoal-muted hover:bg-warm-gray/20 hover:text-charcoal"
-                    }`
-                  }
-                >
-                  <item.icon className="w-5 h-5 shrink-0" />
-                  {t(`portal.sidebar.${item.key}`)}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* Back to landing + Logout */}
-        <div className="p-3 border-t border-warm-gray-dark/10 space-y-1">
-          <NavLink
-            to="/"
-            onClick={onClose}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-charcoal-muted hover:bg-warm-gray/20 hover:text-charcoal transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5 shrink-0" />
-            {t("portal.sidebar.backToSite")}
-          </NavLink>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-charcoal-muted hover:bg-red-50 hover:text-red-600 transition-colors"
-          >
-            <LogOut className="w-5 h-5 shrink-0" />
-            {t("portal.sidebar.logout")}
-          </button>
-        </div>
-      </aside>
-    </>
+      {/* Navigation */}
+      <nav className="flex-1 px-3 pb-6">
+        <ul className="space-y-0.5">
+          {NAV_ITEMS.map((item) => (
+            <li key={item.path}>
+              <NavLink
+                to={item.path}
+                end={item.end}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-sage/10 text-sage"
+                      : "text-charcoal-muted hover:bg-warm-gray/20 hover:text-charcoal"
+                  }`
+                }
+              >
+                <item.icon className="w-4.5 h-4.5 shrink-0" />
+                {t(`portal.sidebar.${item.key}`)}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
   );
 }
+

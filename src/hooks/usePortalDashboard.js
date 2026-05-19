@@ -6,13 +6,11 @@ import { useAuth } from "@/hooks/useAuth";
 
 const DB = env.appwriteDatabaseId;
 const COL_TICKETS = env.collectionTickets;
-const COL_USER_PASSES = env.collectionUserPasses;
 const COL_ORDERS = env.collectionOrders;
 
 /**
  * Aggregates dashboard data for the authenticated client:
  * - Active tickets count + upcoming 3 tickets (future slot dates)
- * - Active passes count (with remaining credits)
  * - Recent orders count
  */
 export function usePortalDashboard() {
@@ -20,7 +18,6 @@ export function usePortalDashboard() {
   const [data, setData] = useState({
     activeTickets: 0,
     upcomingTickets: [],
-    activePasses: 0,
     recentOrders: 0,
   });
   const [loading, setLoading] = useState(true);
@@ -42,12 +39,6 @@ export function usePortalDashboard() {
           Query.equal("status", "valid"),
           Query.limit(100),
         ]),
-        // Active user passes — status = active with credits > 0
-        databases.listDocuments(DB, COL_USER_PASSES, [
-          Query.equal("userId", user.$id),
-          Query.equal("status", "active"),
-          Query.limit(50),
-        ]),
         // Recent orders count
         databases.listDocuments(DB, COL_ORDERS, [
           Query.equal("userId", user.$id),
@@ -58,10 +49,8 @@ export function usePortalDashboard() {
 
       const tickets =
         results[0].status === "fulfilled" ? results[0].value : null;
-      const passes =
-        results[1].status === "fulfilled" ? results[1].value : null;
       const orders =
-        results[2].status === "fulfilled" ? results[2].value : null;
+        results[1].status === "fulfilled" ? results[1].value : null;
 
       // Parse upcoming from ticket snapshots — find those with future dates
       const now = new Date().toISOString();
@@ -99,7 +88,6 @@ export function usePortalDashboard() {
       setData({
         activeTickets: tickets?.total ?? 0,
         upcomingTickets,
-        activePasses: passes?.total ?? 0,
         recentOrders: orders?.total ?? 0,
       });
     } catch (err) {
