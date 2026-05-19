@@ -7,14 +7,7 @@ import StatusBadge from "./StatusBadge";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 
-const TYPE_LABEL_KEYS = [
-  "session",
-  "immersion",
-  "retreat",
-  "stay",
-  "private",
-  "package",
-];
+const TYPE_LABEL_KEYS = ["session", "immersion", "retreat", "stay", "private"];
 const SALE_MODE_KEYS = ["direct", "request"];
 
 function ConfirmOverlay({

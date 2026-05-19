@@ -17,7 +17,6 @@ const TYPE_OPTIONS = [
   { value: "retreat", i18nKey: "admin.experienceTypes.retreat" },
   { value: "stay", i18nKey: "admin.experienceTypes.stay" },
   { value: "private", i18nKey: "admin.experienceTypes.private" },
-  { value: "package", i18nKey: "admin.experienceTypes.package" },
 ];
 const SALE_MODE_OPTIONS = [
   { value: "direct", i18nKey: "admin.saleModes.direct" },
@@ -26,11 +25,10 @@ const SALE_MODE_OPTIONS = [
 const FULFILLMENT_OPTIONS = [
   { value: "ticket", i18nKey: "admin.fulfillmentTypes.ticket" },
   { value: "booking", i18nKey: "admin.fulfillmentTypes.booking" },
-  { value: "package", i18nKey: "admin.fulfillmentTypes.package" },
 ];
 const VALID_FULFILLMENT_BY_MODE = {
-  direct:  ["ticket", "booking", "package"],
-  request: ["ticket", "booking", "package"],
+  direct: ["ticket", "booking"],
+  request: ["ticket", "booking"],
 };
 const STATUS_OPTIONS = [
   { value: "draft", i18nKey: "admin.statuses.draft" },
@@ -186,10 +184,24 @@ export default function ExperienceForm({
     const valid = VALID_FULFILLMENT_BY_MODE[value] ?? [];
     const newFulfillment = valid.includes(form.fulfillmentType)
       ? form.fulfillmentType
-      : valid[0] ?? "";
-    setForm((prev) => ({ ...prev, saleMode: value, fulfillmentType: newFulfillment }));
-    if (errors.saleMode) setErrors((prev) => { const e = { ...prev }; delete e.saleMode; return e; });
-    if (errors.fulfillmentType) setErrors((prev) => { const e = { ...prev }; delete e.fulfillmentType; return e; });
+      : (valid[0] ?? "");
+    setForm((prev) => ({
+      ...prev,
+      saleMode: value,
+      fulfillmentType: newFulfillment,
+    }));
+    if (errors.saleMode)
+      setErrors((prev) => {
+        const e = { ...prev };
+        delete e.saleMode;
+        return e;
+      });
+    if (errors.fulfillmentType)
+      setErrors((prev) => {
+        const e = { ...prev };
+        delete e.fulfillmentType;
+        return e;
+      });
   }
 
   function handleSlugChange(value) {

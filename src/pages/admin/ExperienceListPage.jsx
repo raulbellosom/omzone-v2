@@ -24,7 +24,6 @@ const TYPE_OPTIONS = [
   { value: "retreat", i18nKey: "admin.experienceTypes.retreat" },
   { value: "stay", i18nKey: "admin.experienceTypes.stay" },
   { value: "private", i18nKey: "admin.experienceTypes.private" },
-  { value: "package", i18nKey: "admin.experienceTypes.package" },
 ];
 
 const STATUS_OPTIONS = [

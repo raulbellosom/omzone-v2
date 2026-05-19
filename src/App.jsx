@@ -31,9 +31,6 @@ const ExperiencesListPage = lazy(
 const ExperienceDetailPage = lazy(
   () => import("@/pages/public/ExperienceDetailPage"),
 );
-const PackageDetailPage = lazy(
-  () => import("@/pages/public/PackageDetailPage"),
-);
 const PublicationPage = lazy(() => import("@/pages/public/PublicationPage"));
 const PublicationsListPage = lazy(
   () => import("@/pages/public/PublicationsListPage"),
@@ -122,9 +119,6 @@ const ClientDetailPage = lazy(() => import("@/pages/admin/ClientDetailPage"));
 const SettingsPage = lazy(() => import("@/pages/admin/SettingsPage"));
 const AdminAccountPage = lazy(() => import("@/pages/admin/AdminAccountPage"));
 const CheckInPage = lazy(() => import("@/pages/admin/CheckInPage"));
-const PackageListPage = lazy(() => import("@/pages/admin/PackageListPage"));
-const PackageCreatePage = lazy(() => import("@/pages/admin/PackageCreatePage"));
-const PackageEditPage = lazy(() => import("@/pages/admin/PackageEditPage"));
 const PublicationListPage = lazy(
   () => import("@/pages/admin/PublicationListPage"),
 );
@@ -223,7 +217,6 @@ export default function App() {
               path="/experiences/:slug"
               element={<ExperienceDetailPage />}
             />
-            <Route path="/packages/:slug" element={<PackageDetailPage />} />
             <Route path="/publications" element={<PublicationsListPage />} />
             <Route path="/p/:slug" element={<PublicationPage />} />
             <Route path="/forbidden" element={<ForbiddenPage />} />
@@ -317,12 +310,6 @@ export default function App() {
               <Route path="addons" element={<AddonListPage />} />
               <Route path="addons/new" element={<AddonCreatePage />} />
               <Route path="addons/:addonId/edit" element={<AddonEditPage />} />
-              <Route path="packages" element={<PackageListPage />} />
-              <Route path="packages/new" element={<PackageCreatePage />} />
-              <Route
-                path="packages/:packageId/edit"
-                element={<PackageEditPage />}
-              />
               <Route path="slots" element={<AgendaGlobalPage />} />
               <Route path="resources" element={<ResourcesPage />} />
               <Route path="resources/new" element={<ResourceCreatePage />} />

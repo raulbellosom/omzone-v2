@@ -48,8 +48,6 @@ La barra lateral contiene siete secciones principales:
 
 - **Experiencias** (`/admin/experiences`) - Ofertas principales de bienestar (sesiones, inmersiones, retiros, estadías)
 - **Complementos** (`/admin/addons`) - Extras opcionales que pueden adjuntarse a experiencias
-- **Paquetes** (`/admin/packages`) - Experiencias打包adas con precio fijo
-- **Pases** (`/admin/passes`) - Pases de crédito consumibles para visitas repetidas
 
 ### Operaciones
 

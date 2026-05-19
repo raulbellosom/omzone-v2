@@ -11,7 +11,6 @@ const TYPE_BADGE_VARIANT = {
   retreat: "charcoal",
   stay: "warm",
   private: "outline",
-  package: "default",
 };
 
 /**
@@ -57,7 +56,8 @@ export default function ExperienceArticle({ experience, index = 0 }) {
               variant === "cinematic"
                 ? "rgba(255,255,255,0.35)"
                 : "rgba(0,0,0,0.12)",
-            color: variant === "cinematic" ? "rgba(255,255,255,0.7)" : undefined,
+            color:
+              variant === "cinematic" ? "rgba(255,255,255,0.7)" : undefined,
           }}
         >
           {tag}
@@ -70,7 +70,10 @@ export default function ExperienceArticle({ experience, index = 0 }) {
   if (variant === "cinematic") {
     return (
       <article className="group">
-        <Link to={detailPath} className="block relative h-[50vh] sm:h-[60vh] md:h-[65vh] min-h-[380px] max-h-[720px] overflow-hidden">
+        <Link
+          to={detailPath}
+          className="block relative h-[50vh] sm:h-[60vh] md:h-[65vh] min-h-[380px] max-h-[720px] overflow-hidden"
+        >
           <OptimizedImage
             fileId={experience.heroImageId}
             widths={[1000, 1600, 2200]}
@@ -175,7 +178,9 @@ export default function ExperienceArticle({ experience, index = 0 }) {
               {description}
             </p>
           )}
-          <div className="mt-4 flex flex-wrap gap-2 justify-center">{tagsEl}</div>
+          <div className="mt-4 flex flex-wrap gap-2 justify-center">
+            {tagsEl}
+          </div>
           <span className="inline-flex items-center gap-2 text-sage-dark font-medium text-sm mt-5 group-hover:gap-3 transition-all duration-300">
             {t("experienceList.discoverCta")}
             <ArrowRight className="h-4 w-4" />

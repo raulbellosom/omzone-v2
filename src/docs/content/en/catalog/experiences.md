@@ -51,7 +51,6 @@ Classifies what kind of experience this is. This affects how it's organized on t
 | Retreat   | A multi-day program                          |
 | Stay      | Lodging + integrated activities              |
 | Private   | An exclusive experience for a specific group |
-| Package   | A bundle of multiple experiences             |
 
 **Sale mode**
 Defines how clients can purchase this experience.
@@ -72,8 +71,6 @@ What the client receives after confirming their purchase.
 | ----------- | ----------------------------------------------------- |
 | Ticket      | A digital ticket with a QR code to present on the day |
 | Booking     | A booking confirmation (no physical ticket)           |
-| Pass        | Access to a recurring pass                            |
-| Package     | A bundle of packaged benefits                         |
 
 ---
 
@@ -105,7 +102,7 @@ Additional photos of the experience. You can upload multiple images that will ap
 If enabled, clients must choose an available time slot when booking. If disabled, they can purchase without selecting a date.
 
 > Enable for: sessions with a fixed schedule, retreats with specific dates.
-> Disable for: on-demand experiences or gift packages with no fixed date.
+> Disable for: on-demand experiences or gift items with no fixed date.
 
 **Requires specific date**
 Enable this if the experience has a single fixed date (for example, a particular weekend retreat).

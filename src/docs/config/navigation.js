@@ -34,8 +34,6 @@ export const docsNavigation = {
         order: 3,
       },
       { slug: "addons", title: { en: "Addons", es: "Complementos" }, order: 4 },
-      { slug: "packages", title: { en: "Packages", es: "Paquetes" }, order: 5 },
-      { slug: "passes", title: { en: "Passes", es: "Pases" }, order: 6 },
     ],
   },
   operations: {

@@ -26,7 +26,7 @@ const scripts = [
   "seed-experiences.mjs",
   "seed-pricing-rules.mjs",
   "seed-passes.mjs",
-  "seed-packages.mjs",
+  // "seed-packages.mjs",   // feature discontinued
   "seed-publications.mjs",
   "seed-notification-templates.mjs",
   "seed-reminder-template.mjs",

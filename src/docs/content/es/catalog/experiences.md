@@ -51,7 +51,6 @@ Clasifica qué categoría de experiencia es. Esto afecta cómo se organiza en la
 | Retiro    | Programa de varios días                |
 | Estancia  | Hospedaje + actividades integradas     |
 | Privada   | Experiencia exclusiva para un grupo    |
-| Paquete   | Conjunto de varias experiencias        |
 
 **Modo de venta**
 Define cómo el cliente puede comprar esta experiencia.
@@ -72,8 +71,6 @@ Qué recibe el cliente al confirmar su compra.
 | ------- | ----------------------------------------------------------------------- |
 | Ticket  | Un ticket digital con código QR para presentar el día de la experiencia |
 | Reserva | Una confirmación de reserva (sin ticket físico)                         |
-| Pase    | Acceso a un pase recurrente                                             |
-| Paquete | Un conjunto de beneficios empaquetados                                  |
 
 ---
 
@@ -105,7 +102,7 @@ Fotos adicionales de la experiencia. Puedes subir varias imágenes que aparecer�
 Si activas esto, el cliente debe elegir un horario disponible al reservar. Si lo desactivas, puede comprar sin elegir fecha.
 
 > Actívalo para: sesiones con horario fijo, retiros con fechas específicas.
-> Desactívalo para: experiencias a demanda o paquetes de regalo sin fecha fija.
+> Desactívalo para: experiencias a demanda o artículos de regalo sin fecha fija.
 
 **Requiere fecha específica**
 Actívalo si la experiencia tiene una sola fecha fija (por ejemplo, un retiro de un fin de semana en particular).

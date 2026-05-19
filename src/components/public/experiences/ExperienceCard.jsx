@@ -10,7 +10,6 @@ const TYPE_BADGE_VARIANT = {
   retreat: "charcoal",
   stay: "warm",
   private: "outline",
-  package: "default",
 };
 
 function formatPrice(amount, currency = "MXN") {

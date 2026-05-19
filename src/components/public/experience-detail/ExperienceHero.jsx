@@ -11,7 +11,6 @@ const TYPE_LABELS = {
   retreat: "Retreat",
   stay: "Stay",
   private: "Private",
-  package: "Package",
 };
 const TYPE_BADGE = {
   session: "sage",
@@ -19,7 +18,6 @@ const TYPE_BADGE = {
   retreat: "charcoal",
   stay: "warm",
   private: "outline",
-  package: "default",
 };
 
 export default function ExperienceHero({ experience }) {
