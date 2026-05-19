@@ -177,8 +177,15 @@ function PricingSidebar({ tiers, experience }) {
 
 export default function ExperienceDetailPage() {
   const { slug } = useParams();
-  const { experience, pricingTiers, slots, addons, sections, loading, error } =
-    useExperienceDetail(slug);
+  const {
+    experience,
+    pricingTiers,
+    slots,
+    addons,
+    sections,
+    loading,
+    error,
+  } = useExperienceDetail(slug);
   const { t } = useLanguage();
   const seo = useExperienceSEO(experience, { slots, pricingTiers });
 
@@ -269,7 +276,10 @@ export default function ExperienceDetailPage() {
           {/* ── Sidebar: pricing (lg+) ── */}
           <div className="hidden lg:block">
             <div className="sticky top-20">
-              <PricingSidebar tiers={pricingTiers} experience={experience} />
+              <PricingSidebar
+                tiers={pricingTiers}
+                experience={experience}
+              />
             </div>
           </div>
         </div>

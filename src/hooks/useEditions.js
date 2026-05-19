@@ -5,7 +5,10 @@ import env from "@/config/env";
 const DB = env.appwriteDatabaseId;
 const COL = env.collectionEditions;
 
-export function useEditions(experienceId, { includeArchived = false } = {}) {
+export function useEditions(
+  experienceId,
+  { includeArchived = false, onlyArchived = false } = {},
+) {
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -21,7 +24,11 @@ export function useEditions(experienceId, { includeArchived = false } = {}) {
         Query.orderDesc("$createdAt"),
         Query.limit(100),
       ];
-      if (!includeArchived) queries.push(Query.isNull("archivedAt"));
+      if (onlyArchived) {
+        queries.push(Query.isNotNull("archivedAt"));
+      } else if (!includeArchived) {
+        queries.push(Query.isNull("archivedAt"));
+      }
       const res = await databases.listDocuments(DB, COL, queries);
       setData(res.documents);
       setTotal(res.total);
@@ -30,7 +37,7 @@ export function useEditions(experienceId, { includeArchived = false } = {}) {
     } finally {
       setLoading(false);
     }
-  }, [experienceId, includeArchived]);
+  }, [experienceId, includeArchived, onlyArchived]);
 
   useEffect(() => {
     fetch();
@@ -63,4 +70,48 @@ export async function createEdition(payload) {
 
 export async function updateEdition(id, payload) {
   return databases.updateDocument(DB, COL, id, payload);
+}
+
+/**
+ * Public-facing hook: returns editions visible to clients on the
+ * experience detail page. Filters to `status="open"` and
+ * non-archived. Sorted by `startDate` ascending (nulls last).
+ */
+export function usePublicEditions(experienceId) {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!experienceId) {
+      setData([]);
+      setLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    databases
+      .listDocuments(DB, COL, [
+        Query.equal("experienceId", experienceId),
+        Query.equal("status", "open"),
+        Query.isNull("archivedAt"),
+        Query.orderAsc("startDate"),
+        Query.limit(50),
+      ])
+      .then((res) => {
+        if (!cancelled) setData(res.documents);
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err.message);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [experienceId]);
+
+  return { data, loading, error };
 }

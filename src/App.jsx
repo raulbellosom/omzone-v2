@@ -69,9 +69,6 @@ const ExperienceCreatePage = lazy(
 const ExperienceEditPage = lazy(
   () => import("@/pages/admin/ExperienceEditPage"),
 );
-const EditionListPage = lazy(() => import("@/pages/admin/EditionListPage"));
-const EditionCreatePage = lazy(() => import("@/pages/admin/EditionCreatePage"));
-const EditionEditPage = lazy(() => import("@/pages/admin/EditionEditPage"));
 const PricingTierListPage = lazy(
   () => import("@/pages/admin/PricingTierListPage"),
 );
@@ -273,18 +270,6 @@ export default function App() {
               <Route
                 path="experiences/:id/edit"
                 element={<ExperienceEditPage />}
-              />
-              <Route
-                path="experiences/:id/editions"
-                element={<EditionListPage />}
-              />
-              <Route
-                path="experiences/:id/editions/new"
-                element={<EditionCreatePage />}
-              />
-              <Route
-                path="experiences/:id/editions/:editionId/edit"
-                element={<EditionEditPage />}
               />
               <Route
                 path="experiences/:id/pricing"

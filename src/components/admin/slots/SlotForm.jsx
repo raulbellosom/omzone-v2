@@ -236,19 +236,7 @@ export default function SlotForm({
               }))}
             />
           </Field>
-          <Field
-            label={t("admin.slotForm.edition")}
-            hint={t("admin.slotForm.editionHint")}
-          >
-            <SearchCombobox
-              value={form.editionId}
-              onValueChange={(v) => set("editionId", v)}
-              options={editionOptions}
-              placeholder={t("admin.slotForm.noEdition")}
-              searchPlaceholder={t("admin.slotForm.searchEdition")}
-              emptyMessage={t("admin.common.noResults")}
-            />
-          </Field>
+          {/* Edition field hidden — editions disabled */}
         </div>
       </Card>
 

@@ -9,6 +9,7 @@
  * @input {string} payload.experienceId - Experience to purchase
  * @input {string} payload.pricingTierId - Selected pricing tier
  * @input {string} [payload.slotId] - Selected slot (required if experience.requiresSchedule)
+ * @input {string} [payload.editionId] - Selected edition (when booking via a public edition card)
  * @input {string[]} [payload.addonIds] - Selected addon IDs
  * @input {number} payload.quantity - Number of attendees/units (≥ 1)
  * @input {string} payload.customerName - Customer full name
@@ -405,6 +406,7 @@ export default async ({ req, res, log, error }) => {
       experienceId,
       pricingTierId,
       slotId,
+      editionId,
       addonIds = [],
       quantity,
       customerName,
@@ -608,6 +610,7 @@ export default async ({ req, res, log, error }) => {
     const COL_PRICING_TIERS =
       process.env.APPWRITE_COLLECTION_PRICING_TIERS || "pricing_tiers";
     const COL_SLOTS = process.env.APPWRITE_COLLECTION_SLOTS || "slots";
+    const COL_EDITIONS = process.env.APPWRITE_COLLECTION_EDITIONS || "editions";
     const COL_ADDONS = process.env.APPWRITE_COLLECTION_ADDONS || "addons";
     const COL_ADDON_ASSIGNMENTS =
       process.env.APPWRITE_COLLECTION_ADDON_ASSIGNMENTS || "addon_assignments";
@@ -1050,6 +1053,58 @@ export default async ({ req, res, log, error }) => {
       );
     }
 
+    // ── 6b. Validate edition (if provided) ─────────────────────────────────
+    _step = "validate-edition";
+    let edition = null;
+    if (editionId) {
+      try {
+        edition = await db.getDocument(DB, COL_EDITIONS, editionId);
+      } catch {
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_EDITION_NOT_FOUND",
+              message: "Edition not found",
+            },
+          },
+          404,
+        );
+      }
+
+      if (
+        edition.experienceId !== experienceId ||
+        edition.archivedAt ||
+        edition.status !== "open"
+      ) {
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_EDITION_NOT_AVAILABLE",
+              message: "Edition is not available for booking",
+            },
+          },
+          400,
+        );
+      }
+
+      // Global tiers (no editionId) are compatible with any edition.
+      // Only edition-specific tiers must match the requested edition.
+      if (tier.editionId && tier.editionId !== edition.$id) {
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_TIER_NOT_IN_EDITION",
+              message: "Selected pricing tier does not belong to this edition",
+            },
+          },
+          400,
+        );
+      }
+    }
+
     // ── 7. Validate slot (if required) ─────────────────────────────────────
     _step = "validate-slot";
     let slot = null;
@@ -1094,6 +1149,18 @@ export default async ({ req, res, log, error }) => {
             error: {
               code: "ERR_CHECKOUT_SLOT_MISMATCH",
               message: "Slot does not belong to this experience",
+            },
+          },
+          400,
+        );
+      }
+      if (edition && slot.editionId && slot.editionId !== edition.$id) {
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_CHECKOUT_SLOT_NOT_IN_EDITION",
+              message: "Selected slot does not belong to this edition",
             },
           },
           400,
@@ -1355,6 +1422,11 @@ export default async ({ req, res, log, error }) => {
       slotStart: slot ? slot.startDatetime : null,
       slotEnd: slot ? slot.endDatetime : null,
       slotTimezone: slot ? slot.timezone : null,
+      editionId: edition ? edition.$id : null,
+      editionName: edition ? edition.name : null,
+      editionNameEs: edition ? edition.nameEs || null : null,
+      editionStartDate: edition ? edition.startDate || null : null,
+      editionEndDate: edition ? edition.endDate || null : null,
       constraints: {
         effectiveMin: constraints.effectiveMin,
         effectiveMax: constraints.effectiveMax,

@@ -7,7 +7,6 @@ import {
   updatePricingTier,
   reorderTiers,
 } from "@/hooks/usePricingTiers";
-import { useEditions } from "@/hooks/useEditions";
 import { useExperience } from "@/hooks/useExperiences";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -91,7 +90,6 @@ export default function PricingTierListPage() {
   const { id } = useParams();
   const { data: experience, loading: expLoading } = useExperience(id);
   const { data: tiers, loading, error, refetch } = usePricingTiers(id);
-  const { data: editions } = useEditions(id);
   const { t } = useLanguage();
 
   const [showForm, setShowForm] = useState(false);
@@ -204,7 +202,7 @@ export default function PricingTierListPage() {
           </h2>
           <PricingTierForm
             initialData={editingTier}
-            editions={editions}
+            editions={[]}
             onSubmit={handleSubmit}
             submitting={submitting}
             submitLabel={

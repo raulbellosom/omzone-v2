@@ -440,12 +440,13 @@ export default function HeroSlideForm({
         open={pickerOpen}
         onClose={() => setPickerOpen(false)}
         bucketId={env.bucketPublicResources}
+        buckets={env.imageBuckets}
         multiple={false}
         selected={form.mediaFileId ? [form.mediaFileId] : []}
-        onSelect={(ids) => {
+        onSelect={(ids, activeBucketId) => {
           if (ids?.[0]) {
             set("mediaFileId", ids[0]);
-            set("bucketId", env.bucketPublicResources);
+            set("bucketId", activeBucketId || env.bucketPublicResources);
           }
         }}
         isAdmin

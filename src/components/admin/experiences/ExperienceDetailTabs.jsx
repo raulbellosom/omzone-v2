@@ -4,7 +4,6 @@ import { useLanguage } from "@/hooks/useLanguage";
 
 const tabs = [
   { key: "admin.experiences.tabInfo", to: (id) => `/admin/experiences/${id}/edit` },
-  { key: "admin.experiences.tabEditions", to: (id) => `/admin/experiences/${id}/editions` },
   { key: "admin.experiences.tabPricing", to: (id) => `/admin/experiences/${id}/pricing` },
   { key: "admin.experiences.tabAddons", to: (id) => `/admin/experiences/${id}/addons` },
   { key: "admin.experiences.tabSlots", to: (id) => `/admin/experiences/${id}/slots` },

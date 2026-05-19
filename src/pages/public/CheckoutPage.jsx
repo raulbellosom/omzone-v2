@@ -90,6 +90,10 @@ function CheckoutErrorBanner({ error, t, onDismiss }) {
     ERR_CHECKOUT_SLOT_NOT_FOUND: "checkoutErrors.slotNotFound",
     ERR_CHECKOUT_CONSTRAINT_INVALID: "checkoutErrors.constraintInvalid",
     ERR_CHECKOUT_TIER_SLOT_INCOMPATIBLE: "checkoutErrors.tierSlotIncompatible",
+    ERR_CHECKOUT_TIER_NOT_IN_EDITION: "checkoutErrors.tierNotInEdition",
+    ERR_CHECKOUT_SLOT_NOT_IN_EDITION: "checkoutErrors.slotNotInEdition",
+    ERR_CHECKOUT_EDITION_NOT_FOUND: "checkoutErrors.editionNotFound",
+    ERR_CHECKOUT_EDITION_NOT_AVAILABLE: "checkoutErrors.editionNotAvailable",
     ERR_CHECKOUT_SLOT_REQUIRED_ASSISTED: "checkoutErrors.slotRequiredAssisted",
     ERR_CHECKOUT_ADDON_PRICE_TYPE_UNSUPPORTED:
       "checkoutErrors.addonPriceTypeUnsupported",
@@ -141,6 +145,8 @@ export default function CheckoutPage() {
     pricingTiers,
     slots,
     enrichedAddons,
+    selectedEdition,
+    editionError,
     loading,
     loadError,
     selectedTierId,
@@ -193,6 +199,8 @@ export default function CheckoutPage() {
       experience={experience}
       pricingTiers={pricingTiers}
       slots={slots}
+      selectedEdition={selectedEdition}
+      editionError={editionError}
       selectedTierId={selectedTierId}
       setSelectedTierId={setSelectedTierId}
       selectedSlotId={selectedSlotId}

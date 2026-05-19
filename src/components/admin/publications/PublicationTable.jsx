@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Badge } from "@/components/common/Badge";
 import {
   Pencil,
   Archive,
@@ -103,7 +104,7 @@ function ActionsMenu({
       <ConfirmDialog
         open={confirm?.type === "restore"}
         title={t("admin.archive.restoreTitle")}
-        description={t("admin.archive.restoreDescription")}
+        description={t("admin.archive.restoreDesc")}
         confirmLabel={t("admin.archive.restore")}
         onConfirm={handleConfirm}
         onCancel={() => setConfirm(null)}
@@ -260,18 +261,28 @@ export default function PublicationTable({
                 ":id",
                 pub.$id,
               );
+              const isArchived = Boolean(pub.archivedAt);
               return (
                 <tr
                   key={pub.$id}
-                  className="group border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors"
+                  className={cn(
+                    "group border-b border-sand last:border-0 hover:bg-warm-gray/30 transition-colors",
+                    isArchived && "opacity-60",
+                  )}
                 >
                   <td className="px-4 py-3">
-                    <Link
-                      to={editUrl}
-                      className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors truncate max-w-60 block"
-                    >
-                      {pub.title}
-                    </Link>
+                    {isArchived ? (
+                      <span className="font-medium text-charcoal truncate max-w-60 block">
+                        {pub.title}
+                      </span>
+                    ) : (
+                      <Link
+                        to={editUrl}
+                        className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors truncate max-w-60 block"
+                      >
+                        {pub.title}
+                      </Link>
+                    )}
                     <p className="text-xs text-charcoal-subtle truncate max-w-60">
                       /{pub.slug}
                     </p>
@@ -280,7 +291,11 @@ export default function PublicationTable({
                     <PublicationCategoryChip category={pub.category} />
                   </td>
                   <td className="px-4 py-3">
-                    <StatusBadge status={pub.status} />
+                    {isArchived ? (
+                      <Badge variant="warm">{t("admin.archive.archivedBadge")}</Badge>
+                    ) : (
+                      <StatusBadge status={pub.status} />
+                    )}
                   </td>
                   <td className="px-4 py-3 text-charcoal-subtle hidden lg:table-cell">
                     {pub.publishedAt

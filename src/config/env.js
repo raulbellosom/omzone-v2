@@ -93,6 +93,38 @@ const env = {
   bucketPublicResources:
     import.meta.env.VITE_APPWRITE_BUCKET_PUBLIC_RESOURCES || "public-resources",
 
+  // ─── Image Buckets (communal media library tabs in picker) ───
+  imageBuckets: [
+    {
+      id:
+        import.meta.env.VITE_APPWRITE_BUCKET_EXPERIENCE_MEDIA ||
+        "experience_media",
+      label: "Media Library",
+    },
+    {
+      id:
+        import.meta.env.VITE_APPWRITE_BUCKET_PUBLICATION_MEDIA ||
+        "publication_media",
+      label: "Publications",
+    },
+    {
+      id:
+        import.meta.env.VITE_APPWRITE_BUCKET_ADDON_IMAGES || "addon_images",
+      label: "Addons",
+    },
+    {
+      id:
+        import.meta.env.VITE_APPWRITE_BUCKET_PACKAGE_IMAGES || "package_images",
+      label: "Packages",
+    },
+    {
+      id:
+        import.meta.env.VITE_APPWRITE_BUCKET_PUBLIC_RESOURCES ||
+        "public-resources",
+      label: "Public Resources",
+    },
+  ],
+
   // ─── Stripe ───
   stripePublishableKey: import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "",
 

@@ -11,7 +11,7 @@ const EXACT = new Set([
   "/passes",
 ]);
 
-const PREFIXES = ["/experiences/", "/packages/", "/passes/"];
+const PREFIXES = ["/experiences/", "/packages/", "/passes/", "/p/"];
 
 export default function isHeroRoute(pathname) {
   if (EXACT.has(pathname)) return true;

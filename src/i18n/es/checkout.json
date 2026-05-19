@@ -65,7 +65,9 @@
     "tierSlotIncompatible": "Esta opción de precio no coincide con el horario seleccionado.",
     "spot": "lugar",
     "spots": "lugares",
-    "attendees": "Número de asistentes"
+    "attendees": "Número de asistentes",
+    "youAreBookingEdition": "Estás reservando esta edición",
+    "editionNotAvailable": "La edición seleccionada ya no está disponible. Puedes seguir explorando otras opciones de esta experiencia."
   },
   "addonsStep": {
     "noAddons": "No hay complementos disponibles para esta experiencia.",
@@ -127,6 +129,10 @@
     "slotNotFound": "El horario seleccionado ya no está disponible. Elige otro.",
     "constraintInvalid": "Esta experiencia tiene una configuración inválida de cantidad. Contacta al soporte.",
     "tierSlotIncompatible": "La opción de precio seleccionada no es compatible con este horario.",
+    "tierNotInEdition": "La opción de precio seleccionada no pertenece a esta edición.",
+    "slotNotInEdition": "El horario seleccionado no pertenece a esta edición.",
+    "editionNotFound": "No encontramos la edición seleccionada.",
+    "editionNotAvailable": "La edición seleccionada ya no está disponible para reservar.",
     "slotRequiredAssisted": "Se requiere un horario para esta reserva agendada.",
     "addonPriceTypeUnsupported": "Un complemento seleccionado no está disponible para checkout directo.",
     "network": "Ocurrió un error de conexión. Verifica tu internet e intenta de nuevo.",

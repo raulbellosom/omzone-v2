@@ -37,7 +37,7 @@ export default function PublicationCard({ publication }) {
       {publication.heroImageId && (
         <OptimizedImage
           fileId={publication.heroImageId}
-          bucketId={env.bucketPublicationMedia}
+          bucketId={publication.heroBucketId || env.bucketExperienceMedia}
           widths={[400, 800]}
           alt={title}
           className="aspect-video"

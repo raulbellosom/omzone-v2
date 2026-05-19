@@ -36,13 +36,20 @@ export default function PublicationsListPage() {
       />
 
       {/* Hero section */}
-      <section className="bg-charcoal text-cream pt-28 pb-16 md:pt-36 md:pb-24">
-        <div className="container-shell text-center">
-          <BookOpen className="mx-auto h-10 w-10 text-sage mb-4" />
-          <h1 className="font-display text-3xl md:text-5xl font-bold mb-4">
+      <section className="relative w-full h-[60vh] min-h-105 max-h-160 overflow-hidden bg-charcoal text-cream">
+        <img
+          src="/images/mujer-practicando-yoga-en-estudio-luminoso.webp"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="eager"
+        />
+        <div className="absolute inset-0 bg-linear-to-t from-charcoal/80 via-charcoal/30 to-charcoal/20" />
+        <div className="relative z-10 flex flex-col items-center justify-end h-full pb-14 md:pb-20 text-center container-shell">
+          <h1 className="font-display text-3xl md:text-5xl font-bold mb-4 text-white drop-shadow-lg">
             {t("publications.heroTitle")}
           </h1>
-          <p className="text-cream/70 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
+          <p className="text-white/80 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
             {t("publications.heroSubtitle")}
           </p>
         </div>

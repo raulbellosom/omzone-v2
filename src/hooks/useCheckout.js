@@ -29,12 +29,15 @@ export function useCheckout() {
   const experienceId = searchParams.get("experienceId");
   const initialTierId = searchParams.get("pricingTierId");
   const initialAddonIds = searchParams.get("addonIds");
+  const initialEditionId = searchParams.get("editionId");
 
   const [experience, setExperience] = useState(null);
   const [pricingTiers, setPricingTiers] = useState([]);
   const [slots, setSlots] = useState([]);
   const [addons, setAddons] = useState([]);
   const [addonAssignments, setAddonAssignments] = useState([]);
+  const [selectedEdition, setSelectedEdition] = useState(null);
+  const [editionError, setEditionError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
 
@@ -170,18 +173,51 @@ export function useCheckout() {
 
         if (!cancelled) {
           setExperience(exp);
-          setPricingTiers(tiers);
+
+          // Resolve edition (if provided in URL). When invalid we surface
+          // an editionError but still let the user continue without it.
+          let edition = null;
+          if (initialEditionId) {
+            try {
+              const ed = await databases.getDocument(
+                DB,
+                env.collectionEditions,
+                initialEditionId,
+              );
+              if (
+                ed.experienceId === experienceId &&
+                ed.status === "open" &&
+                !ed.archivedAt
+              ) {
+                edition = ed;
+              } else {
+                setEditionError("edition_not_available");
+              }
+            } catch {
+              setEditionError("edition_not_available");
+            }
+          }
+          setSelectedEdition(edition);
+
+          // Global tiers (editionId = null) work with any edition.
+          // Edition-specific tiers are locked to their own edition.
+          const tiersForEdition = edition
+            ? tiers.filter(
+                (tier) => !tier.editionId || tier.editionId === edition.$id,
+              )
+            : tiers;
+          setPricingTiers(tiersForEdition);
           setSlots(slotsData);
           setAddons(addonsData);
           setAddonAssignments(assignments);
 
           if (
             initialTierId &&
-            tiers.some((tier) => tier.$id === initialTierId)
+            tiersForEdition.some((tier) => tier.$id === initialTierId)
           ) {
             setSelectedTierId(initialTierId);
-          } else if (tiers.length === 1) {
-            setSelectedTierId(tiers[0].$id);
+          } else if (tiersForEdition.length === 1) {
+            setSelectedTierId(tiersForEdition[0].$id);
           }
 
           const preSelected = new Set();
@@ -221,7 +257,7 @@ export function useCheckout() {
     return () => {
       cancelled = true;
     };
-  }, [experienceId, initialTierId, initialAddonIds, user]);
+  }, [experienceId, initialTierId, initialAddonIds, initialEditionId, user]);
 
   const selectedTier = useMemo(
     () => pricingTiers.find((tier) => tier.$id === selectedTierId) || null,
@@ -405,6 +441,7 @@ export function useCheckout() {
         frontendUrl: window.location.origin,
       };
 
+      if (selectedEdition?.$id) payload.editionId = selectedEdition.$id;
       if (selectedSlotId) payload.slotId = selectedSlotId;
       if (customerPhone.trim()) {
         payload.customerPhone = sanitizePhone(customerPhone);
@@ -457,6 +494,7 @@ export function useCheckout() {
     experienceId,
     selectedTierId,
     selectedSlotId,
+    selectedEdition,
     selectedAddonIds,
     quantity,
     customerName,
@@ -481,6 +519,8 @@ export function useCheckout() {
     pricingTiers,
     slots: compatibleSlots,
     enrichedAddons,
+    selectedEdition,
+    editionError,
     loading,
     loadError,
 

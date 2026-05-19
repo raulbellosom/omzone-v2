@@ -3,6 +3,7 @@ import { Input } from "@/components/common/Input";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 import GalleryManager from "@/components/admin/media/GalleryManager";
+import MediaImageField from "@/components/admin/media/MediaImageField";
 import env from "@/config/env";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
@@ -132,12 +133,13 @@ export default function SectionForm({
   }
 
   const isGallery = form.sectionType === "gallery";
+  const isHero = form.sectionType === "hero";
 
   function validate() {
     const e = {};
     if (!form.sectionType) e.sectionType = t("admin.sectionForm.typeRequired");
-    // Validate raw JSON textarea only for non-gallery sections
-    if (!isGallery && form.mediaIdsRaw.trim()) {
+    // Validate raw JSON textarea only for non-gallery, non-hero sections
+    if (!isGallery && !isHero && form.mediaIdsRaw.trim()) {
       try {
         const parsed = JSON.parse(form.mediaIdsRaw);
         if (!Array.isArray(parsed))
@@ -166,7 +168,7 @@ export default function SectionForm({
 
     // Serialize mediaIds: array → JSON string (or null)
     let mediaIdsValue = null;
-    if (isGallery) {
+    if (isGallery || isHero) {
       mediaIdsValue =
         form.mediaIds.length > 0 ? JSON.stringify(form.mediaIds) : null;
     } else {
@@ -283,7 +285,9 @@ export default function SectionForm({
             hint={
               isGallery
                 ? t("admin.sectionForm.galleryHint")
-                : t("admin.sectionForm.mediaArrayHint")
+                : isHero
+                  ? t("admin.sectionForm.heroImageHint")
+                  : t("admin.sectionForm.mediaArrayHint")
             }
             error={errors.mediaIds}
           >
@@ -291,8 +295,19 @@ export default function SectionForm({
               <GalleryManager
                 value={form.mediaIds}
                 onChange={(ids) => set("mediaIds", ids)}
-                bucketId={env.bucketPublicationMedia}
+                bucketId={env.bucketExperienceMedia}
+                buckets={env.imageBuckets}
                 isAdmin
+                disabled={isDisabled}
+              />
+            ) : isHero ? (
+              <MediaImageField
+                fileId={form.mediaIds[0] || ""}
+                bucketId={env.bucketExperienceMedia}
+                buckets={env.imageBuckets}
+                onChange={(fileId) =>
+                  set("mediaIds", fileId ? [fileId] : [])
+                }
                 disabled={isDisabled}
               />
             ) : (

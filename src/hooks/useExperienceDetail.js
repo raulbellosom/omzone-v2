@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { databases, storage, Query } from "@/lib/appwrite";
 import env from "@/config/env";
 
-const DB  = env.appwriteDatabaseId;
+const DB = env.appwriteDatabaseId;
 const BUCKET = env.bucketExperienceMedia;
 
 export function getPreviewUrl(fileId, { width = 1200, height = 800 } = {}) {
@@ -36,14 +36,19 @@ export function useExperienceDetail(slug) {
 
       try {
         // 1. Fetch experience by slug (published only)
-        const expRes = await databases.listDocuments(DB, env.collectionExperiences, [
-          Query.equal("slug", slug),
-          Query.equal("status", "published"),
-          Query.limit(1),
-        ]);
+        const expRes = await databases.listDocuments(
+          DB,
+          env.collectionExperiences,
+          [
+            Query.equal("slug", slug),
+            Query.equal("status", "published"),
+            Query.limit(1),
+          ],
+        );
 
         if (expRes.total === 0) {
-          if (!cancelled) setState((s) => ({ ...s, loading: false, error: "not_found" }));
+          if (!cancelled)
+            setState((s) => ({ ...s, loading: false, error: "not_found" }));
           return;
         }
 
@@ -52,38 +57,45 @@ export function useExperienceDetail(slug) {
         const now = new Date().toISOString();
 
         // 2. Parallel fetches
-        const [tiersRes, slotsRes, assignmentsRes, pubRes] = await Promise.allSettled([
-          databases.listDocuments(DB, env.collectionPricingTiers, [
-            Query.equal("experienceId", expId),
-            Query.equal("isActive", true),
-            Query.orderAsc("sortOrder"),
-            Query.limit(50),
-          ]),
-          databases.listDocuments(DB, env.collectionSlots, [
-            Query.equal("experienceId", expId),
-            Query.equal("status", "available"),
-            Query.greaterThan("startDatetime", now),
-            Query.orderAsc("startDatetime"),
-            Query.limit(20),
-          ]),
-          databases.listDocuments(DB, env.collectionAddonAssignments, [
-            Query.equal("experienceId", expId),
-            Query.orderAsc("sortOrder"),
-            Query.limit(50),
-          ]),
-          databases.listDocuments(DB, env.collectionPublications, [
-            Query.equal("experienceId", expId),
-            Query.equal("status", "published"),
-            Query.limit(1),
-          ]),
-        ]);
+        const [tiersRes, slotsRes, assignmentsRes, pubRes] =
+          await Promise.allSettled([
+            databases.listDocuments(DB, env.collectionPricingTiers, [
+              Query.equal("experienceId", expId),
+              Query.equal("isActive", true),
+              Query.orderAsc("sortOrder"),
+              Query.limit(50),
+            ]),
+            databases.listDocuments(DB, env.collectionSlots, [
+              Query.equal("experienceId", expId),
+              Query.equal("status", "available"),
+              Query.greaterThan("startDatetime", now),
+              Query.orderAsc("startDatetime"),
+              Query.limit(20),
+            ]),
+            databases.listDocuments(DB, env.collectionAddonAssignments, [
+              Query.equal("experienceId", expId),
+              Query.orderAsc("sortOrder"),
+              Query.limit(50),
+            ]),
+            databases.listDocuments(DB, env.collectionPublications, [
+              Query.equal("experienceId", expId),
+              Query.equal("status", "published"),
+              Query.limit(1),
+            ]),
+          ]);
 
-        const pricingTiers = tiersRes.status === "fulfilled" ? tiersRes.value.documents : [];
-        const slots = slotsRes.status === "fulfilled" ? slotsRes.value.documents : [];
-        const assignments = assignmentsRes.status === "fulfilled" ? assignmentsRes.value.documents : [];
-        const publication = pubRes.status === "fulfilled" && pubRes.value.total > 0
-          ? pubRes.value.documents[0]
-          : null;
+        const pricingTiers =
+          tiersRes.status === "fulfilled" ? tiersRes.value.documents : [];
+        const slots =
+          slotsRes.status === "fulfilled" ? slotsRes.value.documents : [];
+        const assignments =
+          assignmentsRes.status === "fulfilled"
+            ? assignmentsRes.value.documents
+            : [];
+        const publication =
+          pubRes.status === "fulfilled" && pubRes.value.total > 0
+            ? pubRes.value.documents[0]
+            : null;
 
         // 3. Fetch addons by IDs from assignments
         let addons = [];
@@ -91,11 +103,15 @@ export function useExperienceDetail(slug) {
           const addonIds = assignments.map((a) => a.addonId).filter(Boolean);
           if (addonIds.length > 0) {
             try {
-              const addonsRes = await databases.listDocuments(DB, env.collectionAddons, [
-                Query.equal("$id", addonIds),
-                Query.equal("status", "active"),
-                Query.limit(50),
-              ]);
+              const addonsRes = await databases.listDocuments(
+                DB,
+                env.collectionAddons,
+                [
+                  Query.equal("$id", addonIds),
+                  Query.equal("status", "active"),
+                  Query.limit(50),
+                ],
+              );
               // Enrich addons with assignment flags (isRequired)
               const assignmentByAddon = Object.fromEntries(
                 assignments.map((a) => [a.addonId, a]),
@@ -114,12 +130,16 @@ export function useExperienceDetail(slug) {
         let sections = [];
         if (publication) {
           try {
-            const sectionsRes = await databases.listDocuments(DB, env.collectionSections, [
-              Query.equal("publicationId", publication.$id),
-              Query.equal("isVisible", true),
-              Query.orderAsc("sortOrder"),
-              Query.limit(50),
-            ]);
+            const sectionsRes = await databases.listDocuments(
+              DB,
+              env.collectionSections,
+              [
+                Query.equal("publicationId", publication.$id),
+                Query.equal("isVisible", true),
+                Query.orderAsc("sortOrder"),
+                Query.limit(50),
+              ],
+            );
             sections = sectionsRes.documents;
           } catch {
             // non-fatal — render without sections
@@ -127,15 +147,27 @@ export function useExperienceDetail(slug) {
         }
 
         if (!cancelled) {
-          setState({ experience, pricingTiers, slots, addons, publication, sections, loading: false, error: null });
+          setState({
+            experience,
+            pricingTiers,
+            slots,
+            addons,
+            publication,
+            sections,
+            loading: false,
+            error: null,
+          });
         }
       } catch (err) {
-        if (!cancelled) setState((s) => ({ ...s, loading: false, error: err.message }));
+        if (!cancelled)
+          setState((s) => ({ ...s, loading: false, error: err.message }));
       }
     }
 
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [slug]);
 
   return state;

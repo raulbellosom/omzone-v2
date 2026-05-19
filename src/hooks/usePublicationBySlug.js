@@ -3,22 +3,22 @@ import { databases, storage, Query } from "@/lib/appwrite";
 import env from "@/config/env";
 
 const DB = env.appwriteDatabaseId;
-const PUB_BUCKET = env.bucketPublicationMedia;
-
 /**
  * Get a preview URL for a publication media file.
- * Always outputs WebP for smaller file sizes.
+ * Defaults to experience_media because that is where legacy images were uploaded.
+ * Pass { bucketId } explicitly when the document stores heroBucketId/ogBucketId.
  */
 export function getPublicationPreviewUrl(
   fileId,
-  { width = 1200, height = 800 } = {},
+  { width = 1200, height = 800, bucketId } = {},
 ) {
   if (!fileId) return null;
+  const bucket = bucketId || env.bucketExperienceMedia;
   try {
     // params: bucketId, fileId, width, height, gravity, quality,
     //         borderWidth, borderColor, borderRadius, opacity, rotation, background, output
     return storage.getFilePreview(
-      PUB_BUCKET,
+      bucket,
       fileId,
       width,
       height,
@@ -57,13 +57,14 @@ export function usePublicationBySlug(slug) {
       setState((s) => ({ ...s, loading: true, error: null }));
 
       try {
-        // 1. Fetch publication by slug — published only
+        // 1. Fetch publication by slug — published and not archived
         const pubRes = await databases.listDocuments(
           DB,
           env.collectionPublications,
           [
             Query.equal("slug", slug),
             Query.equal("status", "published"),
+            Query.isNull("archivedAt"),
             Query.limit(1),
           ],
         );

@@ -113,11 +113,15 @@ export function usePublicationSEO(publication) {
       localizedField(publication, "excerpt", language) ||
       "";
     const ogImageId = publication.ogImageId || publication.heroImageId;
+    const ogBucketId = publication.ogImageId
+      ? publication.ogBucketId
+      : publication.heroBucketId;
     const ogImage = ogImageId
       ? String(
           getPublicationPreviewUrl(ogImageId, {
             width: OG_WIDTH,
             height: OG_HEIGHT,
+            bucketId: ogBucketId || undefined,
           }),
         )
       : undefined;

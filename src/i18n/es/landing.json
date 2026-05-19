@@ -26,6 +26,7 @@
     "privacy": "Política de Privacidad",
     "terms": "Términos de Servicio",
     "refundPolicy": "Política de Reembolso",
+    "journal": "Blog & Artículos",
     "connect": "Conecta",
     "instagram": "Instagram",
     "facebook": "Facebook",
@@ -120,6 +121,13 @@
     "people": "personas",
     "somethingWrong": "Algo salió mal. Por favor inténtalo de nuevo.",
     "inquireForPricing": "Consultar precio"
+  },
+  "editions": {
+    "title": "Próximas Ediciones",
+    "subtitle": "Elige la edición que mejor encaja con tu calendario. Cada una tiene sus propias fechas, cupo y precio.",
+    "bookEdition": "Reservar esta edición",
+    "registrationClosed": "Registro cerrado",
+    "registrationOpensSoon": "El registro abre pronto"
   },
   "experienceTypes": {
     "session": "Sesión",
@@ -551,6 +559,7 @@
   },
   "publication": {
     "home": "Inicio",
+    "backToJournal": "Volver al Blog",
     "relatedExperience": "Experiencia Relacionada",
     "exploreExperience": "Explorar Experiencia"
   },

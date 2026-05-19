@@ -49,6 +49,9 @@ function TabBar({ tab, setTab, isAdmin }) {
 
 function BrowseTab({
   bucketId,
+  buckets,
+  activeBucketId,
+  onBucketChange,
   multiple,
   selected,
   onToggle,
@@ -63,6 +66,27 @@ function BrowseTab({
   const { t } = useLanguage();
   return (
     <div className="flex flex-col gap-3 flex-1 min-h-0">
+      {/* Bucket selector */}
+      {buckets && buckets.length > 1 && (
+        <div className="flex gap-1.5 flex-wrap">
+          {buckets.map((b) => (
+            <button
+              key={b.id}
+              type="button"
+              onClick={() => onBucketChange(b.id)}
+              className={cn(
+                "px-2.5 py-1 text-xs rounded-full border transition-colors",
+                b.id === activeBucketId
+                  ? "bg-sage text-white border-sage"
+                  : "bg-white text-charcoal-subtle border-sand-dark/60 hover:border-sage hover:text-charcoal",
+              )}
+            >
+              {b.label}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Search */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal-subtle pointer-events-none" />
@@ -109,7 +133,7 @@ function BrowseTab({
               >
                 <ImagePreview
                   fileId={file.$id}
-                  bucketId={bucketId}
+                  bucketId={activeBucketId || bucketId}
                   width={200}
                   height={200}
                   className="w-full h-full"
@@ -270,16 +294,18 @@ function UploadTab({ bucketId, onUploaded }) {
  * Props:
  *  - open         {boolean}
  *  - onClose      {fn}
- *  - bucketId     {string}    Which bucket to browse
+ *  - bucketId     {string}    Primary bucket to browse (used when buckets not provided)
+ *  - buckets      {Array}     Optional array of {id, label} — adds bucket selector tabs
  *  - multiple     {boolean}   Allow multi-select (default false)
  *  - selected     {string[]}  Currently selected fileIds
- *  - onSelect     {fn}        Called with fileId[] on confirm
+ *  - onSelect     {fn}        Called with (fileId[], activeBucketId) on confirm
  *  - isAdmin      {boolean}   Show upload tab (default false)
  */
 export default function MediaPicker({
   open,
   onClose,
   bucketId = env.bucketExperienceMedia,
+  buckets,
   multiple = false,
   selected: externalSelected = [],
   onSelect,
@@ -289,8 +315,11 @@ export default function MediaPicker({
   const [tab, setTab] = useState("browse");
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(externalSelected);
+  const defaultBucketId = buckets?.[0]?.id || bucketId;
+  const [activeBucketId, setActiveBucketId] = useState(defaultBucketId);
+
   const { files, loading, error, hasMore, loadMore, refresh } = useBucketFiles(
-    bucketId,
+    activeBucketId,
     { search },
   );
 
@@ -300,6 +329,7 @@ export default function MediaPicker({
       setSelected(externalSelected);
       setTab("browse");
       setSearch("");
+      setActiveBucketId(buckets?.[0]?.id || bucketId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
@@ -317,7 +347,7 @@ export default function MediaPicker({
   }
 
   function handleConfirm() {
-    onSelect?.(selected);
+    onSelect?.(selected, activeBucketId);
     onClose?.();
   }
 
@@ -376,6 +406,13 @@ export default function MediaPicker({
           {tab === "browse" ? (
             <BrowseTab
               bucketId={bucketId}
+              buckets={buckets}
+              activeBucketId={activeBucketId}
+              onBucketChange={(id) => {
+                setActiveBucketId(id);
+                setSearch("");
+                setSelected([]);
+              }}
               multiple={multiple}
               selected={selected}
               onToggle={handleToggle}
@@ -388,7 +425,7 @@ export default function MediaPicker({
               setSearch={setSearch}
             />
           ) : (
-            <UploadTab bucketId={bucketId} onUploaded={handleUploaded} />
+            <UploadTab bucketId={activeBucketId} onUploaded={handleUploaded} />
           )}
         </div>
 

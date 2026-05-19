@@ -1,10 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  ArrowRight,
-  MessageCircle,
-  ChevronDown,
-} from "lucide-react";
+import { ArrowRight, MessageCircle, ChevronDown } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
@@ -35,6 +31,7 @@ function formatPrice(amount, currency = "MXN") {
 export default function ExperienceQuickBookBar({
   experience,
   pricingTiers = [],
+  hasEditions = false,
 }) {
   const navigate = useNavigate();
   const { t, language } = useLanguage();
@@ -66,6 +63,13 @@ export default function ExperienceQuickBookBar({
 
   function handleCTA() {
     if (config.action === "checkout") {
+      if (hasEditions) {
+        const target = document.getElementById("editions");
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+      }
       navigate(
         `${ROUTES.CHECKOUT}?experienceId=${experience.$id}&slug=${experience.slug}`,
       );

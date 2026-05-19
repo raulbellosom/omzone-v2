@@ -2,9 +2,10 @@ import { useState } from "react";
 import { Input } from "@/components/common/Input";
 import AdminFormLayout from "@/components/admin/AdminFormLayout";
 import { Card } from "@/components/common/Card";
-import ImageUpload from "@/components/admin/experiences/ImageUpload";
+import MediaImageField from "@/components/admin/media/MediaImageField";
 import AdminSelect from "@/components/common/AdminSelect";
 import { useLanguage } from "@/hooks/useLanguage";
+import env from "@/config/env";
 import { cn } from "@/lib/utils";
 
 // Resource type options moved inside component for i18n
@@ -14,6 +15,7 @@ const EMPTY = {
   type: "instructor",
   description: "",
   photoId: "",
+  photoBucketId: "",
   contactInfo: "",
   isActive: true,
   metadata: "",
@@ -162,6 +164,7 @@ export default function ResourceForm({
       type: form.type,
       description: form.description.trim() || null,
       photoId: form.photoId || null,
+      photoBucketId: form.photoBucketId || null,
       contactInfo: form.contactInfo.trim() || null,
       isActive: form.isActive,
       metadata: form.metadata.trim() || null,
@@ -295,10 +298,14 @@ export default function ResourceForm({
           {t("admin.resourceForms.resourcePhoto")}
         </h2>
         <div className="max-w-sm">
-          <ImageUpload
+          <MediaImageField
             fileId={form.photoId}
-            onUpload={(id) => set("photoId", id)}
-            onRemove={() => set("photoId", "")}
+            bucketId={form.photoBucketId || env.bucketExperienceMedia}
+            buckets={env.imageBuckets}
+            onChange={(fileId, bucketId) => {
+              set("photoId", fileId);
+              set("photoBucketId", bucketId || env.bucketExperienceMedia);
+            }}
             disabled={submitting}
           />
         </div>

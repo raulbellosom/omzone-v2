@@ -22,11 +22,26 @@ import { useLanguage } from "@/hooks/useLanguage";
 import env from "@/config/env";
 import { cn } from "@/lib/utils";
 
+// ─── Bucket-aware item helpers ────────────────────────────────────────────────
+// Items can be plain "fileId" (legacy) or compound "bucketId|fileId" (multi-bucket).
+
+export function parseGalleryItem(item, defaultBucketId) {
+  if (!item) return { fileId: "", bucketId: defaultBucketId };
+  const sep = item.indexOf("|");
+  if (sep === -1) return { fileId: item, bucketId: defaultBucketId };
+  return { bucketId: item.slice(0, sep), fileId: item.slice(sep + 1) };
+}
+
+export function serializeGalleryItem(fileId, bucketId, defaultBucketId) {
+  if (!bucketId || bucketId === defaultBucketId) return fileId;
+  return `${bucketId}|${fileId}`;
+}
+
 // ─── Sortable thumbnail item ──────────────────────────────────────────────────
 
 function SortableItem({
-  fileId,
-  bucketId,
+  item,
+  defaultBucketId,
   index,
   total,
   onRemove,
@@ -35,6 +50,8 @@ function SortableItem({
   disabled,
   t,
 }) {
+  const { fileId, bucketId } = parseGalleryItem(item, defaultBucketId);
+
   const {
     attributes,
     listeners,
@@ -42,7 +59,7 @@ function SortableItem({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: fileId });
+  } = useSortable({ id: item });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -90,7 +107,7 @@ function SortableItem({
       {!disabled && (
         <button
           type="button"
-          onClick={() => onRemove(fileId)}
+          onClick={() => onRemove(item)}
           className="absolute top-1 right-1 p-1 rounded-full bg-white/90 text-charcoal hover:bg-white shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
           aria-label={t("admin.gallery.removeImage")}
         >
@@ -136,17 +153,19 @@ function SortableItem({
  * GalleryManager — manage an ordered list of fileIds from Appwrite Storage.
  *
  * Props:
- *  - value      {string[]}   Array of fileIds (JSON-serializable)
- *  - onChange   {fn}         Called with new string[] when order/list changes
- *  - bucketId   {string}     Appwrite bucket (default: experience_media)
- *  - isAdmin    {boolean}    Show upload tab in MediaPicker
+ *  - value      {string[]}            Array of items: plain "fileId" or "bucketId|fileId"
+ *  - onChange   {fn}                  Called with new string[] when order/list changes
+ *  - bucketId   {string}              Default Appwrite bucket (default: experience_media)
+ *  - buckets    {Array<{id,label}>}   Optional multi-bucket pills shown in the picker
+ *  - isAdmin    {boolean}             Show upload tab in MediaPicker
  *  - disabled   {boolean}
- *  - maxItems   {number}     Max number of images (default unlimited)
+ *  - maxItems   {number}              Max number of images (default unlimited)
  */
 export default function GalleryManager({
   value = [],
   onChange,
   bucketId = env.bucketExperienceMedia,
+  buckets,
   isAdmin = false,
   disabled = false,
   maxItems,
@@ -168,8 +187,8 @@ export default function GalleryManager({
     onChange?.(arrayMove(value, oldIndex, newIndex));
   }
 
-  function handleRemove(fileId) {
-    onChange?.(value.filter((id) => id !== fileId));
+  function handleRemove(item) {
+    onChange?.(value.filter((i) => i !== item));
   }
 
   function handleMoveLeft(index) {
@@ -182,9 +201,11 @@ export default function GalleryManager({
     onChange?.(arrayMove(value, index, index + 1));
   }
 
-  function handlePickerSelect(fileIds) {
-    const newIds = fileIds.filter((id) => !value.includes(id));
-    let next = [...value, ...newIds];
+  function handlePickerSelect(fileIds, activeBucketId) {
+    const newItems = fileIds
+      .map((id) => serializeGalleryItem(id, activeBucketId, bucketId))
+      .filter((item) => !value.includes(item));
+    let next = [...value, ...newItems];
     if (maxItems) next = next.slice(0, maxItems);
     onChange?.(next);
   }
@@ -202,11 +223,11 @@ export default function GalleryManager({
         >
           <SortableContext items={value} strategy={rectSortingStrategy}>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-              {value.map((fileId, index) => (
+              {value.map((item, index) => (
                 <SortableItem
-                  key={fileId}
-                  fileId={fileId}
-                  bucketId={bucketId}
+                  key={item}
+                  item={item}
+                  defaultBucketId={bucketId}
                   index={index}
                   total={value.length}
                   onRemove={handleRemove}
@@ -250,8 +271,9 @@ export default function GalleryManager({
         open={pickerOpen}
         onClose={() => setPickerOpen(false)}
         bucketId={bucketId}
+        buckets={buckets}
         multiple
-        selected={value}
+        selected={value.map((item) => parseGalleryItem(item, bucketId).fileId)}
         onSelect={handlePickerSelect}
         isAdmin={isAdmin}
       />

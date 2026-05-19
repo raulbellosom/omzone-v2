@@ -1,5 +1,6 @@
 ﻿import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { AlertTriangle } from "lucide-react";
 import PublicationForm from "@/components/admin/publications/PublicationForm";
 import { usePublication, updatePublication } from "@/hooks/usePublications";
 import { Card } from "@/components/common/Card";
@@ -67,6 +68,15 @@ export default function PublicationEditPage() {
           {publication.title}
         </p>
       </div>
+
+      {publication.archivedAt && (
+        <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+          <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
+          <p className="text-sm text-amber-800">
+            {t("admin.publications.archivedEditWarning")}
+          </p>
+        </div>
+      )}
 
       {serverError && (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3">

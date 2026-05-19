@@ -3,9 +3,9 @@ import Badge from "@/components/common/Badge";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { useLanguage } from "@/hooks/useLanguage";
 
-function HeroSection({ section, getPreviewUrl }) {
+function HeroSection({ section, getPreviewUrl, publication }) {
   const mediaIds = parseJson(section.mediaIds, []);
-  const imageId = mediaIds[0] || null;
+  const imageId = mediaIds[0] || publication?.heroImageId || null;
   return (
     <div className="relative rounded-xl overflow-hidden bg-warm-gray aspect-[21/9]">
       {imageId && (
@@ -132,7 +132,7 @@ function parseJson(str, fallback) {
   }
 }
 
-function renderSection(section, getPreviewUrl, t) {
+function renderSection(section, getPreviewUrl, t, publication) {
   if (!section.isVisible) return null;
   const key = section.$id;
   switch (section.sectionType) {
@@ -142,6 +142,7 @@ function renderSection(section, getPreviewUrl, t) {
           key={key}
           section={section}
           getPreviewUrl={getPreviewUrl}
+          publication={publication}
         />
       );
     case "text":
@@ -196,7 +197,7 @@ export default function PublicationPreview({ publication, sections }) {
           </p>
         ) : (
           visibleSections.map((section) =>
-            renderSection(section, getPreviewUrl, t),
+            renderSection(section, getPreviewUrl, t, publication),
           )
         )}
       </div>

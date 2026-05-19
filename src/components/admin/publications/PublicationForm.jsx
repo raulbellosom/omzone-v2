@@ -4,7 +4,8 @@ import { Input } from "@/components/common/Input";
 import AdminFormLayout from "@/components/admin/AdminFormLayout";
 import { Card } from "@/components/common/Card";
 import SlugInput from "@/components/admin/experiences/SlugInput";
-import ImageUpload from "@/components/admin/experiences/ImageUpload";
+import MediaImageField from "@/components/admin/media/MediaImageField";
+import env from "@/config/env";
 import { slugify, checkSlugAvailable } from "@/hooks/usePublications";
 import { useExperiences } from "@/hooks/useExperiences";
 import AdminSelect from "@/components/common/AdminSelect";
@@ -39,11 +40,13 @@ const EMPTY = {
   category: "blog",
   experienceId: "",
   heroImageId: "",
+  heroBucketId: "",
   status: "draft",
   publishedAt: "",
   seoTitle: "",
   seoDescription: "",
   ogImageId: "",
+  ogBucketId: "",
 };
 
 /* ---------- sub-components ---------- */
@@ -176,6 +179,7 @@ export default function PublicationForm({
       category: form.category,
       experienceId: form.experienceId || null,
       heroImageId: form.heroImageId || null,
+      heroBucketId: form.heroBucketId || null,
       status: form.status,
       publishedAt:
         form.status === "published" && !form.publishedAt
@@ -184,6 +188,7 @@ export default function PublicationForm({
       seoTitle: form.seoTitle.trim() || null,
       seoDescription: form.seoDescription.trim() || null,
       ogImageId: form.ogImageId || null,
+      ogBucketId: form.ogBucketId || null,
     };
 
     await onSubmit(payload);
@@ -416,14 +421,16 @@ export default function PublicationForm({
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
           {t("admin.publicationForm.sectionCoverImage")}
         </h2>
-        <div className="max-w-lg">
-          <ImageUpload
-            fileId={form.heroImageId}
-            onUpload={(id) => set("heroImageId", id)}
-            onRemove={() => set("heroImageId", "")}
-            disabled={isDisabled}
-          />
-        </div>
+        <MediaImageField
+          fileId={form.heroImageId}
+          bucketId={form.heroBucketId || env.bucketExperienceMedia}
+          buckets={env.imageBuckets}
+          onChange={(fileId, bucketId) => {
+            set("heroImageId", fileId);
+            set("heroBucketId", bucketId || env.bucketExperienceMedia);
+          }}
+          disabled={isDisabled}
+        />
       </Card>
 
       {/* SEO */}
@@ -458,19 +465,22 @@ export default function PublicationForm({
             />
           </Field>
         </div>
-        <div className="max-w-lg">
-          <Field
-            label={t("admin.publicationForm.ogImage")}
-            hint={t("admin.publicationForm.ogImageHint")}
-          >
-            <ImageUpload
-              fileId={form.ogImageId}
-              onUpload={(id) => set("ogImageId", id)}
-              onRemove={() => set("ogImageId", "")}
-              disabled={isDisabled}
-            />
-          </Field>
-        </div>
+        <Field
+          label={t("admin.publicationForm.ogImage")}
+          hint={t("admin.publicationForm.ogImageHint")}
+        >
+          <MediaImageField
+            fileId={form.ogImageId}
+            bucketId={form.ogBucketId || env.bucketExperienceMedia}
+            buckets={env.imageBuckets}
+            onChange={(fileId, bucketId) => {
+              set("ogImageId", fileId);
+              set("ogBucketId", bucketId || env.bucketExperienceMedia);
+            }}
+            disabled={isDisabled}
+            aspectRatio="og"
+          />
+        </Field>
       </Card>
     </AdminFormLayout>
   );

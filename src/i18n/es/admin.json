@@ -235,7 +235,8 @@
       "dates": "Fechas",
       "capacity": "Capacidad",
       "status": "Estado",
-      "actions": "Acciones"
+      "actions": "Acciones",
+      "noArchived": "Sin ediciones archivadas."
     },
     "editionForm": {
       "sectionIdentity": "Identidad",
@@ -716,7 +717,10 @@
       "statusHeader": "Estado",
       "publishedHeader": "Publicado",
       "noPublications": "No hay publicaciones.",
-      "publishConfirmLabel": "Publicar"
+      "publishConfirmLabel": "Publicar",
+      "emptyArchivedTitle": "Sin publicaciones archivadas",
+      "emptyArchivedMessage": "Las publicaciones que archives aparecerán aquí.",
+      "archivedEditWarning": "Esta publicación está archivada y no es visible para el público. Restáurala para que vuelva a estar disponible."
     },
     "publicationCategories": {
       "all": "Todas las categorías",
@@ -861,6 +865,7 @@
       "typeRequired": "El tipo es requerido",
       "mustBeArray": "Debe ser un array JSON",
       "galleryHint": "Gestiona las imágenes de la galería",
+      "heroImageHint": "Selecciona la imagen de fondo del hero",
       "mediaArrayHint": "Array JSON, ej: [\"file1\",\"file2\"]",
       "metadataHint": "Objeto JSON con datos adicionales",
       "saveChanges": "Guardar cambios",
@@ -916,7 +921,10 @@
       "uploadNew": "Subir nuevo",
       "noResults": "Sin resultados para esta búsqueda",
       "noBucketFiles": "No hay archivos en este bucket",
-      "loadMore": "Cargar más"
+      "loadMore": "Cargar más",
+      "selectImage": "Seleccionar imagen",
+      "changeImage": "Cambiar imagen",
+      "removeImage": "Quitar imagen"
     },
     "clients": {
       "title": "Clientes",

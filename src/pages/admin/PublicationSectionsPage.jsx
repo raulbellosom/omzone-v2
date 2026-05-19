@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Pencil, Eye } from "lucide-react";
+import { ArrowLeft, Pencil, Eye, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 import StatusBadge from "@/components/admin/experiences/StatusBadge";
@@ -96,6 +96,16 @@ export default function PublicationSectionsPage() {
           </Button>
         </div>
       </div>
+
+      {/* Archived banner */}
+      {publication.archivedAt && (
+        <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+          <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
+          <p className="text-sm text-amber-800">
+            {t("admin.publications.archivedEditWarning")}
+          </p>
+        </div>
+      )}
 
       {/* Preview */}
       {showPreview && (

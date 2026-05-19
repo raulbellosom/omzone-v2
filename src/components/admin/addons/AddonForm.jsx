@@ -3,10 +3,11 @@ import { Copy } from "lucide-react";
 import { Input } from "@/components/common/Input";
 import AdminFormLayout from "@/components/admin/AdminFormLayout";
 import { Card } from "@/components/common/Card";
-import ImageUpload from "@/components/admin/experiences/ImageUpload";
+import MediaImageField from "@/components/admin/media/MediaImageField";
 import { slugify, checkAddonSlugAvailable } from "@/hooks/useAddons";
 import AdminSelect from "@/components/common/AdminSelect";
 import { useLanguage } from "@/hooks/useLanguage";
+import env from "@/config/env";
 import { cn } from "@/lib/utils";
 
 const ADDON_TYPE_OPTIONS = [
@@ -51,6 +52,7 @@ const EMPTY = {
   followsMainDuration: false,
   maxQuantity: "",
   heroImageId: "",
+  heroBucketId: "",
   status: "active",
   sortOrder: "",
 };
@@ -135,6 +137,7 @@ export default function AddonForm({
         maxQuantity: initialData.maxQuantity ?? "",
         sortOrder: initialData.sortOrder ?? "",
         heroImageId: initialData.heroImageId ?? "",
+        heroBucketId: initialData.heroBucketId ?? "",
       }
     : { ...EMPTY };
 
@@ -204,6 +207,7 @@ export default function AddonForm({
       followsMainDuration: form.followsMainDuration,
       maxQuantity: form.maxQuantity ? parseInt(form.maxQuantity) : null,
       heroImageId: form.heroImageId || null,
+      heroBucketId: form.heroBucketId || null,
       status: form.status,
       sortOrder: form.sortOrder ? parseInt(form.sortOrder) : 0,
     };
@@ -478,10 +482,14 @@ export default function AddonForm({
           {t("admin.addonForm.sectionCoverImage")}
         </h2>
         <div className="max-w-lg">
-          <ImageUpload
+          <MediaImageField
             fileId={form.heroImageId}
-            onUpload={(id) => set("heroImageId", id)}
-            onRemove={() => set("heroImageId", "")}
+            bucketId={form.heroBucketId || env.bucketExperienceMedia}
+            buckets={env.imageBuckets}
+            onChange={(fileId, bucketId) => {
+              set("heroImageId", fileId);
+              set("heroBucketId", bucketId || env.bucketExperienceMedia);
+            }}
             disabled={isDisabled}
           />
         </div>

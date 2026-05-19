@@ -26,6 +26,7 @@
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "refundPolicy": "Refund Policy",
+    "journal": "Journal",
     "connect": "Connect",
     "instagram": "Instagram",
     "facebook": "Facebook",
@@ -120,6 +121,13 @@
     "people": "people",
     "somethingWrong": "Something went wrong. Please try again.",
     "inquireForPricing": "Inquire for pricing"
+  },
+  "editions": {
+    "title": "Upcoming Editions",
+    "subtitle": "Choose the cohort that fits your calendar. Each edition has its own dates, capacity and price.",
+    "bookEdition": "Book this edition",
+    "registrationClosed": "Registration closed",
+    "registrationOpensSoon": "Registration opens soon"
   },
   "experienceTypes": {
     "session": "Session",
@@ -551,6 +559,7 @@
   },
   "publication": {
     "home": "Home",
+    "backToJournal": "Back to Journal",
     "relatedExperience": "Related Experience",
     "exploreExperience": "Explore Experience"
   },

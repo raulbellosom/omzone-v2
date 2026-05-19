@@ -1,13 +1,20 @@
-﻿import { useState } from "react";
+﻿import { useState, useCallback } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Plus, Pencil, Calendar, Users } from "lucide-react";
 import { useEditions } from "@/hooks/useEditions";
 import { useExperience } from "@/hooks/useExperiences";
+import { useArchive } from "@/hooks/useArchive";
+import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
 import { Button } from "@/components/common/Button";
 import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
+import AdminSelect from "@/components/common/AdminSelect";
+import ArchiveActionsMenu from "@/components/admin/ArchiveActionsMenu";
+import ConfirmHardDeleteModal from "@/components/admin/ConfirmHardDeleteModal";
+import env from "@/config/env";
+import { cn } from "@/lib/utils";
 
 const STATUS_MAP = {
   draft: { i18nKey: "admin.statuses.draft", variant: "warm" },
@@ -100,9 +107,60 @@ function EmptyState({ experienceId, t }) {
 export default function EditionListPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isAdmin, isRoot } = useAuth();
   const { data: experience, loading: expLoading } = useExperience(id);
-  const { data: editions, loading, error } = useEditions(id);
   const { t } = useLanguage();
+
+  const [showArchived, setShowArchived] = useState("");
+  const [hardDeleteDoc, setHardDeleteDoc] = useState(null);
+  const [actionError, setActionError] = useState(null);
+
+  const isArchivedView = showArchived === "__archived__";
+
+  const ARCHIVE_OPTIONS = [
+    { value: "", label: t("admin.statuses.active") },
+    { value: "__archived__", label: t("admin.archive.archivedTab") },
+  ];
+
+  const {
+    data: editions,
+    loading,
+    error,
+    refetch,
+  } = useEditions(id, { onlyArchived: isArchivedView });
+
+  const {
+    archive,
+    restore,
+    hardDelete,
+    loading: archiving,
+    error: archiveError,
+  } = useArchive(env.collectionEditions, () => {
+    setActionError(null);
+    refetch();
+  });
+
+  const handleArchive = useCallback(
+    ({ documentId }) => archive({ documentId, cascade: false }),
+    [archive],
+  );
+
+  const handleRestore = useCallback(
+    ({ documentId }) => restore({ documentId }),
+    [restore],
+  );
+
+  const handleHardDelete = useCallback(({ document }) => {
+    setHardDeleteDoc(document);
+  }, []);
+
+  const handleHardDeleteConfirm = useCallback(
+    async ({ documentId, confirmationId, reason }) => {
+      await hardDelete({ documentId, confirmationId, reason });
+      setHardDeleteDoc(null);
+    },
+    [hardDelete],
+  );
 
   const isLoading = loading || expLoading;
 
@@ -120,28 +178,49 @@ export default function EditionListPage() {
             </p>
           )}
         </div>
-        <Link to={`/admin/experiences/${id}/editions/new`}>
-          <Button size="sm">
-            <Plus className="h-4 w-4" />
-            <span className="hidden sm:inline">
-              {t("admin.editions.newEdition")}
-            </span>
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <AdminSelect
+            value={showArchived}
+            onChange={setShowArchived}
+            options={ARCHIVE_OPTIONS}
+            fullWidth={false}
+          />
+          {!isArchivedView && (
+            <Link to={`/admin/experiences/${id}/editions/new`}>
+              <Button size="sm">
+                <Plus className="h-4 w-4" />
+                <span className="hidden sm:inline">
+                  {t("admin.editions.newEdition")}
+                </span>
+              </Button>
+            </Link>
+          )}
+        </div>
       </div>
 
       <ExperienceDetailTabs />
 
-      {error && (
+      {(error || actionError || archiveError) && (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3">
-          <p className="text-sm text-red-700">{error}</p>
+          <p className="text-sm text-red-700">
+            {error || actionError || archiveError}
+          </p>
         </div>
       )}
 
       {/* Empty */}
-      {!isLoading && !error && editions.length === 0 && (
-        <EmptyState experienceId={id} t={t} />
-      )}
+      {!isLoading &&
+        !error &&
+        editions.length === 0 &&
+        (isArchivedView ? (
+          <Card className="p-10 text-center">
+            <p className="text-sm text-charcoal-muted">
+              {t("admin.editions.noArchived")}
+            </p>
+          </Card>
+        ) : (
+          <EmptyState experienceId={id} t={t} />
+        ))}
 
       {/* Loading skeleton */}
       {isLoading && (
@@ -157,11 +236,21 @@ export default function EditionListPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-warm-gray/60 border-b border-sand-dark text-left">
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">{t("admin.editions.name")}</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">{t("admin.editions.dates")}</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted text-center">{t("admin.editions.capacity")}</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">{t("admin.editions.status")}</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted text-right">{t("admin.editions.actions")}</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
+                  {t("admin.editions.name")}
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
+                  {t("admin.editions.dates")}
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted text-center">
+                  {t("admin.editions.capacity")}
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
+                  {t("admin.editions.status")}
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-muted text-right">
+                  {t("admin.editions.actions")}
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-sand-dark">
@@ -169,14 +258,26 @@ export default function EditionListPage() {
                 const st = STATUS_MAP[ed.status] || STATUS_MAP.draft;
                 const editUrl = `/admin/experiences/${id}/editions/${ed.$id}/edit`;
                 return (
-                  <tr key={ed.$id} className="group hover:bg-warm-gray/30 transition-colors">
+                  <tr
+                    key={ed.$id}
+                    className={cn(
+                      "group hover:bg-warm-gray/30 transition-colors",
+                      isArchivedView && "opacity-70",
+                    )}
+                  >
                     <td className="px-4 py-3">
-                      <Link
-                        to={editUrl}
-                        className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors"
-                      >
-                        {ed.name}
-                      </Link>
+                      {isArchivedView ? (
+                        <span className="font-medium text-charcoal">
+                          {ed.name}
+                        </span>
+                      ) : (
+                        <Link
+                          to={editUrl}
+                          className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors"
+                        >
+                          {ed.name}
+                        </Link>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-charcoal-muted whitespace-nowrap">
                       {formatDate(ed.startDate)} — {formatDate(ed.endDate)}
@@ -185,16 +286,37 @@ export default function EditionListPage() {
                       {ed.capacity ?? "∞"}
                     </td>
                     <td className="px-4 py-3">
-                      <Badge variant={st.variant}>{t(st.i18nKey)}</Badge>
+                      {isArchivedView ? (
+                        <Badge variant="warm">
+                          {t("admin.archive.archivedBadge")}
+                        </Badge>
+                      ) : (
+                        <Badge variant={st.variant}>{t(st.i18nKey)}</Badge>
+                      )}
                     </td>
-                    <td className="px-4 py-3 text-right opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
-                      <Link
-                        to={editUrl}
-                        className="inline-flex p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors"
-                        aria-label={t("admin.editions.editAriaLabel")}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Link>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        {!isArchivedView && (
+                          <Link
+                            to={editUrl}
+                            className="inline-flex p-1.5 rounded-lg text-charcoal-muted hover:text-sage hover:bg-sage/10 transition-colors opacity-0 group-hover:opacity-100 focus-within:opacity-100"
+                            aria-label={t("admin.editions.editAriaLabel")}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Link>
+                        )}
+                        {(isAdmin || isRoot) && (
+                          <ArchiveActionsMenu
+                            document={ed}
+                            onArchive={handleArchive}
+                            onRestore={handleRestore}
+                            onHardDelete={handleHardDelete}
+                            canArchive={isAdmin}
+                            canHardDelete={isRoot}
+                            loading={archiving}
+                          />
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );
@@ -212,16 +334,19 @@ export default function EditionListPage() {
             return (
               <Card
                 key={ed.$id}
-                className="p-4 space-y-2 cursor-pointer hover:shadow-sm transition-shadow"
-                onClick={() =>
-                  navigate(`/admin/experiences/${id}/editions/${ed.$id}/edit`)
-                }
+                className={cn("p-4 space-y-2", isArchivedView && "opacity-70")}
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-medium text-charcoal truncate">
                     {ed.name}
                   </span>
-                  <Badge variant={st.variant}>{t(st.i18nKey)}</Badge>
+                  {isArchivedView ? (
+                    <Badge variant="warm">
+                      {t("admin.archive.archivedBadge")}
+                    </Badge>
+                  ) : (
+                    <Badge variant={st.variant}>{t(st.i18nKey)}</Badge>
+                  )}
                 </div>
                 <div className="flex items-center gap-4 text-xs text-charcoal-muted">
                   <span className="flex items-center gap-1">
@@ -233,11 +358,51 @@ export default function EditionListPage() {
                     {ed.capacity ?? "∞"}
                   </span>
                 </div>
+                <div className="flex items-center gap-2 pt-2 border-t border-sand">
+                  {!isArchivedView && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() =>
+                        navigate(
+                          `/admin/experiences/${id}/editions/${ed.$id}/edit`,
+                        )
+                      }
+                      className="flex-1 justify-center"
+                    >
+                      <Pencil className="h-3.5 w-3.5" />{" "}
+                      {t("admin.editions.editAriaLabel")}
+                    </Button>
+                  )}
+                  {(isAdmin || isRoot) && (
+                    <div className={cn(!isArchivedView ? "" : "ml-auto")}>
+                      <ArchiveActionsMenu
+                        document={ed}
+                        onArchive={handleArchive}
+                        onRestore={handleRestore}
+                        onHardDelete={handleHardDelete}
+                        canArchive={isAdmin}
+                        canHardDelete={isRoot}
+                        loading={archiving}
+                      />
+                    </div>
+                  )}
+                </div>
               </Card>
             );
           })}
         </div>
       )}
+
+      <ConfirmHardDeleteModal
+        open={!!hardDeleteDoc}
+        document={hardDeleteDoc}
+        collectionId={env.collectionEditions}
+        loading={archiving}
+        onConfirm={handleHardDeleteConfirm}
+        onCancel={() => setHardDeleteDoc(null)}
+      />
     </div>
   );
 }

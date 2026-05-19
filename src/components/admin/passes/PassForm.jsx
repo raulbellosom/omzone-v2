@@ -3,11 +3,12 @@ import { Copy } from "lucide-react";
 import { Input } from "@/components/common/Input";
 import AdminFormLayout from "@/components/admin/AdminFormLayout";
 import { Card } from "@/components/common/Card";
-import ImageUpload from "@/components/admin/experiences/ImageUpload";
+import MediaImageField from "@/components/admin/media/MediaImageField";
 import ExperiencePicker from "@/components/admin/passes/ExperiencePicker";
 import { slugify, checkPassSlugAvailable } from "@/hooks/usePasses";
 import AdminSelect from "@/components/common/AdminSelect";
 import { useLanguage } from "@/hooks/useLanguage";
+import env from "@/config/env";
 import { cn } from "@/lib/utils";
 
 const STATUS_OPTIONS = [
@@ -32,6 +33,7 @@ const EMPTY = {
   validityDays: "",
   validExperienceIds: [],
   heroImageId: "",
+  heroBucketId: "",
   status: "active",
   sortOrder: "",
 };
@@ -100,6 +102,7 @@ export default function PassForm({
         validityDays: initialData.validityDays ?? "",
         sortOrder: initialData.sortOrder ?? "",
         heroImageId: initialData.heroImageId ?? "",
+        heroBucketId: initialData.heroBucketId ?? "",
         validExperienceIds: parseJsonArray(initialData.validExperienceIds),
       }
     : { ...EMPTY };
@@ -172,6 +175,7 @@ export default function PassForm({
           ? JSON.stringify(form.validExperienceIds)
           : null,
       heroImageId: form.heroImageId || null,
+      heroBucketId: form.heroBucketId || null,
       status: form.status,
       sortOrder: form.sortOrder ? parseInt(form.sortOrder) : 0,
     };
@@ -415,10 +419,14 @@ export default function PassForm({
           {t("admin.passForm.sectionCoverImage")}
         </h2>
         <div className="max-w-lg">
-          <ImageUpload
+          <MediaImageField
             fileId={form.heroImageId}
-            onUpload={(id) => set("heroImageId", id)}
-            onRemove={() => set("heroImageId", "")}
+            bucketId={form.heroBucketId || env.bucketExperienceMedia}
+            buckets={env.imageBuckets}
+            onChange={(fileId, bucketId) => {
+              set("heroImageId", fileId);
+              set("heroBucketId", bucketId || env.bucketExperienceMedia);
+            }}
             disabled={isDisabled}
           />
         </div>

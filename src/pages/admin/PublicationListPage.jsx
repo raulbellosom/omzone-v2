@@ -110,12 +110,8 @@ export default function PublicationListPage() {
   );
 
   const handleHardDeleteConfirm = useCallback(
-    async (doc) => {
-      await hardDelete({
-        documentId: doc.$id,
-        confirmationId: doc.$id,
-        reason: "admin hard delete",
-      });
+    async ({ documentId, confirmationId, reason }) => {
+      await hardDelete({ documentId, confirmationId, reason });
       setHardDeleteDoc(null);
     },
     [hardDelete],
@@ -201,12 +197,16 @@ export default function PublicationListPage() {
         <Card className="p-10 text-center">
           <FileText className="h-10 w-10 text-charcoal-muted mx-auto mb-3" />
           <h2 className="text-lg font-semibold text-charcoal mb-1">
-            {t("admin.publications.emptyTitle")}
+            {showArchived
+              ? t("admin.publications.emptyArchivedTitle")
+              : t("admin.publications.emptyTitle")}
           </h2>
           <p className="text-sm text-charcoal-muted mb-4">
-            {t("admin.publications.emptyMessage")}
+            {showArchived
+              ? t("admin.publications.emptyArchivedMessage")
+              : t("admin.publications.emptyMessage")}
           </p>
-          {isAdmin && (
+          {isAdmin && !showArchived && (
             <Button type="button" size="sm" asChild>
               <Link to={ROUTES.ADMIN_PUBLICATION_NEW}>
                 <Plus className="h-4 w-4" />
@@ -267,7 +267,15 @@ export default function PublicationListPage() {
 
         {!loading &&
           data.map((pub) => (
-            <PublicationCard key={pub.$id} publication={pub} />
+            <PublicationCard
+              key={pub.$id}
+              publication={pub}
+              onArchive={handleArchive}
+              onRestore={handleRestore}
+              onHardDelete={setHardDeleteDoc}
+              canAdmin={isAdmin}
+              canHardDelete={isRoot}
+            />
           ))}
       </div>
 

@@ -29,7 +29,15 @@ const messages = {
   es: { ...esCommon, ...esLanding, ...esCheckout, ...esPortal, ...esAdmin },
 };
 
-export const LanguageContext = createContext(null);
+// Stable singleton — survives Vite HMR re-evaluation of this module.
+// When the module is re-evaluated due to i18n JSON hot updates, a new
+// createContext() call would produce a different object, causing consumers
+// that received the new reference to get null from useContext.
+const _LANG_CTX_KEY = Symbol.for("omzone.language.context");
+if (!globalThis[_LANG_CTX_KEY]) {
+  globalThis[_LANG_CTX_KEY] = createContext(null);
+}
+export const LanguageContext = globalThis[_LANG_CTX_KEY];
 
 function resolve(obj, path) {
   return path.split(".").reduce((o, k) => (o ? o[k] : undefined), obj);

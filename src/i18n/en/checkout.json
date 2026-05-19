@@ -65,7 +65,9 @@
     "tierSlotIncompatible": "This pricing option does not match the selected slot.",
     "spot": "spot",
     "spots": "spots",
-    "attendees": "Number of attendees"
+    "attendees": "Number of attendees",
+    "youAreBookingEdition": "You're booking this edition",
+    "editionNotAvailable": "The selected edition is no longer available. You can continue browsing other options for this experience."
   },
   "addonsStep": {
     "noAddons": "No add-ons available for this experience.",
@@ -127,6 +129,10 @@
     "slotNotFound": "The selected time slot is no longer available. Please choose another.",
     "constraintInvalid": "This experience has an invalid quantity configuration. Please contact support.",
     "tierSlotIncompatible": "The selected pricing option is not compatible with this time slot.",
+    "tierNotInEdition": "The selected pricing option does not belong to this edition.",
+    "slotNotInEdition": "The selected time slot does not belong to this edition.",
+    "editionNotFound": "The selected edition could not be found.",
+    "editionNotAvailable": "The selected edition is no longer available for booking.",
     "slotRequiredAssisted": "A time slot is required for this scheduled booking.",
     "addonPriceTypeUnsupported": "One selected add-on is not available for direct checkout.",
     "network": "A connection error occurred. Please check your internet and try again.",

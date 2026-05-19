@@ -3,7 +3,7 @@ import { Copy } from "lucide-react";
 import { Input } from "@/components/common/Input";
 import AdminFormLayout from "@/components/admin/AdminFormLayout";
 import { Card } from "@/components/common/Card";
-import ImageUpload from "@/components/admin/experiences/ImageUpload";
+import MediaImageField from "@/components/admin/media/MediaImageField";
 import GalleryManager from "@/components/admin/media/GalleryManager";
 import PackageItemsEditor from "@/components/admin/packages/PackageItemsEditor";
 import { slugify, checkPackageSlugAvailable } from "@/hooks/usePackages";
@@ -38,6 +38,7 @@ const EMPTY = {
   durationDays: "",
   capacity: "",
   heroImageId: "",
+  heroBucketId: "",
   galleryImageIds: [],
   status: "draft",
   sortOrder: "",
@@ -97,6 +98,7 @@ export default function PackageForm({
         capacity: initialData.capacity ?? "",
         sortOrder: initialData.sortOrder ?? "",
         heroImageId: initialData.heroImageId ?? "",
+        heroBucketId: initialData.heroBucketId ?? "",
         galleryImageIds: initialData.galleryImageIds
           ? (() => {
               try {
@@ -174,6 +176,7 @@ export default function PackageForm({
       durationDays: form.durationDays ? parseInt(form.durationDays) : null,
       capacity: form.capacity ? parseInt(form.capacity) : null,
       heroImageId: form.heroImageId || null,
+      heroBucketId: form.heroBucketId || null,
       galleryImageIds:
         form.galleryImageIds.length > 0
           ? JSON.stringify(form.galleryImageIds)
@@ -436,11 +439,14 @@ export default function PackageForm({
           {t("admin.formSections.coverImage")}
         </h2>
         <div className="max-w-lg">
-          <ImageUpload
+          <MediaImageField
             fileId={form.heroImageId}
-            onUpload={(id) => set("heroImageId", id)}
-            onRemove={() => set("heroImageId", "")}
-            bucketId={env.bucketPackageImages}
+            bucketId={form.heroBucketId || env.bucketPackageImages}
+            buckets={env.imageBuckets}
+            onChange={(fileId, bucketId) => {
+              set("heroImageId", fileId);
+              set("heroBucketId", bucketId || env.bucketPackageImages);
+            }}
             disabled={isDisabled}
           />
         </div>
@@ -455,6 +461,7 @@ export default function PackageForm({
           value={form.galleryImageIds}
           onChange={(ids) => set("galleryImageIds", ids)}
           bucketId={env.bucketPackageImages}
+          buckets={env.imageBuckets}
           isAdmin
           disabled={isDisabled}
         />

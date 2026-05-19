@@ -235,7 +235,8 @@
       "dates": "Dates",
       "capacity": "Capacity",
       "status": "Status",
-      "actions": "Actions"
+      "actions": "Actions",
+      "noArchived": "No archived editions."
     },
     "editionForm": {
       "sectionIdentity": "Identity",
@@ -716,7 +717,10 @@
       "statusHeader": "Status",
       "publishedHeader": "Published",
       "noPublications": "No publications.",
-      "publishConfirmLabel": "Publish"
+      "publishConfirmLabel": "Publish",
+      "emptyArchivedTitle": "No archived publications",
+      "emptyArchivedMessage": "Publications you archive will appear here.",
+      "archivedEditWarning": "This publication is archived and not visible to the public. Restore it to make it available again."
     },
     "publicationCategories": {
       "all": "All categories",
@@ -861,6 +865,7 @@
       "typeRequired": "Type is required",
       "mustBeArray": "Must be a JSON array",
       "galleryHint": "Manage gallery images",
+      "heroImageHint": "Select the hero background image",
       "mediaArrayHint": "JSON array, e.g.: [\"file1\",\"file2\"]",
       "metadataHint": "JSON object with additional data",
       "saveChanges": "Save changes",
@@ -916,7 +921,10 @@
       "uploadNew": "Upload new",
       "noResults": "No results for this search",
       "noBucketFiles": "No files in this bucket",
-      "loadMore": "Load more"
+      "loadMore": "Load more",
+      "selectImage": "Select image",
+      "changeImage": "Change image",
+      "removeImage": "Remove image"
     },
     "clients": {
       "title": "Clients",

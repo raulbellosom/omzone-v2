@@ -218,12 +218,8 @@ export default function ResourceListTab() {
   }, []);
 
   const handleHardDeleteConfirm = useCallback(
-    async (doc) => {
-      await hardDelete({
-        documentId: doc.$id,
-        confirmationId: doc.$id,
-        reason: "admin hard delete",
-      });
+    async ({ documentId, confirmationId, reason }) => {
+      await hardDelete({ documentId, confirmationId, reason });
       setHardDeleteDoc(null);
     },
     [hardDelete],

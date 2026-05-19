@@ -24,11 +24,6 @@ export const docsNavigation = {
         order: 1,
       },
       {
-        slug: "editions",
-        title: { en: "Editions", es: "Ediciones" },
-        order: 2,
-      },
-      {
         slug: "pricing-tiers",
         title: { en: "Pricing Tiers", es: "Niveles de Precio" },
         order: 3,

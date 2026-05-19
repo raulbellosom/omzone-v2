@@ -13,7 +13,10 @@ import {
 function formatSlotLabel(slot, language, t) {
   const start = new Date(slot.startDatetime);
   const end = new Date(slot.endDatetime);
-  const available = Math.max(0, Number(slot.capacity || 0) - Number(slot.bookedCount || 0));
+  const available = Math.max(
+    0,
+    Number(slot.capacity || 0) - Number(slot.bookedCount || 0),
+  );
   const locale = language === "es" ? "es-MX" : "en-US";
   const datePart = start.toLocaleDateString(locale, {
     weekday: "short",
@@ -34,7 +37,9 @@ function formatSlotLabel(slot, language, t) {
 }
 
 function formatSlotLocation(slot, t) {
-  const parts = [slot.locationName, slot.roomName, slot.locationAddress].filter(Boolean);
+  const parts = [slot.locationName, slot.roomName, slot.locationAddress].filter(
+    Boolean,
+  );
   if (!parts.length) return t("selection.locationPending");
   return parts.join(" · ");
 }
@@ -43,6 +48,8 @@ export default function SelectionStep({
   experience,
   pricingTiers,
   slots,
+  selectedEdition,
+  editionError,
   selectedTierId,
   setSelectedTierId,
   selectedSlotId,
@@ -55,6 +62,10 @@ export default function SelectionStep({
 }) {
   const { t, language } = useLanguage();
 
+  const editionName = selectedEdition
+    ? localizedField(selectedEdition, "name", language) || selectedEdition.name
+    : null;
+
   const canPickSlot = Boolean(selectedTierId);
   const requiresSchedule = Boolean(experience.requiresSchedule);
   const canPickQuantity = !requiresSchedule || Boolean(selectedSlotId);
@@ -64,6 +75,19 @@ export default function SelectionStep({
 
   return (
     <div className="space-y-6">
+      {editionName && (
+        <div className="rounded-xl border border-sage/40 bg-sage/5 px-4 py-3 text-sm">
+          <p className="text-xs uppercase tracking-wider text-sage font-semibold">
+            {t("selection.youAreBookingEdition")}
+          </p>
+          <p className="mt-1 font-medium text-charcoal">{editionName}</p>
+        </div>
+      )}
+      {editionError && !editionName && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          {t("selection.editionNotAvailable")}
+        </div>
+      )}
       <div className="rounded-xl border border-warm-gray-dark/20 bg-white p-4 flex gap-4 items-center">
         <div className="flex-shrink-0 w-16 h-16 rounded-lg bg-warm-gray flex items-center justify-center text-2xl">
           🧘
@@ -133,7 +157,9 @@ export default function SelectionStep({
           </legend>
           <Select
             value={selectedSlotId || "__empty__"}
-            onValueChange={(value) => setSelectedSlotId(value === "__empty__" ? "" : value)}
+            onValueChange={(value) =>
+              setSelectedSlotId(value === "__empty__" ? "" : value)
+            }
             disabled={!canPickSlot}
           >
             <SelectTrigger className="w-full h-12 cursor-pointer disabled:opacity-50">
@@ -146,7 +172,9 @@ export default function SelectionStep({
               />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="__empty__">{t("selection.selectTimeSlot")}</SelectItem>
+              <SelectItem value="__empty__">
+                {t("selection.selectTimeSlot")}
+              </SelectItem>
               {slots.map((slot) => (
                 <SelectItem key={slot.$id} value={slot.$id}>
                   {formatSlotLabel(slot, language, t)}
@@ -155,31 +183,40 @@ export default function SelectionStep({
             </SelectContent>
           </Select>
           {canPickSlot && slots.length === 0 && (
-            <p className="text-xs text-amber-700">{t("selection.noCompatibleSlots")}</p>
+            <p className="text-xs text-amber-700">
+              {t("selection.noCompatibleSlots")}
+            </p>
           )}
-          {selectedSlotId && (() => {
-            const selectedSlot = slots.find((slot) => slot.$id === selectedSlotId);
-            const locationParts = selectedSlot
-              ? [selectedSlot.locationName, selectedSlot.roomName].filter(Boolean)
-              : [];
-            const address = selectedSlot?.locationAddress;
-            if (!locationParts.length && !address) return null;
-            return (
-              <div className="flex items-start gap-2 mt-2 px-3 py-2.5 rounded-xl bg-sage/8 border border-sage/20 text-charcoal">
-                <MapPin className="h-4 w-4 text-sage mt-0.5 flex-shrink-0" />
-                <div className="min-w-0">
-                  {locationParts.length > 0 && (
-                    <p className="text-sm font-medium leading-snug">
-                      {locationParts.join(" · ")}
-                    </p>
-                  )}
-                  {address && (
-                    <p className="text-xs text-charcoal-muted mt-0.5 leading-snug">{address}</p>
-                  )}
+          {selectedSlotId &&
+            (() => {
+              const selectedSlot = slots.find(
+                (slot) => slot.$id === selectedSlotId,
+              );
+              const locationParts = selectedSlot
+                ? [selectedSlot.locationName, selectedSlot.roomName].filter(
+                    Boolean,
+                  )
+                : [];
+              const address = selectedSlot?.locationAddress;
+              if (!locationParts.length && !address) return null;
+              return (
+                <div className="flex items-start gap-2 mt-2 px-3 py-2.5 rounded-xl bg-sage/8 border border-sage/20 text-charcoal">
+                  <MapPin className="h-4 w-4 text-sage mt-0.5 flex-shrink-0" />
+                  <div className="min-w-0">
+                    {locationParts.length > 0 && (
+                      <p className="text-sm font-medium leading-snug">
+                        {locationParts.join(" · ")}
+                      </p>
+                    )}
+                    {address && (
+                      <p className="text-xs text-charcoal-muted mt-0.5 leading-snug">
+                        {address}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            );
-          })()}
+              );
+            })()}
         </fieldset>
       )}
 

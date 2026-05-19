@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronDown, ArrowRight } from "lucide-react";
+import { ArrowLeft, ChevronDown, ArrowRight } from "lucide-react";
 import Markdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 import { getPublicationPreviewUrl } from "@/hooks/usePublicationBySlug";
 import { getResponsiveSrcSet } from "@/hooks/useImagePreview";
 import { useLanguage, localizedField } from "@/hooks/useLanguage";
+import { ROUTES } from "@/constants/routes";
 import { Button } from "@/components/common/Button";
 import { cn } from "@/lib/utils";
 import env from "@/config/env";
@@ -44,36 +45,53 @@ function isAllowedVideoUrl(url) {
 
 // ─── Section type components ─────────────────────────────────────────────────
 
-function HeroSection({ section, language }) {
+function HeroSection({ section, language, publication }) {
+  const { t } = useLanguage();
   const ids = parseMediaIds(section.mediaIds);
-  const imageId = ids[0];
+  // Fall back to the publication's own heroImageId when the section has no mediaIds
+  const imageId = ids[0] || publication?.heroImageId || null;
+  const heroBucketId = ids[0]
+    ? env.bucketExperienceMedia
+    : publication?.heroBucketId || env.bucketExperienceMedia;
   const {
     src: imgSrc,
     srcSet: imgSrcSet,
     sizes: imgSizes,
   } = getResponsiveSrcSet(imageId, {
-    bucketId: env.bucketPublicationMedia,
+    bucketId: heroBucketId,
     widths: [800, 1200, 1600],
     quality: 82,
   });
 
   return (
     <section className="relative w-full">
-      <div className="relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden bg-warm-gray">
+      <div className="relative w-full h-[60vh] min-h-105 max-h-170 overflow-hidden bg-warm-gray">
         {imgSrc ? (
           <img
             src={imgSrc}
             srcSet={imgSrcSet || undefined}
             sizes={imgSizes || undefined}
             alt={localizedField(section, "title", language) || ""}
-            loading="lazy"
+            loading="eager"
             decoding="async"
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-sage/20 via-warm-gray to-sand/30" />
+          <div className="w-full h-full bg-linear-to-br from-sage/20 via-warm-gray to-sand/30" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent" />
+        {/* Back link — overlaid top-left, below navbar */}
+        <div className="absolute top-20 left-0 right-0 z-10">
+          <div className="container-shell">
+            <Link
+              to={ROUTES.PUBLICATIONS}
+              className="inline-flex items-center gap-1.5 text-sm text-white/90 hover:text-white transition-colors group backdrop-blur-sm bg-black/20 rounded-full px-3 py-1.5"
+            >
+              <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+              {t("publication.backToJournal")}
+            </Link>
+          </div>
+        </div>
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
           <div className="container-shell">
             {localizedField(section, "title", language) && (
@@ -94,8 +112,10 @@ function HeroSection({ section, language }) {
 }
 
 function TextSection({ section, language }) {
-  const content = localizedField(section, "content", language);
-  if (!content) return null;
+  const raw = localizedField(section, "content", language);
+  if (!raw) return null;
+  // Add two trailing spaces before each newline so Markdown renders hard line breaks
+  const content = raw.replace(/([^\n])\n(?!\n)/g, "$1  \n");
 
   return (
     <section className="py-10 md:py-14">
@@ -195,11 +215,23 @@ function HighlightsSection({ section, language }) {
                   />
                 </svg>
               </div>
-              <p className="text-sm text-charcoal leading-relaxed">
-                {typeof item === "string"
-                  ? item
-                  : item.text || item.label || JSON.stringify(item)}
-              </p>
+              <div>
+                <p className="text-sm text-charcoal leading-relaxed font-medium">
+                  {typeof item === "string"
+                    ? item
+                    : item[`title_${language}`] ||
+                      item.title_en ||
+                      item.text ||
+                      item.label ||
+                      ""}
+                </p>
+                {typeof item === "object" &&
+                  (item[`description_${language}`] || item.description_en) && (
+                    <p className="text-xs text-charcoal-muted leading-relaxed mt-0.5">
+                      {item[`description_${language}`] || item.description_en}
+                    </p>
+                  )}
+              </div>
             </div>
           ))}
         </div>
@@ -521,7 +553,7 @@ const SECTION_MAP = {
 
 // ─── Main renderer ────────────────────────────────────────────────────────────
 
-export default function PublicationSectionRenderer({ sections, experience }) {
+export default function PublicationSectionRenderer({ sections, experience, publication }) {
   const { language } = useLanguage();
   if (!sections || sections.length === 0) return null;
 
@@ -536,6 +568,7 @@ export default function PublicationSectionRenderer({ sections, experience }) {
             section={section}
             experience={experience}
             language={language}
+            publication={publication}
           />
         );
       })}

@@ -3,9 +3,10 @@ import { Copy } from "lucide-react";
 import { Input } from "@/components/common/Input";
 import AdminFormLayout from "@/components/admin/AdminFormLayout";
 import { Card } from "@/components/common/Card";
-import ImageUpload from "./ImageUpload";
+import MediaImageField from "@/components/admin/media/MediaImageField";
 import AdminSelect from "@/components/common/AdminSelect";
 import { useLanguage } from "@/hooks/useLanguage";
+import env from "@/config/env";
 import { cn } from "@/lib/utils";
 
 const STATUS_OPTIONS = [
@@ -28,6 +29,7 @@ const EMPTY = {
   capacity: "",
   status: "draft",
   heroImageId: "",
+  heroBucketId: "",
 };
 
 function Field({ label, required, error, hint, children }) {
@@ -146,6 +148,7 @@ export default function EditionForm({
       capacity: form.capacity ? parseInt(form.capacity) : null,
       status: form.status,
       heroImageId: form.heroImageId || null,
+      heroBucketId: form.heroBucketId || null,
     };
 
     onSubmit(payload);
@@ -336,10 +339,14 @@ export default function EditionForm({
           {t("admin.editionForm.sectionCoverImage")}
         </h2>
         <div className="max-w-lg">
-          <ImageUpload
+          <MediaImageField
             fileId={form.heroImageId}
-            onUpload={(id) => set("heroImageId", id)}
-            onRemove={() => set("heroImageId", "")}
+            bucketId={form.heroBucketId || env.bucketExperienceMedia}
+            buckets={env.imageBuckets}
+            onChange={(fileId, bucketId) => {
+              set("heroImageId", fileId);
+              set("heroBucketId", bucketId || env.bucketExperienceMedia);
+            }}
             disabled={isDisabled}
           />
         </div>
