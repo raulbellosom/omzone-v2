@@ -6,11 +6,18 @@ import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
 import { Button } from "@/components/common/Button";
 import { ROUTES } from "@/constants/routes";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 
 const CATEGORY_KEYS = ["landing", "blog", "highlight", "institutional", "faq"];
 
-function ConfirmDialog({ open, title, description, confirmLabel, onConfirm, onCancel }) {
+function ConfirmDialog({
+  open,
+  title,
+  description,
+  confirmLabel,
+  onConfirm,
+  onCancel,
+}) {
   const { t } = useLanguage();
   if (!open) return null;
   return (
@@ -40,7 +47,7 @@ export default function PublicationCard({
   canAdmin,
   canHardDelete,
 }) {
-  const { t, lang } = useLanguage();
+  const { t, language } = useLanguage();
   const [confirm, setConfirm] = useState(null);
 
   const editUrl = ROUTES.ADMIN_PUBLICATION_EDIT.replace(":id", publication.$id);
@@ -85,7 +92,7 @@ export default function PublicationCard({
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <p className="font-medium text-charcoal truncate">
-              {publication.title}
+              {localizedField(publication, "title", language)}
             </p>
             <p className="text-xs text-charcoal-subtle truncate">
               /{publication.slug}
@@ -102,7 +109,7 @@ export default function PublicationCard({
           {publication.publishedAt && (
             <span>
               {new Date(publication.publishedAt).toLocaleDateString(
-                lang === "es" ? "es-MX" : "en-US",
+                language === "es" ? "es-MX" : "en-US",
                 { day: "numeric", month: "short" },
               )}
             </span>

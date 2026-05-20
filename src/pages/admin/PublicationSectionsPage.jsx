@@ -9,7 +9,7 @@ import { usePublication } from "@/hooks/usePublications";
 import { usePublicationSections } from "@/hooks/usePublicationSections";
 import { ROUTES } from "@/constants/routes";
 import { useState } from "react";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 
 function LoadingSkeleton() {
   return (
@@ -30,7 +30,7 @@ export default function PublicationSectionsPage() {
   const { data: publication, loading, error } = usePublication(id);
   const { data: sections } = usePublicationSections(id);
   const [showPreview, setShowPreview] = useState(false);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (loading) return <LoadingSkeleton />;
 
@@ -60,7 +60,7 @@ export default function PublicationSectionsPage() {
           </Link>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-display font-semibold text-charcoal">
-              {publication.title}
+              {localizedField(publication, "title", language)}
             </h1>
             <StatusBadge status={publication.status} />
           </div>
@@ -83,12 +83,7 @@ export default function PublicationSectionsPage() {
               ? t("admin.publications.hidePreview")
               : t("admin.publications.showPreview")}
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            asChild
-          >
+          <Button type="button" variant="outline" size="sm" asChild>
             <Link to={editUrl}>
               <Pencil className="h-4 w-4" />
               {t("admin.publications.editData")}

@@ -21,7 +21,7 @@ import StatusBadge from "@/components/admin/experiences/StatusBadge";
 import PublicationCategoryChip from "@/components/admin/publications/PublicationCategoryChip";
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 
 const CATEGORY_I18N_KEYS = {
   landing: "admin.publicationCategories.landing",
@@ -217,7 +217,7 @@ export default function PublicationTable({
   canAdmin,
   canHardDelete,
 }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   return (
     <div className="overflow-x-auto rounded-xl border border-sand-dark">
       <table className="min-w-full text-sm">
@@ -273,14 +273,14 @@ export default function PublicationTable({
                   <td className="px-4 py-3">
                     {isArchived ? (
                       <span className="font-medium text-charcoal truncate max-w-60 block">
-                        {pub.title}
+                        {localizedField(pub, "title", language)}
                       </span>
                     ) : (
                       <Link
                         to={editUrl}
                         className="font-medium text-charcoal hover:text-sage-dark hover:underline underline-offset-2 transition-colors truncate max-w-60 block"
                       >
-                        {pub.title}
+                        {localizedField(pub, "title", language)}
                       </Link>
                     )}
                     <p className="text-xs text-charcoal-subtle truncate max-w-60">
@@ -292,7 +292,9 @@ export default function PublicationTable({
                   </td>
                   <td className="px-4 py-3">
                     {isArchived ? (
-                      <Badge variant="warm">{t("admin.archive.archivedBadge")}</Badge>
+                      <Badge variant="warm">
+                        {t("admin.archive.archivedBadge")}
+                      </Badge>
                     ) : (
                       <StatusBadge status={pub.status} />
                     )}

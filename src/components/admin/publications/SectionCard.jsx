@@ -1,7 +1,7 @@
 import { GripVertical, Pencil, Trash2, Eye, EyeOff } from "lucide-react";
 import Badge from "@/components/common/Badge";
 import { cn } from "@/lib/utils";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 
 const TYPE_I18N_KEYS = {
   hero: "admin.sectionTypes.hero",
@@ -40,7 +40,7 @@ export default function SectionCard({
   onToggleVisibility,
   disabled,
 }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const typeKey = TYPE_I18N_KEYS[section.sectionType];
   const typeLabel = typeKey ? t(typeKey) : section.sectionType;
   const typeVariant = TYPE_VARIANTS[section.sectionType] ?? "default";
@@ -72,15 +72,15 @@ export default function SectionCard({
           <Badge variant={typeVariant} size="sm">
             {typeLabel}
           </Badge>
-          {section.title && (
+          {(section.title || section.titleEs) && (
             <span className="text-sm font-medium text-charcoal truncate">
-              {section.title}
+              {localizedField(section, "title", language)}
             </span>
           )}
         </div>
-        {section.content && (
+        {(section.content || section.contentEs) && (
           <p className="text-xs text-charcoal-subtle mt-0.5 line-clamp-1">
-            {section.content.slice(0, 120)}
+            {localizedField(section, "content", language).slice(0, 120)}
           </p>
         )}
       </div>

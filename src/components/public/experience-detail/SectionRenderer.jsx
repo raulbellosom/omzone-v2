@@ -80,6 +80,14 @@ function GallerySection({ section, language }) {
   );
 }
 
+function getLocalizedItemField(item, field, language) {
+  if (language === "es") {
+    const esVal = item[`${field}_es`];
+    if (esVal && String(esVal).trim()) return esVal;
+  }
+  return item[`${field}_en`] || item[field] || "";
+}
+
 function HighlightsSection({ section, language }) {
   const items =
     parseJsonSafe(section.metadata)?.items ||
@@ -98,30 +106,48 @@ function HighlightsSection({ section, language }) {
           </h2>
         )}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl">
-          {list.map((item, i) => (
-            <div key={i} className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-sage flex items-center justify-center mt-0.5">
-                <svg
-                  className="w-3.5 h-3.5 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={3}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+          {list.map((item, i) => {
+            const isString = typeof item === "string";
+            const title = isString
+              ? item
+              : getLocalizedItemField(item, "title", language) ||
+                item.text ||
+                item.label ||
+                "";
+            const description = isString
+              ? ""
+              : getLocalizedItemField(item, "description", language);
+
+            return (
+              <div key={i} className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-sage flex items-center justify-center mt-0.5">
+                  <svg
+                    className="w-3.5 h-3.5 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-charcoal leading-snug">
+                    {title}
+                  </p>
+                  {description && (
+                    <p className="text-sm text-charcoal-muted leading-relaxed mt-0.5">
+                      {description}
+                    </p>
+                  )}
+                </div>
               </div>
-              <p className="text-sm text-charcoal leading-relaxed">
-                {typeof item === "string"
-                  ? item
-                  : item.text || item.label || JSON.stringify(item)}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -259,7 +285,9 @@ function InclusionsSection({ section, language }) {
               </svg>
               {typeof item === "string"
                 ? item
-                : item.text || JSON.stringify(item)}
+                : getLocalizedItemField(item, "title", language) ||
+                  item.text ||
+                  ""}
             </li>
           ))}
         </ul>
@@ -305,7 +333,9 @@ function RestrictionsSection({ section, language }) {
               </svg>
               {typeof item === "string"
                 ? item
-                : item.text || JSON.stringify(item)}
+                : getLocalizedItemField(item, "title", language) ||
+                  item.text ||
+                  ""}
             </li>
           ))}
         </ul>
