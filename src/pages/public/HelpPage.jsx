@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import SEOHead from "@/components/common/SEOHead";
 import StructuredData from "@/components/common/StructuredData";
 import env from "@/config/env";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 import { usePublications } from "@/hooks/usePublications";
 import { functions } from "@/lib/appwrite";
 import { ROUTES } from "@/constants/routes";
@@ -293,7 +293,7 @@ function QuickContactForm({ t }) {
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function HelpPage() {
-  const { t, locale } = useLanguage();
+  const { t, language } = useLanguage();
   const {
     data: faqs,
     loading,
@@ -312,10 +312,12 @@ export default function HelpPage() {
           "@type": "FAQPage",
           mainEntity: faqs.map((pub) => ({
             "@type": "Question",
-            name: pub.title,
+            name: localizedField(pub, "title", language),
             acceptedAnswer: {
               "@type": "Answer",
-              text: pub.description || pub.title,
+              text:
+                localizedField(pub, "excerpt", language) ||
+                localizedField(pub, "title", language),
             },
           })),
         }
@@ -375,8 +377,8 @@ export default function HelpPage() {
                 {faqs.map((pub) => (
                   <FaqItem
                     key={pub.$id}
-                    title={pub.title}
-                    body={pub.excerpt}
+                    title={localizedField(pub, "title", language)}
+                    body={localizedField(pub, "excerpt", language)}
                     href={`/p/${pub.slug}`}
                   />
                 ))}
