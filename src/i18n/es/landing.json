@@ -32,7 +32,10 @@
     "facebook": "Facebook",
     "emailUs": "Escríbenos",
     "copyright": "OMZONE. Todos los derechos reservados.",
-    "crafted": "Creado con intención"
+    "crafted": "Creado con intención",
+    "support": "Soporte",
+    "helpFaq": "Ayuda y FAQ",
+    "requestInvoice": "Solicitar Factura"
   },
   "home": {
     "hero": {
@@ -324,7 +327,7 @@
   },
   "terms": {
     "seoTitle": "Términos de Servicio — OMZONE",
-    "seoDescription": "Revisa los términos y condiciones para usar la plataforma de experiencias wellness OMZONE.",
+    "seoDescription": "Revisa los términos y condiciones para usar la plataforma de experiencias OMZONE.",
     "title": "Términos de Servicio",
     "intro": "Por favor revisa estos términos antes de usar la plataforma o adquirir cualquier experiencia.",
     "lastUpdated": "Última actualización: abril 2026",
@@ -420,7 +423,7 @@
   },
   "refund": {
     "seoTitle": "Política de Reembolso — OMZONE",
-    "seoDescription": "Revisa la política de cancelación y reembolso de OMZONE para experiencias wellness, tickets y pases.",
+    "seoDescription": "Revisa la política de cancelación y reembolso de OMZONE para experiencias, tickets y pases.",
     "title": "Política de Reembolso",
     "intro": "Queremos que te sientas seguro al reservar. Aquí está nuestra política de cancelación y reembolso.",
     "lastUpdated": "Última actualización: abril 2026",
@@ -607,5 +610,113 @@
     "day": "día",
     "days": "días",
     "bookPackage": "Reservar paquete"
+  },
+  "billing": {
+    "seoTitle": "Solicitar Factura — OMZONE",
+    "seoDescription": "Solicita tu factura por una experiencia OMZONE. Llena el formulario con tu número de reserva y datos fiscales y te la enviamos.",
+    "hero": {
+      "eyebrow": "Solicitud de Factura",
+      "title": "¿Necesitas Factura?",
+      "subtitle": "Llena el formulario con tus datos fiscales y nuestro equipo emitirá tu factura manualmente y la enviará al correo indicado en un plazo de 3 a 5 días hábiles."
+    },
+    "form": {
+      "nameLabel": "Nombre completo",
+      "namePlaceholder": "Tu nombre",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "tu@correo.com",
+      "phoneLabel": "WhatsApp",
+      "phonePlaceholder": "+52 322 123 4567",
+      "orderCodeLabel": "Número de reserva / orden",
+      "orderCodePlaceholder": "Ej. OMZ-ORD-… o OMZ-TKT-…",
+      "rfcLabel": "RFC",
+      "rfcPlaceholder": "XAXX010101000",
+      "taxRegimeLabel": "Régimen fiscal",
+      "taxRegimePlaceholder": "Ej. 601 – General de Ley Personas Morales",
+      "cfdiUseLabel": "Uso de CFDI",
+      "cfdiUsePlaceholder": "Ej. G03 – Gastos en general",
+      "fiscalEmailLabel": "Correo de entrega de factura",
+      "fiscalEmailPlaceholder": "contabilidad@tuempresa.com",
+      "additionalInfoLabel": "Información adicional",
+      "additionalInfoPlaceholder": "Cualquier dato adicional necesario para la factura…",
+      "send": "Enviar solicitud",
+      "sending": "Enviando…",
+      "successTitle": "Solicitud recibida",
+      "successBody": "Recibimos tu solicitud. Nuestro equipo emitirá la factura y la enviará al correo indicado en un plazo de 3 a 5 días hábiles.",
+      "sendAnother": "Enviar otra solicitud",
+      "errorTitle": "Algo salió mal",
+      "errorBody": "No pudimos enviar tu solicitud. Inténtalo de nuevo o escríbenos a hello@omzone.com.",
+      "retry": "Reintentar"
+    },
+    "validation": {
+      "nameRequired": "Por favor ingresa tu nombre.",
+      "emailRequired": "Por favor ingresa tu correo.",
+      "emailInvalid": "Por favor ingresa un correo válido.",
+      "phoneRequired": "Por favor ingresa tu número de WhatsApp.",
+      "orderCodeRequired": "Por favor ingresa tu número de reserva u orden.",
+      "rfcRequired": "Por favor ingresa tu RFC.",
+      "captchaRequired": "Por favor completa el CAPTCHA."
+    },
+    "notice": {
+      "title": "¿Cómo funciona?",
+      "step1": "Llena el formulario con tu número de reserva y tus datos fiscales.",
+      "step2": "Nuestro equipo revisa la solicitud y emite la factura manualmente.",
+      "step3": "Te la enviamos al correo indicado en un plazo de 3 a 5 días hábiles.",
+      "help": "Para cualquier otra consulta escríbenos a"
+    }
+  },
+  "help": {
+    "seoTitle": "Ayuda y FAQ — OMZONE",
+    "seoDescription": "Preguntas frecuentes y recursos de soporte para experiencias de bienestar OMZONE en Puerto Vallarta.",
+    "hero": {
+      "eyebrow": "Centro de Ayuda",
+      "title": "¿En Qué Te Ayudamos?",
+      "subtitle": "Encuentra respuestas a las preguntas más comunes o contáctanos directamente."
+    },
+    "faqSection": {
+      "title": "Preguntas Frecuentes",
+      "subtitle": "Respuestas a las dudas más comunes sobre reservas, pagos, tickets y experiencias.",
+      "noFaqs": "Aún no hay preguntas frecuentes. Vuelve pronto.",
+      "errorLoading": "No pudimos cargar las FAQ. Por favor intenta de nuevo.",
+      "readMore": "Leer artículo completo"
+    },
+    "contactSection": {
+      "title": "¿Aún Necesitas Ayuda?",
+      "subtitle": "Nuestro equipo está disponible para ti. Envíanos un mensaje y te responderemos pronto.",
+      "emailCta": "Escríbenos a",
+      "formTitle": "Contacto rápido",
+      "successTitle": "Mensaje enviado",
+      "successBody": "¡Gracias! Nos pondremos en contacto contigo pronto.",
+      "labelName": "Nombre",
+      "labelEmail": "Correo electrónico",
+      "labelPhone": "Teléfono o WhatsApp (opcional)",
+      "labelMessage": "Mensaje",
+      "labelPreferredContact": "¿Cómo prefieres que te contactemos?",
+      "viaEmail": "Email",
+      "viaCall": "Llamada",
+      "viaWhatsapp": "WhatsApp"
+    },
+    "resources": {
+      "title": "Más recursos",
+      "contact": "Contáctanos",
+      "invoice": "Solicitar factura",
+      "portal": "Mi Portal"
+    }
+  },
+  "supportWidget": {
+    "triggerLabel": "¿Necesitas ayuda?",
+    "title": "Estamos Aquí",
+    "subtitle": "¿En qué podemos ayudarte?",
+    "emailAction": "Escríbenos",
+    "faqAction": "Ayuda y FAQ",
+    "formAction": "Enviar mensaje",
+    "invoiceAction": "Solicitar factura",
+    "dismiss": "Cerrar",
+    "formTitle": "Mensaje rápido",
+    "formSend": "Enviar",
+    "formSending": "Enviando…",
+    "formSuccess": "¡Mensaje enviado!",
+    "formSuccessBody": "Te responderemos pronto.",
+    "formPlaceholderMessage": "¿En qué podemos ayudarte?",
+    "formErrorBody": "Algo salió mal. Por favor intenta de nuevo."
   }
 }

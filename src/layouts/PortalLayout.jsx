@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import Navbar from "@/components/layout/Navbar";
 import PortalSidebar from "@/components/portal/layout/PortalSidebar";
 import PortalBottomTabs from "@/components/portal/layout/PortalBottomTabs";
+import SupportWidget from "@/components/common/SupportWidget";
 
 export default function PortalLayout() {
   return (
@@ -28,13 +29,17 @@ export default function PortalLayout() {
           </main>
 
           <footer className="hidden lg:block border-t border-warm-gray-dark/15 bg-white py-5 text-center text-xs text-charcoal-muted">
-            &copy; {new Date().getFullYear()} OMZONE &middot; Wellness experiences
+            &copy; {new Date().getFullYear()} OMZONE &middot; Experiences in
+            Puerto Vallarta
           </footer>
         </div>
       </div>
 
       {/* Mobile bottom tabs */}
       <PortalBottomTabs />
+
+      {/* Support widget */}
+      <SupportWidget />
     </>
   );
 }

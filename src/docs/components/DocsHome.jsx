@@ -1,18 +1,18 @@
-import { Link } from 'react-router-dom';
-import { 
-  BookOpen, 
-  Sparkles, 
-  CalendarDays, 
-  ShoppingCart, 
-  FileText, 
+import { Link } from "react-router-dom";
+import {
+  BookOpen,
+  Sparkles,
+  CalendarDays,
+  ShoppingCart,
+  FileText,
   Settings,
   Users,
   ArrowRight,
   Lightbulb,
-  Wrench
-} from 'lucide-react';
-import { docsNavigation, getLocalizedTitle } from '../config/navigation';
-import DocsSearch from './DocsSearch';
+  Wrench,
+} from "lucide-react";
+import { docsNavigation, getLocalizedTitle } from "../config/navigation";
+import DocsSearch from "./DocsSearch";
 
 const SECTION_ICONS = {
   gettingStarted: BookOpen,
@@ -24,7 +24,7 @@ const SECTION_ICONS = {
   reference: Lightbulb,
 };
 
-export default function DocsHome({ lang = 'en' }) {
+export default function DocsHome({ lang = "en" }) {
   const sections = Object.entries(docsNavigation)
     .sort(([, a], [, b]) => a.order - b.order)
     .map(([key, section]) => ({
@@ -38,12 +38,12 @@ export default function DocsHome({ lang = 'en' }) {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-serif font-semibold text-stone-800 mb-3">
-          {lang === 'es' ? 'Centro de Documentación' : 'Documentation Center'}
+          {lang === "es" ? "Centro de Documentación" : "Documentation Center"}
         </h1>
         <p className="text-stone-600 text-lg">
-          {lang === 'es' 
-            ? 'Bienvenido a la documentación de OMZONE. Explora las secciones abaixo para aprender cómo usar la plataforma.'
-            : 'Welcome to the OMZONE documentation. Explore the sections below to learn how to use the platform.'}
+          {lang === "es"
+            ? "Bienvenido a la documentación de OMZONE. Explora las secciones abajo para aprender cómo usar la plataforma."
+            : "Welcome to the OMZONE documentation. Explore the sections below to learn how to use the platform."}
         </p>
       </div>
 
@@ -55,46 +55,46 @@ export default function DocsHome({ lang = 'en' }) {
       {/* Quick Links */}
       <div className="mb-10">
         <h2 className="text-lg font-semibold text-stone-700 mb-4">
-          {lang === 'es' ? 'Acceso Rápido' : 'Quick Links'}
+          {lang === "es" ? "Acceso Rápido" : "Quick Links"}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Link
-            to={`/help/docs/${lang}/introduction`}
+            to={`/help/docs/${lang}/bienvenida`}
             className="flex items-center gap-3 p-4 rounded-lg bg-amber-50 border border-amber-100 hover:bg-amber-100 transition-colors"
           >
             <BookOpen className="w-5 h-5 text-amber-600" />
             <span className="font-medium text-stone-800">
-              {lang === 'es' ? 'Introducción' : 'Introduction'}
+              {lang === "es" ? "Introducción" : "Introduction"}
             </span>
             <ArrowRight className="w-4 h-4 text-amber-600 ml-auto" />
           </Link>
           <Link
-            to={`/help/docs/${lang}/experiences`}
+            to={`/help/docs/${lang}/experiencias`}
             className="flex items-center gap-3 p-4 rounded-lg bg-sage/10 border border-sage/20 hover:bg-sage/20 transition-colors"
           >
             <Sparkles className="w-5 h-5 text-sage-dark" />
             <span className="font-medium text-stone-800">
-              {lang === 'es' ? 'Experiencias' : 'Experiences'}
+              {lang === "es" ? "Experiencias" : "Experiences"}
             </span>
             <ArrowRight className="w-4 h-4 text-sage-dark ml-auto" />
           </Link>
           <Link
-            to={`/help/docs/${lang}/orders`}
+            to={`/help/docs/${lang}/ordenes`}
             className="flex items-center gap-3 p-4 rounded-lg bg-blue-50 border border-blue-100 hover:bg-blue-100 transition-colors"
           >
             <ShoppingCart className="w-5 h-5 text-blue-600" />
             <span className="font-medium text-stone-800">
-              {lang === 'es' ? 'Órdenes' : 'Orders'}
+              {lang === "es" ? "Órdenes" : "Orders"}
             </span>
             <ArrowRight className="w-4 h-4 text-blue-600 ml-auto" />
           </Link>
           <Link
-            to={`/help/docs/${lang}/glossary`}
+            to={`/help/docs/${lang}/glosario`}
             className="flex items-center gap-3 p-4 rounded-lg bg-purple-50 border border-purple-100 hover:bg-purple-100 transition-colors"
           >
             <Lightbulb className="w-5 h-5 text-purple-600" />
             <span className="font-medium text-stone-800">
-              {lang === 'es' ? 'Glosario' : 'Glossary'}
+              {lang === "es" ? "Glosario" : "Glossary"}
             </span>
             <ArrowRight className="w-4 h-4 text-purple-600 ml-auto" />
           </Link>
@@ -119,7 +119,9 @@ export default function DocsHome({ lang = 'en' }) {
                     className="flex items-center gap-2 px-4 py-3 rounded-lg bg-white border border-stone-200 hover:border-stone-300 hover:bg-stone-50 transition-colors"
                   >
                     <FileText className="w-4 h-4 text-stone-400" />
-                    <span className="text-sm text-stone-700">{getLocalizedTitle(page.title, lang)}</span>
+                    <span className="text-sm text-stone-700">
+                      {getLocalizedTitle(page.title, lang)}
+                    </span>
                   </Link>
                 ))}
               </div>
@@ -132,7 +134,7 @@ export default function DocsHome({ lang = 'en' }) {
       <div className="mt-12 pt-8 border-t border-stone-200">
         <h2 className="flex items-center gap-2 text-lg font-semibold text-stone-700 mb-4">
           <Wrench className="w-5 h-5 text-stone-500" />
-          {lang === 'es' ? 'Recursos de Soporte' : 'Support Resources'}
+          {lang === "es" ? "Recursos de Soporte" : "Support Resources"}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Link
@@ -142,10 +144,12 @@ export default function DocsHome({ lang = 'en' }) {
             <Wrench className="w-5 h-5 text-stone-600" />
             <div>
               <span className="font-medium text-stone-800 block">
-                {lang === 'es' ? 'Solución de Problemas' : 'Troubleshooting'}
+                {lang === "es" ? "Solución de Problemas" : "Troubleshooting"}
               </span>
               <span className="text-xs text-stone-500">
-                {lang === 'es' ? 'Soluciones a problemas comunes' : 'Solutions to common problems'}
+                {lang === "es"
+                  ? "Soluciones a problemas comunes"
+                  : "Solutions to common problems"}
               </span>
             </div>
           </Link>
@@ -156,10 +160,12 @@ export default function DocsHome({ lang = 'en' }) {
             <Users className="w-5 h-5 text-stone-600" />
             <div>
               <span className="font-medium text-stone-800 block">
-                {lang === 'es' ? 'Limitaciones Conocidas' : 'Known Limitations'}
+                {lang === "es" ? "Limitaciones Conocidas" : "Known Limitations"}
               </span>
               <span className="text-xs text-stone-500">
-                {lang === 'es' ? 'Restricciones conocidas del sistema' : 'Known system constraints'}
+                {lang === "es"
+                  ? "Restricciones conocidas del sistema"
+                  : "Known system constraints"}
               </span>
             </div>
           </Link>

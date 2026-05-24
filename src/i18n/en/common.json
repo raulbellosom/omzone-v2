@@ -23,7 +23,7 @@
     "dismiss": "Later"
   },
   "auth": {
-    "brandTagline": "Wellness Experiences",
+    "brandTagline": "Experiences in Puerto Vallarta",
     "backToOmzone": "Back to OMZONE",
     "login": {
       "pageTitle": "Sign In — OMZONE",
@@ -44,7 +44,7 @@
     "register": {
       "pageTitle": "Create Account — OMZONE",
       "heading": "Create your account",
-      "subtitle": "Begin your wellness journey",
+      "subtitle": "Begin your journey",
       "firstNameLabel": "First name",
       "firstNamePlaceholder": "First name",
       "lastNameLabel": "Last name",
@@ -98,7 +98,7 @@
       "pageTitleDefault": "Verify Email — OMZONE",
       "loadingHeading": "Verifying your email…",
       "successHeading": "Email verified!",
-      "successMessage": "Your account is now active. Sign in to begin your wellness journey.",
+      "successMessage": "Your account is now active. Sign in to begin your journey.",
       "successButton": "Sign In",
       "errorHeading": "Verification failed",
       "errorMessage": "The verification link may be expired or invalid. Please try signing in to receive a new verification email.",

@@ -231,9 +231,10 @@ export default function PassDetailPage() {
   return (
     <div className="min-h-screen bg-cream">
       <SEOHead
-        title={`${name} — Wellness Pass`}
+        title={`${name} — Experience Pass`}
         description={
-          description || `${name} — ${pass.totalCredits} credits wellness pass`
+          description ||
+          `${name} — ${pass.totalCredits} credits experience pass`
         }
         ogImage={seoImage}
         ogType="product"

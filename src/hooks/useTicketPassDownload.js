@@ -106,7 +106,7 @@ export function useTicketPassDownload() {
 
       ctx.font = '11px "Inter", -apple-system, Arial, sans-serif';
       ctx.fillStyle = "#7c8c6e";
-      ctx.fillText("Wellness Experience Pass", W / 2, 65);
+      ctx.fillText("Experience Pass", W / 2, 65);
 
       // ── SEPARATOR ─────────────────────────────────────────────
       ctx.strokeStyle = "rgba(255,255,255,0.08)";
@@ -264,7 +264,11 @@ export function useTicketPassDownload() {
       ctx.textAlign = "center";
       ctx.font = '10px "Inter", -apple-system, Arial, sans-serif';
       ctx.fillStyle = "rgba(255,255,255,0.22)";
-      ctx.fillText("OMZONE · Wellness Experiences", W / 2, tearY + 20);
+      ctx.fillText(
+        "OMZONE · Experiences in Puerto Vallarta",
+        W / 2,
+        tearY + 20,
+      );
       ctx.fillText("omzone.mx", W / 2, tearY + 38);
 
       // Bottom sage bar

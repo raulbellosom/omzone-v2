@@ -7,7 +7,7 @@ const CONTENT = {
     eyebrow: "Coming Soon",
     title: "Something beautiful\nis being crafted.",
     subtitle:
-      "We are putting the finishing touches on a new wellness experience for Puerto Vallarta and Bahía de Banderas. In the meantime, don't hesitate to reach out.",
+      "We are putting the finishing touches on something new for Puerto Vallarta and Bahía de Banderas. In the meantime, don't hesitate to reach out.",
     contactLabel: "Get in touch",
   },
   es: {

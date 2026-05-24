@@ -42,6 +42,10 @@ const CheckoutSuccessPage = lazy(
 const CheckoutCancelPage = lazy(
   () => import("@/pages/public/CheckoutCancelPage"),
 );
+const BillingRequestPage = lazy(
+  () => import("@/pages/public/BillingRequestPage"),
+);
+const HelpPage = lazy(() => import("@/pages/public/HelpPage"));
 
 // ─── Auth pages ───
 const LoginPage = lazy(() => import("@/pages/auth/LoginPage"));
@@ -216,6 +220,10 @@ export default function App() {
             />
             <Route path="/publications" element={<PublicationsListPage />} />
             <Route path="/p/:slug" element={<PublicationPage />} />
+            <Route path="/facturacion" element={<BillingRequestPage />} />
+            <Route path="/billing-request" element={<BillingRequestPage />} />
+            <Route path="/help" element={<HelpPage />} />
+            <Route path="/faq" element={<HelpPage />} />
             <Route path="/forbidden" element={<ForbiddenPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
@@ -367,8 +375,12 @@ export default function App() {
             </Route>
           </Route>
 
-          {/* Help/Docs routes — require root authentication */}
-          <Route element={<ProtectedRoute labels={[ROLES.ROOT]} />}>
+          {/* Help/Docs routes — accessible to admin, root, and docs-label users */}
+          <Route
+            element={
+              <ProtectedRoute labels={[ROLES.ROOT, ROLES.ADMIN, ROLES.DOCS]} />
+            }
+          >
             <Route path="/help/docs" element={<HelpDocsPage />} />
             <Route path="/help/docs/:lang" element={<HelpDocsPage />} />
             <Route path="/help/docs/:lang/:slug" element={<HelpDocsPage />} />

@@ -3,6 +3,7 @@ export const ROLES = {
   ADMIN: "admin",
   OPERATOR: "operator",
   CLIENT: "client",
+  DOCS: "docs",
 };
 
 export function roleFromLabels(labels = []) {
@@ -74,6 +75,7 @@ export function displayRoleName(labels = []) {
   if (role === ROLES.ROOT || role === ROLES.ADMIN) return "Admin";
   if (role === ROLES.OPERATOR) return "Operador";
   if (role === ROLES.CLIENT) return "Cliente";
+  if (labels.includes(ROLES.DOCS)) return "Documentación";
   return "—";
 }
 

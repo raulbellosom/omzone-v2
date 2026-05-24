@@ -8,6 +8,7 @@ import Input from "@/components/common/Input";
 import AdminSelect from "@/components/common/AdminSelect";
 import { Search, Mail, MailOpen, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getCategoryConfig, CATEGORY_LIST } from "@/constants/contactCategories";
 
 const PAGE_SIZE = 25;
 
@@ -22,19 +23,36 @@ function formatDate(dateStr) {
   }).format(new Date(dateStr));
 }
 
+function CategoryBadge({ category }) {
+  const cfg = getCategoryConfig(category || "contact");
+  return (
+    <span className={`inline-flex items-center gap-1 text-xs font-medium rounded-full px-2 py-0.5 ${cfg.color}`}>
+      <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${cfg.dotColor}`} />
+      {cfg.labelEn}
+    </span>
+  );
+}
+
 export default function ContactMessageListPage() {
   const { t } = useLanguage();
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
   const [page, setPage] = useState(0);
 
-  const { data, total, loading, error } = useContactMessages({
+  const { data: rawData, total, loading, error } = useContactMessages({
     filter,
     search,
     page,
   });
+
+  // Client-side category filter (since we don't push it to the hook yet)
+  const data = categoryFilter === "all"
+    ? rawData
+    : rawData.filter((m) => (m.category || "contact") === categoryFilter);
+
   const totalPages = Math.ceil(total / PAGE_SIZE);
-  const hasFilters = search || filter !== "all";
+  const hasFilters = search || filter !== "all" || categoryFilter !== "all";
 
   const filterOptions = [
     { value: "all", label: t("admin.contactMessages.filterAll") },
@@ -42,9 +60,18 @@ export default function ContactMessageListPage() {
     { value: "read", label: t("admin.contactMessages.filterRead") },
   ];
 
+  const categoryOptions = [
+    { value: "all", label: t("admin.contactMessages.filterCategoryAll") },
+    ...CATEGORY_LIST.map((c) => ({
+      value: c.key,
+      label: c.labelEn,
+    })),
+  ];
+
   const clearFilters = () => {
     setSearch("");
     setFilter("all");
+    setCategoryFilter("all");
     setPage(0);
   };
 
@@ -86,6 +113,15 @@ export default function ContactMessageListPage() {
           }}
           options={filterOptions}
           className="w-40"
+        />
+        <AdminSelect
+          value={categoryFilter}
+          onChange={(v) => {
+            setCategoryFilter(v);
+            setPage(0);
+          }}
+          options={categoryOptions}
+          className="w-44"
         />
         {hasFilters && (
           <button
@@ -134,6 +170,9 @@ export default function ContactMessageListPage() {
                     </th>
                     <th className="px-5 py-3 font-medium text-charcoal-muted">
                       {t("admin.contactMessages.colStatus")}
+                    </th>
+                    <th className="px-5 py-3 font-medium text-charcoal-muted hidden lg:table-cell">
+                      {t("admin.contactMessages.colCategory")}
                     </th>
                   </tr>
                 </thead>
@@ -196,6 +235,9 @@ export default function ContactMessageListPage() {
                             {t("admin.contactMessages.statusUnread")}
                           </span>
                         )}
+                      </td>
+                      <td className="px-5 py-3.5 hidden lg:table-cell">
+                        <CategoryBadge category={msg.category} />
                       </td>
                     </tr>
                   ))}

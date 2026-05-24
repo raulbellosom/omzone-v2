@@ -14,7 +14,7 @@
     "myTickets": "My Tickets"
   },
   "footer": {
-    "tagline": "Premium wellness experiences designed to nurture your body, mind and spirit.",
+    "tagline": "Premium experiences designed to nurture your body, mind and spirit.",
     "experiences": "Experiences",
     "allExperiences": "All Experiences",
     "sessions": "Sessions",
@@ -32,12 +32,15 @@
     "facebook": "Facebook",
     "emailUs": "Email Us",
     "copyright": "OMZONE. All rights reserved.",
-    "crafted": "Crafted with intention"
+    "crafted": "Crafted with intention",
+    "support": "Support",
+    "helpFaq": "Help & FAQ",
+    "requestInvoice": "Request Invoice"
   },
   "home": {
     "hero": {
       "title": "Experiences in Puerto Vallarta",
-      "subtitle": "Wellness sessions, sound healing, breathwork, immersions, retreats and stays — crafted for mind, body and soul in Bahía de Banderas.",
+      "subtitle": "Sessions, sound healing, breathwork, immersions, retreats and stays — crafted for mind, body and soul in Bahía de Banderas.",
       "cta": "Explore Experiences"
     },
     "discover": {
@@ -74,7 +77,7 @@
           "description": "Where the Sierra Madre meets the Pacific. A geography that heals — tropical forest, mountain air, ocean breeze."
         },
         "transformative": {
-          "title": "Transformative Wellness",
+          "title": "Transformative Experiences",
           "description": "We do not sell activities. We create conditions for something to shift — in your body, your breath, your perspective."
         },
         "intimate": {
@@ -91,7 +94,7 @@
   },
   "experienceList": {
     "title": "Experiences",
-    "subtitle": "Discover transformative wellness experiences crafted for your mind, body and soul.",
+    "subtitle": "Discover transformative experiences crafted for your mind, body and soul.",
     "errorLoading": "We couldn't load the experiences right now.",
     "tryAgain": "Try again",
     "emptyTitle": "No experiences available at the moment.",
@@ -148,8 +151,8 @@
     "free": "Free"
   },
   "about": {
-    "seoTitle": "About OMZONE — Wellness Experiences in Puerto Vallarta",
-    "seoDescription": "Discover OMZONE: curated wellness experiences in Puerto Vallarta, Bahía de Banderas and Riviera Nayarit. Our mission, philosophy and the Pacific coast setting that inspires transformation.",
+    "seoTitle": "About OMZONE — Experiences in Puerto Vallarta",
+    "seoDescription": "Discover OMZONE: curated experiences in Puerto Vallarta, Bahía de Banderas and Riviera Nayarit. Our mission, philosophy and the Pacific coast setting that inspires transformation.",
     "hero": {
       "eyebrow": "The OMZONE Story",
       "title": "Where Stillness Becomes a Way of Living",
@@ -158,12 +161,12 @@
     "mission": {
       "eyebrow": "Why We Exist",
       "title": "Curating Experiences That Return You to Yourself",
-      "body1": "OMZONE was created from a simple, radical belief: that the most transformative journeys don't require a destination — they require presence. We curate extraordinary wellness experiences where the only agenda is your own reconnection.",
+      "body1": "OMZONE was created from a simple, radical belief: that the most transformative journeys don't require a destination — they require presence. We curate extraordinary experiences where the only agenda is your own reconnection.",
       "body2": "Every session, immersion, retreat, and stay we offer has been designed with the same care you'd give to a ritual — intentional, unhurried, held in spaces where nature does most of the healing. We don't sell schedules. We hold space for what your body and mind have been asking for.",
-      "body3": "This is not another wellness marketplace. This is a living collection of experiences shaped by practitioners, facilitators, and souls who understand that real wellbeing isn't a luxury — it's a homecoming.",
-      "visionTitle": "A World Where Wellness Is Sacred Again",
+      "body3": "This is not another marketplace. This is a living collection of experiences shaped by practitioners, facilitators, and souls who understand that real wellbeing isn't a luxury — it's a homecoming.",
+      "visionTitle": "A World Where Presence Is Sacred Again",
       "visionBody1": "We envision a world where taking care of yourself is not an afterthought or a trend, but an act of quiet reverence. Where slowing down is not a privilege, but a practice available to anyone willing to pause.",
-      "visionBody2": "OMZONE exists to make intentional wellness accessible, thoughtfully curated, and deeply personal — one experience at a time."
+      "visionBody2": "OMZONE exists to make intentional experiences accessible, thoughtfully curated, and deeply personal — one experience at a time."
     },
     "location": {
       "eyebrow": "Puerto Vallarta & Bahía de Banderas",
@@ -177,7 +180,7 @@
       "title": "Four Pillars of Presence",
       "intention": {
         "title": "Intention",
-        "description": "Every experience at OMZONE begins with a deliberate choice — not a scroll, not an impulse, but a conscious decision to show up for yourself. We believe wellness without intention is just consumption."
+        "description": "Every experience at OMZONE begins with a deliberate choice — not a scroll, not an impulse, but a conscious decision to show up for yourself. We believe presence without intention is just consumption."
       },
       "transformation": {
         "title": "Transformation",
@@ -200,7 +203,7 @@
   },
   "contact": {
     "seoTitle": "Contact — OMZONE",
-    "seoDescription": "Get in touch with OMZONE in Puerto Vallarta. We'd love to hear from you about our wellness experiences.",
+    "seoDescription": "Get in touch with OMZONE in Puerto Vallarta. We'd love to hear from you about our experiences.",
     "hero": {
       "eyebrow": "We're Listening",
       "title": "Get in Touch",
@@ -324,7 +327,7 @@
   },
   "terms": {
     "seoTitle": "Terms of Service — OMZONE",
-    "seoDescription": "Review the terms and conditions for using the OMZONE wellness experience platform.",
+    "seoDescription": "Review the terms and conditions for using the OMZONE experience platform.",
     "title": "Terms of Service",
     "intro": "Please review these terms before using the platform or purchasing any experience.",
     "lastUpdated": "Last updated: April 2026",
@@ -340,7 +343,7 @@
       {
         "heading": "2. About the Platform",
         "paragraphs": [
-          "OMZONE is a platform for discovering, booking and managing premium wellness experiences including sessions, immersions, retreats, stays and private experiences in Puerto Vallarta and the Bahía de Banderas region, Mexico.",
+          "OMZONE is a platform for discovering, booking and managing premium experiences including sessions, immersions, retreats, stays and private experiences in Puerto Vallarta and the Bahía de Banderas region, Mexico.",
           "Experiences are operated by OMZONE and/or independent facilitators. The Platform facilitates the booking and payment process."
         ]
       },
@@ -420,7 +423,7 @@
   },
   "refund": {
     "seoTitle": "Refund Policy — OMZONE",
-    "seoDescription": "Review OMZONE's cancellation and refund policy for wellness experiences, tickets and passes.",
+    "seoDescription": "Review OMZONE's cancellation and refund policy for experiences, tickets and passes.",
     "title": "Refund Policy",
     "intro": "We want you to feel confident when booking. Here is our cancellation and refund policy.",
     "lastUpdated": "Last updated: April 2026",
@@ -564,9 +567,9 @@
     "exploreExperience": "Explore Experience"
   },
   "passes": {
-    "pageTitle": "Wellness Passes",
-    "pageDescription": "Multi-session wellness passes for transformative experiences in Puerto Vallarta. Save on sessions, immersions and retreats.",
-    "heroTitle": "Wellness Passes",
+    "pageTitle": "Experience Passes",
+    "pageDescription": "Multi-session experience passes for transformative experiences in Puerto Vallarta. Save on sessions, immersions and retreats.",
+    "heroTitle": "Experience Passes",
     "heroSubtitle": "Unlock multiple sessions with a single pass — your gateway to deeper transformation and meaningful savings.",
     "allPasses": "All Passes",
     "credits": "{count} credits",
@@ -578,13 +581,13 @@
     "errorLoading": "Could not load passes. Please try again.",
     "tryAgain": "Try Again",
     "emptyTitle": "No passes available",
-    "emptySubtitle": "Check back soon for new wellness passes."
+    "emptySubtitle": "Check back soon for new experience passes."
   },
   "publications": {
     "pageTitle": "Stories & Insights",
-    "pageDescription": "Explore wellness stories, guides and insights from OMZONE in Puerto Vallarta — breathwork, sound healing, retreats and more.",
+    "pageDescription": "Explore stories, guides and insights from OMZONE in Puerto Vallarta — breathwork, sound healing, retreats and more.",
     "heroTitle": "Stories & Insights",
-    "heroSubtitle": "Dive into the world of mindful living — stories, guides and inspiration from our wellness community.",
+    "heroSubtitle": "Dive into the world of mindful living — stories, guides and inspiration from our community.",
     "allCategories": "All",
     "readMore": "Read more",
     "errorLoading": "Could not load publications. Please try again.",
@@ -607,5 +610,113 @@
     "day": "day",
     "days": "days",
     "bookPackage": "Book Package"
+  },
+  "billing": {
+    "seoTitle": "Request Invoice — OMZONE",
+    "seoDescription": "Request an invoice for your OMZONE experience. Fill out the form with your booking number and tax information and we will send it to you.",
+    "hero": {
+      "eyebrow": "Invoice Request",
+      "title": "Need an Invoice?",
+      "subtitle": "Fill out the form below and our team will manually issue your invoice and send it to the email you indicate within 3–5 business days."
+    },
+    "form": {
+      "nameLabel": "Full Name",
+      "namePlaceholder": "Your name",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "phoneLabel": "WhatsApp",
+      "phonePlaceholder": "+52 322 123 4567",
+      "orderCodeLabel": "Booking / Order Number",
+      "orderCodePlaceholder": "e.g. OMZ-ORD-… or OMZ-TKT-…",
+      "rfcLabel": "RFC (Tax ID)",
+      "rfcPlaceholder": "XAXX010101000",
+      "taxRegimeLabel": "Tax Regime",
+      "taxRegimePlaceholder": "e.g. 601 – General de Ley Personas Morales",
+      "cfdiUseLabel": "CFDI Use",
+      "cfdiUsePlaceholder": "e.g. G03 – Gastos en general",
+      "fiscalEmailLabel": "Invoice Delivery Email",
+      "fiscalEmailPlaceholder": "accounting@yourcompany.com",
+      "additionalInfoLabel": "Additional Information",
+      "additionalInfoPlaceholder": "Any other details needed for the invoice…",
+      "send": "Submit Request",
+      "sending": "Sending…",
+      "successTitle": "Request Received",
+      "successBody": "We received your invoice request. Our team will issue it and send it to the indicated email within 3–5 business days.",
+      "sendAnother": "Submit Another Request",
+      "errorTitle": "Something went wrong",
+      "errorBody": "We couldn't send your request. Please try again or email us at hello@omzone.com.",
+      "retry": "Try Again"
+    },
+    "validation": {
+      "nameRequired": "Please enter your name.",
+      "emailRequired": "Please enter your email.",
+      "emailInvalid": "Please enter a valid email address.",
+      "phoneRequired": "Please enter your WhatsApp number.",
+      "orderCodeRequired": "Please enter your booking or order number.",
+      "rfcRequired": "Please enter your RFC.",
+      "captchaRequired": "Please complete the CAPTCHA."
+    },
+    "notice": {
+      "title": "How it works",
+      "step1": "Fill in the form with your booking number and tax details.",
+      "step2": "Our team reviews the request and issues the invoice manually.",
+      "step3": "We send it to your indicated email within 3–5 business days.",
+      "help": "For any other questions write to us at"
+    }
+  },
+  "help": {
+    "seoTitle": "Help & FAQ — OMZONE",
+    "seoDescription": "Frequently asked questions and support resources for OMZONE experiences in Puerto Vallarta.",
+    "hero": {
+      "eyebrow": "Help Center",
+      "title": "How Can We Help You?",
+      "subtitle": "Find answers to the most common questions below or reach out to us directly."
+    },
+    "faqSection": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Answers to the most common questions about booking, payments, tickets and experiences.",
+      "noFaqs": "No FAQs available yet. Check back soon.",
+      "errorLoading": "Could not load FAQs. Please try again.",
+      "readMore": "Read full article"
+    },
+    "contactSection": {
+      "title": "Still Need Help?",
+      "subtitle": "Our team is here for you. Send us a quick message and we'll get back to you shortly.",
+      "emailCta": "Email us at",
+      "formTitle": "Quick Contact",
+      "successTitle": "Message Sent",
+      "successBody": "Thank you! We'll get back to you soon.",
+      "labelName": "Name",
+      "labelEmail": "Email",
+      "labelPhone": "Phone or WhatsApp (optional)",
+      "labelMessage": "Message",
+      "labelPreferredContact": "How should we contact you?",
+      "viaEmail": "Email",
+      "viaCall": "Phone call",
+      "viaWhatsapp": "WhatsApp"
+    },
+    "resources": {
+      "title": "More Resources",
+      "contact": "Contact Us",
+      "invoice": "Request an Invoice",
+      "portal": "My Portal"
+    }
+  },
+  "supportWidget": {
+    "triggerLabel": "Need help?",
+    "title": "We're Here",
+    "subtitle": "How can we help you?",
+    "emailAction": "Email us",
+    "faqAction": "Help & FAQ",
+    "formAction": "Send a message",
+    "invoiceAction": "Request invoice",
+    "dismiss": "Close",
+    "formTitle": "Quick Message",
+    "formSend": "Send",
+    "formSending": "Sending…",
+    "formSuccess": "Message sent!",
+    "formSuccessBody": "We'll get back to you shortly.",
+    "formPlaceholderMessage": "How can we help you?",
+    "formErrorBody": "Something went wrong. Please try again."
   }
 }

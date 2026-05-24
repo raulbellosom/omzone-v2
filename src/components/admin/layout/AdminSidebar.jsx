@@ -132,9 +132,9 @@ const NAV_SECTIONS = [
     items: [
       {
         nameKey: "admin.sidebar.docs",
-        path: "/help/docs/en",
+        path: "/help/docs/es",
         icon: BookOpen,
-        rootOnly: true,
+        adminOnly: true,
       },
     ],
   },

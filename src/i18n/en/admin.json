@@ -430,7 +430,7 @@
       "displayOrderHint": "Display order (lower = first)",
       "placeholderName": "Breath & Move Pass",
       "placeholderNameEs": "Pase Respira y Muévete",
-      "placeholderDescEn": "Multi-session pass for wellness experiences…",
+      "placeholderDescEn": "Multi-session pass for experiences…",
       "placeholderDescEs": "Pase multi-sesión para experiencias de bienestar…"
     },
     "userPasses": {
@@ -772,7 +772,7 @@
       "ogImageHint": "Image shared on social media",
       "noExperiences": "No experiences found.",
       "placeholderSeoTitle": "The Art of Stillness | OMZONE",
-      "placeholderSeoDescription": "Discover our transformative wellness…"
+      "placeholderSeoDescription": "Discover our transformative experiences…"
     },
     "sections": {
       "newSection": "New section",
@@ -1717,6 +1717,12 @@
       "filterAll": "All",
       "filterUnread": "Unread",
       "filterRead": "Read",
+      "filterCategoryAll": "All categories",
+      "filterCategoryContact": "Contact",
+      "filterCategoryInvoice": "Invoice",
+      "filterCategoryFaq": "FAQ",
+      "filterCategorySupport": "Support",
+      "filterCategoryOther": "Other",
       "clearFilters": "Clear filters",
       "loading": "Loading messages…",
       "error": "Error loading messages.",
@@ -1726,6 +1732,7 @@
       "colSubject": "Subject",
       "colDate": "Date",
       "colStatus": "Status",
+      "colCategory": "Category",
       "statusUnread": "Unread",
       "statusRead": "Read",
       "prev": "Previous",
@@ -1736,6 +1743,7 @@
       "senderInfo": "Sender information",
       "labelName": "Name",
       "labelEmail": "Email",
+      "labelPhone": "WhatsApp / Phone",
       "labelDate": "Sent on",
       "messageLabel": "Message",
       "markRead": "Mark as read",
@@ -1745,7 +1753,20 @@
       "adminNotesPlaceholder": "e.g. Contacted by email on X date, follow-up scheduled for…",
       "saveNotes": "Save notes",
       "notesSaved": "Notes saved",
-      "notesError": "Error saving"
+      "notesError": "Error saving",
+      "categoryLabel": "Category",
+      "reclassify": "Reclassify",
+      "reclassifySaved": "Category updated",
+      "invoiceDataTitle": "Invoice Request Details",
+      "labelOrderCode": "Order / Booking Code",
+      "labelRfc": "RFC",
+      "labelTaxRegime": "Tax Regime",
+      "labelCfdiUse": "CFDI Use",
+      "labelFiscalEmail": "Invoice Email",
+      "labelAdditionalInfo": "Additional Info",
+      "copyFiscalData": "Copy fiscal data",
+      "copiedFiscalData": "Copied!",
+      "viewOrder": "View order in admin"
     }
   }
 }

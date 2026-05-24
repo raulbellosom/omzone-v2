@@ -1,134 +1,287 @@
-// Navigation structure mirroring admin sidebar
-// Section order, titles, and page slugs
-// All titles and descriptions support i18n with { en, es } structure
+// Navigation structure for /help/docs
+// All titles support { en, es } i18n structure
 
 export const docsNavigation = {
-  gettingStarted: {
-    title: { en: "Getting Started", es: "Primeros Pasos" },
+  bienvenida: {
+    title: { en: "Getting Started", es: "Bienvenida" },
     order: 1,
     pages: [
       {
-        slug: "introduction",
-        title: { en: "Introduction", es: "Introduccion" },
+        slug: "bienvenida",
+        title: { en: "Welcome to OMZONE", es: "Bienvenida a OMZONE" },
         order: 1,
+      },
+      {
+        slug: "como-iniciar-sesion",
+        title: { en: "Logging In", es: "Cómo iniciar sesión" },
+        order: 2,
+      },
+      {
+        slug: "roles-y-permisos",
+        title: { en: "Roles & Permissions", es: "Roles y permisos" },
+        order: 3,
+      },
+      {
+        slug: "recorrido-del-panel",
+        title: { en: "Panel Tour", es: "Recorrido del panel" },
+        order: 4,
       },
     ],
   },
-  catalog: {
-    title: { en: "Catalog", es: "Catalogo" },
+  admin: {
+    title: { en: "Admin Panel", es: "Panel de Administración" },
     order: 2,
     pages: [
       {
-        slug: "experiences",
-        title: { en: "Experiences", es: "Experiencias" },
+        slug: "panel-resumen",
+        title: { en: "Dashboard", es: "Resumen del panel" },
         order: 1,
       },
       {
-        slug: "pricing-tiers",
-        title: { en: "Pricing Tiers", es: "Niveles de Precio" },
+        slug: "experiencias",
+        title: { en: "Experiences", es: "Experiencias" },
+        order: 2,
+      },
+      {
+        slug: "precios",
+        title: { en: "Pricing", es: "Precios" },
         order: 3,
       },
-      { slug: "addons", title: { en: "Addons", es: "Complementos" }, order: 4 },
+      {
+        slug: "complementos",
+        title: { en: "Add-ons", es: "Complementos" },
+        order: 4,
+      },
+      {
+        slug: "paquetes-y-pases",
+        title: { en: "Packages & Passes", es: "Paquetes y pases" },
+        order: 5,
+      },
+      {
+        slug: "agenda-y-horarios",
+        title: { en: "Agenda & Schedules", es: "Agenda y horarios" },
+        order: 6,
+      },
+      {
+        slug: "recursos",
+        title: { en: "Resources", es: "Recursos" },
+        order: 7,
+      },
+      {
+        slug: "ubicaciones",
+        title: { en: "Locations", es: "Ubicaciones" },
+        order: 8,
+      },
+      {
+        slug: "solicitudes-de-reserva",
+        title: { en: "Booking Requests", es: "Solicitudes de reserva" },
+        order: 9,
+      },
+      {
+        slug: "ordenes",
+        title: { en: "Orders", es: "Órdenes" },
+        order: 10,
+      },
+      {
+        slug: "tickets",
+        title: { en: "Tickets", es: "Tickets" },
+        order: 11,
+      },
+      {
+        slug: "venta-asistida",
+        title: { en: "Assisted Sale", es: "Venta asistida" },
+        order: 12,
+      },
+      {
+        slug: "clientes",
+        title: { en: "Clients", es: "Clientes" },
+        order: 13,
+      },
+      {
+        slug: "publicaciones",
+        title: { en: "Publications", es: "Publicaciones" },
+        order: 14,
+      },
+      {
+        slug: "secciones-y-bloques",
+        title: { en: "Sections & Blocks", es: "Secciones y bloques" },
+        order: 15,
+      },
+      {
+        slug: "multimedia",
+        title: { en: "Media", es: "Multimedia" },
+        order: 16,
+      },
+      {
+        slug: "configuracion",
+        title: { en: "Settings", es: "Configuración" },
+        order: 17,
+      },
     ],
   },
-  operations: {
-    title: { en: "Operations", es: "Operaciones" },
+  portal: {
+    title: { en: "Client Portal", es: "Portal del Cliente" },
     order: 3,
     pages: [
       {
-        slug: "slots",
-        title: { en: "Slots & Agenda", es: "Horarios y Agenda" },
+        slug: "que-es-el-portal",
+        title: { en: "What is the Portal?", es: "¿Qué es el portal?" },
         order: 1,
       },
       {
-        slug: "resources",
-        title: { en: "Resources", es: "Recursos" },
+        slug: "mis-reservas-y-tickets",
+        title: { en: "My Bookings & Tickets", es: "Mis reservas y tickets" },
         order: 2,
       },
       {
-        slug: "locations",
-        title: { en: "Locations & Spaces", es: "Ubicaciones y Espacios" },
+        slug: "mis-pases",
+        title: { en: "My Passes", es: "Mis pases" },
         order: 3,
       },
       {
-        slug: "booking-requests",
-        title: { en: "Booking Requests", es: "Solicitudes de Reserva" },
+        slug: "mi-perfil",
+        title: { en: "My Profile", es: "Mi perfil" },
+        order: 4,
+      },
+      {
+        slug: "historial-de-compras",
+        title: { en: "Purchase History", es: "Historial de compras" },
+        order: 5,
+      },
+      {
+        slug: "validar-ticket",
+        title: {
+          en: "Using Your Ticket",
+          es: "Cómo usar tu ticket el día del evento",
+        },
+        order: 6,
+      },
+    ],
+  },
+  landing: {
+    title: { en: "Public Website", es: "Sitio Público" },
+    order: 4,
+    pages: [
+      {
+        slug: "estructura-de-la-landing",
+        title: { en: "Website Structure", es: "Estructura del sitio" },
+        order: 1,
+      },
+      {
+        slug: "como-explora-un-visitante",
+        title: { en: "How Visitors Browse", es: "Cómo navega un visitante" },
+        order: 2,
+      },
+      {
+        slug: "pagina-de-experiencia",
+        title: { en: "Experience Page", es: "Página de una experiencia" },
+        order: 3,
+      },
+      {
+        slug: "flujo-de-compra",
+        title: { en: "Purchase Flow", es: "Flujo de compra" },
         order: 4,
       },
     ],
   },
-  sales: {
-    title: { en: "Sales", es: "Ventas" },
-    order: 4,
-    pages: [
-      { slug: "orders", title: { en: "Orders", es: "Ordenes" }, order: 1 },
-      {
-        slug: "assisted-sale",
-        title: { en: "Assisted Sale", es: "Venta Asistida" },
-        order: 2,
-      },
-    ],
-  },
-  content: {
-    title: { en: "Content", es: "Contenido" },
+  casosDeUso: {
+    title: { en: "Use Cases", es: "Casos de Uso" },
     order: 5,
     pages: [
       {
-        slug: "publications",
-        title: { en: "Publications", es: "Publicaciones" },
+        slug: "lanzar-una-sesion",
+        title: {
+          en: "Launch a Yoga Session",
+          es: "Lanzar una nueva sesión de yoga",
+        },
         order: 1,
       },
       {
-        slug: "sections",
-        title: { en: "Sections", es: "Secciones" },
+        slug: "organizar-un-retiro",
+        title: {
+          en: "Organize a Weekend Retreat",
+          es: "Organizar un retiro de fin de semana",
+        },
         order: 2,
       },
-    ],
-  },
-  system: {
-    title: { en: "System", es: "Sistema" },
-    order: 6,
-    pages: [
-      { slug: "tickets", title: { en: "Tickets", es: "Tickets" }, order: 1 },
-      { slug: "clients", title: { en: "Clients", es: "Clientes" }, order: 2 },
-      { slug: "media", title: { en: "Media", es: "Multimedia" }, order: 3 },
       {
-        slug: "settings",
-        title: { en: "Settings", es: "Configuracion" },
-        order: 4,
-      },
-    ],
-  },
-  reference: {
-    title: { en: "Reference", es: "Referencia" },
-    order: 7,
-    pages: [
-      { slug: "glossary", title: { en: "Glossary", es: "Glosario" }, order: 1 },
-      { slug: "flows", title: { en: "Flows", es: "Flujos" }, order: 2 },
-      {
-        slug: "reservation-playbooks",
-        title: { en: "Reservation Playbooks", es: "Playbooks de Reservas" },
+        slug: "vender-un-paquete",
+        title: {
+          en: "Sell a 10-Class Package",
+          es: "Vender un paquete de 10 clases",
+        },
         order: 3,
       },
       {
-        slug: "known-limitations",
-        title: { en: "Known Limitations", es: "Limitaciones Conocidas" },
+        slug: "solicitud-privada",
+        title: {
+          en: "Handle a Private Experience Request",
+          es: "Recibir una solicitud de experiencia privada",
+        },
         order: 4,
       },
       {
-        slug: "troubleshooting",
-        title: { en: "Troubleshooting", es: "Solucion de Problemas" },
+        slug: "dar-de-alta-instructor",
+        title: {
+          en: "Add a New Instructor",
+          es: "Dar de alta un nuevo instructor",
+        },
         order: 5,
+      },
+      {
+        slug: "cierre-del-dia",
+        title: { en: "End-of-Day Review", es: "Revisión de cierre del día" },
+        order: 6,
+      },
+      {
+        slug: "manejar-cancelacion",
+        title: { en: "Handle a Cancellation", es: "Manejar una cancelación" },
+        order: 7,
+      },
+      {
+        slug: "recuperar-acceso-cliente",
+        title: {
+          en: "Restore Client Access",
+          es: "Recuperar acceso de un cliente",
+        },
+        order: 8,
+      },
+    ],
+  },
+  referencia: {
+    title: { en: "Reference", es: "Referencia Rápida" },
+    order: 6,
+    pages: [
+      {
+        slug: "glosario",
+        title: { en: "Glossary", es: "Glosario" },
+        order: 1,
+      },
+      {
+        slug: "problemas-frecuentes",
+        title: { en: "Common Problems", es: "Problemas frecuentes" },
+        order: 2,
+      },
+      {
+        slug: "preguntas-frecuentes",
+        title: { en: "FAQ", es: "Preguntas frecuentes" },
+        order: 3,
       },
     ],
   },
 };
 
 // Helper to get localized title
-export function getLocalizedTitle(titleObj, lang = "en") {
+export function getLocalizedTitle(titleObj, lang = "es") {
   if (typeof titleObj === "string") return titleObj;
   if (typeof titleObj === "object" && titleObj !== null) {
-    return titleObj[lang] || titleObj.en || Object.values(titleObj)[0] || "";
+    return (
+      titleObj[lang] ||
+      titleObj.es ||
+      titleObj.en ||
+      Object.values(titleObj)[0] ||
+      ""
+    );
   }
   return "";
 }

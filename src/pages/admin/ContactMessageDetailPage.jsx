@@ -5,6 +5,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/common/Card";
 import Button from "@/components/common/Button";
+import { getCategoryConfig } from "@/constants/contactCategories";
 import {
   ArrowLeft,
   Mail,
@@ -14,6 +15,10 @@ import {
   MessageSquare,
   Save,
   CheckCheck,
+  Phone,
+  FileText,
+  Copy,
+  ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -205,8 +210,105 @@ export default function ContactMessageDetailPage() {
             label={t("admin.contactMessages.labelDate")}
             value={formatDate(message.$createdAt)}
           />
+          {message.phone && (
+            <InfoRow
+              icon={Phone}
+              label={t("admin.contactMessages.labelPhone")}
+              value={
+                <a href={`tel:${message.phone}`} className="text-sage hover:underline">
+                  {message.phone}
+                </a>
+              }
+            />
+          )}
+        </div>
+
+        {/* Category badge + reclassify */}
+        <div className="border-t border-sand/60 pt-4 flex flex-wrap items-center gap-3">
+          {(() => {
+            const cfg = getCategoryConfig(message.category || "contact");
+            return (
+              <span className={`inline-flex items-center gap-1.5 text-xs font-medium rounded-full px-2.5 py-1 ${cfg.color}`}>
+                <span className={`h-1.5 w-1.5 rounded-full ${cfg.dotColor}`} />
+                {cfg.labelEn}
+              </span>
+            );
+          })()}
         </div>
       </Card>
+
+      {/* Invoice data panel — only for invoice_request */}
+      {message.category === "invoice_request" && (() => {
+        let invoiceData = {};
+        try {
+          if (message.categoryData) invoiceData = JSON.parse(message.categoryData);
+        } catch {
+          // ignore
+        }
+        const rows = [
+          { label: t("admin.contactMessages.labelOrderCode"), value: invoiceData.orderCode },
+          { label: t("admin.contactMessages.labelRfc"), value: invoiceData.rfc },
+          { label: t("admin.contactMessages.labelTaxRegime"), value: invoiceData.taxRegime },
+          { label: t("admin.contactMessages.labelCfdiUse"), value: invoiceData.cfdiUse },
+          { label: t("admin.contactMessages.labelFiscalEmail"), value: invoiceData.fiscalEmail },
+        ].filter((r) => r.value);
+        const copyText = rows.map((r) => `${r.label}: ${r.value}`).join("\n");
+        const [copied, setCopied] = useState(false);
+        function handleCopy() {
+          navigator.clipboard.writeText(copyText);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        }
+        return (
+          <Card className="p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-charcoal-muted" />
+                <h2 className="text-sm font-semibold text-charcoal">
+                  {t("admin.contactMessages.invoiceDataTitle")}
+                </h2>
+              </div>
+              <div className="flex items-center gap-2">
+                {invoiceData.orderCode && (
+                  <Link
+                    to={ROUTES.ADMIN_ORDER_DETAIL?.replace(":id", invoiceData.orderCode) || "#"}
+                    className="flex items-center gap-1 text-xs text-sage hover:underline"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    {t("admin.contactMessages.viewOrder")}
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={handleCopy}
+                  className="flex items-center gap-1 text-xs text-charcoal-muted hover:text-charcoal transition-colors"
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                  {copied ? t("admin.contactMessages.copiedFiscalData") : t("admin.contactMessages.copyFiscalData")}
+                </button>
+              </div>
+            </div>
+            <dl className="grid sm:grid-cols-2 gap-x-6 gap-y-3">
+              {rows.map(({ label, value }) => (
+                <div key={label}>
+                  <dt className="text-xs text-charcoal-muted">{label}</dt>
+                  <dd className="mt-0.5 text-sm text-charcoal font-medium">{value}</dd>
+                </div>
+              ))}
+              {invoiceData.additionalInfo && (
+                <div className="sm:col-span-2">
+                  <dt className="text-xs text-charcoal-muted">
+                    {t("admin.contactMessages.labelAdditionalInfo")}
+                  </dt>
+                  <dd className="mt-0.5 text-sm text-charcoal leading-relaxed">
+                    {invoiceData.additionalInfo}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </Card>
+        );
+      })()}
 
       {/* Message content */}
       <Card className="p-5">

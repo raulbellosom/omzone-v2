@@ -152,7 +152,7 @@ export default function DocsPageContent({ lang = "en", slug: propSlug }) {
   }, [slug, lang]);
 
   if (!slug) {
-    return <Navigate to={`/help/docs/${lang}/introduction`} replace />;
+    return <Navigate to={`/help/docs/${lang}/bienvenida`} replace />;
   }
 
   const currentPage = allPages.find((p) => p.slug === slug);

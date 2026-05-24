@@ -1,6 +1,7 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import StructuredData from "@/components/common/StructuredData";
+import SupportWidget from "@/components/common/SupportWidget";
 import { useLanguage } from "@/hooks/useLanguage";
 import env from "@/config/env";
 import { ROUTES } from "@/constants/routes";
@@ -12,8 +13,7 @@ const ORGANIZATION_SCHEMA = {
   name: "OMZONE",
   url: env.siteUrl,
   logo: `${env.siteUrl}/logo.png`,
-  description:
-    "Premium wellness experiences in Puerto Vallarta and Bahía de Banderas",
+  description: "Premium experiences in Puerto Vallarta and Bahía de Banderas",
   address: {
     "@type": "PostalAddress",
     addressLocality: "Puerto Vallarta",
@@ -45,9 +45,11 @@ export default function PublicLayout() {
         <Outlet />
       </main>
 
+      <SupportWidget />
+
       <footer className="border-t border-warm-gray-dark/40 bg-white">
         <div className="container-shell py-12 md:py-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
             {/* Brand */}
             <div className="sm:col-span-2 lg:col-span-1">
               <Link
@@ -155,6 +157,39 @@ export default function PublicLayout() {
                   >
                     {t("footer.journal")}
                   </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Support */}
+            <div>
+              <h4 className="text-xs font-semibold text-charcoal uppercase tracking-wider mb-4">
+                {t("footer.support")}
+              </h4>
+              <ul className="space-y-2.5">
+                <li>
+                  <Link
+                    to={ROUTES.HELP}
+                    className="text-sm text-charcoal-muted hover:text-sage transition-colors"
+                  >
+                    {t("footer.helpFaq")}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to={ROUTES.BILLING_REQUEST}
+                    className="text-sm text-charcoal-muted hover:text-sage transition-colors"
+                  >
+                    {t("footer.requestInvoice")}
+                  </Link>
+                </li>
+                <li>
+                  <a
+                    href="mailto:hello@omzone.com"
+                    className="text-sm text-charcoal-muted hover:text-sage transition-colors"
+                  >
+                    hello@omzone.com
+                  </a>
                 </li>
               </ul>
             </div>

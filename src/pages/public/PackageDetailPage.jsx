@@ -237,7 +237,7 @@ export default function PackageDetailPage() {
   const seoTitle = `${localizedField(pkg, "name", language)} — OMZONE`;
   const seoDescription =
     localizedField(pkg, "description", language) ||
-    `${localizedField(pkg, "name", language)} wellness package`;
+    `${localizedField(pkg, "name", language)} — experience package`;
   const seoImage = getPackagePreviewUrl(pkg.heroImageId, {
     width: 1200,
     height: 630,

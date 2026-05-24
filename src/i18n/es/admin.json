@@ -430,7 +430,7 @@
       "displayOrderHint": "Orden de despliegue (menor = primero)",
       "placeholderName": "Pase Breath & Move",
       "placeholderNameEs": "Pase Respira y Muévete",
-      "placeholderDescEn": "Multi-session pass for wellness experiences…",
+      "placeholderDescEn": "Multi-session pass for experiences…",
       "placeholderDescEs": "Pase multi-sesión para experiencias de bienestar…"
     },
     "userPasses": {
@@ -772,7 +772,7 @@
       "ogImageHint": "Imagen para compartir en redes sociales",
       "noExperiences": "No se encontraron experiencias.",
       "placeholderSeoTitle": "The Art of Stillness | OMZONE",
-      "placeholderSeoDescription": "Discover our transformative wellness…"
+      "placeholderSeoDescription": "Discover our transformative experiences…"
     },
     "sections": {
       "newSection": "Nueva sección",
@@ -1717,6 +1717,12 @@
       "filterAll": "Todos",
       "filterUnread": "Sin leer",
       "filterRead": "Leídos",
+      "filterCategoryAll": "Todas las categorías",
+      "filterCategoryContact": "Contacto",
+      "filterCategoryInvoice": "Factura",
+      "filterCategoryFaq": "FAQ",
+      "filterCategorySupport": "Soporte",
+      "filterCategoryOther": "Otro",
       "clearFilters": "Limpiar filtros",
       "loading": "Cargando mensajes…",
       "error": "Error al cargar los mensajes.",
@@ -1726,6 +1732,7 @@
       "colSubject": "Asunto",
       "colDate": "Fecha",
       "colStatus": "Estado",
+      "colCategory": "Categoría",
       "statusUnread": "Sin leer",
       "statusRead": "Leído",
       "prev": "Anterior",
@@ -1736,6 +1743,7 @@
       "senderInfo": "Información del remitente",
       "labelName": "Nombre",
       "labelEmail": "Email",
+      "labelPhone": "WhatsApp / Teléfono",
       "labelDate": "Fecha de envío",
       "messageLabel": "Mensaje",
       "markRead": "Marcar como leído",
@@ -1745,7 +1753,20 @@
       "adminNotesPlaceholder": "Ej: Contactado por email el día X, se acordó seguimiento para...",
       "saveNotes": "Guardar notas",
       "notesSaved": "Notas guardadas",
-      "notesError": "Error al guardar"
+      "notesError": "Error al guardar",
+      "categoryLabel": "Categoría",
+      "reclassify": "Reclasificar",
+      "reclassifySaved": "Categoría actualizada",
+      "invoiceDataTitle": "Datos para Factura",
+      "labelOrderCode": "Código de orden / reserva",
+      "labelRfc": "RFC",
+      "labelTaxRegime": "Régimen fiscal",
+      "labelCfdiUse": "Uso de CFDI",
+      "labelFiscalEmail": "Correo de factura",
+      "labelAdditionalInfo": "Información adicional",
+      "copyFiscalData": "Copiar datos fiscales",
+      "copiedFiscalData": "¡Copiado!",
+      "viewOrder": "Ver orden en el admin"
     }
   }
 }

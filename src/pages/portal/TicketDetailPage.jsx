@@ -235,10 +235,14 @@ export default function TicketDetailPage() {
               <span className="text-right">
                 <span className="block">{snap.locationName}</span>
                 {snap.locationAddress && (
-                  <span className="block text-xs text-charcoal-muted font-normal mt-0.5">{snap.locationAddress}</span>
+                  <span className="block text-xs text-charcoal-muted font-normal mt-0.5">
+                    {snap.locationAddress}
+                  </span>
                 )}
                 {snap.roomName && (
-                  <span className="block text-xs text-charcoal-muted font-normal">{snap.roomName}</span>
+                  <span className="block text-xs text-charcoal-muted font-normal">
+                    {snap.roomName}
+                  </span>
                 )}
               </span>
             </DetailRow>
@@ -287,7 +291,7 @@ export default function TicketDetailPage() {
 
         {/* OMZONE branding for print */}
         <p className="text-center text-xs text-charcoal-muted/60 print:mt-8">
-          OMZONE &middot; Wellness Experiences
+          OMZONE &middot; Experiences in Puerto Vallarta
         </p>
       </div>
 

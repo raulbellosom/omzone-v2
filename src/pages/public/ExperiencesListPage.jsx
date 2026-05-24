@@ -85,9 +85,7 @@ export default function ExperiencesListPage() {
   return (
     <>
       <SEOHead
-        title={
-          t("experienceList.title") + " — OMZONE | Wellness Puerto Vallarta"
-        }
+        title={t("experienceList.title") + " — OMZONE | Puerto Vallarta"}
         description={t("experienceList.subtitle")}
         canonical={`${env.siteUrl}/experiences`}
       />

@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet-async";
 import env from "@/config/env";
 
 const DEFAULT_DESCRIPTION =
-  "Discover transformative wellness experiences in Puerto Vallarta — sessions, immersions, retreats and stays crafted for mind, body and soul.";
+  "Discover transformative experiences in Puerto Vallarta — sessions, immersions, retreats and stays crafted for mind, body and soul.";
 const DEFAULT_OG_IMAGE = `${env.siteUrl}/logo.png`;
 
 /**
@@ -32,7 +32,7 @@ export default function SEOHead({
 }) {
   const fullTitle = title
     ? `${title} — ${env.siteName}`
-    : `${env.siteName} — Wellness Experiences`;
+    : `${env.siteName} — Experiences in Puerto Vallarta`;
   const desc = description || DEFAULT_DESCRIPTION;
   const oTitle = ogTitle || title || env.siteName;
   const oDesc = ogDescription || desc;
