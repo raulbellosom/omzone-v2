@@ -1,14 +1,12 @@
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Pencil, Eye, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Pencil, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 import StatusBadge from "@/components/admin/experiences/StatusBadge";
 import SectionManager from "@/components/admin/publications/SectionManager";
-import PublicationPreview from "@/components/admin/publications/PublicationPreview";
 import { usePublication } from "@/hooks/usePublications";
 import { usePublicationSections } from "@/hooks/usePublicationSections";
 import { ROUTES } from "@/constants/routes";
-import { useState } from "react";
 import { useLanguage, localizedField } from "@/hooks/useLanguage";
 
 function LoadingSkeleton() {
@@ -29,7 +27,6 @@ export default function PublicationSectionsPage() {
   const { id } = useParams();
   const { data: publication, loading, error } = usePublication(id);
   const { data: sections } = usePublicationSections(id);
-  const [showPreview, setShowPreview] = useState(false);
   const { t, language } = useLanguage();
 
   if (loading) return <LoadingSkeleton />;
@@ -72,17 +69,6 @@ export default function PublicationSectionsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setShowPreview(!showPreview)}
-          >
-            <Eye className="h-4 w-4" />
-            {showPreview
-              ? t("admin.publications.hidePreview")
-              : t("admin.publications.showPreview")}
-          </Button>
           <Button type="button" variant="outline" size="sm" asChild>
             <Link to={editUrl}>
               <Pencil className="h-4 w-4" />
@@ -100,11 +86,6 @@ export default function PublicationSectionsPage() {
             {t("admin.publications.archivedEditWarning")}
           </p>
         </div>
-      )}
-
-      {/* Preview */}
-      {showPreview && (
-        <PublicationPreview publication={publication} sections={sections} />
       )}
 
       {/* Section Manager */}
