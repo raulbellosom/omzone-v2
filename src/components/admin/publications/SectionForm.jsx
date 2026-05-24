@@ -144,21 +144,23 @@ export default function SectionForm({
 
   // Types that replace the content textarea pair with a visual builder
   const CONTENT_BUILDER_TYPES = ["faq", "testimonials", "highlights"];
-  // Types that replace the metadata textarea with a dedicated field/builder
+  // Types that replace the metadata field with a dedicated builder
   const METADATA_BUILDER_TYPES = ["itinerary", "cta", "video"];
-  // Types that hide the content textareas entirely (metadata-only or no content)
+  // Types that hide the content textareas entirely
   const HIDE_CONTENT_TYPES = ["itinerary", "video", "gallery"];
 
   const useContentBuilder = CONTENT_BUILDER_TYPES.includes(form.sectionType);
   const useMetadataBuilder = METADATA_BUILDER_TYPES.includes(form.sectionType);
   const hideContent = HIDE_CONTENT_TYPES.includes(form.sectionType);
+  // Only show the metadata section when a dedicated builder exists for it
+  const showMetadataSection = useMetadataBuilder;
 
   const CONTENT_HINTS = {
-    text: "Markdown soportado. Texto libre.",
-    hero: "Subtítulo o descripción breve que aparece sobre la imagen.",
-    inclusions: "Una inclusión por línea. Ej: Wi-Fi incluido",
-    restrictions: "Una restricción por línea. Ej: No apto para embarazadas",
-    cta: "Texto descriptivo debajo del título del CTA.",
+    text: t("admin.sectionForm.contentHintText"),
+    hero: t("admin.sectionForm.contentHintHero"),
+    inclusions: t("admin.sectionForm.contentHintInclusions"),
+    restrictions: t("admin.sectionForm.contentHintRestrictions"),
+    cta: t("admin.sectionForm.contentHintCta"),
   };
   const contentHint = CONTENT_HINTS[form.sectionType] || null;
 
@@ -268,9 +270,9 @@ export default function SectionForm({
             {useContentBuilder ? (
               <div className="space-y-2">
                 <label className="text-sm font-medium text-charcoal">
-                  {form.sectionType === "faq" && "Preguntas frecuentes"}
-                  {form.sectionType === "testimonials" && "Testimonios"}
-                  {form.sectionType === "highlights" && "Highlights"}
+                  {form.sectionType === "faq" && t("admin.sectionForm.contentLabelFaq")}
+                  {form.sectionType === "testimonials" && t("admin.sectionForm.contentLabelTestimonials")}
+                  {form.sectionType === "highlights" && t("admin.sectionForm.contentLabelHighlights")}
                 </label>
                 {form.sectionType === "faq" && (
                   <FaqBuilder
@@ -279,6 +281,7 @@ export default function SectionForm({
                     valueEs={form.contentEs}
                     onChangeEn={(v) => set("content", v)}
                     onChangeEs={(v) => set("contentEs", v)}
+                    metadataValue={form.metadata}
                     disabled={isDisabled}
                   />
                 )}
@@ -289,6 +292,7 @@ export default function SectionForm({
                     valueEs={form.contentEs}
                     onChangeEn={(v) => set("content", v)}
                     onChangeEs={(v) => set("contentEs", v)}
+                    metadataValue={form.metadata}
                     disabled={isDisabled}
                   />
                 )}
@@ -296,7 +300,8 @@ export default function SectionForm({
                   <HighlightsBuilder
                     key={`highlights-${form.sectionType}`}
                     value={form.content}
-                    onChange={(v) => set("content", v)}
+                    onChange={(v) => { set("content", v); set("contentEs", v); }}
+                    metadataValue={form.metadata}
                     disabled={isDisabled}
                   />
                 )}
@@ -336,12 +341,7 @@ export default function SectionForm({
           </div>
         )}
 
-        <div
-          className={cn(
-            "grid gap-4",
-            usesMedia ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1",
-          )}
-        >
+        <div className="space-y-4">
           {usesMedia && (
             <Field
               label={t("admin.sectionForm.media")}
@@ -372,54 +372,37 @@ export default function SectionForm({
               )}
             </Field>
           )}
-          <Field
-            label={t("admin.sectionForm.metadata")}
-            hint={!useMetadataBuilder ? t("admin.sectionForm.metadataHint") : null}
-            error={errors.metadata}
-          >
-            {useMetadataBuilder ? (
-              <>
-                {form.sectionType === "itinerary" && (
-                  <ItineraryBuilder
-                    key={`itinerary-${form.sectionType}`}
-                    value={form.metadata}
-                    onChange={(v) => set("metadata", v)}
-                    disabled={isDisabled}
-                  />
-                )}
-                {form.sectionType === "cta" && (
-                  <CtaMetadataField
-                    key={`cta-${form.sectionType}`}
-                    value={form.metadata}
-                    onChange={(v) => set("metadata", v)}
-                    disabled={isDisabled}
-                  />
-                )}
-                {form.sectionType === "video" && (
-                  <VideoMetadataField
-                    key={`video-${form.sectionType}`}
-                    value={form.metadata}
-                    onChange={(v) => set("metadata", v)}
-                    disabled={isDisabled}
-                  />
-                )}
-              </>
-            ) : (
-              <textarea
-                value={form.metadata}
-                onChange={(e) => set("metadata", e.target.value)}
-                placeholder='{"key": "value"}'
-                disabled={isDisabled}
-                rows={4}
-                className={cn(
-                  "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal font-mono placeholder:text-charcoal-subtle",
-                  "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-vertical",
-                  "disabled:opacity-50 disabled:bg-warm-gray",
-                  errors.metadata && "border-red-400",
-                )}
-              />
-            )}
-          </Field>
+          {showMetadataSection && (
+            <Field
+              label={t("admin.sectionForm.metadata")}
+              error={errors.metadata}
+            >
+              {form.sectionType === "itinerary" && (
+                <ItineraryBuilder
+                  key={`itinerary-${form.sectionType}`}
+                  value={form.metadata}
+                  onChange={(v) => set("metadata", v)}
+                  disabled={isDisabled}
+                />
+              )}
+              {form.sectionType === "cta" && (
+                <CtaMetadataField
+                  key={`cta-${form.sectionType}`}
+                  value={form.metadata}
+                  onChange={(v) => set("metadata", v)}
+                  disabled={isDisabled}
+                />
+              )}
+              {form.sectionType === "video" && (
+                <VideoMetadataField
+                  key={`video-${form.sectionType}`}
+                  value={form.metadata}
+                  onChange={(v) => set("metadata", v)}
+                  disabled={isDisabled}
+                />
+              )}
+            </Field>
+          )}
         </div>
       </Card>
 

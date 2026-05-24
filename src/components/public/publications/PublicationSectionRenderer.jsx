@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, ChevronDown, ArrowRight } from "lucide-react";
 import Markdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
+import remarkGfm from "remark-gfm";
 import { getPublicationPreviewUrl } from "@/hooks/usePublicationBySlug";
 import { getResponsiveSrcSet } from "@/hooks/useImagePreview";
 import { useLanguage, localizedField } from "@/hooks/useLanguage";
@@ -126,7 +127,7 @@ function TextSection({ section, language }) {
           </h2>
         )}
         <div className="prose prose-charcoal max-w-none text-charcoal-muted leading-relaxed">
-          <Markdown rehypePlugins={[rehypeSanitize]}>{content}</Markdown>
+          <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]}>{content}</Markdown>
         </div>
       </div>
     </section>
@@ -181,12 +182,13 @@ function GallerySection({ section, language }) {
 }
 
 function HighlightsSection({ section, language }) {
-  const localContent = localizedField(section, "content", language);
+  // section.content stores bilingual objects [{title_en, title_es, description_en, description_es}]
+  // Always read from section.content (not localized) — the objects themselves are bilingual
   const items =
-    parseJsonSafe(section.metadata)?.items || parseJsonSafe(localContent, []);
+    parseJsonSafe(section.metadata)?.items || parseJsonSafe(section.content, []);
   const list = Array.isArray(items)
     ? items
-    : localContent.split("\n").filter(Boolean);
+    : (section.content || "").split("\n").filter(Boolean);
   if (list.length === 0) return null;
 
   return (
@@ -200,7 +202,7 @@ function HighlightsSection({ section, language }) {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl">
           {list.map((item, i) => (
             <div key={i} className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-sage flex items-center justify-center mt-0.5">
+              <div className="shrink-0 w-6 h-6 rounded-full bg-sage flex items-center justify-center mt-0.5">
                 <svg
                   className="w-3.5 h-3.5 text-white"
                   fill="none"
@@ -267,14 +269,14 @@ function FaqSection({ section, language }) {
                 <button
                   type="button"
                   onClick={() => setOpenIndex(open ? null : i)}
-                  className="flex w-full items-start justify-between gap-4 py-5 text-left min-h-[44px]"
+                  className="flex w-full items-start justify-between gap-4 py-5 text-left min-h-11"
                 >
                   <span className="text-base font-semibold text-charcoal">
                     {q}
                   </span>
                   <ChevronDown
                     className={cn(
-                      "flex-shrink-0 h-5 w-5 text-charcoal-subtle transition-transform mt-0.5",
+                      "shrink-0 h-5 w-5 text-charcoal-subtle transition-transform mt-0.5",
                       open && "rotate-180",
                     )}
                   />
@@ -418,7 +420,7 @@ function InclusionsSection({ section, language }) {
               className="flex items-center gap-2.5 text-sm text-charcoal"
             >
               <svg
-                className="w-4 h-4 text-sage flex-shrink-0"
+                className="w-4 h-4 text-sage shrink-0"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -465,7 +467,7 @@ function RestrictionsSection({ section, language }) {
               className="flex items-center gap-2.5 text-sm text-charcoal-muted"
             >
               <svg
-                className="w-4 h-4 text-charcoal-subtle flex-shrink-0"
+                className="w-4 h-4 text-charcoal-subtle shrink-0"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -495,7 +497,9 @@ function CtaSection({ section, experience, language }) {
     ? `/experiences/${experience.slug}`
     : meta?.link || null;
   const buttonLabel =
-    meta?.buttonLabel || (experience ? "Explore Experience" : null);
+    (language === "es" ? meta?.buttonLabelEs : null) ||
+    meta?.buttonLabel ||
+    (experience ? "Explore Experience" : null);
 
   return (
     <section className="py-12 md:py-16 bg-sage/10">

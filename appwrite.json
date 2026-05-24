@@ -295,6 +295,27 @@
       "entrypoint": "src/main.js",
       "commands": "npm install",
       "path": "functions/submit-contact"
+    },
+    {
+      "$id": "expire-payment-links",
+      "name": "expire-payment-links",
+      "runtime": "node-22",
+      "execute": [],
+      "scopes": [
+        "documents.read",
+        "documents.write",
+        "databases.read",
+        "collections.read"
+      ],
+      "events": [],
+      "schedule": "0 3 * * *",
+      "timeout": 120,
+      "enabled": true,
+      "logging": true,
+      "deploymentRetention": 0,
+      "entrypoint": "src/main.js",
+      "commands": "npm install",
+      "path": "functions/expire-payment-links"
     }
   ],
   "databases": [
@@ -3549,6 +3570,23 @@
         },
         {
           "key": "userArchivedAt",
+          "type": "datetime",
+          "required": false,
+          "array": false,
+          "default": null,
+          "format": ""
+        },
+        {
+          "key": "stripePaymentLinkUrl",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 1024,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "paymentLinkExpiresAt",
           "type": "datetime",
           "required": false,
           "array": false,

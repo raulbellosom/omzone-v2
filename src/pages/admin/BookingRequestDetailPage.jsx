@@ -27,6 +27,9 @@ import {
   FileText,
   DollarSign,
   ExternalLink,
+  Copy,
+  MessageCircle,
+  CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { functions } from "@/lib/appwrite";
@@ -110,7 +113,7 @@ function StatusActions({ request, isAdmin, onAction, acting, t }) {
       variant: "destructive",
     },
     converted: {
-      i18nKey: "admin.bookingRequests.convertToOrder",
+      i18nKey: "admin.bookingRequests.sendQuote",
       variant: "default",
     },
   };
@@ -228,7 +231,7 @@ export default function BookingRequestDetailPage() {
         adminNotes,
       });
 
-      // Execute create-checkout with request-conversion type
+      // Execute create-checkout with request-conversion type (Stripe Payment Link)
       const payload = JSON.stringify({
         experienceId: request.experienceId,
         bookingRequestId: request.$id,
@@ -238,7 +241,6 @@ export default function BookingRequestDetailPage() {
         customerEmail: request.contactEmail,
         customerPhone: request.contactPhone || "",
         orderType: "request-conversion",
-        skipStripe: true,
       });
 
       const execution = await functions.createExecution(
@@ -253,16 +255,6 @@ export default function BookingRequestDetailPage() {
       if (!result.ok) {
         throw new Error(result.error?.message || "Conversion failed");
       }
-
-      // Update booking request status to converted
-      await updateBookingRequestStatus(id, "converted", {
-        adminUserId: user?.$id,
-      });
-
-      // Persist convertedOrderId
-      await updateBookingRequestFields(id, {
-        convertedOrderId: result.data.orderId,
-      });
 
       setConversionResult(result.data);
       refetch();
@@ -314,19 +306,58 @@ export default function BookingRequestDetailPage() {
 
       {/* Conversion success */}
       {conversionResult && (
-        <Card className="p-4 border-emerald-200 bg-emerald-50">
-          <p className="text-sm text-emerald-800 font-medium">
-            Order created: {conversionResult.orderNumber}
-          </p>
-          <Link
-            to={ROUTES.ADMIN_ORDER_DETAIL.replace(
-              ":orderId",
-              conversionResult.orderId,
-            )}
-            className="text-sm text-emerald-700 underline mt-1 inline-flex items-center gap-1"
-          >
-            View Order <ExternalLink className="h-3.5 w-3.5" />
-          </Link>
+        <Card className="p-4 border-emerald-200 bg-emerald-50 space-y-3">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+            <p className="text-sm text-emerald-800 font-medium">
+              {t("admin.bookingRequests.quoteSent")} — {conversionResult.orderNumber}
+            </p>
+          </div>
+
+          {conversionResult.paymentLink && (
+            <div className="rounded-md bg-white border border-emerald-200 p-3 space-y-2">
+              <p className="text-xs font-medium text-charcoal-muted">
+                {t("admin.orders.paymentLink")}
+              </p>
+              <p className="text-xs text-charcoal break-all font-mono">
+                {conversionResult.paymentLink}
+              </p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-1.5 rounded-md border border-emerald-300 bg-white px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-50 transition-colors"
+                  onClick={() => {
+                    navigator.clipboard.writeText(conversionResult.paymentLink);
+                  }}
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                  {t("admin.orders.copyLink")}
+                </button>
+                {request.contactPhone && (
+                  <a
+                    href={`https://wa.me/${request.contactPhone.replace(/[^\d]/g, "")}?text=${encodeURIComponent(
+                      `Hola ${request.contactName}, aquí tu cotización para ${experience?.publicName || "la experiencia"} — ${formatCurrency(parseFloat(quotedAmount))} MXN. Puedes pagar aquí: ${conversionResult.paymentLink}`,
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-md bg-[#25D366] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#1ebe5d] transition-colors"
+                  >
+                    <MessageCircle className="h-3.5 w-3.5" />
+                    {t("admin.orders.openWhatsApp")}
+                  </a>
+                )}
+                <Link
+                  to={ROUTES.ADMIN_ORDER_DETAIL.replace(
+                    ":orderId",
+                    conversionResult.orderId,
+                  )}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-sand-dark px-3 py-1.5 text-xs font-medium text-charcoal hover:bg-sand transition-colors"
+                >
+                  {t("admin.orders.viewOrder")} <ExternalLink className="h-3 w-3" />
+                </Link>
+              </div>
+            </div>
+          )}
         </Card>
       )}
 

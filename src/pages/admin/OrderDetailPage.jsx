@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useOrderDetail, updateOrderStatus } from "@/hooks/useOrders";
+import { useOrderDetail, updateOrderStatus, resendPaymentLink } from "@/hooks/useOrders";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ROLES } from "@/constants/roles";
@@ -12,7 +12,7 @@ import PaymentStatusBadge from "@/components/admin/orders/PaymentStatusBadge";
 import SnapshotViewer from "@/components/admin/orders/SnapshotViewer";
 import OrderTimeline from "@/components/admin/orders/OrderTimeline";
 import StatusTransitionDropdown from "@/components/admin/orders/StatusTransitionDropdown";
-import { ArrowLeft, ShoppingCart } from "lucide-react";
+import { ArrowLeft, ShoppingCart, Copy, MessageCircle, MailIcon, Clock } from "lucide-react";
 
 function formatCurrency(amount, currency = "MXN") {
   return new Intl.NumberFormat("en-US", {
@@ -68,6 +68,9 @@ export default function OrderDetailPage() {
   const { t } = useLanguage();
   const [actionError, setActionError] = useState(null);
   const [updating, setUpdating] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const isAdmin =
     user?.labels?.includes(ROLES.ADMIN) || user?.labels?.includes(ROLES.ROOT);
@@ -84,6 +87,45 @@ export default function OrderDetailPage() {
       setUpdating(false);
     }
   };
+
+  const handleResendPaymentLink = async () => {
+    setResending(true);
+    setActionError(null);
+    setResendSuccess(false);
+    try {
+      await resendPaymentLink(orderId);
+      setResendSuccess(true);
+    } catch (err) {
+      setActionError(err.message);
+    } finally {
+      setResending(false);
+    }
+  };
+
+  const handleCopyLink = () => {
+    if (!order?.stripePaymentLinkUrl) return;
+    navigator.clipboard.writeText(order.stripePaymentLinkUrl);
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 2000);
+  };
+
+  /** Days remaining until paymentLinkExpiresAt. Negative = expired. */
+  const paymentLinkDaysLeft = order?.paymentLinkExpiresAt
+    ? Math.ceil(
+        (new Date(order.paymentLinkExpiresAt) - new Date()) /
+          (1000 * 60 * 60 * 24),
+      )
+    : null;
+
+  /** Phone from snapshot for WhatsApp deep-link */
+  const whatsappPhone = (() => {
+    try {
+      const snap = JSON.parse(order?.snapshot || "{}");
+      return (snap.customerPhone || "").replace(/[^\d]/g, "") || null;
+    } catch {
+      return null;
+    }
+  })();
 
   if (loading) return <LoadingSkeleton />;
 
@@ -326,6 +368,89 @@ export default function OrderDetailPage() {
               )}
             </Card>
           )}
+
+          {/* Payment Link panel (request-conversion + pending) */}
+          {order.orderType === "request-conversion" &&
+            order.paymentStatus !== "succeeded" &&
+            order.stripePaymentLinkUrl && (
+              <Card className="p-6 space-y-4">
+                <h3 className="text-sm font-semibold text-charcoal">
+                  {t("admin.orders.paymentLink")}
+                </h3>
+
+                {/* Expiry indicator */}
+                {paymentLinkDaysLeft !== null && (
+                  <div
+                    className={`flex items-center gap-1.5 text-xs font-medium ${
+                      paymentLinkDaysLeft <= 0
+                        ? "text-red-600"
+                        : paymentLinkDaysLeft <= 2
+                          ? "text-amber-600"
+                          : "text-charcoal-muted"
+                    }`}
+                  >
+                    <Clock className="h-3.5 w-3.5 shrink-0" />
+                    {paymentLinkDaysLeft <= 0
+                      ? t("admin.orders.paymentLinkExpired")
+                      : t("admin.orders.paymentLinkExpires").replace(
+                          "{days}",
+                          paymentLinkDaysLeft,
+                        )}
+                  </div>
+                )}
+
+                {/* URL preview */}
+                <p className="text-xs text-charcoal-muted font-mono break-all bg-sand rounded-md px-2 py-1.5">
+                  {order.stripePaymentLinkUrl}
+                </p>
+
+                {/* Actions */}
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={handleCopyLink}
+                    className="inline-flex items-center gap-1.5 rounded-md border border-sand-dark px-3 py-1.5 text-xs font-medium text-charcoal hover:bg-sand transition-colors"
+                  >
+                    <Copy className="h-3.5 w-3.5" />
+                    {linkCopied ? t("admin.orders.copied") : t("admin.orders.copyLink")}
+                  </button>
+
+                  {whatsappPhone && (
+                    <a
+                      href={`https://wa.me/${whatsappPhone}?text=${encodeURIComponent(
+                        `Hola ${order.customerName || ""}, aquí tu link de pago para la orden ${order.orderNumber}: ${order.stripePaymentLinkUrl}`,
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-md bg-[#25D366] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#1ebe5d] transition-colors"
+                    >
+                      <MessageCircle className="h-3.5 w-3.5" />
+                      {t("admin.orders.openWhatsApp")}
+                    </a>
+                  )}
+
+                  {isAdmin && paymentLinkDaysLeft > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleResendPaymentLink}
+                      disabled={resending}
+                      className="inline-flex items-center gap-1.5 rounded-md border border-forest/30 bg-forest/5 px-3 py-1.5 text-xs font-medium text-forest hover:bg-forest/10 transition-colors disabled:opacity-50"
+                    >
+                      <MailIcon className="h-3.5 w-3.5" />
+                      {resending
+                        ? t("admin.orders.resendingLink")
+                        : t("admin.orders.resendLink")}
+                    </button>
+                  )}
+                </div>
+
+                {resendSuccess && (
+                  <p className="text-xs text-emerald-700 font-medium">
+                    {t("admin.orders.linkResent")}
+                  </p>
+                )}
+              </Card>
+            )}
 
           {order.notes && (
             <Card className="p-6">

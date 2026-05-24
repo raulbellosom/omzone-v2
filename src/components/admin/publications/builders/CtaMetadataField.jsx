@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link2 } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 function parseJsonSafe(str) {
   if (!str) return {};
@@ -23,6 +24,7 @@ const inputCls =
   "w-full rounded-lg border border-sand-dark bg-white px-3 py-2 text-sm text-charcoal placeholder:text-charcoal-subtle focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 disabled:opacity-50 disabled:bg-warm-gray";
 
 export default function CtaMetadataField({ value, onChange, disabled }) {
+  const { t } = useLanguage();
   const [fields, setFields] = useState(() => init(value));
 
   function update(patch) {
@@ -48,18 +50,18 @@ export default function CtaMetadataField({ value, onChange, disabled }) {
       <div className="space-y-1.5">
         <label className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wider flex items-center gap-1.5">
           <Link2 className="h-3.5 w-3.5" />
-          URL / Link
+          {t("admin.sectionBuilders.cta.linkLabel")}
         </label>
         <input
           type="text"
           value={fields.link}
           onChange={(e) => update({ link: e.target.value })}
-          placeholder="/experiences/retreat-vallarta"
+          placeholder={t("admin.sectionBuilders.cta.placeholderLink")}
           disabled={disabled}
           className={inputCls}
         />
         <p className="text-xs text-charcoal-subtle">
-          Ruta relativa o URL completa del destino del botón.
+          {t("admin.sectionBuilders.cta.linkHint")}
         </p>
       </div>
 
@@ -67,26 +69,26 @@ export default function CtaMetadataField({ value, onChange, disabled }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-sage uppercase tracking-wider">
-            Texto del botón EN
+            {t("admin.sectionBuilders.cta.buttonLabelEN")}
           </label>
           <input
             type="text"
             value={fields.labelEn}
             onChange={(e) => update({ labelEn: e.target.value })}
-            placeholder="Book now"
+            placeholder={t("admin.sectionBuilders.cta.placeholderLabelEN")}
             disabled={disabled}
             className={inputCls}
           />
         </div>
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-charcoal-muted uppercase tracking-wider">
-            Texto del botón ES
+            {t("admin.sectionBuilders.cta.buttonLabelES")}
           </label>
           <input
             type="text"
             value={fields.labelEs}
             onChange={(e) => update({ labelEs: e.target.value })}
-            placeholder="Reservar ahora"
+            placeholder={t("admin.sectionBuilders.cta.placeholderLabelES")}
             disabled={disabled}
             className={inputCls}
           />

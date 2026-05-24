@@ -258,6 +258,7 @@ async function sendPaymentLinkEmail({
   totalAmount,
   currency,
   paymentLinkUrl,
+  paymentLinkExpiresAt,
   targetUserId,
   log,
   error,
@@ -313,6 +314,13 @@ async function sendPaymentLinkEmail({
       experienceName: experienceName || "",
       totalAmount: formatCurrency(totalAmount, currency),
       paymentLinkUrl: paymentLinkUrl || "",
+      expiresAt: paymentLinkExpiresAt
+        ? new Date(paymentLinkExpiresAt).toLocaleDateString("en-US", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })
+        : "",
     };
     const renderedSubject = renderTemplate(subject, vars);
     const renderedBody = renderTemplate(bodyTpl, vars);
@@ -775,6 +783,10 @@ export default async ({ req, res, log, error }) => {
       const rcStatus = skipStripe ? "confirmed" : "pending";
       const rcPaymentStatus = skipStripe ? "succeeded" : "pending";
       const rcPaidAt = skipStripe ? new Date().toISOString() : null;
+      // Payment link expires 7 days from now (only used in Stripe path)
+      const rcPaymentLinkExpiresAt = skipStripe
+        ? null
+        : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
 
       const rcOrderData = {
         userId: rcOrderUserId,
@@ -910,6 +922,9 @@ export default async ({ req, res, log, error }) => {
           price_data: item.price_data,
           quantity: item.quantity,
         })),
+        restrictions: {
+          completed_sessions: { limit: 1 },
+        },
         metadata: {
           orderId: rcOrder.$id,
           userId: rcOrderUserId,
@@ -925,6 +940,8 @@ export default async ({ req, res, log, error }) => {
 
       await db.updateDocument(DB, COL_ORDERS, rcOrder.$id, {
         stripeSessionId: rcPaymentLink.id,
+        stripePaymentLinkUrl: rcPaymentLink.url,
+        paymentLinkExpiresAt: rcPaymentLinkExpiresAt,
       });
       log(
         `Stripe Payment Link for request-conversion: ${rcPaymentLink.id} for order ${rcOrder.$id}`,
@@ -940,7 +957,7 @@ export default async ({ req, res, log, error }) => {
           bookingReq.contactName ||
           ""
         ).trim();
-        await sendPaymentLinkEmail({
+      await sendPaymentLinkEmail({
           db,
           customerEmail: rcCustomerEmail,
           customerName: rcCustomerName,
@@ -949,6 +966,7 @@ export default async ({ req, res, log, error }) => {
           totalAmount: quotedAmount,
           currency: rcCurrency,
           paymentLinkUrl: rcPaymentLink.url,
+          paymentLinkExpiresAt: rcPaymentLinkExpiresAt,
           targetUserId: bookingReq.userId || null,
           log,
           error,
@@ -959,6 +977,8 @@ export default async ({ req, res, log, error }) => {
         ok: true,
         data: {
           paymentLink: rcPaymentLink.url,
+          paymentLinkId: rcPaymentLink.id,
+          paymentLinkExpiresAt: rcPaymentLinkExpiresAt,
           orderId: rcOrder.$id,
           orderNumber: rcOrderNumber,
         },

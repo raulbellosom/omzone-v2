@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Plus, Trash2, GripVertical } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 import SortableList from "@/components/common/SortableList";
 import SortableItem from "@/components/common/SortableItem";
 
@@ -13,22 +14,35 @@ function parseJsonSafe(str, fallback = []) {
   }
 }
 
-function initItems(value) {
+function initItems(value, metadataValue) {
   const arr = parseJsonSafe(value);
-  if (!Array.isArray(arr) || arr.length === 0) return [];
-  return arr.map((item) => ({
-    id: crypto.randomUUID(),
-    title_en:
-      typeof item === "string"
-        ? item
-        : item.title_en || item.text || item.label || "",
-    title_es: typeof item === "string" ? "" : item.title_es || "",
-    desc_en:
-      typeof item === "string"
-        ? ""
-        : item.description_en || item.description || "",
-    desc_es: typeof item === "string" ? "" : item.description_es || "",
-  }));
+  if (Array.isArray(arr) && arr.length > 0) {
+    return arr.map((item) => ({
+      id: crypto.randomUUID(),
+      title_en:
+        typeof item === "string"
+          ? item
+          : item.title_en || item.text || item.label || "",
+      title_es: typeof item === "string" ? "" : item.title_es || "",
+      desc_en:
+        typeof item === "string"
+          ? ""
+          : item.description_en || item.description || "",
+      desc_es: typeof item === "string" ? "" : item.description_es || "",
+    }));
+  }
+  // Legacy fallback: migrate from metadata.items (old format)
+  const legacyItems = parseJsonSafe(metadataValue, {})?.items;
+  if (Array.isArray(legacyItems) && legacyItems.length > 0) {
+    return legacyItems.map((item) => ({
+      id: crypto.randomUUID(),
+      title_en: typeof item === "string" ? item : item.title_en || item.text || item.label || "",
+      title_es: typeof item === "string" ? "" : item.title_es || "",
+      desc_en: typeof item === "string" ? "" : item.description_en || item.description || "",
+      desc_es: typeof item === "string" ? "" : item.description_es || "",
+    }));
+  }
+  return [];
 }
 
 function serialize(items) {
@@ -49,8 +63,9 @@ const textareaCls =
 const inputCls =
   "w-full rounded-lg border border-sand-dark bg-white px-3 py-2 text-sm text-charcoal placeholder:text-charcoal-subtle focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 disabled:opacity-50 disabled:bg-warm-gray";
 
-export default function HighlightsBuilder({ value, onChange, disabled }) {
-  const [items, setItems] = useState(() => initItems(value));
+export default function HighlightsBuilder({ value, onChange, metadataValue, disabled }) {
+  const { t } = useLanguage();
+  const [items, setItems] = useState(() => initItems(value, metadataValue));
 
   function applyUpdate(next) {
     setItems(next);
@@ -107,20 +122,18 @@ export default function HighlightsBuilder({ value, onChange, disabled }) {
                       {...attributes}
                       disabled={disabled}
                       className="text-charcoal-subtle hover:text-charcoal cursor-grab active:cursor-grabbing disabled:opacity-50 disabled:cursor-default touch-none"
-                      aria-label="Mover"
-                    >
+                      aria-label={t("admin.sectionBuilders.moveAriaLabel")}>
                       <GripVertical className="h-4 w-4" />
                     </button>
                     <span className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wide flex-1">
-                      Highlight {idx + 1}
+                      {t("admin.sectionBuilders.highlights.itemLabel")} {idx + 1}
                     </span>
                     <button
                       type="button"
                       onClick={() => removeItem(item.id)}
                       disabled={disabled}
                       className="text-charcoal-subtle hover:text-red-500 transition-colors disabled:opacity-50"
-                      aria-label="Eliminar"
-                    >
+                      aria-label={t("admin.sectionBuilders.deleteAriaLabel")}>
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   </div>
@@ -131,7 +144,7 @@ export default function HighlightsBuilder({ value, onChange, disabled }) {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
                         <span className="text-xs font-semibold text-sage uppercase tracking-wider">
-                          Título EN
+                          {t("admin.sectionBuilders.highlights.titleEN")}
                         </span>
                         <input
                           type="text"
@@ -139,14 +152,14 @@ export default function HighlightsBuilder({ value, onChange, disabled }) {
                           onChange={(e) =>
                             updateField(item.id, "title_en", e.target.value)
                           }
-                          placeholder="Title…"
+                          placeholder={t("admin.sectionBuilders.highlights.placeholderTitleEN")}
                           disabled={disabled}
                           className={inputCls}
                         />
                       </div>
                       <div className="space-y-1.5">
                         <span className="text-xs font-semibold text-charcoal-muted uppercase tracking-wider">
-                          Título ES
+                          {t("admin.sectionBuilders.highlights.titleES")}
                         </span>
                         <input
                           type="text"
@@ -154,7 +167,7 @@ export default function HighlightsBuilder({ value, onChange, disabled }) {
                           onChange={(e) =>
                             updateField(item.id, "title_es", e.target.value)
                           }
-                          placeholder="Título…"
+                          placeholder={t("admin.sectionBuilders.highlights.placeholderTitleES")}
                           disabled={disabled}
                           className={inputCls}
                         />
@@ -165,14 +178,14 @@ export default function HighlightsBuilder({ value, onChange, disabled }) {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
                         <span className="text-xs font-semibold text-sage uppercase tracking-wider">
-                          Descripción EN
+                          {t("admin.sectionBuilders.highlights.descEN")}
                         </span>
                         <textarea
                           value={item.desc_en}
                           onChange={(e) =>
                             updateField(item.id, "desc_en", e.target.value)
                           }
-                          placeholder="Description…"
+                          placeholder={t("admin.sectionBuilders.highlights.placeholderDescEN")}
                           disabled={disabled}
                           rows={2}
                           className={textareaCls}
@@ -180,14 +193,14 @@ export default function HighlightsBuilder({ value, onChange, disabled }) {
                       </div>
                       <div className="space-y-1.5">
                         <span className="text-xs font-semibold text-charcoal-muted uppercase tracking-wider">
-                          Descripción ES
+                          {t("admin.sectionBuilders.highlights.descES")}
                         </span>
                         <textarea
                           value={item.desc_es}
                           onChange={(e) =>
                             updateField(item.id, "desc_es", e.target.value)
                           }
-                          placeholder="Descripción…"
+                          placeholder={t("admin.sectionBuilders.highlights.placeholderDescES")}
                           disabled={disabled}
                           rows={2}
                           className={textareaCls}
@@ -204,7 +217,7 @@ export default function HighlightsBuilder({ value, onChange, disabled }) {
 
       {items.length === 0 && (
         <p className="text-sm text-charcoal-subtle text-center py-4">
-          No hay highlights. Agrega el primero.
+          {t("admin.sectionBuilders.highlights.empty")}
         </p>
       )}
 
@@ -215,7 +228,7 @@ export default function HighlightsBuilder({ value, onChange, disabled }) {
         className="flex items-center gap-2 w-full justify-center py-2.5 border border-dashed border-sage/50 rounded-xl text-sm text-sage hover:bg-sage/5 hover:border-sage transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <Plus className="h-4 w-4" />
-        Agregar highlight
+        {t("admin.sectionBuilders.highlights.add")}
       </button>
     </div>
   );

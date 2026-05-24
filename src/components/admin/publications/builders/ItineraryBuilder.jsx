@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Plus, Trash2, GripVertical } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 import SortableList from "@/components/common/SortableList";
 import SortableItem from "@/components/common/SortableItem";
 
@@ -52,6 +53,7 @@ const inputCls =
   "w-full rounded-lg border border-sand-dark bg-white px-3 py-2 text-sm text-charcoal placeholder:text-charcoal-subtle focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 disabled:opacity-50 disabled:bg-warm-gray";
 
 export default function ItineraryBuilder({ value, onChange, disabled }) {
+  const { t } = useLanguage();
   const [items, setItems] = useState(() => initItems(value));
 
   function applyUpdate(next) {
@@ -103,7 +105,7 @@ export default function ItineraryBuilder({ value, onChange, disabled }) {
                       {...attributes}
                       disabled={disabled}
                       className="text-charcoal-subtle hover:text-charcoal cursor-grab active:cursor-grabbing disabled:opacity-50 disabled:cursor-default touch-none"
-                      aria-label="Mover"
+                      aria-label={t("admin.sectionBuilders.moveAriaLabel")}
                     >
                       <GripVertical className="h-4 w-4" />
                     </button>
@@ -112,14 +114,14 @@ export default function ItineraryBuilder({ value, onChange, disabled }) {
                       {String(idx + 1).padStart(2, "0")}
                     </span>
                     <span className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wide flex-1">
-                      Paso {idx + 1}
+                      {t("admin.sectionBuilders.itinerary.itemLabel")} {idx + 1}
                     </span>
                     <button
                       type="button"
                       onClick={() => removeItem(item.id)}
                       disabled={disabled}
                       className="text-charcoal-subtle hover:text-red-500 transition-colors disabled:opacity-50"
-                      aria-label="Eliminar"
+                      aria-label={t("admin.sectionBuilders.deleteAriaLabel")}
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
@@ -131,7 +133,7 @@ export default function ItineraryBuilder({ value, onChange, disabled }) {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
                         <span className="text-xs font-semibold text-sage uppercase tracking-wider">
-                          Título EN
+                          {t("admin.sectionBuilders.itinerary.titleEN")}
                         </span>
                         <input
                           type="text"
@@ -139,14 +141,14 @@ export default function ItineraryBuilder({ value, onChange, disabled }) {
                           onChange={(e) =>
                             updateField(item.id, "title_en", e.target.value)
                           }
-                          placeholder="Step title…"
+                          placeholder={t("admin.sectionBuilders.itinerary.placeholderTitleEN")}
                           disabled={disabled}
                           className={inputCls}
                         />
                       </div>
                       <div className="space-y-1.5">
                         <span className="text-xs font-semibold text-charcoal-muted uppercase tracking-wider">
-                          Título ES
+                          {t("admin.sectionBuilders.itinerary.titleES")}
                         </span>
                         <input
                           type="text"
@@ -154,7 +156,7 @@ export default function ItineraryBuilder({ value, onChange, disabled }) {
                           onChange={(e) =>
                             updateField(item.id, "title_es", e.target.value)
                           }
-                          placeholder="Título del paso…"
+                          placeholder={t("admin.sectionBuilders.itinerary.placeholderTitleES")}
                           disabled={disabled}
                           className={inputCls}
                         />
@@ -165,14 +167,14 @@ export default function ItineraryBuilder({ value, onChange, disabled }) {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
                         <span className="text-xs font-semibold text-sage uppercase tracking-wider">
-                          Descripción EN
+                          {t("admin.sectionBuilders.itinerary.descEN")}
                         </span>
                         <textarea
                           value={item.desc_en}
                           onChange={(e) =>
                             updateField(item.id, "desc_en", e.target.value)
                           }
-                          placeholder="Description…"
+                          placeholder={t("admin.sectionBuilders.itinerary.placeholderDescEN")}
                           disabled={disabled}
                           rows={2}
                           className={textareaCls}
@@ -180,14 +182,14 @@ export default function ItineraryBuilder({ value, onChange, disabled }) {
                       </div>
                       <div className="space-y-1.5">
                         <span className="text-xs font-semibold text-charcoal-muted uppercase tracking-wider">
-                          Descripción ES
+                          {t("admin.sectionBuilders.itinerary.descES")}
                         </span>
                         <textarea
                           value={item.desc_es}
                           onChange={(e) =>
                             updateField(item.id, "desc_es", e.target.value)
                           }
-                          placeholder="Descripción…"
+                          placeholder={t("admin.sectionBuilders.itinerary.placeholderDescES")}
                           disabled={disabled}
                           rows={2}
                           className={textareaCls}
@@ -204,7 +206,7 @@ export default function ItineraryBuilder({ value, onChange, disabled }) {
 
       {items.length === 0 && (
         <p className="text-sm text-charcoal-subtle text-center py-4">
-          No hay pasos. Agrega el primero.
+          {t("admin.sectionBuilders.itinerary.empty")}
         </p>
       )}
 
@@ -215,7 +217,7 @@ export default function ItineraryBuilder({ value, onChange, disabled }) {
         className="flex items-center gap-2 w-full justify-center py-2.5 border border-dashed border-sage/50 rounded-xl text-sm text-sage hover:bg-sage/5 hover:border-sage transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <Plus className="h-4 w-4" />
-        Agregar paso
+        {t("admin.sectionBuilders.itinerary.add")}
       </button>
     </div>
   );

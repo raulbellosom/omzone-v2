@@ -165,3 +165,19 @@ export async function updateOrderStatus(orderId, newStatus) {
   }
   return body.data?.order || body.data;
 }
+
+export async function resendPaymentLink(orderId) {
+  const execution = await functions.createExecution(
+    env.functionAdminOrderAction,
+    JSON.stringify({ orderId, action: "resend_payment_link" }),
+    false,
+    "/",
+    "POST",
+    { "Content-Type": "application/json" },
+  );
+  const body = JSON.parse(execution.responseBody || "{}");
+  if (!body.ok) {
+    throw new Error(body.error?.message || "Resend failed");
+  }
+  return body.data;
+}
