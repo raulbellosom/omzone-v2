@@ -32,7 +32,7 @@ export const SheetContent = React.forwardRef(function SheetContent(
     right:
       "right-0 top-0 h-full w-full max-w-xs sm:max-w-sm border-l border-warm-gray-dark data-[state=open]:animate-sheet-in-right data-[state=closed]:animate-sheet-out-right",
     "right-xl":
-      "right-0 top-0 h-full w-full max-w-2xl border-l border-warm-gray-dark data-[state=open]:animate-sheet-in-right data-[state=closed]:animate-sheet-out-right",
+      "right-0 top-0 h-full w-full max-w-4xl border-l border-warm-gray-dark data-[state=open]:animate-sheet-in-right data-[state=closed]:animate-sheet-out-right",
     left: "left-0 top-0 h-full w-full max-w-xs sm:max-w-sm border-r border-warm-gray-dark data-[state=open]:animate-sheet-in-left data-[state=closed]:animate-sheet-out-left",
     bottom:
       "bottom-0 left-0 w-full rounded-t-2xl border-t border-warm-gray-dark max-h-[90vh] data-[state=open]:animate-sheet-in-bottom data-[state=closed]:animate-sheet-out-bottom",
@@ -80,6 +80,18 @@ export function SheetBody({ className, ...props }) {
   return (
     <div
       className={cn("flex-1 overflow-y-auto px-5 py-5", className)}
+      {...props}
+    />
+  );
+}
+
+export function SheetFooter({ className, ...props }) {
+  return (
+    <div
+      className={cn(
+        "shrink-0 border-t border-warm-gray px-5 py-4 bg-white",
+        className,
+      )}
       {...props}
     />
   );

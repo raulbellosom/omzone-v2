@@ -13,6 +13,7 @@ import {
   SheetTitle,
   SheetDescription,
   SheetBody,
+  SheetFooter,
 } from "@/components/common/Sheet";
 import {
   usePublicationSections,
@@ -242,6 +243,8 @@ export default function SectionManager({ publicationId }) {
                 onSubmit={handleCreate}
                 onCancel={closeForm}
                 submitting={submitting}
+                formId="section-form"
+                hideFooter
               />
             )}
             {mode === "edit" && editingSection && (
@@ -250,12 +253,46 @@ export default function SectionManager({ publicationId }) {
                 onSubmit={handleUpdate}
                 onCancel={closeForm}
                 submitting={submitting}
+                formId="section-form"
+                hideFooter
               />
             )}
-            {actionError && (
-              <p className="mt-3 text-sm text-red-600">{actionError}</p>
-            )}
           </SheetBody>
+
+          {/* Sticky footer — always visible */}
+          <SheetFooter>
+            {actionError && (
+              <p className="text-sm text-red-600 mb-3">{actionError}</p>
+            )}
+            <div className="flex items-center gap-3">
+              <Button
+                type="submit"
+                form="section-form"
+                disabled={submitting}
+                size="md"
+              >
+                {submitting ? (
+                  <span className="flex items-center gap-2">
+                    <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                    {t("admin.common.saving")}
+                  </span>
+                ) : mode === "edit" ? (
+                  t("admin.sectionForm.saveChanges")
+                ) : (
+                  t("admin.sectionForm.addSection")
+                )}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="md"
+                onClick={closeForm}
+                disabled={submitting}
+              >
+                {t("admin.common.cancel")}
+              </Button>
+            </div>
+          </SheetFooter>
         </SheetContent>
       </Sheet>
     </div>

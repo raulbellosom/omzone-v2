@@ -86,6 +86,8 @@ export default function SectionForm({
   onSubmit,
   onCancel,
   submitting,
+  formId = "section-form",
+  hideFooter = false,
 }) {
   const isEditing = !!initialData?.$id;
   const { t } = useLanguage();
@@ -209,7 +211,7 @@ export default function SectionForm({
   const isDisabled = submitting;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form id={formId} onSubmit={handleSubmit} className="space-y-4">
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
           {isEditing
@@ -406,7 +408,7 @@ export default function SectionForm({
         </div>
       </Card>
 
-      <div className="flex items-center gap-3">
+      <div className={cn("flex items-center gap-3", hideFooter && "hidden")}>
         <Button type="submit" disabled={isDisabled} size="md">
           {submitting ? (
             <span className="flex items-center gap-2">
