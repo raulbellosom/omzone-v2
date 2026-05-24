@@ -8,6 +8,12 @@ import env from "@/config/env";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
+import FaqBuilder from "@/components/admin/publications/builders/FaqBuilder";
+import TestimonialsBuilder from "@/components/admin/publications/builders/TestimonialsBuilder";
+import HighlightsBuilder from "@/components/admin/publications/builders/HighlightsBuilder";
+import ItineraryBuilder from "@/components/admin/publications/builders/ItineraryBuilder";
+import CtaMetadataField from "@/components/admin/publications/builders/CtaMetadataField";
+import VideoMetadataField from "@/components/admin/publications/builders/VideoMetadataField";
 
 const SECTION_TYPES = [
   { value: "hero", i18nKey: "admin.sectionTypes.hero" },
@@ -136,21 +142,23 @@ export default function SectionForm({
   const isHero = form.sectionType === "hero";
   const usesMedia = isGallery || isHero;
 
+  // Types that replace the content textarea pair with a visual builder
+  const CONTENT_BUILDER_TYPES = ["faq", "testimonials", "highlights"];
+  // Types that replace the metadata textarea with a dedicated field/builder
+  const METADATA_BUILDER_TYPES = ["itinerary", "cta", "video"];
+  // Types that hide the content textareas entirely (metadata-only or no content)
+  const HIDE_CONTENT_TYPES = ["itinerary", "video", "gallery"];
+
+  const useContentBuilder = CONTENT_BUILDER_TYPES.includes(form.sectionType);
+  const useMetadataBuilder = METADATA_BUILDER_TYPES.includes(form.sectionType);
+  const hideContent = HIDE_CONTENT_TYPES.includes(form.sectionType);
+
   const CONTENT_HINTS = {
     text: "Markdown soportado. Texto libre.",
     hero: "Subtítulo o descripción breve que aparece sobre la imagen.",
-    highlights:
-      'Una opción por línea. O JSON: [{"title_en":"...","description_en":"..."}]',
     inclusions: "Una inclusión por línea. Ej: Wi-Fi incluido",
     restrictions: "Una restricción por línea. Ej: No apto para embarazadas",
-    faq: 'JSON requerido: [{"question":"¿...","answer":"..."}]',
-    itinerary:
-      'Metadata: {"items":[{"step":"01","title_en":"...","title_es":"...","description_en":"...","description_es":"..."}]}',
-    testimonials: 'JSON requerido: [{"quote":"...","author":"Nombre"}]',
     cta: "Texto descriptivo debajo del título del CTA.",
-    video:
-      'No se usa. Ingresa la URL del video en Metadata: {"url":"https://..."}',
-    gallery: "No se usa para galería.",
   };
   const contentHint = CONTENT_HINTS[form.sectionType] || null;
 
@@ -255,36 +263,78 @@ export default function SectionForm({
           </Field>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label={t("admin.sectionForm.contentEn")} hint={contentHint}>
-            <textarea
-              value={form.content}
-              onChange={(e) => set("content", e.target.value)}
-              placeholder={t("admin.sectionForm.placeholderContentEn")}
-              disabled={isDisabled}
-              rows={8}
-              className={cn(
-                "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal placeholder:text-charcoal-subtle font-mono",
-                "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-vertical",
-                "disabled:opacity-50 disabled:bg-warm-gray",
-              )}
-            />
-          </Field>
-          <Field label={t("admin.sectionForm.contentEs")} hint={contentHint}>
-            <textarea
-              value={form.contentEs}
-              onChange={(e) => set("contentEs", e.target.value)}
-              placeholder={t("admin.sectionForm.placeholderContentEs")}
-              disabled={isDisabled}
-              rows={8}
-              className={cn(
-                "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal placeholder:text-charcoal-subtle font-mono",
-                "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-vertical",
-                "disabled:opacity-50 disabled:bg-warm-gray",
-              )}
-            />
-          </Field>
-        </div>
+        {!hideContent && (
+          <div>
+            {useContentBuilder ? (
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-charcoal">
+                  {form.sectionType === "faq" && "Preguntas frecuentes"}
+                  {form.sectionType === "testimonials" && "Testimonios"}
+                  {form.sectionType === "highlights" && "Highlights"}
+                </label>
+                {form.sectionType === "faq" && (
+                  <FaqBuilder
+                    key={`faq-${form.sectionType}`}
+                    valueEn={form.content}
+                    valueEs={form.contentEs}
+                    onChangeEn={(v) => set("content", v)}
+                    onChangeEs={(v) => set("contentEs", v)}
+                    disabled={isDisabled}
+                  />
+                )}
+                {form.sectionType === "testimonials" && (
+                  <TestimonialsBuilder
+                    key={`testimonials-${form.sectionType}`}
+                    valueEn={form.content}
+                    valueEs={form.contentEs}
+                    onChangeEn={(v) => set("content", v)}
+                    onChangeEs={(v) => set("contentEs", v)}
+                    disabled={isDisabled}
+                  />
+                )}
+                {form.sectionType === "highlights" && (
+                  <HighlightsBuilder
+                    key={`highlights-${form.sectionType}`}
+                    value={form.content}
+                    onChange={(v) => set("content", v)}
+                    disabled={isDisabled}
+                  />
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Field label={t("admin.sectionForm.contentEn")} hint={contentHint}>
+                  <textarea
+                    value={form.content}
+                    onChange={(e) => set("content", e.target.value)}
+                    placeholder={t("admin.sectionForm.placeholderContentEn")}
+                    disabled={isDisabled}
+                    rows={8}
+                    className={cn(
+                      "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal placeholder:text-charcoal-subtle font-mono",
+                      "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-vertical",
+                      "disabled:opacity-50 disabled:bg-warm-gray",
+                    )}
+                  />
+                </Field>
+                <Field label={t("admin.sectionForm.contentEs")} hint={contentHint}>
+                  <textarea
+                    value={form.contentEs}
+                    onChange={(e) => set("contentEs", e.target.value)}
+                    placeholder={t("admin.sectionForm.placeholderContentEs")}
+                    disabled={isDisabled}
+                    rows={8}
+                    className={cn(
+                      "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal placeholder:text-charcoal-subtle font-mono",
+                      "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-vertical",
+                      "disabled:opacity-50 disabled:bg-warm-gray",
+                    )}
+                  />
+                </Field>
+              </div>
+            )}
+          </div>
+        )}
 
         <div
           className={cn(
@@ -324,22 +374,51 @@ export default function SectionForm({
           )}
           <Field
             label={t("admin.sectionForm.metadata")}
-            hint={t("admin.sectionForm.metadataHint")}
+            hint={!useMetadataBuilder ? t("admin.sectionForm.metadataHint") : null}
             error={errors.metadata}
           >
-            <textarea
-              value={form.metadata}
-              onChange={(e) => set("metadata", e.target.value)}
-              placeholder='{"key": "value"}'
-              disabled={isDisabled}
-              rows={4}
-              className={cn(
-                "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal font-mono placeholder:text-charcoal-subtle",
-                "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-vertical",
-                "disabled:opacity-50 disabled:bg-warm-gray",
-                errors.metadata && "border-red-400",
-              )}
-            />
+            {useMetadataBuilder ? (
+              <>
+                {form.sectionType === "itinerary" && (
+                  <ItineraryBuilder
+                    key={`itinerary-${form.sectionType}`}
+                    value={form.metadata}
+                    onChange={(v) => set("metadata", v)}
+                    disabled={isDisabled}
+                  />
+                )}
+                {form.sectionType === "cta" && (
+                  <CtaMetadataField
+                    key={`cta-${form.sectionType}`}
+                    value={form.metadata}
+                    onChange={(v) => set("metadata", v)}
+                    disabled={isDisabled}
+                  />
+                )}
+                {form.sectionType === "video" && (
+                  <VideoMetadataField
+                    key={`video-${form.sectionType}`}
+                    value={form.metadata}
+                    onChange={(v) => set("metadata", v)}
+                    disabled={isDisabled}
+                  />
+                )}
+              </>
+            ) : (
+              <textarea
+                value={form.metadata}
+                onChange={(e) => set("metadata", e.target.value)}
+                placeholder='{"key": "value"}'
+                disabled={isDisabled}
+                rows={4}
+                className={cn(
+                  "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal font-mono placeholder:text-charcoal-subtle",
+                  "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-vertical",
+                  "disabled:opacity-50 disabled:bg-warm-gray",
+                  errors.metadata && "border-red-400",
+                )}
+              />
+            )}
           </Field>
         </div>
       </Card>
