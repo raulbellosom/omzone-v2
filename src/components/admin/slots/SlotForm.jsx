@@ -19,6 +19,8 @@ const SLOT_TYPE_OPTIONS = [
 const STATUS_OPTIONS = [
   { value: "draft", i18nKey: "admin.statuses.draft" },
   { value: "published", i18nKey: "admin.statuses.published" },
+  { value: "full", i18nKey: "admin.statuses.full" },
+  { value: "cancelled", i18nKey: "admin.statuses.cancelled" },
 ];
 
 const TIMEZONE_OPTIONS = [
@@ -219,7 +221,13 @@ export default function SlotForm({
   );
 
   return (
-    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={submitting} submitLabel={submitLabel} asideChildren={asideContent}>
+    <AdminFormLayout
+      onSubmit={handleSubmit}
+      submitting={submitting}
+      disabled={submitting}
+      submitLabel={submitLabel}
+      asideChildren={asideContent}
+    >
       {/* Basic info */}
       <Card className="p-5 space-y-4">
         <h2 className="text-base font-semibold text-charcoal">
@@ -364,7 +372,6 @@ export default function SlotForm({
           />
         </Field>
       </Card>
-
     </AdminFormLayout>
   );
 }
