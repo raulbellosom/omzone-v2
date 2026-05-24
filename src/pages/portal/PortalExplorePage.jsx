@@ -1,11 +1,9 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { usePublicExperiences } from "@/hooks/usePublicExperiences";
-import { usePublicPublications } from "@/hooks/usePublicPublications";
 import { useLanguage } from "@/hooks/useLanguage";
 import ExperienceCard from "@/components/public/experiences/ExperienceCard";
-import PublicationCard from "@/components/public/publications/PublicationCard";
-import { ArrowRight, Compass, BookOpen } from "lucide-react";
+import { ArrowRight, Compass } from "lucide-react";
 
 function SectionHeader({ icon: Icon, title, linkTo, linkLabel, count }) {
   return (
@@ -92,27 +90,12 @@ const EXP_TYPE_OPTIONS = [
   { value: "private", labelKey: "experienceTypes.private" },
 ];
 
-const PUB_CATEGORY_OPTIONS = [
-  { value: "blog", labelKey: "publications.category.blog" },
-  { value: "highlight", labelKey: "publications.category.highlight" },
-  { value: "landing", labelKey: "publications.category.landing" },
-  { value: "institutional", labelKey: "publications.category.institutional" },
-  { value: "faq", labelKey: "publications.category.faq" },
-];
-
 export default function PortalExplorePage() {
   const { t } = useLanguage();
 
-  const {
-    experiences,
-    priceMap,
-    loading: loadingExp,
-  } = usePublicExperiences();
-
-  const { publications, loading: loadingPubs } = usePublicPublications();
+  const { experiences, priceMap, loading: loadingExp } = usePublicExperiences();
 
   const [expType, setExpType] = useState("");
-  const [pubCategory, setPubCategory] = useState("");
 
   // Filter experiences by type
   const filteredExp = useMemo(() => {
@@ -120,26 +103,11 @@ export default function PortalExplorePage() {
     return experiences.filter((e) => e.type === expType);
   }, [experiences, expType]);
 
-  // Filter publications by category — only show categories that exist in data
-  const availableCategories = useMemo(() => {
-    const cats = new Set(publications.map((p) => p.category));
-    return PUB_CATEGORY_OPTIONS.filter((o) => cats.has(o.value));
-  }, [publications]);
-
-  const filteredPubs = useMemo(() => {
-    if (!pubCategory) return publications;
-    return publications.filter((p) => p.category === pubCategory);
-  }, [publications, pubCategory]);
-
   // Translate type options
   const expTypeOptions = useMemo(
-    () => EXP_TYPE_OPTIONS.map((o) => ({ value: o.value, label: t(o.labelKey) })),
+    () =>
+      EXP_TYPE_OPTIONS.map((o) => ({ value: o.value, label: t(o.labelKey) })),
     [t],
-  );
-
-  const pubCatOptions = useMemo(
-    () => availableCategories.map((o) => ({ value: o.value, label: t(o.labelKey) })),
-    [availableCategories, t],
   );
 
   return (
@@ -161,7 +129,11 @@ export default function PortalExplorePage() {
           title={t("portal.explore.experiences")}
           linkTo="/experiences"
           linkLabel={t("portal.explore.viewAll")}
-          count={!loadingExp && experiences.length > 0 ? filteredExp.length : undefined}
+          count={
+            !loadingExp && experiences.length > 0
+              ? filteredExp.length
+              : undefined
+          }
         />
         {!loadingExp && experiences.length > 0 && (
           <FilterPills
@@ -193,40 +165,6 @@ export default function PortalExplorePage() {
           </p>
         )}
       </section>
-
-      {/* Publications section */}
-      {(loadingPubs || publications.length > 0) && (
-        <section>
-          <SectionHeader
-            icon={BookOpen}
-            title={t("portal.explore.publications")}
-            linkTo="/publications"
-            linkLabel={t("portal.explore.viewAll")}
-            count={!loadingPubs && publications.length > 0 ? filteredPubs.length : undefined}
-          />
-          {!loadingPubs && availableCategories.length > 1 && (
-            <FilterPills
-              options={pubCatOptions}
-              selected={pubCategory}
-              onSelect={setPubCategory}
-              allLabel={t("portal.explore.allCategories")}
-            />
-          )}
-          {loadingPubs ? (
-            <CardSkeleton count={3} aspect="aspect-video" />
-          ) : filteredPubs.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredPubs.slice(0, 6).map((pub) => (
-                <PublicationCard key={pub.$id} publication={pub} />
-              ))}
-            </div>
-          ) : (
-            <p className="text-sm text-charcoal-muted text-center py-8">
-              {t("portal.explore.noFilterResults")}
-            </p>
-          )}
-        </section>
-      )}
     </div>
   );
 }

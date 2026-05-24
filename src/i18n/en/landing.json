@@ -720,5 +720,41 @@
     "formSuccessBody": "We'll get back to you shortly.",
     "formPlaceholderMessage": "How can we help you?",
     "formErrorBody": "Something went wrong. Please try again."
+  },
+  "helpFaq": {
+    "items": [
+      {
+        "q": "How do I book an experience?",
+        "a": "Browse our experiences, choose a date and pricing tier that works for you, and complete the checkout. You'll receive a confirmation email with your ticket and all the details you need."
+      },
+      {
+        "q": "Can I cancel or reschedule my reservation?",
+        "a": "Cancellations and reschedules must be requested at least 48 hours before your session. Contact us at hello@omzone.com and we'll do our best to accommodate you."
+      },
+      {
+        "q": "How do I redeem a wellness pass?",
+        "a": "Once you have an active pass in your portal, select an eligible experience during checkout and apply your pass as the payment method. Your pass balance will update automatically."
+      },
+      {
+        "q": "What is included in the experience price?",
+        "a": "Each experience listing specifies exactly what is included. Some may include materials, equipment, or refreshments — review the inclusions section on the experience page before booking."
+      },
+      {
+        "q": "How do I receive my ticket?",
+        "a": "Your ticket is delivered by email immediately after a successful booking. You can also access all your tickets anytime from your portal under \"My Tickets\"."
+      },
+      {
+        "q": "Do you offer group or private bookings?",
+        "a": "Yes! We offer private experiences for groups. Browse our private experiences or contact us directly to customize a session for your group."
+      },
+      {
+        "q": "What payment methods do you accept?",
+        "a": "We accept all major credit and debit cards (Visa, Mastercard, American Express) through our secure payment processor. Wellness passes can also be used for eligible experiences."
+      },
+      {
+        "q": "Is my personal information secure?",
+        "a": "Yes. We use industry-standard encryption and never share your personal data with third parties. Your payment information is handled entirely by our secure payment processor."
+      }
+    ]
   }
 }

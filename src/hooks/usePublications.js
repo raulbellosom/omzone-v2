@@ -18,7 +18,7 @@ function slugify(text = "") {
 
 export function usePublications({
   search = "",
-  category = "",
+  tag = "",
   status = "",
   includeArchived = false,
   onlyArchived = false,
@@ -45,7 +45,7 @@ export function usePublications({
       } else if (!includeArchived) {
         queries.push(Query.isNull("archivedAt"));
       }
-      if (category) queries.push(Query.equal("category", category));
+      if (tag) queries.push(Query.contains("tags", tag));
       if (status && !onlyArchived) {
         queries.push(Query.equal("status", status));
       } else if (!includeDrafts && !onlyArchived) {
@@ -63,7 +63,7 @@ export function usePublications({
     }
   }, [
     search,
-    category,
+    tag,
     status,
     includeArchived,
     onlyArchived,

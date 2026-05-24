@@ -16,18 +16,6 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import env from "@/config/env";
 
-const CATEGORY_OPTIONS = [
-  { value: "", i18nKey: "admin.publicationCategories.all" },
-  { value: "landing", i18nKey: "admin.publicationCategories.landing" },
-  { value: "blog", i18nKey: "admin.publicationCategories.blog" },
-  { value: "highlight", i18nKey: "admin.publicationCategories.highlight" },
-  {
-    value: "institutional",
-    i18nKey: "admin.publicationCategories.institutional",
-  },
-  { value: "faq", i18nKey: "admin.publicationCategories.faq" },
-];
-
 const STATUS_OPTIONS = [
   { value: "", i18nKey: "admin.statuses.all" },
   { value: "draft", i18nKey: "admin.statuses.draft" },
@@ -42,7 +30,7 @@ export default function PublicationListPage() {
   const { t } = useLanguage();
 
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
+  const [tagFilter, setTagFilter] = useState("");
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(0);
   const [actionError, setActionError] = useState(null);
@@ -53,7 +41,7 @@ export default function PublicationListPage() {
   const offset = page * PAGE_SIZE;
   const { data, total, loading, error, refetch } = usePublications({
     search,
-    category,
+    tag: tagFilter,
     status: showArchived ? "" : status,
     onlyArchived: showArchived,
     includeDrafts: true,
@@ -74,8 +62,8 @@ export default function PublicationListPage() {
     setSearch(value);
     setPage(0);
   }
-  function handleCategoryChange(value) {
-    setCategory(value);
+  function handleTagChange(value) {
+    setTagFilter(value);
     setPage(0);
   }
   function handleStatusChange(value) {
@@ -117,7 +105,7 @@ export default function PublicationListPage() {
     [hardDelete],
   );
 
-  const hasFilters = search || category || status;
+  const hasFilters = search || tagFilter || status;
 
   return (
     <div className="space-y-5">
@@ -156,12 +144,14 @@ export default function PublicationListPage() {
             className="pl-9 h-10"
           />
         </div>
-        <AdminSelect
-          value={category}
-          onChange={handleCategoryChange}
-          options={CATEGORY_OPTIONS.map((o) => ({ ...o, label: t(o.i18nKey) }))}
-          fullWidth={false}
-        />
+        <div className="relative">
+          <Input
+            value={tagFilter}
+            onChange={(e) => handleTagChange(e.target.value)}
+            placeholder="Filter by tag…"
+            className="h-10 w-36"
+          />
+        </div>
         <AdminSelect
           value={status}
           onChange={handleStatusChange}
@@ -173,7 +163,7 @@ export default function PublicationListPage() {
             type="button"
             onClick={() => {
               setSearch("");
-              setCategory("");
+              setTagFilter("");
               setStatus("");
               setPage(0);
             }}

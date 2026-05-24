@@ -87,13 +87,12 @@ export function usePublicationBySlug(slug) {
           ]),
         ];
 
-        if (publication.experienceId) {
+        const experienceId =
+          publication.suggestedExperienceId || publication.experienceId;
+
+        if (experienceId) {
           fetches.push(
-            databases.getDocument(
-              DB,
-              env.collectionExperiences,
-              publication.experienceId,
-            ),
+            databases.getDocument(DB, env.collectionExperiences, experienceId),
           );
         }
 

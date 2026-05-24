@@ -12,7 +12,7 @@ export function getPreviewUrl(fileId, { width = 1200, height = 800 } = {}) {
 
 /**
  * Fetch an experience by slug + all related public data in parallel.
- * Returns: { experience, pricingTiers, slots, addons, publication, sections, loading, error }
+ * Returns: { experience, pricingTiers, slots, addons, loading, error }
  */
 export function useExperienceDetail(slug) {
   const [state, setState] = useState({
@@ -20,8 +20,6 @@ export function useExperienceDetail(slug) {
     pricingTiers: [],
     slots: [],
     addons: [],
-    publication: null,
-    sections: [],
     loading: true,
     error: null,
   });
@@ -57,32 +55,27 @@ export function useExperienceDetail(slug) {
         const now = new Date().toISOString();
 
         // 2. Parallel fetches
-        const [tiersRes, slotsRes, assignmentsRes, pubRes] =
-          await Promise.allSettled([
-            databases.listDocuments(DB, env.collectionPricingTiers, [
-              Query.equal("experienceId", expId),
-              Query.equal("isActive", true),
-              Query.orderAsc("sortOrder"),
-              Query.limit(50),
-            ]),
-            databases.listDocuments(DB, env.collectionSlots, [
-              Query.equal("experienceId", expId),
-              Query.equal("status", "available"),
-              Query.greaterThan("startDatetime", now),
-              Query.orderAsc("startDatetime"),
-              Query.limit(20),
-            ]),
-            databases.listDocuments(DB, env.collectionAddonAssignments, [
-              Query.equal("experienceId", expId),
-              Query.orderAsc("sortOrder"),
-              Query.limit(50),
-            ]),
-            databases.listDocuments(DB, env.collectionPublications, [
-              Query.equal("experienceId", expId),
-              Query.equal("status", "published"),
-              Query.limit(1),
-            ]),
-          ]);
+        const [tiersRes, slotsRes, assignmentsRes] = await Promise.allSettled([
+          databases.listDocuments(DB, env.collectionPricingTiers, [
+            Query.equal("experienceId", expId),
+            Query.equal("isActive", true),
+            Query.orderAsc("sortOrder"),
+            Query.limit(50),
+          ]),
+          databases.listDocuments(DB, env.collectionSlots, [
+            Query.equal("experienceId", expId),
+            Query.equal("status", "available"),
+            Query.greaterThan("startDatetime", now),
+            Query.orderAsc("startDatetime"),
+            Query.limit(20),
+          ]),
+          databases.listDocuments(DB, env.collectionAddonAssignments, [
+            Query.equal("experienceId", expId),
+            Query.orderAsc("sortOrder"),
+            Query.limit(50),
+          ]),
+          // NOTE: publication lookup removed — publications are blog-only now
+        ]);
 
         const pricingTiers =
           tiersRes.status === "fulfilled" ? tiersRes.value.documents : [];
@@ -92,10 +85,6 @@ export function useExperienceDetail(slug) {
           assignmentsRes.status === "fulfilled"
             ? assignmentsRes.value.documents
             : [];
-        const publication =
-          pubRes.status === "fulfilled" && pubRes.value.total > 0
-            ? pubRes.value.documents[0]
-            : null;
 
         // 3. Fetch addons by IDs from assignments
         let addons = [];
@@ -126,34 +115,12 @@ export function useExperienceDetail(slug) {
           }
         }
 
-        // 4. Fetch publication sections
-        let sections = [];
-        if (publication) {
-          try {
-            const sectionsRes = await databases.listDocuments(
-              DB,
-              env.collectionSections,
-              [
-                Query.equal("publicationId", publication.$id),
-                Query.equal("isVisible", true),
-                Query.orderAsc("sortOrder"),
-                Query.limit(50),
-              ],
-            );
-            sections = sectionsRes.documents;
-          } catch {
-            // non-fatal — render without sections
-          }
-        }
-
         if (!cancelled) {
           setState({
             experience,
             pricingTiers,
             slots,
             addons,
-            publication,
-            sections,
             loading: false,
             error: null,
           });

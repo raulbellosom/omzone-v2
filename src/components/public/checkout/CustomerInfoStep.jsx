@@ -14,12 +14,12 @@ export default function CustomerInfoStep({
   const emailValid =
     !customerEmail.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail);
 
-  // Validate local number length directly (>= 8 digits required when provided)
+  // Phone is optional; if provided the cleaned value must be '+' followed by digits only.
+  // Handles both PhoneInput format (+52 3222652650) and E.164 pre-fills (+523222652650).
   const phoneValid = (() => {
-    if (!customerPhone.trim()) return true; // optional
-    const spaceIdx = customerPhone.indexOf(" ");
-    const localPart = spaceIdx >= 0 ? customerPhone.slice(spaceIdx + 1) : "";
-    return localPart.replace(/\D/g, "").length >= 8;
+    if (!customerPhone.trim()) return true;
+    const clean = customerPhone.trim().replace(/[\s-]/g, "");
+    return /^\+\d+$/.test(clean);
   })();
 
   return (

@@ -705,7 +705,25 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": ["landing", "blog", "highlight", "institutional", "faq"]
+          "elements": ["blog"]
+        },
+        {
+          "key": "tags",
+          "type": "string",
+          "required": false,
+          "array": true,
+          "size": 64,
+          "default": null,
+          "encrypt": false
+        },
+        {
+          "key": "suggestedExperienceId",
+          "type": "string",
+          "required": false,
+          "array": false,
+          "size": 255,
+          "default": null,
+          "encrypt": false
         },
         {
           "key": "experienceId",
@@ -830,17 +848,10 @@
           "orders": []
         },
         {
-          "key": "idx_category_status",
+          "key": "idx_suggestedExperienceId",
           "type": "key",
           "status": "available",
-          "columns": ["category", "status"],
-          "orders": []
-        },
-        {
-          "key": "idx_experienceId",
-          "type": "key",
-          "status": "available",
-          "columns": ["experienceId"],
+          "columns": ["suggestedExperienceId"],
           "orders": []
         },
         {

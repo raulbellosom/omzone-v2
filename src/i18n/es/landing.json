@@ -720,5 +720,41 @@
     "formSuccessBody": "Te responderemos pronto.",
     "formPlaceholderMessage": "¿En qué podemos ayudarte?",
     "formErrorBody": "Algo salió mal. Por favor intenta de nuevo."
+  },
+  "helpFaq": {
+    "items": [
+      {
+        "q": "¿Cómo reservo una experiencia?",
+        "a": "Explora nuestras experiencias, elige una fecha y el nivel de precio que más te convenga, y completa el proceso de pago. Recibirás un correo de confirmación con tu boleto y todos los detalles que necesitas."
+      },
+      {
+        "q": "¿Puedo cancelar o reagendar mi reservación?",
+        "a": "Las cancelaciones y cambios de fecha deben solicitarse con al menos 48 horas de anticipación antes de tu sesión. Escríbenos a hello@omzone.com y haremos lo posible por atenderte."
+      },
+      {
+        "q": "¿Cómo redimo un pase de bienestar?",
+        "a": "Una vez que tengas un pase activo en tu portal, selecciona una experiencia elegible durante el proceso de compra y aplica tu pase como método de pago. Tu saldo se actualizará automáticamente."
+      },
+      {
+        "q": "¿Qué incluye el precio de la experiencia?",
+        "a": "Cada experiencia especifica exactamente qué está incluido. Algunas pueden incluir materiales, equipo o refrigerios — revisa la sección de inclusiones en la página de la experiencia antes de reservar."
+      },
+      {
+        "q": "¿Cómo recibo mi boleto?",
+        "a": "Tu boleto se envía por correo electrónico inmediatamente después de una reservación exitosa. También puedes acceder a todos tus boletos en cualquier momento desde tu portal en \"Mis Reservaciones\"."
+      },
+      {
+        "q": "¿Ofrecen reservaciones grupales o privadas?",
+        "a": "¡Sí! Ofrecemos experiencias privadas para grupos. Explora nuestras experiencias privadas o contáctanos directamente para personalizar una sesión para tu grupo."
+      },
+      {
+        "q": "¿Qué métodos de pago aceptan?",
+        "a": "Aceptamos todas las tarjetas de crédito y débito principales (Visa, Mastercard, American Express) a través de nuestro procesador de pagos seguro. Los pases de bienestar también pueden usarse en experiencias elegibles."
+      },
+      {
+        "q": "¿Mi información personal está segura?",
+        "a": "Sí. Utilizamos cifrado estándar de la industria y nunca compartimos tus datos personales con terceros. Tu información de pago es manejada íntegramente por nuestro procesador de pagos seguro."
+      }
+    ]
   }
 }

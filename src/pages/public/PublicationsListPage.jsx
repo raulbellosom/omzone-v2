@@ -9,22 +9,25 @@ import { BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import env from "@/config/env";
 
-const CATEGORIES = ["blog", "highlight", "landing", "institutional", "faq"];
-
 export default function PublicationsListPage() {
   const { publications, loading, error, refetch } = usePublicPublications();
   const { t } = useLanguage();
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedTag, setSelectedTag] = useState("");
 
   const filtered = useMemo(() => {
-    if (!selectedCategory) return publications;
-    return publications.filter((p) => p.category === selectedCategory);
-  }, [publications, selectedCategory]);
+    if (!selectedTag) return publications;
+    return publications.filter(
+      (p) => Array.isArray(p.tags) && p.tags.includes(selectedTag),
+    );
+  }, [publications, selectedTag]);
 
-  // Only show category pills for categories that have at least one publication
-  const availableCategories = useMemo(() => {
-    const cats = new Set(publications.map((p) => p.category).filter(Boolean));
-    return CATEGORIES.filter((c) => cats.has(c));
+  // Collect all unique tags that appear across publications
+  const availableTags = useMemo(() => {
+    const tagSet = new Set();
+    publications.forEach((p) => {
+      if (Array.isArray(p.tags)) p.tags.forEach((tag) => tagSet.add(tag));
+    });
+    return [...tagSet].sort();
   }, [publications]);
 
   return (
@@ -55,36 +58,36 @@ export default function PublicationsListPage() {
         </div>
       </section>
 
-      {/* Category filter pills */}
-      {!loading && availableCategories.length > 1 && (
+      {/* Tag filter pills */}
+      {!loading && availableTags.length > 0 && (
         <div className="sticky top-16 z-30 bg-cream/90 backdrop-blur-md border-b border-sand/60">
           <div className="container-shell py-4">
             <div className="flex flex-wrap gap-2">
               <button
                 type="button"
-                onClick={() => setSelectedCategory("")}
+                onClick={() => setSelectedTag("")}
                 className={cn(
                   "px-4 py-1.5 rounded-full text-sm font-medium transition-colors",
-                  !selectedCategory
+                  !selectedTag
                     ? "bg-charcoal text-cream"
                     : "bg-warm-gray/40 text-charcoal hover:bg-warm-gray/60",
                 )}
               >
                 {t("publications.allCategories")}
               </button>
-              {availableCategories.map((cat) => (
+              {availableTags.map((tag) => (
                 <button
-                  key={cat}
+                  key={tag}
                   type="button"
-                  onClick={() => setSelectedCategory(cat)}
+                  onClick={() => setSelectedTag(tag)}
                   className={cn(
                     "px-4 py-1.5 rounded-full text-sm font-medium transition-colors",
-                    selectedCategory === cat
+                    selectedTag === tag
                       ? "bg-charcoal text-cream"
                       : "bg-warm-gray/40 text-charcoal hover:bg-warm-gray/60",
                   )}
                 >
-                  {t(`publications.category.${cat}`) || cat}
+                  {tag}
                 </button>
               ))}
             </div>

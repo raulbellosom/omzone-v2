@@ -8,8 +8,6 @@ import { Button } from "@/components/common/Button";
 import { ROUTES } from "@/constants/routes";
 import { useLanguage, localizedField } from "@/hooks/useLanguage";
 
-const CATEGORY_KEYS = ["landing", "blog", "highlight", "institutional", "faq"];
-
 function ConfirmDialog({
   open,
   title,
@@ -57,10 +55,7 @@ export default function PublicationCard({
   );
 
   const isArchived = Boolean(publication.archivedAt);
-
-  const categoryLabel = CATEGORY_KEYS.includes(publication.category)
-    ? t(`admin.publicationCard.categories.${publication.category}`)
-    : publication.category;
+  const tags = Array.isArray(publication.tags) ? publication.tags : [];
 
   function handleConfirm() {
     const { type } = confirm;
@@ -105,7 +100,20 @@ export default function PublicationCard({
           )}
         </div>
         <div className="flex items-center justify-between text-xs text-charcoal-subtle">
-          <span>{categoryLabel}</span>
+          <div className="flex flex-wrap gap-1">
+            {tags.length > 0 ? (
+              tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-block px-1.5 py-0.5 rounded bg-sage/10 text-sage text-xs font-medium"
+                >
+                  {tag}
+                </span>
+              ))
+            ) : (
+              <span className="italic text-charcoal-subtle/60">no tags</span>
+            )}
+          </div>
           {publication.publishedAt && (
             <span>
               {new Date(publication.publishedAt).toLocaleDateString(

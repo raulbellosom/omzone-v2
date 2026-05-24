@@ -2,6 +2,7 @@ import { MapPin } from "lucide-react";
 import { formatPrice } from "@/components/public/checkout/utils";
 import { cn } from "@/lib/utils";
 import { useLanguage, localizedField } from "@/hooks/useLanguage";
+import OptimizedImage from "@/components/common/OptimizedImage";
 import {
   Select,
   SelectTrigger,
@@ -89,9 +90,14 @@ export default function SelectionStep({
         </div>
       )}
       <div className="rounded-xl border border-warm-gray-dark/20 bg-white p-4 flex gap-4 items-center">
-        <div className="flex-shrink-0 w-16 h-16 rounded-lg bg-warm-gray flex items-center justify-center text-2xl">
-          🧘
-        </div>
+        <OptimizedImage
+          fileId={experience.heroImageId}
+          widths={[64, 128]}
+          alt={localizedField(experience, "publicName", language)}
+          className="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden"
+          imgClass="w-full h-full object-cover"
+          aspectRatio="1/1"
+        />
         <div className="min-w-0">
           <p className="text-xs text-charcoal-subtle uppercase tracking-wider">
             {experience.type}

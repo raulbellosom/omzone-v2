@@ -5,7 +5,6 @@ import { useLanguage, localizedField } from "@/hooks/useLanguage";
 import SEOHead from "@/components/common/SEOHead";
 import StructuredData from "@/components/common/StructuredData";
 import ExperienceHero from "@/components/public/experience-detail/ExperienceHero";
-import SectionRenderer from "@/components/public/experience-detail/SectionRenderer";
 import PricingSection from "@/components/public/experience-detail/PricingSection";
 import AgendaSection from "@/components/public/experience-detail/AgendaSection";
 import AddonsSection from "@/components/public/experience-detail/AddonsSection";
@@ -177,15 +176,8 @@ function PricingSidebar({ tiers, experience }) {
 
 export default function ExperienceDetailPage() {
   const { slug } = useParams();
-  const {
-    experience,
-    pricingTiers,
-    slots,
-    addons,
-    sections,
-    loading,
-    error,
-  } = useExperienceDetail(slug);
+  const { experience, pricingTiers, slots, addons, loading, error } =
+    useExperienceDetail(slug);
   const { t } = useLanguage();
   const seo = useExperienceSEO(experience, { slots, pricingTiers });
 
@@ -201,7 +193,6 @@ export default function ExperienceDetailPage() {
     );
   }
 
-  const hasPublication = sections.length > 0;
   const showAgenda = experience.requiresSchedule && slots.length > 0;
 
   // Parse gallery image IDs (stored as JSON string)
@@ -234,11 +225,8 @@ export default function ExperienceDetailPage() {
         <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-12">
           {/* ── Main column ── */}
           <div className="min-w-0">
-            {/* Editorial sections */}
-            {hasPublication && <SectionRenderer sections={sections} />}
-            {!hasPublication && (
-              <LongDescriptionBlock experience={experience} />
-            )}
+            {/* Editorial / long description */}
+            <LongDescriptionBlock experience={experience} />
 
             {/* Gallery images */}
             {galleryImageIds.length > 0 && (
@@ -276,10 +264,7 @@ export default function ExperienceDetailPage() {
           {/* ── Sidebar: pricing (lg+) ── */}
           <div className="hidden lg:block">
             <div className="sticky top-20">
-              <PricingSidebar
-                tiers={pricingTiers}
-                experience={experience}
-              />
+              <PricingSidebar tiers={pricingTiers} experience={experience} />
             </div>
           </div>
         </div>

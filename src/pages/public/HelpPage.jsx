@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 import SEOHead from "@/components/common/SEOHead";
 import StructuredData from "@/components/common/StructuredData";
 import env from "@/config/env";
-import { useLanguage, localizedField } from "@/hooks/useLanguage";
-import { usePublications } from "@/hooks/usePublications";
+import { useLanguage } from "@/hooks/useLanguage";
 import { functions } from "@/lib/appwrite";
 import { ROUTES } from "@/constants/routes";
 import {
@@ -15,7 +14,6 @@ import {
   Mail,
   FileText,
   LayoutDashboard,
-  Loader2,
   CheckCircle,
   AlertCircle,
   MessageSquare,
@@ -339,31 +337,23 @@ function QuickContactForm({ t }) {
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function HelpPage() {
-  const { t, language } = useLanguage();
-  const {
-    data: faqs,
-    loading,
-    error,
-  } = usePublications({
-    category: "faq",
-    status: "published",
-    limit: 30,
-  });
+  const { t } = useLanguage();
 
-  // Build FAQ structured data from publications
+  // Hardcoded FAQ items from i18n
+  const faqs = t("helpFaq.items", { returnObjects: true }) || [];
+
+  // Build FAQ structured data from hardcoded items
   const faqSchema =
     faqs.length > 0
       ? {
           "@context": "https://schema.org",
           "@type": "FAQPage",
-          mainEntity: faqs.map((pub) => ({
+          mainEntity: faqs.map((item) => ({
             "@type": "Question",
-            name: localizedField(pub, "title", language),
+            name: item.q,
             acceptedAnswer: {
               "@type": "Answer",
-              text:
-                localizedField(pub, "excerpt", language) ||
-                localizedField(pub, "title", language),
+              text: item.a,
             },
           })),
         }
@@ -406,30 +396,11 @@ export default function HelpPage() {
               </p>
             </div>
 
-            {loading ? (
-              <div className="py-12 flex justify-center">
-                <Loader2 className="h-6 w-6 animate-spin text-charcoal-muted" />
-              </div>
-            ) : error ? (
-              <p className="text-sm text-charcoal-muted py-8">
-                {t("help.faqSection.errorLoading")}
-              </p>
-            ) : faqs.length === 0 ? (
-              <p className="text-sm text-charcoal-muted py-8">
-                {t("help.faqSection.noFaqs")}
-              </p>
-            ) : (
-              <div className="bg-white rounded-2xl border border-sand/60 shadow-sm divide-y divide-sand px-6">
-                {faqs.map((pub) => (
-                  <FaqItem
-                    key={pub.$id}
-                    title={localizedField(pub, "title", language)}
-                    body={localizedField(pub, "excerpt", language)}
-                    href={`/p/${pub.slug}`}
-                  />
-                ))}
-              </div>
-            )}
+            <div className="bg-white rounded-2xl border border-sand/60 shadow-sm divide-y divide-sand px-6">
+              {faqs.map((item, idx) => (
+                <FaqItem key={idx} title={item.q} body={item.a} />
+              ))}
+            </div>
           </section>
 
           {/* Contact + Resources grid */}

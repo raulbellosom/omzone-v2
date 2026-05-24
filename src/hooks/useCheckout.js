@@ -411,11 +411,10 @@ export function useCheckout() {
     if (!customerName.trim()) return false;
     if (!customerEmail.trim()) return false;
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) return false;
-    // Phone is optional, but if provided the local part must be >= 8 digits
+    // Phone is optional; if provided the cleaned value must be '+' followed by digits only.
     if (customerPhone.trim()) {
-      const spaceIdx = customerPhone.indexOf(" ");
-      const localPart = spaceIdx >= 0 ? customerPhone.slice(spaceIdx + 1) : "";
-      if (localPart.replace(/\D/g, "").length < 8) return false;
+      const clean = customerPhone.trim().replace(/[\s-]/g, "");
+      if (!/^\+\d+$/.test(clean)) return false;
     }
     return true;
   }, [customerName, customerEmail, customerPhone]);
