@@ -148,7 +148,7 @@ export default function PublicationListPage() {
           <Input
             value={tagFilter}
             onChange={(e) => handleTagChange(e.target.value)}
-            placeholder="Filter by tag…"
+            placeholder={t("admin.publications.filterByTag")}
             className="h-10 w-36"
           />
         </div>

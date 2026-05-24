@@ -92,7 +92,7 @@ export default function ConfirmHardDeleteModal({
             onChange={(e) => setReason(e.target.value)}
             rows={2}
             placeholder={t("admin.archive.hardDeleteReasonPlaceholder")}
-            className="w-full rounded-xl border border-sand-dark bg-white px-3 py-2 text-sm text-charcoal focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-none"
+            className="w-full rounded-xl border border-sand-dark bg-white px-3 py-2 text-sm text-charcoal focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-vertical"
           />
         </div>
 

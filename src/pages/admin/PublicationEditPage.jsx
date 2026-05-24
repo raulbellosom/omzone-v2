@@ -1,9 +1,12 @@
 ﻿import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { AlertTriangle } from "lucide-react";
+import { useParams, Link } from "react-router-dom";
+import { AlertTriangle, Layers } from "lucide-react";
 import PublicationForm from "@/components/admin/publications/PublicationForm";
 import { usePublication, updatePublication } from "@/hooks/usePublications";
+import { usePublicationSections } from "@/hooks/usePublicationSections";
 import { Card } from "@/components/common/Card";
+import { Button } from "@/components/common/Button";
+import { ROUTES } from "@/constants/routes";
 import { useLanguage } from "@/hooks/useLanguage";
 import { toast } from "sonner";
 
@@ -27,6 +30,7 @@ export default function PublicationEditPage() {
   const { id } = useParams();
   const { t } = useLanguage();
   const { data: publication, loading, error: loadError } = usePublication(id);
+  const { data: sections } = usePublicationSections(id);
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
 
@@ -60,13 +64,26 @@ export default function PublicationEditPage() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-display font-semibold text-charcoal">
-          {t("admin.publications.editTitle")}
-        </h1>
-        <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
-          {publication.title}
-        </p>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-display font-semibold text-charcoal">
+            {t("admin.publications.editTitle")}
+          </h1>
+          <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
+            {publication.title}
+          </p>
+        </div>
+        <Button type="button" variant="outline" size="sm" asChild>
+          <Link to={ROUTES.ADMIN_PUBLICATION_SECTIONS.replace(":id", id)}>
+            <Layers className="h-4 w-4" />
+            {t("admin.publications.sectionsButton")}
+            {sections.length > 0 && (
+              <span className="ml-1 inline-flex items-center justify-center rounded-full bg-sage/15 px-1.5 py-0.5 text-xs font-medium text-sage leading-none">
+                {sections.length}
+              </span>
+            )}
+          </Link>
+        </Button>
       </div>
 
       {publication.archivedAt && (

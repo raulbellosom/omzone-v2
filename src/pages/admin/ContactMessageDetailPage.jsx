@@ -52,7 +52,7 @@ function formatDate(dateStr) {
 export default function ContactMessageDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const { message, loading, error, refetch } = useContactMessage(id);
 
@@ -270,12 +270,13 @@ export default function ContactMessageDetailPage() {
         <div className="border-t border-sand/60 pt-4 flex flex-wrap items-center gap-3">
           {(() => {
             const cfg = getCategoryConfig(message.category || "contact");
+            const catLabel = language === "es" ? cfg.labelEs : cfg.labelEn;
             return (
               <span
                 className={`inline-flex items-center gap-1.5 text-xs font-medium rounded-full px-2.5 py-1 ${cfg.color}`}
               >
                 <span className={`h-1.5 w-1.5 rounded-full ${cfg.dotColor}`} />
-                {cfg.labelEn}
+                {catLabel}
               </span>
             );
           })()}

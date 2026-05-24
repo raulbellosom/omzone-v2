@@ -718,6 +718,7 @@
       "statusHeader": "Status",
       "publishedHeader": "Published",
       "noPublications": "No publications.",
+      "filterByTag": "Filter by tag…",
       "publishConfirmLabel": "Publish",
       "emptyArchivedTitle": "No archived publications",
       "emptyArchivedMessage": "Publications you archive will appear here.",
@@ -773,7 +774,14 @@
       "ogImageHint": "Image shared on social media",
       "noExperiences": "No experiences found.",
       "placeholderSeoTitle": "The Art of Stillness | OMZONE",
-      "placeholderSeoDescription": "Discover our transformative experiences…"
+      "placeholderSeoDescription": "Discover our transformative experiences…",
+      "blogInfoPart1": "Publications are",
+      "blogInfoBold1": "blog posts",
+      "blogInfoPart2": ". They appear in the blog and do not get automatically inserted into other pages. Use",
+      "blogInfoBold2": "tags",
+      "blogInfoPart3": "to organize content and the",
+      "blogInfoBold3": "suggested experience",
+      "blogInfoPart4": "field to link a related experience as a CTA at the end of the post."
     },
     "sections": {
       "newSection": "New section",

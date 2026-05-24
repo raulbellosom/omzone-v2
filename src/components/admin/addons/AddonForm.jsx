@@ -81,7 +81,7 @@ function Textarea({ value, onChange, placeholder, disabled, rows = 3, error }) {
       rows={rows}
       className={cn(
         "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal placeholder:text-charcoal-subtle",
-        "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-none",
+        "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-vertical",
         "disabled:opacity-50 disabled:bg-warm-gray",
         error && "border-red-400",
       )}
@@ -224,7 +224,11 @@ export default function AddonForm({
         <p className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wider">
           {t("admin.formSections.publication")}
         </p>
-        <Field label={t("admin.addonForm.status")} required error={errors.status}>
+        <Field
+          label={t("admin.addonForm.status")}
+          required
+          error={errors.status}
+        >
           <AdminSelect
             value={form.status}
             onChange={(v) => set("status", v)}
@@ -293,7 +297,13 @@ export default function AddonForm({
   );
 
   return (
-    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={isDisabled} submitLabel={submitLabel} asideChildren={asideContent}>
+    <AdminFormLayout
+      onSubmit={handleSubmit}
+      submitting={submitting}
+      disabled={isDisabled}
+      submitLabel={submitLabel}
+      asideChildren={asideContent}
+    >
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
@@ -494,7 +504,6 @@ export default function AddonForm({
           />
         </div>
       </Card>
-
     </AdminFormLayout>
   );
 }

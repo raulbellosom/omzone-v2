@@ -134,20 +134,30 @@ export default function SectionForm({
 
   const isGallery = form.sectionType === "gallery";
   const isHero = form.sectionType === "hero";
+  const usesMedia = isGallery || isHero;
+
+  const CONTENT_HINTS = {
+    text: "Markdown soportado. Texto libre.",
+    hero: "Subtítulo o descripción breve que aparece sobre la imagen.",
+    highlights:
+      'Una opción por línea. O JSON: [{"title_en":"...","description_en":"..."}]',
+    inclusions: "Una inclusión por línea. Ej: Wi-Fi incluido",
+    restrictions: "Una restricción por línea. Ej: No apto para embarazadas",
+    faq: 'JSON requerido: [{"question":"¿...","answer":"..."}]',
+    itinerary:
+      'Metadata: {"items":[{"step":"01","title_en":"...","title_es":"...","description_en":"...","description_es":"..."}]}',
+    testimonials: 'JSON requerido: [{"quote":"...","author":"Nombre"}]',
+    cta: "Texto descriptivo debajo del título del CTA.",
+    video:
+      'No se usa. Ingresa la URL del video en Metadata: {"url":"https://..."}',
+    gallery: "No se usa para galería.",
+  };
+  const contentHint = CONTENT_HINTS[form.sectionType] || null;
 
   function validate() {
     const e = {};
     if (!form.sectionType) e.sectionType = t("admin.sectionForm.typeRequired");
-    // Validate raw JSON textarea only for non-gallery, non-hero sections
-    if (!isGallery && !isHero && form.mediaIdsRaw.trim()) {
-      try {
-        const parsed = JSON.parse(form.mediaIdsRaw);
-        if (!Array.isArray(parsed))
-          e.mediaIds = t("admin.sectionForm.mustBeArray");
-      } catch {
-        e.mediaIds = t("admin.sectionForm.invalidJSON");
-      }
-    }
+
     if (form.metadata.trim()) {
       try {
         JSON.parse(form.metadata);
@@ -166,14 +176,11 @@ export default function SectionForm({
       return;
     }
 
-    // Serialize mediaIds: array → JSON string (or null)
-    let mediaIdsValue = null;
-    if (isGallery || isHero) {
-      mediaIdsValue =
-        form.mediaIds.length > 0 ? JSON.stringify(form.mediaIds) : null;
-    } else {
-      mediaIdsValue = form.mediaIdsRaw.trim() || null;
-    }
+    // Serialize mediaIds: only hero/gallery use media
+    const mediaIdsValue =
+      usesMedia && form.mediaIds.length > 0
+        ? JSON.stringify(form.mediaIds)
+        : null;
 
     const payload = {
       sectionType: form.sectionType,
@@ -249,83 +256,72 @@ export default function SectionForm({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label={t("admin.sectionForm.contentEn")}>
+          <Field label={t("admin.sectionForm.contentEn")} hint={contentHint}>
             <textarea
               value={form.content}
               onChange={(e) => set("content", e.target.value)}
               placeholder={t("admin.sectionForm.placeholderContentEn")}
               disabled={isDisabled}
-              rows={6}
+              rows={8}
               className={cn(
-                "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal placeholder:text-charcoal-subtle",
-                "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-none",
+                "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal placeholder:text-charcoal-subtle font-mono",
+                "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-vertical",
                 "disabled:opacity-50 disabled:bg-warm-gray",
               )}
             />
           </Field>
-          <Field label={t("admin.sectionForm.contentEs")}>
+          <Field label={t("admin.sectionForm.contentEs")} hint={contentHint}>
             <textarea
               value={form.contentEs}
               onChange={(e) => set("contentEs", e.target.value)}
               placeholder={t("admin.sectionForm.placeholderContentEs")}
               disabled={isDisabled}
-              rows={6}
+              rows={8}
               className={cn(
-                "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal placeholder:text-charcoal-subtle",
-                "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-none",
+                "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal placeholder:text-charcoal-subtle font-mono",
+                "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-vertical",
                 "disabled:opacity-50 disabled:bg-warm-gray",
               )}
             />
           </Field>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field
-            label={t("admin.sectionForm.media")}
-            hint={
-              isGallery
-                ? t("admin.sectionForm.galleryHint")
-                : isHero
-                  ? t("admin.sectionForm.heroImageHint")
-                  : t("admin.sectionForm.mediaArrayHint")
-            }
-            error={errors.mediaIds}
-          >
-            {isGallery ? (
-              <GalleryManager
-                value={form.mediaIds}
-                onChange={(ids) => set("mediaIds", ids)}
-                bucketId={env.bucketExperienceMedia}
-                buckets={env.imageBuckets}
-                isAdmin
-                disabled={isDisabled}
-              />
-            ) : isHero ? (
-              <MediaImageField
-                fileId={form.mediaIds[0] || ""}
-                bucketId={env.bucketExperienceMedia}
-                buckets={env.imageBuckets}
-                onChange={(fileId) =>
-                  set("mediaIds", fileId ? [fileId] : [])
-                }
-                disabled={isDisabled}
-              />
-            ) : (
-              <textarea
-                value={form.mediaIdsRaw}
-                onChange={(e) => set("mediaIdsRaw", e.target.value)}
-                placeholder='["fileId1", "fileId2"]'
-                disabled={isDisabled}
-                rows={2}
-                className={cn(
-                  "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal font-mono placeholder:text-charcoal-subtle",
-                  "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-none",
-                  "disabled:opacity-50 disabled:bg-warm-gray",
-                  errors.mediaIds && "border-red-400",
-                )}
-              />
-            )}
-          </Field>
+        <div
+          className={cn(
+            "grid gap-4",
+            usesMedia ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1",
+          )}
+        >
+          {usesMedia && (
+            <Field
+              label={t("admin.sectionForm.media")}
+              hint={
+                isGallery
+                  ? t("admin.sectionForm.galleryHint")
+                  : t("admin.sectionForm.heroImageHint")
+              }
+              error={errors.mediaIds}
+            >
+              {isGallery ? (
+                <GalleryManager
+                  value={form.mediaIds}
+                  onChange={(ids) => set("mediaIds", ids)}
+                  bucketId={env.bucketExperienceMedia}
+                  buckets={env.imageBuckets}
+                  isAdmin
+                  disabled={isDisabled}
+                />
+              ) : (
+                <MediaImageField
+                  fileId={form.mediaIds[0] || ""}
+                  bucketId={env.bucketExperienceMedia}
+                  buckets={env.imageBuckets}
+                  onChange={(fileId) => set("mediaIds", fileId ? [fileId] : [])}
+                  disabled={isDisabled}
+                />
+              )}
+            </Field>
+          )}
           <Field
             label={t("admin.sectionForm.metadata")}
             hint={t("admin.sectionForm.metadataHint")}
@@ -336,10 +332,10 @@ export default function SectionForm({
               onChange={(e) => set("metadata", e.target.value)}
               placeholder='{"key": "value"}'
               disabled={isDisabled}
-              rows={2}
+              rows={4}
               className={cn(
                 "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal font-mono placeholder:text-charcoal-subtle",
-                "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-none",
+                "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-vertical",
                 "disabled:opacity-50 disabled:bg-warm-gray",
                 errors.metadata && "border-red-400",
               )}

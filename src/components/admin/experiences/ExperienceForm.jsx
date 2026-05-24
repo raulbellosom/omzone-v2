@@ -123,7 +123,7 @@ function Textarea({
       maxLength={maxLength}
       className={cn(
         "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal placeholder:text-charcoal-subtle",
-        "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-none",
+        "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-vertical",
         "disabled:opacity-50 disabled:bg-warm-gray",
         error && "border-red-400",
       )}

@@ -52,9 +52,11 @@ export default function AdminSelect({
           className,
         )}
       >
-        <SelectValue
-          placeholder={placeholder || allOption?.label || "Select…"}
-        />
+        <span className="truncate min-w-0 flex-1">
+          <SelectValue
+            placeholder={placeholder || allOption?.label || "Select…"}
+          />
+        </span>
       </SelectTrigger>
       <SelectContent>
         {allOption && (

@@ -72,7 +72,7 @@ function Textarea({
       maxLength={maxLength}
       className={cn(
         "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal placeholder:text-charcoal-subtle",
-        "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-none",
+        "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-vertical",
         "disabled:opacity-50 disabled:bg-warm-gray",
       )}
     />
@@ -184,7 +184,13 @@ export default function LocationForm({
   );
 
   return (
-    <AdminFormLayout onSubmit={handleSubmit} submitting={submitting} disabled={submitting} submitLabel={submitLabel || t("admin.resourceForms.save")} asideChildren={asideContent}>
+    <AdminFormLayout
+      onSubmit={handleSubmit}
+      submitting={submitting}
+      disabled={submitting}
+      submitLabel={submitLabel || t("admin.resourceForms.save")}
+      asideChildren={asideContent}
+    >
       {/* Identidad */}
       <Card className="p-5 space-y-4">
         <h2 className="text-sm font-semibold text-charcoal-subtle uppercase tracking-wider">
@@ -246,7 +252,6 @@ export default function LocationForm({
           />
         </Field>
       </Card>
-
     </AdminFormLayout>
   );
 }

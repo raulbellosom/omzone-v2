@@ -155,7 +155,7 @@ function Textarea({
       maxLength={maxLength}
       className={cn(
         "flex w-full rounded-xl border border-sand-dark bg-white px-4 py-3 text-sm text-charcoal placeholder:text-charcoal-subtle",
-        "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-none",
+        "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 resize-vertical",
         "disabled:opacity-50 disabled:bg-warm-gray",
         error && "border-red-400",
       )}
@@ -364,11 +364,13 @@ export default function PublicationForm({
       <div className="flex items-start gap-3 rounded-xl bg-sage/10 border border-sage/20 px-4 py-3 text-sm text-sage">
         <Info className="h-4 w-4 shrink-0 mt-0.5" />
         <p>
-          Publications are <strong>blog posts</strong>. They appear in the blog
-          and do not get automatically inserted into other pages. Use{" "}
-          <strong>tags</strong> to organize content and the{" "}
-          <strong>suggested experience</strong> field to link a related
-          experience as a CTA at the end of the post.
+          {t("admin.publicationForm.blogInfoPart1")}{" "}
+          <strong>{t("admin.publicationForm.blogInfoBold1")}</strong>
+          {t("admin.publicationForm.blogInfoPart2")}{" "}
+          <strong>{t("admin.publicationForm.blogInfoBold2")}</strong>{" "}
+          {t("admin.publicationForm.blogInfoPart3")}{" "}
+          <strong>{t("admin.publicationForm.blogInfoBold3")}</strong>{" "}
+          {t("admin.publicationForm.blogInfoPart4")}
         </p>
       </div>
 

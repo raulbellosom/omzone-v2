@@ -181,12 +181,12 @@ function GallerySection({ section, language }) {
 }
 
 function HighlightsSection({ section, language }) {
+  const localContent = localizedField(section, "content", language);
   const items =
-    parseJsonSafe(section.metadata)?.items ||
-    parseJsonSafe(section.content, []);
+    parseJsonSafe(section.metadata)?.items || parseJsonSafe(localContent, []);
   const list = Array.isArray(items)
     ? items
-    : (section.content || "").split("\n").filter(Boolean);
+    : localContent.split("\n").filter(Boolean);
   if (list.length === 0) return null;
 
   return (
@@ -241,8 +241,9 @@ function HighlightsSection({ section, language }) {
 }
 
 function FaqSection({ section, language }) {
+  const localContent = localizedField(section, "content", language);
   const items =
-    parseJsonSafe(section.metadata)?.faqs || parseJsonSafe(section.content, []);
+    parseJsonSafe(section.metadata)?.faqs || parseJsonSafe(localContent, []);
   const faqs = Array.isArray(items) ? items : [];
   const [openIndex, setOpenIndex] = useState(null);
   if (faqs.length === 0) return null;
@@ -293,8 +294,9 @@ function FaqSection({ section, language }) {
 }
 
 function ItinerarySection({ section, language }) {
-  const items =
-    parseJsonSafe(section.metadata)?.days || parseJsonSafe(section.content, []);
+  const localContent = localizedField(section, "content", language);
+  const meta = parseJsonSafe(section.metadata);
+  const items = meta?.days || meta?.items || parseJsonSafe(localContent, []);
   const days = Array.isArray(items) ? items : [];
   if (days.length === 0) return null;
 
@@ -308,16 +310,29 @@ function ItinerarySection({ section, language }) {
         )}
         <div className="relative space-y-6 pl-8 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-px before:bg-sage/30">
           {days.map((day, i) => {
+            const stepLabel = day.step || String(i + 1).padStart(2, "0");
             const label =
               typeof day === "string"
                 ? day
-                : day.day || day.title || `Day ${i + 1}`;
+                : day[`title_${language}`] ||
+                  day.title_en ||
+                  day.day ||
+                  day.title ||
+                  `Step ${stepLabel}`;
             const desc =
-              typeof day === "string" ? "" : day.description || day.desc || "";
+              typeof day === "string"
+                ? ""
+                : day[`description_${language}`] ||
+                  day.description_en ||
+                  day.description ||
+                  day.desc ||
+                  "";
             return (
               <div key={i} className="relative">
                 <div className="absolute -left-8 top-0.5 w-6 h-6 rounded-full bg-sage/20 border-2 border-sage flex items-center justify-center">
-                  <span className="text-xs font-bold text-sage">{i + 1}</span>
+                  <span className="text-xs font-bold text-sage">
+                    {stepLabel}
+                  </span>
                 </div>
                 <h4 className="text-base font-semibold text-charcoal">
                   {label}
@@ -337,9 +352,10 @@ function ItinerarySection({ section, language }) {
 }
 
 function TestimonialsSection({ section, language }) {
+  const localContent = localizedField(section, "content", language);
   const items =
     parseJsonSafe(section.metadata)?.testimonials ||
-    parseJsonSafe(section.content, []);
+    parseJsonSafe(localContent, []);
   const list = Array.isArray(items) ? items : [];
   if (list.length === 0) return null;
 
@@ -379,9 +395,10 @@ function TestimonialsSection({ section, language }) {
 }
 
 function InclusionsSection({ section, language }) {
+  const localContent = localizedField(section, "content", language);
   const items = parseJsonSafe(
-    section.content,
-    (section.content || "").split("\n").filter(Boolean),
+    localContent,
+    localContent.split("\n").filter(Boolean),
   );
   const list = Array.isArray(items) ? items : [];
   if (list.length === 0) return null;
@@ -425,9 +442,10 @@ function InclusionsSection({ section, language }) {
 }
 
 function RestrictionsSection({ section, language }) {
+  const localContent = localizedField(section, "content", language);
   const items = parseJsonSafe(
-    section.content,
-    (section.content || "").split("\n").filter(Boolean),
+    localContent,
+    localContent.split("\n").filter(Boolean),
   );
   const list = Array.isArray(items) ? items : [];
   if (list.length === 0) return null;
@@ -553,7 +571,11 @@ const SECTION_MAP = {
 
 // ─── Main renderer ────────────────────────────────────────────────────────────
 
-export default function PublicationSectionRenderer({ sections, experience, publication }) {
+export default function PublicationSectionRenderer({
+  sections,
+  experience,
+  publication,
+}) {
   const { language } = useLanguage();
   if (!sections || sections.length === 0) return null;
 

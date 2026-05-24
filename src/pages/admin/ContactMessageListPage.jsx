@@ -8,7 +8,10 @@ import Input from "@/components/common/Input";
 import AdminSelect from "@/components/common/AdminSelect";
 import { Search, Mail, MailOpen, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getCategoryConfig, CATEGORY_LIST } from "@/constants/contactCategories";
+import {
+  getCategoryConfig,
+  CATEGORY_LIST,
+} from "@/constants/contactCategories";
 
 const PAGE_SIZE = 25;
 
@@ -24,32 +27,42 @@ function formatDate(dateStr) {
 }
 
 function CategoryBadge({ category }) {
+  const { language } = useLanguage();
   const cfg = getCategoryConfig(category || "contact");
+  const label = language === "es" ? cfg.labelEs : cfg.labelEn;
   return (
-    <span className={`inline-flex items-center gap-1 text-xs font-medium rounded-full px-2 py-0.5 ${cfg.color}`}>
+    <span
+      className={`inline-flex items-center gap-1 text-xs font-medium rounded-full px-2 py-0.5 ${cfg.color}`}
+    >
       <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${cfg.dotColor}`} />
-      {cfg.labelEn}
+      {label}
     </span>
   );
 }
 
 export default function ContactMessageListPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [page, setPage] = useState(0);
 
-  const { data: rawData, total, loading, error } = useContactMessages({
+  const {
+    data: rawData,
+    total,
+    loading,
+    error,
+  } = useContactMessages({
     filter,
     search,
     page,
   });
 
   // Client-side category filter (since we don't push it to the hook yet)
-  const data = categoryFilter === "all"
-    ? rawData
-    : rawData.filter((m) => (m.category || "contact") === categoryFilter);
+  const data =
+    categoryFilter === "all"
+      ? rawData
+      : rawData.filter((m) => (m.category || "contact") === categoryFilter);
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
   const hasFilters = search || filter !== "all" || categoryFilter !== "all";
@@ -64,7 +77,7 @@ export default function ContactMessageListPage() {
     { value: "all", label: t("admin.contactMessages.filterCategoryAll") },
     ...CATEGORY_LIST.map((c) => ({
       value: c.key,
-      label: c.labelEn,
+      label: language === "es" ? c.labelEs : c.labelEn,
     })),
   ];
 
@@ -194,7 +207,10 @@ export default function ContactMessageListPage() {
                       </td>
                       <td className="px-5 py-3.5">
                         <Link
-                          to={ROUTES.ADMIN_CONTACT_MESSAGE_DETAIL.replace(":id", msg.$id)}
+                          to={ROUTES.ADMIN_CONTACT_MESSAGE_DETAIL.replace(
+                            ":id",
+                            msg.$id,
+                          )}
                           className="hover:text-sage transition-colors"
                         >
                           <span
@@ -212,7 +228,10 @@ export default function ContactMessageListPage() {
                       </td>
                       <td className="px-5 py-3.5 text-charcoal max-w-xs truncate">
                         <Link
-                          to={ROUTES.ADMIN_CONTACT_MESSAGE_DETAIL.replace(":id", msg.$id)}
+                          to={ROUTES.ADMIN_CONTACT_MESSAGE_DETAIL.replace(
+                            ":id",
+                            msg.$id,
+                          )}
                           className="hover:text-sage transition-colors"
                         >
                           {msg.subject || (
@@ -250,7 +269,10 @@ export default function ContactMessageListPage() {
               {data.map((msg) => (
                 <Link
                   key={msg.$id}
-                  to={ROUTES.ADMIN_CONTACT_MESSAGE_DETAIL.replace(":id", msg.$id)}
+                  to={ROUTES.ADMIN_CONTACT_MESSAGE_DETAIL.replace(
+                    ":id",
+                    msg.$id,
+                  )}
                   className={cn(
                     "flex items-start gap-3 px-4 py-4 hover:bg-sand/40 transition-colors",
                     !msg.isRead && "bg-sage/5",
@@ -264,10 +286,17 @@ export default function ContactMessageListPage() {
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className={cn("text-sm text-charcoal truncate", !msg.isRead && "font-semibold")}>
+                    <p
+                      className={cn(
+                        "text-sm text-charcoal truncate",
+                        !msg.isRead && "font-semibold",
+                      )}
+                    >
                       {msg.name}
                     </p>
-                    <p className="text-xs text-charcoal-muted truncate">{msg.email}</p>
+                    <p className="text-xs text-charcoal-muted truncate">
+                      {msg.email}
+                    </p>
                     <p className="text-xs text-charcoal mt-0.5 truncate">
                       {msg.subject || (
                         <span className="italic text-charcoal-subtle">
