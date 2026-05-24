@@ -7,6 +7,7 @@ import {
   VALID_TRANSITIONS,
   getStatusLabel,
   getStatusBadgeClass,
+  getStatusI18nKey,
 } from "@/hooks/useBookingRequests";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -20,6 +21,7 @@ import {
   ArrowLeft,
   User,
   Mail,
+  MailIcon,
   Phone,
   Calendar,
   Users,
@@ -28,11 +30,13 @@ import {
   DollarSign,
   ExternalLink,
   Copy,
+  Check,
   MessageCircle,
   CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { functions } from "@/lib/appwrite";
+import { resendPaymentLink } from "@/hooks/useOrders";
 import env from "@/config/env";
 
 function formatDate(iso, locale = "en-US") {
@@ -149,7 +153,7 @@ export default function BookingRequestDetailPage() {
   const isAdmin =
     user?.labels?.includes(ROLES.ADMIN) || user?.labels?.includes(ROLES.ROOT);
 
-  const { request, experience, loading, error, refetch } =
+  const { request, experience, convertedOrder, loading, error, refetch } =
     useBookingRequestDetail(id);
   const { t, lang } = useLanguage();
 
@@ -161,6 +165,9 @@ export default function BookingRequestDetailPage() {
   const [converting, setConverting] = useState(false);
   const [conversionResult, setConversionResult] = useState(null);
   const [actionError, setActionError] = useState(null);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
 
   // Sync form once request loads
   if (request && !notesLoaded) {
@@ -266,6 +273,21 @@ export default function BookingRequestDetailPage() {
     }
   }
 
+  // ── Resend payment link ────────────────────────────────────────────────────
+  async function handleResend(orderId) {
+    setResending(true);
+    setResendSuccess(false);
+    setActionError(null);
+    try {
+      await resendPaymentLink(orderId);
+      setResendSuccess(true);
+    } catch (err) {
+      setActionError(err.message);
+    } finally {
+      setResending(false);
+    }
+  }
+
   return (
     <div className="space-y-6">
       {/* Back */}
@@ -274,7 +296,7 @@ export default function BookingRequestDetailPage() {
         className="inline-flex items-center gap-1.5 text-sm text-charcoal-subtle hover:text-charcoal transition-colors group"
       >
         <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-        All Requests
+        {t("admin.bookingRequests.backToAll")}
       </Link>
 
       {/* Header */}
@@ -284,7 +306,8 @@ export default function BookingRequestDetailPage() {
             {t("admin.bookingDetail.title")}
           </h1>
           <p className="text-sm text-charcoal-muted mt-0.5">
-            {t("admin.bookingDetail.created")} {formatDate(request.$createdAt, lang)}
+            {t("admin.bookingDetail.created")}{" "}
+            {formatDate(request.$createdAt, lang)}
           </p>
         </div>
         <span
@@ -293,7 +316,9 @@ export default function BookingRequestDetailPage() {
             getStatusBadgeClass(request.status),
           )}
         >
-          {getStatusLabel(request.status)}
+          {getStatusI18nKey(request.status)
+            ? t(getStatusI18nKey(request.status))
+            : getStatusLabel(request.status)}
         </span>
       </div>
 
@@ -304,62 +329,110 @@ export default function BookingRequestDetailPage() {
         </Card>
       )}
 
-      {/* Conversion success */}
-      {conversionResult && (
-        <Card className="p-4 border-emerald-200 bg-emerald-50 space-y-3">
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
-            <p className="text-sm text-emerald-800 font-medium">
-              {t("admin.bookingRequests.quoteSent")} — {conversionResult.orderNumber}
-            </p>
-          </div>
+      {/* Conversion success / persisted payment link */}
+      {(() => {
+        // Show either the freshly-converted result or the persisted order data
+        const paymentLink =
+          conversionResult?.paymentLink ||
+          convertedOrder?.stripePaymentLinkUrl ||
+          null;
+        const orderNumber =
+          conversionResult?.orderNumber || convertedOrder?.orderNumber || "";
+        const orderId =
+          conversionResult?.orderId || request.convertedOrderId || null;
+        if (!paymentLink && !orderId) return null;
+        return (
+          <Card className="p-4 border-emerald-200 bg-emerald-50 space-y-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+              <p className="text-sm text-emerald-800 font-medium">
+                {t("admin.bookingRequests.quoteSent")} — {orderNumber}
+              </p>
+            </div>
 
-          {conversionResult.paymentLink && (
-            <div className="rounded-md bg-white border border-emerald-200 p-3 space-y-2">
-              <p className="text-xs font-medium text-charcoal-muted">
-                {t("admin.orders.paymentLink")}
-              </p>
-              <p className="text-xs text-charcoal break-all font-mono">
-                {conversionResult.paymentLink}
-              </p>
-              <div className="flex flex-wrap gap-2 pt-1">
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-1.5 rounded-md border border-emerald-300 bg-white px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-50 transition-colors"
-                  onClick={() => {
-                    navigator.clipboard.writeText(conversionResult.paymentLink);
-                  }}
-                >
-                  <Copy className="h-3.5 w-3.5" />
-                  {t("admin.orders.copyLink")}
-                </button>
-                {request.contactPhone && (
-                  <a
-                    href={`https://wa.me/${request.contactPhone.replace(/[^\d]/g, "")}?text=${encodeURIComponent(
-                      `Hola ${request.contactName}, aquí tu cotización para ${experience?.publicName || "la experiencia"} — ${formatCurrency(parseFloat(quotedAmount))} MXN. Puedes pagar aquí: ${conversionResult.paymentLink}`,
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-md bg-[#25D366] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#1ebe5d] transition-colors"
+            {paymentLink && (
+              <div className="rounded-md bg-white border border-emerald-200 p-3 space-y-2">
+                <p className="text-xs font-medium text-charcoal-muted">
+                  {t("admin.orders.paymentLink")}
+                </p>
+                <p className="text-xs text-charcoal break-all font-mono">
+                  {paymentLink}
+                </p>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  <button
+                    type="button"
+                    className={cn(
+                      "inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-all duration-200",
+                      linkCopied
+                        ? "border-emerald-400 bg-emerald-50 text-emerald-700"
+                        : "border-emerald-300 bg-white text-emerald-700 hover:bg-emerald-50",
+                    )}
+                    onClick={() => {
+                      navigator.clipboard.writeText(paymentLink);
+                      setLinkCopied(true);
+                      setTimeout(() => setLinkCopied(false), 2000);
+                    }}
                   >
-                    <MessageCircle className="h-3.5 w-3.5" />
-                    {t("admin.orders.openWhatsApp")}
-                  </a>
-                )}
-                <Link
-                  to={ROUTES.ADMIN_ORDER_DETAIL.replace(
-                    ":orderId",
-                    conversionResult.orderId,
+                    {linkCopied ? (
+                      <Check className="h-3.5 w-3.5" />
+                    ) : (
+                      <Copy className="h-3.5 w-3.5" />
+                    )}
+                    {linkCopied
+                      ? t("admin.orders.copied")
+                      : t("admin.orders.copyLink")}
+                  </button>
+                  {request.contactPhone && (
+                    <a
+                      href={`https://wa.me/${request.contactPhone.replace(/[^\d]/g, "")}?text=${encodeURIComponent(
+                        `Hola ${request.contactName}, aquí tu cotización para ${
+                          experience?.publicName || "la experiencia"
+                        } — ${formatCurrency(parseFloat(quotedAmount))} MXN. Puedes pagar aquí: ${paymentLink}`,
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-md bg-[#25D366] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#1ebe5d] transition-colors"
+                    >
+                      <MessageCircle className="h-3.5 w-3.5" />
+                      {t("admin.orders.openWhatsApp")}
+                    </a>
                   )}
-                  className="inline-flex items-center gap-1.5 rounded-md border border-sand-dark px-3 py-1.5 text-xs font-medium text-charcoal hover:bg-sand transition-colors"
+                  {isAdmin && orderId && (
+                    <button
+                      type="button"
+                      onClick={() => handleResend(orderId)}
+                      disabled={resending}
+                      className="inline-flex items-center gap-1.5 rounded-md border border-forest/30 bg-forest/5 px-3 py-1.5 text-xs font-medium text-forest hover:bg-forest/10 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <MailIcon className="h-3.5 w-3.5" />
+                      {resending
+                        ? t("admin.orders.resendingLink")
+                        : t("admin.orders.resendLink")}
+                    </button>
+                  )}
+                </div>
+                {resendSuccess && (
+                  <p className="text-xs text-emerald-700 font-medium mt-1">
+                    {t("admin.orders.linkResent")}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {orderId && (
+              <div className="flex pt-1">
+                <Link
+                  to={ROUTES.ADMIN_ORDER_DETAIL.replace(":orderId", orderId)}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-emerald-300 bg-white px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-50 transition-colors"
                 >
-                  {t("admin.orders.viewOrder")} <ExternalLink className="h-3 w-3" />
+                  {t("admin.orders.viewOrder")}{" "}
+                  <ExternalLink className="h-3 w-3" />
                 </Link>
               </div>
-            </div>
-          )}
-        </Card>
-      )}
+            )}
+          </Card>
+        );
+      })()}
 
       {/* Content grid */}
       <div className="grid md:grid-cols-2 gap-6">
@@ -378,7 +451,11 @@ export default function BookingRequestDetailPage() {
             label={t("admin.orderDetail.email")}
             value={request.contactEmail}
           />
-          <InfoRow icon={Phone} label={t("admin.bookingDetail.phone")} value={request.contactPhone} />
+          <InfoRow
+            icon={Phone}
+            label={t("admin.bookingDetail.phone")}
+            value={request.contactPhone}
+          />
           <InfoRow
             icon={Users}
             label={t("admin.bookingRequests.participant")}
@@ -393,7 +470,9 @@ export default function BookingRequestDetailPage() {
             <div className="flex items-start gap-3">
               <MessageSquare className="h-4 w-4 text-charcoal-subtle mt-0.5 shrink-0" />
               <div>
-                <p className="text-xs text-charcoal-subtle">{t("admin.bookingDetail.message")}</p>
+                <p className="text-xs text-charcoal-subtle">
+                  {t("admin.bookingDetail.message")}
+                </p>
                 <p className="text-sm text-charcoal whitespace-pre-wrap">
                   {request.message}
                 </p>
@@ -410,21 +489,27 @@ export default function BookingRequestDetailPage() {
           {experience ? (
             <>
               <p className="text-sm font-medium text-charcoal">
-                {experience.publicName}
+                {(lang === "es" && experience.publicNameEs) ||
+                  experience.publicName}
               </p>
               <p className="text-xs text-charcoal-subtle capitalize">
-                {experience.type}
+                {t(`admin.experienceTypes.${experience.type}`) ||
+                  experience.type}
               </p>
               <p className="text-xs text-charcoal-subtle">
                 {t("admin.experienceForm.saleMode")}:{" "}
-                <span className="font-medium">{experience.saleMode}</span>
+                <span className="font-medium">
+                  {t(`admin.saleModes.${experience.saleMode}`) ||
+                    experience.saleMode}
+                </span>
               </p>
               <Link
                 to={`/experiences/${experience.slug}`}
                 target="_blank"
                 className="inline-flex items-center gap-1 text-xs text-sage hover:underline"
               >
-                {t("admin.bookingDetail.viewPublicPage")} <ExternalLink className="h-3 w-3" />
+                {t("admin.bookingDetail.viewPublicPage")}{" "}
+                <ExternalLink className="h-3 w-3" />
               </Link>
             </>
           ) : (
@@ -435,7 +520,9 @@ export default function BookingRequestDetailPage() {
 
           {request.convertedOrderId && (
             <div className="pt-3 border-t border-sand-dark/40">
-              <p className="text-xs text-charcoal-subtle">{t("admin.bookingDetail.convertedOrder")}</p>
+              <p className="text-xs text-charcoal-subtle">
+                {t("admin.bookingDetail.convertedOrder")}
+              </p>
               <Link
                 to={ROUTES.ADMIN_ORDER_DETAIL.replace(
                   ":orderId",
@@ -450,7 +537,9 @@ export default function BookingRequestDetailPage() {
 
           {request.respondedAt && (
             <div>
-              <p className="text-xs text-charcoal-subtle">{t("admin.bookingDetail.respondedAt")}</p>
+              <p className="text-xs text-charcoal-subtle">
+                {t("admin.bookingDetail.respondedAt")}
+              </p>
               <p className="text-sm text-charcoal">
                 {formatDate(request.respondedAt, lang)}
               </p>
@@ -503,7 +592,9 @@ export default function BookingRequestDetailPage() {
             onClick={handleSaveFields}
             disabled={saving}
           >
-            {saving ? t("admin.bookingDetail.saving") : t("admin.bookingDetail.saveNotes")}
+            {saving
+              ? t("admin.bookingDetail.saving")
+              : t("admin.bookingDetail.saveNotes")}
           </Button>
         )}
       </Card>
@@ -511,7 +602,9 @@ export default function BookingRequestDetailPage() {
       {/* Actions */}
       {request.status !== "converted" && (
         <Card className="p-6 space-y-3">
-          <h2 className="text-base font-semibold text-charcoal">{t("admin.bookingDetail.actions")}</h2>
+          <h2 className="text-base font-semibold text-charcoal">
+            {t("admin.bookingDetail.actions")}
+          </h2>
           <StatusActions
             request={request}
             isAdmin={isAdmin}
@@ -521,7 +614,7 @@ export default function BookingRequestDetailPage() {
           />
           {converting && (
             <p className="text-sm text-charcoal-muted animate-pulse">
-              Converting to order...
+              {t("admin.bookingRequests.converting")}
             </p>
           )}
         </Card>

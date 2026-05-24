@@ -594,7 +594,21 @@
       "experience": "Experience",
       "date": "Date",
       "tier": "Tier",
-      "participant": "Participant"
+      "participant": "Participant",
+      "backToAll": "All Requests",
+      "converting": "Converting to order...",
+      "colContact": "Contact",
+      "colExperience": "Experience",
+      "colPreferredDate": "Preferred Date",
+      "colPax": "Pax",
+      "colStatus": "Status",
+      "colCreated": "Created",
+      "emptyTable": "No booking requests found",
+      "statusPending": "Pending",
+      "statusReviewing": "Reviewing",
+      "statusApproved": "Approved",
+      "statusRejected": "Rejected",
+      "statusConverted": "Converted"
     },
     "checkin": {
       "title": "Check-in",

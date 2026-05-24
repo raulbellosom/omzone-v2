@@ -6,6 +6,7 @@ import env from "@/config/env";
 const DB = env.appwriteDatabaseId;
 const COL = env.collectionBookingRequests || "booking_requests";
 const COL_EXPERIENCES = env.collectionExperiences;
+const COL_ORDERS = env.collectionOrders;
 const COL_ACTIVITY = env.collectionAdminActivityLogs || "admin_activity_logs";
 
 // ─── Status helpers ─────────────────────────────────────────────────────────
@@ -49,6 +50,17 @@ export function getStatusLabel(status) {
   return REQUEST_STATUSES.find((s) => s.value === status)?.label || status;
 }
 
+export function getStatusI18nKey(status) {
+  const map = {
+    pending: "admin.bookingRequests.statusPending",
+    reviewing: "admin.bookingRequests.statusReviewing",
+    approved: "admin.bookingRequests.statusApproved",
+    rejected: "admin.bookingRequests.statusRejected",
+    converted: "admin.bookingRequests.statusConverted",
+  };
+  return map[status] || null;
+}
+
 // ─── List hook ──────────────────────────────────────────────────────────────
 
 export function useBookingRequests({
@@ -87,7 +99,7 @@ export function useBookingRequests({
         const expResult = await databases.listDocuments(DB, COL_EXPERIENCES, [
           Query.equal("$id", experienceIds),
           Query.limit(100),
-          Query.select(["$id", "publicName", "slug"]),
+          Query.select(["$id", "publicName", "publicNameEs", "slug"]),
         ]);
         for (const exp of expResult.documents) {
           experienceMap[exp.$id] = exp;
@@ -144,6 +156,7 @@ export function useNewRequestCount() {
 export function useBookingRequestDetail(id) {
   const [request, setRequest] = useState(null);
   const [experience, setExperience] = useState(null);
+  const [convertedOrder, setConvertedOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -167,6 +180,19 @@ export function useBookingRequestDetail(id) {
           // Experience may have been deleted
         }
       }
+
+      if (doc.convertedOrderId) {
+        try {
+          const ord = await databases.getDocument(
+            DB,
+            COL_ORDERS,
+            doc.convertedOrderId,
+          );
+          setConvertedOrder(ord);
+        } catch {
+          // Order may have been deleted
+        }
+      }
     } catch {
       setError("not_found");
     } finally {
@@ -178,7 +204,14 @@ export function useBookingRequestDetail(id) {
     fetch();
   }, [fetch]);
 
-  return { request, experience, loading, error, refetch: fetch };
+  return {
+    request,
+    experience,
+    convertedOrder,
+    loading,
+    error,
+    refetch: fetch,
+  };
 }
 
 // ─── Create (public form) ───────────────────────────────────────────────────

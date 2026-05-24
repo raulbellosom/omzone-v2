@@ -594,7 +594,21 @@
       "experience": "Experiencia",
       "date": "Fecha",
       "tier": "Tier",
-      "participant": "Participante"
+      "participant": "Participante",
+      "backToAll": "Todas las solicitudes",
+      "converting": "Convirtiendo a orden...",
+      "colContact": "Contacto",
+      "colExperience": "Experiencia",
+      "colPreferredDate": "Fecha preferida",
+      "colPax": "Pax",
+      "colStatus": "Estado",
+      "colCreated": "Creado",
+      "emptyTable": "Sin solicitudes de reserva",
+      "statusPending": "Pendiente",
+      "statusReviewing": "En revisión",
+      "statusApproved": "Aprobada",
+      "statusRejected": "Rechazada",
+      "statusConverted": "Convertida"
     },
     "checkin": {
       "title": "Check-in",
