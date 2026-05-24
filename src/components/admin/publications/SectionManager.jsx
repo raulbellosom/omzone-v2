@@ -7,6 +7,14 @@ import SortableItem from "@/components/common/SortableItem";
 import SectionCard from "./SectionCard";
 import SectionForm from "./SectionForm";
 import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetBody,
+} from "@/components/common/Sheet";
+import {
   usePublicationSections,
   createSection,
   updateSection,
@@ -210,22 +218,46 @@ export default function SectionManager({ publicationId }) {
         </Button>
       )}
 
-      {/* Inline form */}
-      {mode === "create" && (
-        <SectionForm
-          onSubmit={handleCreate}
-          onCancel={closeForm}
-          submitting={submitting}
-        />
-      )}
-      {mode === "edit" && editingSection && (
-        <SectionForm
-          initialData={editingSection}
-          onSubmit={handleUpdate}
-          onCancel={closeForm}
-          submitting={submitting}
-        />
-      )}
+      {/* Section form — slide-over sheet */}
+      <Sheet
+        open={mode !== null}
+        onOpenChange={(open) => { if (!open) closeForm(); }}
+      >
+        <SheetContent side="right-xl">
+          <SheetHeader>
+            <SheetTitle>
+              {mode === "create"
+                ? t("admin.sections.newSection")
+                : t("admin.sections.editSection")}
+            </SheetTitle>
+            {mode === "edit" && editingSection && (
+              <SheetDescription>
+                {editingSection.title || editingSection.sectionType}
+              </SheetDescription>
+            )}
+          </SheetHeader>
+          <SheetBody>
+            {mode === "create" && (
+              <SectionForm
+                onSubmit={handleCreate}
+                onCancel={closeForm}
+                submitting={submitting}
+              />
+            )}
+            {mode === "edit" && editingSection && (
+              <SectionForm
+                initialData={editingSection}
+                onSubmit={handleUpdate}
+                onCancel={closeForm}
+                submitting={submitting}
+              />
+            )}
+            {actionError && (
+              <p className="mt-3 text-sm text-red-600">{actionError}</p>
+            )}
+          </SheetBody>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

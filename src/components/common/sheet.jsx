@@ -31,6 +31,8 @@ export const SheetContent = React.forwardRef(function SheetContent(
   const sides = {
     right:
       "right-0 top-0 h-full w-full max-w-xs sm:max-w-sm border-l border-warm-gray-dark data-[state=open]:animate-sheet-in-right data-[state=closed]:animate-sheet-out-right",
+    "right-xl":
+      "right-0 top-0 h-full w-full max-w-2xl border-l border-warm-gray-dark data-[state=open]:animate-sheet-in-right data-[state=closed]:animate-sheet-out-right",
     left: "left-0 top-0 h-full w-full max-w-xs sm:max-w-sm border-r border-warm-gray-dark data-[state=open]:animate-sheet-in-left data-[state=closed]:animate-sheet-out-left",
     bottom:
       "bottom-0 left-0 w-full rounded-t-2xl border-t border-warm-gray-dark max-h-[90vh] data-[state=open]:animate-sheet-in-bottom data-[state=closed]:animate-sheet-out-bottom",
@@ -44,7 +46,9 @@ export const SheetContent = React.forwardRef(function SheetContent(
         ref={ref}
         aria-describedby={undefined}
         className={cn(
-          "fixed z-50 bg-white shadow-modal overflow-y-auto",
+          "fixed z-50 bg-white shadow-modal",
+          // flex-col so header sticks and body scrolls independently
+          "flex flex-col",
           sides[side],
           className,
         )}
@@ -61,7 +65,24 @@ export const SheetContent = React.forwardRef(function SheetContent(
 });
 
 export function SheetHeader({ className, ...props }) {
-  return <div className={cn("px-5 pt-5 pb-3", className)} {...props} />;
+  return (
+    <div
+      className={cn(
+        "px-5 pt-5 pb-3 shrink-0 border-b border-warm-gray",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export function SheetBody({ className, ...props }) {
+  return (
+    <div
+      className={cn("flex-1 overflow-y-auto px-5 py-5", className)}
+      {...props}
+    />
+  );
 }
 
 export const SheetTitle = React.forwardRef(function SheetTitle(
