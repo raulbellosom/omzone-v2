@@ -626,8 +626,8 @@
       "emailPlaceholder": "tu@correo.com",
       "phoneLabel": "WhatsApp",
       "phonePlaceholder": "+52 322 123 4567",
-      "orderCodeLabel": "Número de reserva / orden",
-      "orderCodePlaceholder": "Ej. OMZ-ORD-… o OMZ-TKT-…",
+      "orderCodeLabel": "Número de orden",
+      "orderCodePlaceholder": "Ej. OMZ-20260517-UHJ",
       "rfcLabel": "RFC",
       "rfcPlaceholder": "XAXX010101000",
       "taxRegimeLabel": "Régimen fiscal",
@@ -652,7 +652,7 @@
       "emailRequired": "Por favor ingresa tu correo.",
       "emailInvalid": "Por favor ingresa un correo válido.",
       "phoneRequired": "Por favor ingresa tu número de WhatsApp.",
-      "orderCodeRequired": "Por favor ingresa tu número de reserva u orden.",
+      "orderCodeRequired": "Por favor ingresa tu número de orden.",
       "rfcRequired": "Por favor ingresa tu RFC.",
       "captchaRequired": "Por favor completa el CAPTCHA."
     },
@@ -691,6 +691,8 @@
       "labelPhone": "Teléfono o WhatsApp (opcional)",
       "labelMessage": "Mensaje",
       "labelPreferredContact": "¿Cómo prefieres que te contactemos?",
+      "labelTopic": "Asunto",
+      "topicPlaceholder": "¿De qué trata tu mensaje?",
       "viaEmail": "Email",
       "viaCall": "Llamada",
       "viaWhatsapp": "WhatsApp"

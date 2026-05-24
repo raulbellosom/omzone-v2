@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/common/SEOHead";
 import StructuredData from "@/components/common/StructuredData";
@@ -68,9 +69,12 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const CONTACT_METHODS = ["email", "call", "whatsapp"];
 
 function QuickContactForm({ t }) {
+  const captchaRef = useRef(null);
+  const [captchaToken, setCaptchaToken] = useState(null);
   const [form, setForm] = useState({
     name: "",
     email: "",
+    topic: "",
     phone: "",
     message: "",
     preferredContact: "email",
@@ -97,6 +101,7 @@ function QuickContactForm({ t }) {
       e.email = t("contact.validation.emailInvalid");
     if (!form.message.trim())
       e.message = t("contact.validation.messageRequired");
+    if (!captchaToken) e.captcha = t("contact.validation.captchaRequired");
     setErrors(e);
     return Object.keys(e).length === 0;
   }
@@ -113,7 +118,8 @@ function QuickContactForm({ t }) {
           email: form.email.trim(),
           phone: form.phone.trim() || undefined,
           message: form.message.trim(),
-          recaptchaToken: null,
+          recaptchaToken: captchaToken,
+          subject: form.topic.trim() || undefined,
           category: "support",
           categoryData: { preferredContact: form.preferredContact },
         }),
@@ -126,6 +132,8 @@ function QuickContactForm({ t }) {
       setStatus("success");
     } catch {
       setStatus("error");
+      captchaRef.current?.reset();
+      setCaptchaToken(null);
     }
   }
 
@@ -146,6 +154,7 @@ function QuickContactForm({ t }) {
             setForm({
               name: "",
               email: "",
+              topic: "",
               phone: "",
               message: "",
               preferredContact: "email",
@@ -256,6 +265,21 @@ function QuickContactForm({ t }) {
         </div>
       </div>
 
+      {/* Topic / Subject */}
+      <div>
+        <label className="block text-xs font-medium text-charcoal-muted mb-1.5">
+          {t("help.contactSection.labelTopic")}
+        </label>
+        <input
+          type="text"
+          placeholder={t("help.contactSection.topicPlaceholder")}
+          value={form.topic}
+          onChange={(e) => setField("topic", e.target.value)}
+          disabled={sending}
+          className="w-full rounded-lg border border-sand px-4 py-2.5 text-sm bg-white placeholder:text-charcoal-subtle/60 focus:outline-none focus:ring-2 focus:ring-sage/40 disabled:opacity-50"
+        />
+      </div>
+
       {/* Message */}
       <div>
         <label className="block text-xs font-medium text-charcoal-muted mb-1.5">
@@ -272,6 +296,28 @@ function QuickContactForm({ t }) {
         />
         {errors.message && (
           <p className="mt-1 text-xs text-red-500">{errors.message}</p>
+        )}
+      </div>
+
+      {/* reCAPTCHA */}
+      <div>
+        <ReCAPTCHA
+          ref={captchaRef}
+          sitekey={env.recaptchaSiteKey}
+          onChange={(token) => {
+            setCaptchaToken(token);
+            if (errors.captcha)
+              setErrors((e) => {
+                const n = { ...e };
+                delete n.captcha;
+                return n;
+              });
+          }}
+          onExpired={() => setCaptchaToken(null)}
+          theme="light"
+        />
+        {errors.captcha && (
+          <p className="mt-1 text-xs text-red-500">{errors.captcha}</p>
         )}
       </div>
 

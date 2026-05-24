@@ -60,6 +60,7 @@ export default function ContactMessageDetailPage() {
   const [savingNotes, setSavingNotes] = useState(false);
   const [notesStatus, setNotesStatus] = useState(null); // "saved" | "error"
   const [togglingRead, setTogglingRead] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   // Pre-fill notes when message loads
   const [notesInitialized, setNotesInitialized] = useState(false);
@@ -125,6 +126,16 @@ export default function ContactMessageDetailPage() {
         </Card>
       </div>
     );
+  }
+
+  // Parse extra category data (support messages carry preferredContact)
+  let supportData = null;
+  if (message.category === "support" && message.categoryData) {
+    try {
+      supportData = JSON.parse(message.categoryData);
+    } catch {
+      /* ignore */
+    }
   }
 
   return (
@@ -240,6 +251,19 @@ export default function ContactMessageDetailPage() {
               }
             />
           )}
+          {supportData?.preferredContact && (
+            <InfoRow
+              icon={MessageSquare}
+              label={t("admin.contactMessages.labelPreferredContact")}
+              value={
+                {
+                  email: t("admin.contactMessages.contactMethodEmail"),
+                  call: t("admin.contactMessages.contactMethodCall"),
+                  whatsapp: t("admin.contactMessages.contactMethodWhatsapp"),
+                }[supportData.preferredContact] ?? supportData.preferredContact
+              }
+            />
+          )}
         </div>
 
         {/* Category badge + reclassify */}
@@ -295,7 +319,6 @@ export default function ContactMessageDetailPage() {
             },
           ].filter((r) => r.value);
           const copyText = rows.map((r) => `${r.label}: ${r.value}`).join("\n");
-          const [copied, setCopied] = useState(false);
           function handleCopy() {
             navigator.clipboard.writeText(copyText);
             setCopied(true);
@@ -315,7 +338,7 @@ export default function ContactMessageDetailPage() {
                     <Link
                       to={
                         ROUTES.ADMIN_ORDER_DETAIL?.replace(
-                          ":id",
+                          ":orderId",
                           invoiceData.orderCode,
                         ) || "#"
                       }

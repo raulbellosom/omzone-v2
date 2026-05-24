@@ -626,8 +626,8 @@
       "emailPlaceholder": "you@example.com",
       "phoneLabel": "WhatsApp",
       "phonePlaceholder": "+52 322 123 4567",
-      "orderCodeLabel": "Booking / Order Number",
-      "orderCodePlaceholder": "e.g. OMZ-ORD-… or OMZ-TKT-…",
+      "orderCodeLabel": "Order Number",
+      "orderCodePlaceholder": "e.g. OMZ-20260517-UHJ",
       "rfcLabel": "RFC (Tax ID)",
       "rfcPlaceholder": "XAXX010101000",
       "taxRegimeLabel": "Tax Regime",
@@ -652,7 +652,7 @@
       "emailRequired": "Please enter your email.",
       "emailInvalid": "Please enter a valid email address.",
       "phoneRequired": "Please enter your WhatsApp number.",
-      "orderCodeRequired": "Please enter your booking or order number.",
+      "orderCodeRequired": "Please enter your order number.",
       "rfcRequired": "Please enter your RFC.",
       "captchaRequired": "Please complete the CAPTCHA."
     },
@@ -691,6 +691,8 @@
       "labelPhone": "Phone or WhatsApp (optional)",
       "labelMessage": "Message",
       "labelPreferredContact": "How should we contact you?",
+      "labelTopic": "Subject",
+      "topicPlaceholder": "What is your message about?",
       "viaEmail": "Email",
       "viaCall": "Phone call",
       "viaWhatsapp": "WhatsApp"

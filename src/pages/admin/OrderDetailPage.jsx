@@ -90,13 +90,11 @@ export default function OrderDetailPage() {
   if (error) {
     return (
       <Card className="p-6 border-red-200 bg-red-50">
-        <p className="text-sm text-red-700">{error}</p>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="mt-3"
-          asChild
-        >
+        <p className="text-sm font-medium text-red-700 mb-1">
+          {t("admin.orders.notFound")}
+        </p>
+        <p className="text-xs text-red-500">{t("admin.orders.loadError")}</p>
+        <Button variant="ghost" size="sm" className="mt-3" asChild>
           <Link to={ROUTES.ADMIN_ORDERS}>{t("admin.orders.backToOrders")}</Link>
         </Button>
       </Card>
@@ -110,12 +108,7 @@ export default function OrderDetailPage() {
         <h2 className="text-lg font-semibold text-charcoal">
           {t("admin.orders.notFound")}
         </h2>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="mt-3"
-          asChild
-        >
+        <Button variant="ghost" size="sm" className="mt-3" asChild>
           <Link to={ROUTES.ADMIN_ORDERS}>{t("admin.orders.backToOrders")}</Link>
         </Button>
       </Card>
@@ -126,11 +119,7 @@ export default function OrderDetailPage() {
     <div className="space-y-6 max-w-4xl">
       {/* Header */}
       <div className="flex flex-wrap items-start gap-3">
-        <Button
-          variant="ghost"
-          size="sm"
-          asChild
-        >
+        <Button variant="ghost" size="sm" asChild>
           <Link to={ROUTES.ADMIN_ORDERS}>
             <ArrowLeft className="h-4 w-4" />
           </Link>

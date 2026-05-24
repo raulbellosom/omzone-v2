@@ -88,18 +88,38 @@ export function useOrderDetail(orderId) {
     setLoading(true);
     setError(null);
 
-    Promise.all([
-      databases.getDocument(DB, COL_ORDERS, orderId),
-      databases.listDocuments(DB, COL_ORDER_ITEMS, [
-        Query.equal("orderId", orderId),
-        Query.limit(100),
-      ]),
-      databases.listDocuments(DB, COL_PAYMENTS, [
-        Query.equal("orderId", orderId),
-        Query.limit(25),
-        Query.orderDesc("$createdAt"),
-      ]),
-    ])
+    // Appwrite IDs are alphanumeric + underscore only.
+    // If the param has dashes or other chars it's an orderNumber (human-readable).
+    const isAppwriteId = /^[a-zA-Z0-9_]+$/.test(orderId);
+
+    const getOrderDoc = isAppwriteId
+      ? databases.getDocument(DB, COL_ORDERS, orderId)
+      : databases
+          .listDocuments(DB, COL_ORDERS, [
+            Query.equal("orderNumber", orderId),
+            Query.limit(1),
+          ])
+          .then((res) => {
+            if (!res.documents.length) throw new Error("Order not found");
+            return res.documents[0];
+          });
+
+    getOrderDoc
+      .then((orderDoc) => {
+        const docId = orderDoc.$id;
+        return Promise.all([
+          Promise.resolve(orderDoc),
+          databases.listDocuments(DB, COL_ORDER_ITEMS, [
+            Query.equal("orderId", docId),
+            Query.limit(100),
+          ]),
+          databases.listDocuments(DB, COL_PAYMENTS, [
+            Query.equal("orderId", docId),
+            Query.limit(25),
+            Query.orderDesc("$createdAt"),
+          ]),
+        ]);
+      })
       .then(([orderDoc, itemsRes, paymentsRes]) => {
         setOrder(orderDoc);
         setItems(itemsRes.documents);
