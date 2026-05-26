@@ -8,7 +8,7 @@
 
 ## Contexto
 
-OMZONE necesita un modelo de autorización que diferencie entre root, admin, operator y client. Appwrite 1.9.0 soporta labels en Auth users y permisos por label en colecciones (`Role.label("admin")`).
+OMZONE necesita un modelo de autorización que diferencie entre super-admin, admin, operator y client. Appwrite 1.9.0 soporta labels en Auth users y permisos por label en colecciones (`Role.label("admin")`).
 
 ## Opciones evaluadas
 
@@ -33,7 +33,7 @@ OMZONE necesita un modelo de autorización que diferencie entre root, admin, ope
 
 Labels base:
 
-- `root` → Acceso total técnico. Invisible en UI.
+- `super-admin` → Acceso total técnico. Invisible en UI.
 - `admin` → Acceso total de negocio al panel.
 - `operator` → Acceso operativo restringido al panel.
 - `client` → Acceso al portal de cliente.
@@ -43,30 +43,30 @@ Reglas:
 1. El frontend lee `user.labels` para guards de ruta y visibilidad de UI.
 2. Las colecciones usan `Role.label("admin")`, `Role.label("operator")`, etc.
 3. Las Functions sensibles validan labels del token JWT, no confían solo en UI.
-4. `root` usa los mismos permisos que `admin` a nivel de colección pero se oculta en UI.
+4. `super-admin` usa los mismos permisos que `admin` a nivel de colección pero se oculta en UI.
 5. Si en el futuro se necesita granularidad fina, se añade una tabla `operator_permissions` complementaria, pero NO se elimina el sistema de labels.
 
-### Regla de invisibilidad del root (ghost user)
+### Regla de invisibilidad del super-admin (usuario fantasma)
 
-El usuario `root` es un **usuario fantasma**. No basta con no mostrar la palabra "root" en la UI — el usuario root debe ser completamente invisible en toda la plataforma para cualquier otro rol:
+El usuario `super-admin` es un **usuario fantasma**. No basta con no mostrar el rol en la UI — el super-admin debe ser completamente invisible en toda la plataforma para cualquier otro rol:
 
-| Regla                       | Descripción                                                                                           |
-| --------------------------- | ----------------------------------------------------------------------------------------------------- |
-| **Listados de usuarios**    | Un admin/operator/client NO debe ver usuarios root en ninguna lista (equipo, perfiles, asignaciones). |
-| **Transacciones y órdenes** | Órdenes, tickets, pagos y movimientos de un root NO aparecen para admin/operator/client.              |
-| **Actividad y logs**        | Cualquier log o historial de actividad de un root se oculta para no-root.                             |
-| **Nombre de rol en UI**     | Si se muestra el rol de un root (solo visible para otro root), se muestra como "Admin", nunca "Root". |
-| **Excepción**               | Un usuario root SÍ puede ver a otros usuarios root en todos los listados y transacciones.             |
+| Regla                       | Descripción                                                                                                  |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **Listados de usuarios**    | Un admin/operator/client NO debe ver usuarios super-admin en ninguna lista (equipo, perfiles, asignaciones). |
+| **Transacciones y órdenes** | Órdenes, tickets, pagos y movimientos de un super-admin NO aparecen para admin/operator/client.              |
+| **Actividad y logs**        | Cualquier log o historial de actividad de un super-admin se oculta para no super-admin.                      |
+| **Nombre de rol en UI**     | Si se muestra el rol de un super-admin (solo visible para otro super-admin), se muestra como "Admin".        |
+| **Excepción**               | Un usuario super-admin SÍ puede ver a otros super-admin en todos los listados y transacciones.               |
 
 **Implementación frontend:**
 
 - `src/constants/roles.js` exporta `isGhostUser()`, `excludeGhostUsers()` y `displayRoleName()`.
 - Todo componente que liste usuarios, órdenes, tickets o actividad DEBE pasar los resultados por `excludeGhostUsers(items, viewerLabels, getLabels)` antes de renderizar.
-- `AuthContext` expone `isRoot` para que los componentes sepan si el viewer es root y si deben hacer el filtrado.
+- `AuthContext` expone `isAdminViewer` para que los componentes sepan si el viewer es super-admin y si deben hacer el filtrado.
 
 **Implementación backend (Functions):**
 
-- Toda Function que retorne listas de usuarios o entidades con owner debe excluir documentos pertenecientes a usuarios root, a menos que el caller sea root.
+- Toda Function que retorne listas de usuarios o entidades con owner debe excluir documentos pertenecientes a usuarios super-admin, a menos que el caller sea super-admin.
 - El filtrado se hace server-side con Query filters sobre `userId` o verificación de labels del owner.
 
 ## Entidades impactadas
@@ -80,7 +80,7 @@ El usuario `root` es un **usuario fantasma**. No basta con no mostrar la palabra
 ## Riesgos
 
 - **Escalabilidad de permisos:** Si surgen necesidades de permisos finos por módulo para operators, habrá que agregar capa complementaria. Mitigación: diseñar la tabla futura pero no implementarla ahora.
-- **Root expuesto:** Si la UI no oculta `root` correctamente, se expone un actor técnico. Mitigación: el frontend NUNCA muestra "root" como opción ni como label visible.
+- **Super-admin expuesto:** Si la UI no oculta el super-admin correctamente, se expone un actor técnico. Mitigación: el frontend NUNCA muestra el rol super-admin como opción ni como label visible.
 
 ## Limitaciones conocidas de `Role.label()` en Appwrite 1.9.0
 
@@ -88,20 +88,20 @@ El usuario `root` es un **usuario fantasma**. No basta con no mostrar la palabra
 
 ### Storage buckets NO soportan `label:` como scope
 
-Appwrite 1.9.0 self-hosted **acepta** `create("label:admin")` y `create("label:root")` al configurar permisos de un bucket de Storage, pero los **rechaza en runtime** al intentar subir un archivo:
+Appwrite 1.9.0 self-hosted **acepta** `create("label:admin")` y `create("label:super-admin")` al configurar permisos de un bucket de Storage, pero los **rechaza en runtime** al intentar subir un archivo:
 
 ```
-Missing "create" permission for role "label:root". Only ["any","guests"] scopes are allowed
-and ["label:admin","label:root"] was given.
+Missing "create" permission for role "label:super-admin". Only ["any","guests"] scopes are allowed
+and ["label:admin","label:super-admin"] was given.
 ```
 
 **Scopes válidos a nivel de bucket de Storage:** `any`, `guests`, `users`.
 
-**Impacto:** Los 7 buckets de OMZONE (`experience_media`, `publication_media`, `addon_images`, `package_images`, `user_avatars`, `documents`, `public-resources`) fueron corregidos para usar `users` en lugar de `label:admin`/`label:root`.
+**Impacto:** Los 7 buckets de OMZONE (`experience_media`, `publication_media`, `addon_images`, `package_images`, `user_avatars`, `documents`, `public-resources`) fueron corregidos para usar `users` en lugar de `label:admin`/`label:super-admin`.
 
-**Mitigación:** La restricción de que solo admins/root puedan subir archivos de catálogo se implementa en dos capas:
+**Mitigación:** La restricción de que solo admins puedan subir archivos de catálogo se implementa en dos capas:
 
-1. **Route guards de frontend:** Solo usuarios con label `admin` o `root` acceden al panel admin donde están los formularios de upload.
+1. **Route guards de frontend:** Solo usuarios con label `admin` acceden al panel admin donde están los formularios de upload.
 2. **Contexto de UI:** Los componentes `ImageUpload` y `GalleryManager` solo se renderizan dentro de formularios admin protegidos.
 
 **Nota:** Esta limitación **NO aplica** a colecciones de base de datos. `Role.label("admin")` funciona correctamente para permisos de colecciones y documentos. Solo Storage buckets tienen esta restricción.

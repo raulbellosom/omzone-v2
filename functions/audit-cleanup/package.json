@@ -1,0 +1,10 @@
+{
+  "name": "audit-cleanup",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/main.js",
+  "dependencies": {
+    "node-appwrite": "^16.0.0"
+  }
+}

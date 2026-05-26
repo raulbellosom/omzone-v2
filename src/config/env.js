@@ -108,8 +108,7 @@ const env = {
       label: "Publications",
     },
     {
-      id:
-        import.meta.env.VITE_APPWRITE_BUCKET_ADDON_IMAGES || "addon_images",
+      id: import.meta.env.VITE_APPWRITE_BUCKET_ADDON_IMAGES || "addon_images",
       label: "Addons",
     },
     {
@@ -151,6 +150,13 @@ const env = {
     import.meta.env.VITE_APPWRITE_FUNCTION_SEND_REMINDER || "send-reminder",
   functionSubmitContact:
     import.meta.env.VITE_APPWRITE_FUNCTION_SUBMIT_CONTACT || "submit-contact",
+  functionLogEvent:
+    import.meta.env.VITE_APPWRITE_FUNCTION_LOG_EVENT || "log-event",
+
+  // ─── Audit ───
+  collectionSystemEventLogs:
+    import.meta.env.VITE_APPWRITE_COLLECTION_SYSTEM_EVENT_LOGS ||
+    "system_event_logs",
 
   // ─── reCAPTCHA ───
   recaptchaSiteKey: import.meta.env.VITE_RECAPTCHA_SITE_KEY || "",

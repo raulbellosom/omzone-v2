@@ -1038,7 +1038,7 @@ Templates de notificaciones.
 
 ## Storage Buckets
 
-| #   | Bucket ID          | Nombre            | Permisos                     | Descripción                                                                                                                                                         |
-| --- | ------------------ | ----------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | `experience_media` | Experience Media  | read(any), CRUD(admin)       | Imágenes de portada y galerías de experiencias                                                                                                                      |
-| 2   | `public-resources` | Recursos Publicos | read(any), CRUD(admin, root) | Stock de imágenes reutilizables en toda la plataforma (backgrounds, placeholders, decorativos). ~30MB max por archivo. Formatos: jpg, png, webp, svg, gif, mp4, pdf |
+| #   | Bucket ID          | Nombre            | Permisos               | Descripción                                                                                                                                                         |
+| --- | ------------------ | ----------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | `experience_media` | Experience Media  | read(any), CRUD(admin) | Imágenes de portada y galerías de experiencias                                                                                                                      |
+| 2   | `public-resources` | Recursos Publicos | read(any), CRUD(admin) | Stock de imágenes reutilizables en toda la plataforma (backgrounds, placeholders, decorativos). ~30MB max por archivo. Formatos: jpg, png, webp, svg, gif, mp4, pdf |

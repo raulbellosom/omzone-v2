@@ -21,13 +21,13 @@ Archivar oculta un registro de la vista activa pero lo conserva en la base de da
 - El registro se etiqueta con `archivedAt` (timestamp), `archivedBy` (ID de usuario) y `archiveReason` (texto opcional).
 - Los registros archivados desaparecen de las listas y del sitio público.
 - Pueden restaurarse en cualquier momento.
-- **Quién puede archivar / restaurar:** `root`, `admin`, `operator`.
+- **Quién puede archivar / restaurar:** `admin`, `operator`.
 
 ### Eliminar permanentemente (hard-delete)
 
 La eliminación permanente borra el registro de la base de datos para siempre. **No se puede deshacer.**
 
-- **Quién puede eliminar permanentemente:** solo `root` (el usuario fantasma/super-admin).
+- **Quién puede eliminar permanentemente:** solo super-admin (acceso restringido).
 - Se requiere un diálogo de confirmación con texto explícito antes de proceder.
 - Pensado para limpiar datos de prueba, registros duplicados o registros que nunca debieron existir.
 
@@ -50,7 +50,7 @@ Al abrir un registro archivado para editarlo (ej. una publicación), aparece un 
 
 ## Eliminar permanentemente en la interfaz
 
-La acción **Eliminar permanentemente** solo es visible para usuarios `root`. Aparece en el mismo menú de acciones, debajo de Archivar.
+La acción **Eliminar permanentemente** solo es visible para super-admin. Aparece en el mismo menú de acciones, debajo de Archivar.
 
 Un modal te pide escribir el nombre o ID del registro para confirmar — esto previene clics accidentales.
 
@@ -79,13 +79,13 @@ La función `archive-personal` permite a un cliente autenticado ocultar un regis
 
 | Colección            | Archivar | Eliminar permanentemente |
 | -------------------- | -------- | ------------------------ |
-| Experiencias         | ✅       | ✅ (root)                |
-| Ediciones            | ✅       | ✅ (root)                |
-| Horarios             | ✅       | ✅ (root)                |
-| Publicaciones        | ✅       | ✅ (root)                |
-| Paquetes             | ✅       | ✅ (root)                |
-| Pases                | ✅       | ✅ (root)                |
-| Slides del hero      | ✅       | ✅ (root)                |
+| Experiencias         | ✅       | ✅ (super-admin)         |
+| Ediciones            | ✅       | ✅ (super-admin)         |
+| Horarios             | ✅       | ✅ (super-admin)         |
+| Publicaciones        | ✅       | ✅ (super-admin)         |
+| Paquetes             | ✅       | ✅ (super-admin)         |
+| Pases                | ✅       | ✅ (super-admin)         |
+| Slides del hero      | ✅       | ✅ (super-admin)         |
 | Mensajes de contacto | ✅       | —                        |
 | Órdenes              | —        | —                        |
 | Tickets              | —        | —                        |
@@ -102,7 +102,7 @@ Tres Funciones de Appwrite manejan las operaciones de archivado:
 | ---------------------- | ----------------------------------------------------------------------- |
 | `archive-document`     | Archiva suavemente cualquier documento, establece los campos de archivo |
 | `restore-document`     | Limpia los campos de archivo, restaura al estado activo                 |
-| `hard-delete-document` | Elimina permanentemente un documento (solo root)                        |
+| `hard-delete-document` | Elimina permanentemente un documento (solo super-admin)                 |
 | `archive-personal`     | Agrega un registro a la lista de ocultamiento personal del cliente      |
 
 Todas las funciones validan los permisos del solicitante antes de operar.

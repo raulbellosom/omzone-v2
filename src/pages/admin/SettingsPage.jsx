@@ -5,6 +5,7 @@ import { Card } from "@/components/common/Card";
 import TemplateEditor from "@/components/admin/settings/TemplateEditor";
 import SystemInfoPanel from "@/components/admin/settings/SystemInfoPanel";
 import { Mail, Settings, Bell, Loader2 } from "lucide-react";
+import { auditAction } from "@/lib/audit";
 
 const SECTION_TABS = ["templates", "system"];
 
@@ -36,6 +37,15 @@ export default function SettingsPage() {
   const { t } = useLanguage();
   const { templates, loading, error, updateTemplate } =
     useNotificationTemplates();
+
+  const handleUpdateTemplate = async (templateId, data) => {
+    await updateTemplate(templateId, data);
+    auditAction({
+      action: "settings.template_update",
+      entityType: "notification_templates",
+      entityId: templateId,
+    });
+  };
 
   const [activeTab, setActiveTab] = useState("templates");
   const [editingTemplate, setEditingTemplate] = useState(null);
@@ -184,7 +194,7 @@ export default function SettingsPage() {
               onOpenChange={(open) => {
                 if (!open) setEditingTemplate(null);
               }}
-              onSave={updateTemplate}
+              onSave={handleUpdateTemplate}
             />
           )}
         </div>

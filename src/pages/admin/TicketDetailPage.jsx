@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ROLES } from "@/constants/roles";
 import { ROUTES } from "@/constants/routes";
+import { auditAction } from "@/lib/audit";
 import { Card } from "@/components/common/Card";
 import Button from "@/components/common/Button";
 import TicketStatusBadge from "@/components/admin/tickets/TicketStatusBadge";
@@ -55,7 +56,8 @@ export default function TicketDetailPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { t } = useLanguage();
-  const { ticket, experience, slot, order, loading, error } = useTicketDetail(ticketId);
+  const { ticket, experience, slot, order, loading, error } =
+    useTicketDetail(ticketId);
   const [actionError, setActionError] = useState(null);
   const [invalidating, setInvalidating] = useState(false);
 
@@ -68,6 +70,12 @@ export default function TicketDetailPage() {
     setInvalidating(true);
     try {
       await invalidateTicket(ticketId);
+      auditAction({
+        action: "ticket.invalidate",
+        entityType: "tickets",
+        entityId: ticketId,
+        severity: "warn",
+      });
       window.location.reload();
     } catch (err) {
       setActionError(err.message);
@@ -122,7 +130,8 @@ export default function TicketDetailPage() {
                 {ticket.ticketCode}
               </h1>
               <p className="text-sm text-charcoal-muted mt-0.5">
-                {t("admin.ticketDetail.created")} {formatDate(ticket.$createdAt)}
+                {t("admin.ticketDetail.created")}{" "}
+                {formatDate(ticket.$createdAt)}
               </p>
             </div>
           </div>
@@ -145,7 +154,9 @@ export default function TicketDetailPage() {
             <h2 className="text-base font-semibold text-charcoal mb-3">
               {t("admin.ticketDetail.ticketInfo")}
             </h2>
-            <DetailRow label={t("admin.ticketDetail.code")}>{ticket.ticketCode}</DetailRow>
+            <DetailRow label={t("admin.ticketDetail.code")}>
+              {ticket.ticketCode}
+            </DetailRow>
             <DetailRow label={t("admin.ticketDetail.status")}>
               <TicketStatusBadge status={ticket.status} />
             </DetailRow>
@@ -153,7 +164,9 @@ export default function TicketDetailPage() {
               <div className="text-right">
                 <p>{ticket.participantName || "—"}</p>
                 {ticket.participantEmail && (
-                  <p className="text-xs text-charcoal-muted">{ticket.participantEmail}</p>
+                  <p className="text-xs text-charcoal-muted">
+                    {ticket.participantEmail}
+                  </p>
                 )}
               </div>
             </DetailRow>

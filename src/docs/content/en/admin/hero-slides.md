@@ -85,4 +85,4 @@ Drag a slide card by its handle to move it up or down in the list. The order is 
 
 Archive a slide via the actions menu (three dots → Archive). Archived slides disappear from the carousel but are kept in the system. You can restore them at any time.
 
-For permanent removal, only `root` users can hard-delete a slide. See [Archiving & Deletion](../referencia/archivado-y-eliminacion.md).
+For permanent removal (irreversible), this action requires super-admin permissions. See [Archiving & Deletion](../referencia/archivado-y-eliminacion.md).

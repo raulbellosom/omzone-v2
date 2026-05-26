@@ -19,6 +19,7 @@ import { Card } from "@/components/common/Card";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
+import { auditAction } from "@/lib/audit";
 
 const STATUS_FILTER_OPTIONS = [
   { value: "", i18nKey: "admin.statuses.all" },
@@ -167,6 +168,11 @@ export default function SlotListPage() {
     setCancelling(slot.$id);
     try {
       await cancelSlot(slot.$id);
+      auditAction({
+        action: "slot.cancel",
+        entityType: "slots",
+        entityId: slot.$id,
+      });
       refetch();
     } catch {
       // silent
@@ -325,7 +331,10 @@ export default function SlotListPage() {
                   const st = STATUS_LABELS[slot.status] || STATUS_LABELS.draft;
                   const editUrl = `/admin/experiences/${id}/slots/${slot.$id}/edit`;
                   return (
-                    <tr key={slot.$id} className="group hover:bg-warm-gray/30 transition-colors">
+                    <tr
+                      key={slot.$id}
+                      className="group hover:bg-warm-gray/30 transition-colors"
+                    >
                       <td className="px-4 py-3 text-charcoal whitespace-nowrap">
                         <Link
                           to={editUrl}

@@ -13,6 +13,7 @@ import { createSlot } from "@/hooks/useSlots";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import { toast } from "sonner";
+import { auditAction } from "@/lib/audit";
 
 const DAYS_OF_WEEK = [
   { value: 1, i18nKey: "admin.slotQuickCreate.mon" },
@@ -149,7 +150,7 @@ export default function SlotQuickCreatePage() {
     try {
       for (let i = 0; i < generatedSlots.length; i++) {
         const s = generatedSlots[i];
-        await createSlot({
+        const doc = await createSlot({
           experienceId: id,
           editionId: null,
           slotType: "single_session",
@@ -161,6 +162,12 @@ export default function SlotQuickCreatePage() {
           roomId: roomId || null,
           status: "draft",
           notes: null,
+        });
+        auditAction({
+          action: "slot.create",
+          entityType: "slots",
+          entityId: doc.$id,
+          details: { bulk: true, experienceId: id },
         });
         setProgress({ done: i + 1, total: generatedSlots.length });
       }

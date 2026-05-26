@@ -125,12 +125,6 @@ Define cómo se entrega la reservación.
 | `ticket`  | Genera tickets con código QR para check-in |
 | `booking` | Reservación confirmada sin tickets         |
 
-## G
-
-### Usuario Fantasma
-
-Usuarios de Appwrite a nivel root que deben ser excluidos de los listados. La etiqueta `root` identifica a los usuarios fantasma.
-
 ## L
 
 ### Etiqueta
@@ -139,7 +133,6 @@ Etiqueta de permiso de Appwrite adjunta a usuarios para control de acceso basado
 
 | Etiqueta   | Acceso                       |
 | ---------- | ---------------------------- |
-| `root`     | Sistema completo (invisible) |
 | `admin`    | Acceso al panel de admin     |
 | `operator` | Acceso limitado de admin     |
 | `client`   | Acceso al portal de clientes |

@@ -551,6 +551,7 @@ export default async ({ req, res, log, error }) => {
     // ── 3. Authenticate ────────────────────────────────────────────────────
     _step = "authenticate";
     const callerUserId = req.headers["x-appwrite-user-id"];
+    let callerLabels = []; // hoisted — populated below if assisted/conversion
     if (!callerUserId) {
       return res.json(
         {
@@ -590,8 +591,12 @@ export default async ({ req, res, log, error }) => {
           403,
         );
       }
-      const callerLabels = callerUser.labels ?? [];
-      if (!callerLabels.includes("admin") && !callerLabels.includes("root")) {
+      const callerLabels_inner = callerUser.labels ?? [];
+      callerLabels = callerLabels_inner; // hoist to outer scope
+      if (
+        !callerLabels_inner.includes("admin") &&
+        !callerLabels_inner.includes("root")
+      ) {
         return res.json(
           {
             ok: false,
@@ -843,30 +848,35 @@ export default async ({ req, res, log, error }) => {
         rcPermissions,
       );
 
-      // Log admin activity
+      // Log admin activity (ghost-user rule: root users never leave traces)
       try {
-        await db.createDocument(
-          DB,
-          COL_ACTIVITY_LOGS,
-          ID.unique(),
-          {
-            userId: callerUserId,
-            action: "request-conversion",
-            entityType: "order",
-            entityId: rcOrder.$id,
-            details: JSON.stringify({
-              orderNumber: rcOrderNumber,
-              bookingRequestId: bookingReq.$id,
-              quotedAmount,
-              currency: rcCurrency,
-              skipStripe,
-            }),
-          },
-          [
-            Permission.read(Role.label("admin")),
-            Permission.read(Role.label("root")),
-          ],
-        );
+        if (!callerLabels.includes("root")) {
+          await db.createDocument(
+            DB,
+            COL_ACTIVITY_LOGS,
+            ID.unique(),
+            {
+              userId: callerUserId,
+              action: "request-conversion",
+              entityType: "order",
+              entityId: rcOrder.$id,
+              details: JSON.stringify({
+                orderNumber: rcOrderNumber,
+                bookingRequestId: bookingReq.$id,
+                quotedAmount,
+                currency: rcCurrency,
+                skipStripe,
+              }),
+              severity: "info",
+              result: "ok",
+              source: "admin",
+            },
+            [
+              Permission.read(Role.label("admin")),
+              Permission.read(Role.label("root")),
+            ],
+          );
+        }
       } catch (logErr) {
         error("Activity log failed: " + logErr.message);
       }
@@ -957,7 +967,7 @@ export default async ({ req, res, log, error }) => {
           bookingReq.contactName ||
           ""
         ).trim();
-      await sendPaymentLinkEmail({
+        await sendPaymentLinkEmail({
           db,
           customerEmail: rcCustomerEmail,
           customerName: rcCustomerName,
@@ -1588,7 +1598,7 @@ export default async ({ req, res, log, error }) => {
     }
 
     // ── 14. Log admin activity ─────────────────────────────────────────────
-    if (isAssistedSale) {
+    if (isAssistedSale && !callerLabels.includes("root")) {
       try {
         await db.createDocument(
           DB,

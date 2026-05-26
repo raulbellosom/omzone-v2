@@ -4,6 +4,7 @@ import PublicationForm from "@/components/admin/publications/PublicationForm";
 import { createPublication } from "@/hooks/usePublications";
 import { ROUTES } from "@/constants/routes";
 import { useLanguage } from "@/hooks/useLanguage";
+import { auditAction } from "@/lib/audit";
 
 export default function PublicationCreatePage() {
   const navigate = useNavigate();
@@ -16,6 +17,11 @@ export default function PublicationCreatePage() {
     setServerError(null);
     try {
       const doc = await createPublication(payload);
+      auditAction({
+        action: "publication.create",
+        entityType: "publications",
+        entityId: doc.$id,
+      });
       // Redirect to sections page so user can start adding content
       navigate(ROUTES.ADMIN_PUBLICATION_SECTIONS.replace(":id", doc.$id));
     } catch (err) {

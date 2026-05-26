@@ -5,6 +5,7 @@ import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetai
 import { useExperience } from "@/hooks/useExperiences";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useEdition, updateEdition } from "@/hooks/useEditions";
+import { auditAction } from "@/lib/audit";
 import { Card } from "@/components/common/Card";
 import { toast } from "sonner";
 
@@ -37,6 +38,11 @@ export default function EditionEditPage() {
     setServerError(null);
     try {
       await updateEdition(editionId, payload);
+      auditAction({
+        action: "edition.update",
+        entityType: "editions",
+        entityId: editionId,
+      });
       toast.success(t("admin.common.savedSuccess"));
     } catch (err) {
       setServerError(err.message);

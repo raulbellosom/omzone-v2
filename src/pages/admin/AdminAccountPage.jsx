@@ -21,6 +21,7 @@ import { Card } from "@/components/common/Card";
 import PhoneInput from "@/components/common/PhoneInput";
 import { account } from "@/lib/appwrite";
 import { isValidPhone, sanitizePhone } from "@/lib/utils";
+import { auditAction } from "@/lib/audit";
 
 const BIO_MAX = 1000;
 
@@ -126,6 +127,11 @@ export default function AdminAccountPage() {
         .join(" ");
       await account.updateName(fullName);
       await hydrateUser();
+      auditAction({
+        action: "account.profile_update",
+        entityType: "user_profiles",
+        entityId: user?.$id,
+      });
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {

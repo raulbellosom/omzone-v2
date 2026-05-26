@@ -6,6 +6,7 @@ import { useExperience } from "@/hooks/useExperiences";
 import { useLanguage } from "@/hooks/useLanguage";
 import { createEdition } from "@/hooks/useEditions";
 import { toast } from "sonner";
+import { auditAction } from "@/lib/audit";
 
 export default function EditionCreatePage() {
   const { id } = useParams();
@@ -18,7 +19,13 @@ export default function EditionCreatePage() {
     setSubmitting(true);
     setServerError(null);
     try {
-      await createEdition({ ...payload, experienceId: id });
+      const doc = await createEdition({ ...payload, experienceId: id });
+      auditAction({
+        action: "edition.create",
+        entityType: "editions",
+        entityId: doc.$id,
+        details: { experienceId: id },
+      });
       toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
       setServerError(err.message);

@@ -15,6 +15,7 @@ import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import env from "@/config/env";
+import { auditAction } from "@/lib/audit";
 
 const STATUS_OPTIONS = [
   { value: "", i18nKey: "admin.statuses.all" },
@@ -79,6 +80,12 @@ export default function PublicationListPage() {
         if (newStatus === "published")
           payload.publishedAt = new Date().toISOString();
         await updatePublication(id, payload);
+        auditAction({
+          action: "publication.status_update",
+          entityType: "publications",
+          entityId: id,
+          details: { status: newStatus },
+        });
         refetch();
       } catch (err) {
         setActionError(err.message);

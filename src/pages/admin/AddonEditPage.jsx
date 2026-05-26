@@ -2,6 +2,7 @@
 import { useParams } from "react-router-dom";
 import AddonForm from "@/components/admin/addons/AddonForm";
 import { useAddon, updateAddon } from "@/hooks/useAddons";
+import { auditAction } from "@/lib/audit";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Card } from "@/components/common/Card";
 import { toast } from "sonner";
@@ -34,6 +35,11 @@ export default function AddonEditPage() {
     setServerError(null);
     try {
       await updateAddon(addonId, payload);
+      auditAction({
+        action: "addon.update",
+        entityType: "addons",
+        entityId: addonId,
+      });
       toast.success(t("admin.common.savedSuccess"));
     } catch (err) {
       setServerError(err.message);

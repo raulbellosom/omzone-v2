@@ -12,6 +12,7 @@ import AdminSelect from "@/components/common/AdminSelect";
 import AddonTypeChip from "@/components/admin/addons/AddonTypeChip";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/constants/routes";
+import { auditAction } from "@/lib/audit";
 
 const ADDON_TYPE_LABELS = {
   service: "admin.addonTypes.service",
@@ -156,6 +157,12 @@ export default function AddonListPage() {
       await updateAddon(addon.$id, {
         status: addon.status === "active" ? "inactive" : "active",
       });
+      auditAction({
+        action: "addon.status_toggle",
+        entityType: "addons",
+        entityId: addon.$id,
+        details: { status: addon.status === "active" ? "inactive" : "active" },
+      });
       refetch();
     } catch {
       // silent
@@ -268,7 +275,10 @@ export default function AddonListPage() {
               {addons.map((addon) => {
                 const editUrl = `/admin/addons/${addon.$id}/edit`;
                 return (
-                  <tr key={addon.$id} className="group hover:bg-warm-gray/30 transition-colors">
+                  <tr
+                    key={addon.$id}
+                    className="group hover:bg-warm-gray/30 transition-colors"
+                  >
                     <td className="px-4 py-3">
                       <Link
                         to={editUrl}
@@ -293,7 +303,9 @@ export default function AddonListPage() {
                         className="focus:outline-none"
                       >
                         <Badge
-                          variant={addon.status === "active" ? "success" : "warm"}
+                          variant={
+                            addon.status === "active" ? "success" : "warm"
+                          }
                           className="cursor-pointer"
                         >
                           {toggling === addon.$id

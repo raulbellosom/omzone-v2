@@ -85,4 +85,4 @@ Arrastra una tarjeta de slide por su control para moverla hacia arriba o hacia a
 
 Archiva un slide desde el menú de acciones (tres puntos → Archivar). Los slides archivados desaparecen del carrusel pero se conservan en el sistema. Puedes restaurarlos en cualquier momento.
 
-Para eliminación permanente, solo los usuarios `root` pueden hacer un hard-delete. Ver [Archivado y eliminación](../referencia/archivado-y-eliminacion.md).
+Para eliminación permanente (irreversible), esta acción requiere permisos de super-admin. Ver [Archivado y eliminación](../referencia/archivado-y-eliminacion.md).

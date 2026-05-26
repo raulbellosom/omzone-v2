@@ -16,6 +16,7 @@ import { ROUTES } from "@/constants/routes";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
 import env from "@/config/env";
+import { auditAction } from "@/lib/audit";
 
 const TYPE_OPTIONS = [
   { value: "", i18nKey: "admin.experienceTypes.all" },
@@ -96,6 +97,12 @@ export default function ExperienceListPage() {
       setActionError(null);
       try {
         await updateExperience(id, { status: newStatus });
+        auditAction({
+          action: "experience.status_update",
+          entityType: "experiences",
+          entityId: id,
+          details: { status: newStatus },
+        });
         refetch();
       } catch (err) {
         setActionError(err.message);

@@ -17,12 +17,14 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** El checkout falla o la página de pago no carga.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar configuración de Stripe en Configuración → Pago
 2. Confirmar que las claves de Stripe son correctas (no claves de prueba en producción)
 3. Verificar que la cuenta de Stripe está en buen estado
 4. Revisar el dashboard de Stripe para mensajes de error específicos
 
 **Soluciones:**
+
 - Verificar que la clave publicable coincide con el entorno
 - Verificar si la tarjeta del cliente es válida y tiene fondos
 - Confirmar que el webhook de Stripe está configurado y recibiendo eventos
@@ -33,12 +35,14 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** La capacidad del slot parece agotada pero se esperaban lugares abiertos.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar configuraciones de capacidad del slot
 2. Verificar que no haya conflictos de recursos (disponibilidad del instructor)
 3. Revisar reservas existentes para ese slot
 4. Verificar fechas bloqueadas o bloqueos manuales de capacidad
 
 **Soluciones:**
+
 - Aumentar capacidad del slot en la página de edición del slot
 - Agregar recursos adicionales para resolver conflictos
 - Cancelar reservas innecesarias para liberar capacidad
@@ -49,12 +53,14 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** El cliente envió la solicitud pero no es visible en la lista de solicitudes.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar filtros de estado de solicitud (por defecto puede mostrar solo `pending`)
 2. Verificar que la experiencia tiene `saleMode: request`
 3. Confirmar que el cliente envió la solicitud correctamente
 4. Revisar la solicitud en la base de datos si aún falta
 
 **Soluciones:**
+
 - Cambiar filtro a "Todos" para ver solicitudes no pendientes
 - Confirmar que la configuración de la experiencia incluye `saleMode: request`
 - Verificar email de confirmación del cliente
@@ -65,11 +71,13 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** El pedido muestra estado `pending` indefinidamente.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar estado de pago en dashboard de Stripe
 2. Revisar registros de webhook en Appwrite
 3. Confirmar que la URL del webhook está correctamente configurada en Stripe
 
 **Soluciones:**
+
 - Si el pago成功了 en Stripe: Verificar y actualizar manualmente el estado vía admin
 - Si el pago falló: Contactar al cliente para nuevo método de pago
 - Reproducir webhook desde el dashboard de Stripe si el webhook falló
@@ -82,12 +90,14 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** El cliente reporta fallos de inicio de sesión.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar que la dirección de email es correcta
 2. Verificar estado de la cuenta en Sistema → Clientes
 3. Confirmar que las etiquetas incluyen `client`
 4. Verificar si la contraseña cumple los requisitos
 
 **Soluciones:**
+
 - Enviar restablecimiento de contraseña desde la página de inicio de sesión
 - Verificar que el estado de la cuenta es `active` (no `inactive` o `suspended`)
 - Revisar etiquetas en el perfil del cliente
@@ -98,12 +108,14 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** El cliente reporta que el email de restablecimiento no llega.
 
 **Pasos de Diagnóstico:**
+
 1. Revisar carpeta de spam/correo no deseado
 2. Verificar que la dirección de email es correcta
 3. Verificar si la función de Appwrite envió el email
 4. Revisar registros de email
 
 **Soluciones:**
+
 - Revisar carpeta de spam primero
 - Verificar que la dirección de email coincide con la cuenta registrada
 - Reenviar email de verificación desde el panel de admin
@@ -115,13 +127,15 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** Usuario con etiqueta de admin no puede acceder a rutas de admin.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar que el usuario tiene las etiquetas correctas (`admin`, `operator`)
 2. Revisar asignación de etiquetas en el perfil del cliente
 3. Confirmar configuración del guardia de ruta
 
 **Soluciones:**
+
 - Agregar etiqueta apropiada vía Sistema → Clientes → Editar Etiquetas
-- Contactar admin con acceso `root` para verificar permisos
+- Contactar al super-admin para verificar permisos
 - Limpiar caché del navegador y almacenamiento de sesión
 - Verificar que no hay restricciones de IP bloqueando el acceso
 
@@ -132,12 +146,14 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** Los pagos confirman pero el estado del pedido no se actualiza.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar URL del webhook en dashboard de Stripe
 2. Verificar configuración del secreto del webhook
 3. Revisar registros de webhook en Stripe
 4. Verificar registros de funciones de Appwrite
 
 **Soluciones:**
+
 - Configurar URL del webhook apuntando al endpoint de la Función de Appwrite
 - Verificar que el secreto del webhook coincide con la configuración de Appwrite
 - Verificar "El secreto de firma es válido" en dashboard de Stripe
@@ -149,11 +165,13 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** El botón de reembolso no funciona o devuelve error.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar que el estado del pedido permite reembolso (`paid` o `confirmed`)
 2. Verificar capacidad de reembolso en dashboard de Stripe
 3. Confirmar que el reembolso no ha sido procesado ya
 
 **Soluciones:**
+
 - Solo reembolsar pedidos con estado `paid` o `confirmed`
 - Cancelar primero, luego reembolsar para mantener el flujo de estado
 - Verificar que la cuenta de Stripe tiene capacidad de reembolso
@@ -166,11 +184,13 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** El escáner no puede leer el código QR del ticket.
 
 **Pasos de Diagnóstico:**
+
 1. Probar permisos de cámara en el navegador
 2. Verificar que el código QR no está dañado (si está impreso)
 3. Verificar que el estado del ticket permite check-in
 
 **Soluciones:**
+
 - Otorgar permisos de cámara en configuración del navegador
 - Usar búsqueda manual de ticket en lugar de escaneo
 - Limpiar código QR si está impreso (sin manchas)
@@ -182,11 +202,13 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** Un ticket válido muestra error de "ya check-in".
 
 **Pasos de Diagnóstico:**
+
 1. Verificar con el cliente el estado de su ticket
 2. Revisar historial de check-in del ticket
 3. Confirmar que no hubo check-in duplicado accidental
 
 **Soluciones:**
+
 - Verificar que el nombre del cliente coincide con el ticket
 - Revisar línea de tiempo en detalle del ticket para timestamp de check-in
 - Si es error genuino: Puede requerirse anulación de supervisor
@@ -197,11 +219,13 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** El reporte diario no muestra todos los check-ins esperados.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar filtro de fecha en el reporte
 2. Revisar filtros de estado de ticket
 3. Confirmar que los tickets realmente fueron check-in
 
 **Soluciones:**
+
 - Asegurar que el rango de fechas del reporte incluye la fecha del slot
 - Verificar si algunas reservas usaron pases (seguimiento diferente)
 - Verificar que el filtro de estado de ticket incluye `confirmed`
@@ -214,12 +238,14 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** La experiencia publicada no aparece en el listado.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar que el estado de la experiencia es `published`
 2. Verificar que existen slots y están publicados
 3. Confirmar que existen niveles de precio
 4. Verificar si la publicación vincula la experiencia
 
 **Soluciones:**
+
 - Establecer estado de experiencia a `published`
 - Crear y publicar al menos un slot
 - Agregar al menos un nivel de precio
@@ -230,11 +256,13 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** El precio incorrecto muestra en el checkout.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar que el nivel está vinculado a la experiencia correcta
 2. Verificar si precios específicos por edición sobrescriben
 3. Confirmar que el nivel está activo y no archivado
 
 **Soluciones:**
+
 - Verificar asignación de nivel en pestaña Niveles de Precio de la experiencia
 - Revisar configuración de precios específicos por edición
 - Establecer estado del nivel como activo
@@ -245,11 +273,13 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** El addon requerido no muestra en checkout.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar que el addon está vinculado a la experiencia
 2. Revisar tipo de asignación del addon (`required`, `default`, `optional`)
 3. Confirmar que el addon está activo
 
 **Soluciones:**
+
 - Agregar addon a la experiencia vía pestaña Addons
 - Revisar tipo de asignación: los addons `required` son automáticos, `optional` requieren selección
 - Establecer estado del addon como activo
@@ -262,12 +292,14 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** El slot existe pero los clientes no pueden seleccionarlo.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar que el estado del slot es `published`
 2. Verificar que la fecha del slot es en el futuro
 3. Confirmar que la capacidad no es cero
 4. Verificar si la experiencia tiene una publicación vinculándola
 
 **Soluciones:**
+
 - Establecer estado del slot a `published`
 - Crear slot con fecha futura
 - Aumentar capacidad del slot por encima de cero
@@ -279,11 +311,13 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** La reserva cancelada no libera capacidad del slot.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar que la cancelación ocurrió antes de la hora del slot
 2. Verificar si la actualización automática del slot está configurada
 3. Revisar flujo de trabajo de cancelación
 
 **Soluciones:**
+
 - Ajustar manualmente la capacidad del slot si la liberación automática falló
 - Asegurar que la cancelación ocurrió antes de la hora de inicio del slot
 - Verificar que el slot tiene capacidad restante suficiente
@@ -296,11 +330,13 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** Las imágenes no cargan al Gestor de Medios.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar que el tamaño del archivo es menor al límite de 10MB
 2. Verificar que el formato de archivo es soportado
 3. Revisar consola del navegador para errores
 
 **Soluciones:**
+
 - Comprimir imágenes antes de cargar
 - Convertir a formato soportado (JPG, PNG, WebP)
 - Probar diferente navegador si los errores de consola persisten
@@ -311,11 +347,13 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** La imagen cargada muestra ícono roto o vacío.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar que la carga se completó exitosamente
 2. Verificar que la URL de la imagen es correcta
 3. Confirmar que el formato de archivo es soportado
 
 **Soluciones:**
+
 - Esperar a que se complete la optimización de imagen
 - Verificar que la imagen se cargó al bucket correcto
 - Revisar consola del navegador para errores de carga
@@ -328,12 +366,14 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** Las páginas del panel de admin toman tiempo excesivo en cargar.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar conexión a internet
 2. Verificar que no hay mantenimiento en curso
 3. Revisar estado del servidor de Appwrite
 4. Revisar rendimiento del navegador
 
 **Soluciones:**
+
 - Limpiar caché y cookies del navegador
 - Revisar página de estado del servidor de Appwrite
 - Deshabilitar extensiones del navegador que puedan interferir
@@ -345,11 +385,13 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** Los envíos de formulario fallan o los datos se revierten.
 
 **Pasos de Diagnóstico:**
+
 1. Revisar consola del navegador para errores de validación
 2. Verificar que los campos requeridos están llenos
 3. Revisar tiempo de expiración de sesión
 
 **Soluciones:**
+
 - Completar todos los campos requeridos
 - Limpiar almacenamiento de sesión del navegador
 - Buscar errores de validación mostrados en el formulario
@@ -361,11 +403,13 @@ Esta guía cubre los problemas comunes encontrados en el panel de admin de OMZON
 **Síntomas:** No se puede completar la configuración de 2FA o el inicio de sesión.
 
 **Pasos de Diagnóstico:**
+
 1. Verificar que OTP basado en tiempo está sincronizado
 2. Verificar si se guardaron los códigos de respaldo
 3. Confirmar que la app de autenticador es la correcta
 
 **Soluciones:**
+
 - Usar códigos de respaldo si el dispositivo 2FA no está disponible
 - Contactar admin para restablecer 2FA (requiere acceso de admin)
 - Verificar que la hora del dispositivo es precisa (OTP es basado en tiempo)

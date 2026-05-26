@@ -26,14 +26,11 @@ El panel de OMZONE Admin es tu centro de control para gestionar toda la platafor
 
 Accede al panel de admin navegando a `/admin` después de iniciar sesión. Debes tener uno de los siguientes labels asignados a tu cuenta:
 
-| Label      | Nombre a Mostrar | Nivel de Acceso                                   |
-| ---------- | ---------------- | ------------------------------------------------- |
-| `root`     | Admin            | Acceso completo al sistema, invisible en listados |
-| `admin`    | Admin            | Acceso completo a todas las funciones de admin    |
-| `operator` | Operador         | Acceso programado a operaciones y ventas          |
-| `client`   | Cliente          | Acceso solo al portal, sin admin                  |
-
-> **Importante:** El label `root` es invisible en toda la plataforma. Los usuarios root nunca aparecen en listados de clientes u órdenes, y root nunca se muestra como nombre de rol. Al mostrar roles, siempre usa "Admin" para ambos labels root y admin.
+| Label      | Nombre a Mostrar | Nivel de Acceso                                |
+| ---------- | ---------------- | ---------------------------------------------- |
+| `admin`    | Admin            | Acceso completo a todas las funciones de admin |
+| `operator` | Operador         | Acceso programado a operaciones y ventas       |
+| `client`   | Cliente          | Acceso solo al portal, sin admin               |
 
 ## Estructura de Navegación del Admin
 
@@ -230,18 +227,18 @@ Borrador → Publicada → Archivada
 
 ## Resumen de Roles y Permisos
 
-| Acción                  | Root | Admin | Operador | Cliente      |
-| ----------------------- | ---- | ----- | -------- | ------------ |
-| Crear Experiencias      | Sí   | Sí    | No       | No           |
-| Editar Experiencias     | Sí   | Sí    | No       | No           |
-| Crear Horarios          | Sí   | Sí    | Sí       | No           |
-| Ver Órdenes             | Sí   | Sí    | Sí       | Solo propias |
-| Crear Ventas Asistidas  | Sí   | Sí    | No       | No           |
-| Gestionar Recursos      | Sí   | Sí    | No       | No           |
-| Ver Tickets             | Sí   | Sí    | Sí       | Solo propios |
-| Check-in de Tickets     | Sí   | Sí    | Sí       | No           |
-| Editar Publicaciones    | Sí   | Sí    | No       | No           |
-| Acceder a Configuración | Sí   | Sí    | No       | No           |
+| Acción                  | Admin | Operador | Cliente      |
+| ----------------------- | ----- | -------- | ------------ |
+| Crear Experiencias      | Sí    | No       | No           |
+| Editar Experiencias     | Sí    | No       | No           |
+| Crear Horarios          | Sí    | Sí       | No           |
+| Ver Órdenes             | Sí    | Sí       | Solo propias |
+| Crear Ventas Asistidas  | Sí    | No       | No           |
+| Gestionar Recursos      | Sí    | No       | No           |
+| Ver Tickets             | Sí    | Sí       | Solo propios |
+| Check-in de Tickets     | Sí    | Sí       | No           |
+| Editar Publicaciones    | Sí    | No       | No           |
+| Acceder a Configuración | Sí    | No       | No           |
 
 ## Obtener Ayuda
 

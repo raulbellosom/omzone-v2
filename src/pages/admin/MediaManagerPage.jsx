@@ -13,6 +13,7 @@ import MediaGrid from "@/components/admin/media/MediaGrid";
 import FileDetailModal from "@/components/admin/media/FileDetailModal";
 import { Search, Upload, FolderOpen, X } from "lucide-react";
 import { toast } from "sonner";
+import { auditAction } from "@/lib/audit";
 
 export default function MediaManagerPage() {
   const { user } = useAuth();
@@ -67,6 +68,13 @@ export default function MediaManagerPage() {
 
   const handleDelete = async (fileId) => {
     await deleteFile(fileId);
+    auditAction({
+      action: "media.delete",
+      entityType: "storage",
+      entityId: fileId,
+      details: { bucketId },
+      severity: "warn",
+    });
     refresh();
   };
 
@@ -87,6 +95,11 @@ export default function MediaManagerPage() {
         );
         try {
           await upload(file);
+          auditAction({
+            action: "media.upload",
+            entityType: "storage",
+            details: { fileName: file.name, bucketId },
+          });
           toast.success(file.name, {
             id: toastId,
             description: t("admin.mediaManager.uploadSuccess"),

@@ -105,6 +105,6 @@ Keep titles and descriptions unique across all publications for best search perf
 ## Archiving and hard-delete
 
 - **Archive**: moves the publication out of the public site. Reversible. Available to `admin` and `operator`.
-- **Hard-delete**: permanently removes the publication and all its sections. Only `root` users can do this.
+- **Hard-delete**: permanently removes the publication and all its sections. Requires super-admin permissions.
 
 See [Archiving & Deletion](../referencia/archivado-y-eliminacion.md) for the full reference.

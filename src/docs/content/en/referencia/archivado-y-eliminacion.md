@@ -21,13 +21,13 @@ Archiving hides a record from the active view but keeps it in the database. It i
 - The record is tagged with `archivedAt` (timestamp), `archivedBy` (user ID), and `archiveReason` (optional text).
 - Archived records disappear from lists and the public site.
 - They can be restored at any time.
-- **Who can archive / restore:** `root`, `admin`, `operator`.
+- **Who can archive / restore:** `admin`, `operator`.
 
 ### Hard-delete
 
 Hard-delete permanently removes the record from the database. **It cannot be undone.**
 
-- **Who can hard-delete:** `root` only (the ghost/super-admin user).
+- **Who can hard-delete:** super-admin only (restricted access).
 - A confirmation dialog with explicit text entry is required before the deletion proceeds.
 - Intended for cleanup of test data, duplicate records, or records that should never have existed.
 
@@ -50,7 +50,7 @@ When you open an archived record for editing (e.g., a publication), a warning ba
 
 ## Hard-delete in the UI
 
-The **Delete permanently** action is only visible for `root` users. It appears in the same actions dropdown, below Archive.
+The **Delete permanently** action is only visible for super-admin users. It appears in the same actions dropdown, below Archive.
 
 A modal asks you to type the record's name or ID to confirm — this prevents accidental clicks.
 
@@ -77,18 +77,18 @@ The `archive-personal` function lets a logged-in client hide a record from their
 
 ## Which records can be archived
 
-| Collection       | Soft-archive | Hard-delete |
-| ---------------- | ------------ | ----------- |
-| Experiences      | ✅           | ✅ (root)   |
-| Editions         | ✅           | ✅ (root)   |
-| Slots            | ✅           | ✅ (root)   |
-| Publications     | ✅           | ✅ (root)   |
-| Packages         | ✅           | ✅ (root)   |
-| Passes           | ✅           | ✅ (root)   |
-| Hero slides      | ✅           | ✅ (root)   |
-| Contact messages | ✅           | —           |
-| Orders           | —            | —           |
-| Tickets          | —            | —           |
+| Collection       | Soft-archive | Hard-delete      |
+| ---------------- | ------------ | ---------------- |
+| Experiences      | ✅           | ✅ (super-admin) |
+| Editions         | ✅           | ✅ (super-admin) |
+| Slots            | ✅           | ✅ (super-admin) |
+| Publications     | ✅           | ✅ (super-admin) |
+| Packages         | ✅           | ✅ (super-admin) |
+| Passes           | ✅           | ✅ (super-admin) |
+| Hero slides      | ✅           | ✅ (super-admin) |
+| Contact messages | ✅           | —                |
+| Orders           | —            | —                |
+| Tickets          | —            | —                |
 
 > Orders and tickets are **immutable** — they are never archived or deleted. This preserves the historical record of all transactions. If an order is invalid, it is cancelled (not deleted).
 
@@ -98,12 +98,12 @@ The `archive-personal` function lets a logged-in client hide a record from their
 
 Three Appwrite Functions handle archiving operations:
 
-| Function               | What it does                                     |
-| ---------------------- | ------------------------------------------------ |
-| `archive-document`     | Soft-archives any document, sets archive fields  |
-| `restore-document`     | Clears archive fields, restores to active        |
-| `hard-delete-document` | Permanently removes a document (root only)       |
-| `archive-personal`     | Adds a record to the client's personal hide list |
+| Function               | What it does                                      |
+| ---------------------- | ------------------------------------------------- |
+| `archive-document`     | Soft-archives any document, sets archive fields   |
+| `restore-document`     | Clears archive fields, restores to active         |
+| `hard-delete-document` | Permanently removes a document (super-admin only) |
+| `archive-personal`     | Adds a record to the client's personal hide list  |
 
 All functions validate the caller's permissions before operating.
 

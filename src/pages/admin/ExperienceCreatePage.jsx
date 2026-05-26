@@ -3,6 +3,7 @@ import ExperienceForm from "@/components/admin/experiences/ExperienceForm";
 import { createExperience } from "@/hooks/useExperiences";
 import { useLanguage } from "@/hooks/useLanguage";
 import { toast } from "sonner";
+import { auditAction } from "@/lib/audit";
 
 export default function ExperienceCreatePage() {
   const { t } = useLanguage();
@@ -13,7 +14,12 @@ export default function ExperienceCreatePage() {
     setSubmitting(true);
     setServerError(null);
     try {
-      await createExperience(payload);
+      const doc = await createExperience(payload);
+      auditAction({
+        action: "experience.create",
+        entityType: "experiences",
+        entityId: doc.$id,
+      });
       toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
       setServerError(err.message);

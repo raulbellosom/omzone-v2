@@ -3,6 +3,7 @@ import AddonForm from "@/components/admin/addons/AddonForm";
 import { createAddon } from "@/hooks/useAddons";
 import { useLanguage } from "@/hooks/useLanguage";
 import { toast } from "sonner";
+import { auditAction } from "@/lib/audit";
 
 export default function AddonCreatePage() {
   const { t } = useLanguage();
@@ -13,7 +14,12 @@ export default function AddonCreatePage() {
     setSubmitting(true);
     setServerError(null);
     try {
-      await createAddon(payload);
+      const doc = await createAddon(payload);
+      auditAction({
+        action: "addon.create",
+        entityType: "addons",
+        entityId: doc.$id,
+      });
       toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
       setServerError(err.message);

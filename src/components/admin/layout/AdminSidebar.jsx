@@ -21,6 +21,7 @@ import {
   Settings,
   UserCog,
   BookOpen,
+  Shield,
 } from "lucide-react";
 
 const NAV_SECTIONS = [
@@ -124,6 +125,12 @@ const NAV_SECTIONS = [
         nameKey: "admin.sidebar.settings",
         path: ROUTES.ADMIN_SETTINGS,
         icon: Settings,
+      },
+      {
+        nameKey: "admin.sidebar.audit",
+        path: ROUTES.ADMIN_AUDIT,
+        icon: Shield,
+        rootOnly: true,
       },
     ],
   },

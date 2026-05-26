@@ -40,3 +40,5 @@ temp-*
 temp_*
 temp/
 
+*.bak
+*.bak2

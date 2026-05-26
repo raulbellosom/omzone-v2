@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ROLES } from "@/constants/roles";
 import { ROUTES } from "@/constants/routes";
+import { auditAction } from "@/lib/audit";
 import { Card } from "@/components/common/Card";
 import { Button } from "@/components/common/Button";
 import Input from "@/components/common/Input";
@@ -190,6 +191,11 @@ export default function BookingRequestDetailPage() {
         adminNotes,
         quotedAmount: quotedAmount ? parseFloat(quotedAmount) : null,
       });
+      auditAction({
+        action: "booking_request.fields_update",
+        entityType: "booking_requests",
+        entityId: id,
+      });
       refetch();
     } catch (err) {
       setActionError(err.message);
@@ -212,6 +218,12 @@ export default function BookingRequestDetailPage() {
         adminNotes,
         quotedAmount: quotedAmount ? parseFloat(quotedAmount) : undefined,
         adminUserId: user?.$id,
+      });
+      auditAction({
+        action: "booking_request.status_update",
+        entityType: "booking_requests",
+        entityId: id,
+        details: { status: newStatus },
       });
       refetch();
       setNotesLoaded(false); // re-sync

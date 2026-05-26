@@ -6,9 +6,26 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import AppUpdateBanner from "@/components/common/AppUpdateBanner";
+import { captureError } from "@/lib/audit";
 
 import App from "@/App";
 import "@/styles/globals.css";
+
+// ── Global error capture ───────────────────────────────────────────────────
+// Uncaught errors and unhandled promise rejections are sent to system_event_logs
+// (root-only visibility). These listeners are passive and never throw.
+if (typeof window !== "undefined") {
+  window.addEventListener("error", (e) => {
+    if (e.error) {
+      captureError(e.error, { type: "uncaught", message: e.message });
+    }
+  });
+  window.addEventListener("unhandledrejection", (e) => {
+    captureError(e.reason ?? new Error("Unhandled rejection"), {
+      type: "unhandledrejection",
+    });
+  });
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {

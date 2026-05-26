@@ -78,26 +78,11 @@ async function assertRoot(users, userId) {
   return { userId, labels };
 }
 
-async function logActivity(
-  db,
-  entityType,
-  entityId,
-  actorId,
-  details = {},
-  ipAddress = null,
-) {
-  try {
-    await db.createDocument(DB, "admin_activity_logs", ID.unique(), {
-      userId: actorId,
-      action: "hard_delete",
-      entityType,
-      entityId,
-      details: JSON.stringify(details),
-      ...(ipAddress ? { ipAddress } : {}),
-    });
-  } catch {
-    // Non-critical — log failure should not block the delete
-  }
+// hard_delete is root-only. Root users never leave audit traces (ghost-user rule).
+// logActivity is intentionally a no-op — kept for clarity and future auditability
+// in case permissions are extended.
+async function logActivity() {
+  // Root-only operation: ghost-user rule means no trace is ever written.
 }
 
 // ── Main handler ───────────────────────────────────────────────────────────

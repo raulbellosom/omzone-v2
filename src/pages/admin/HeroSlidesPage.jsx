@@ -14,6 +14,7 @@ import {
   reorderHeroSlides,
 } from "@/hooks/useHeroSlides";
 import { useLanguage } from "@/hooks/useLanguage";
+import { auditAction } from "@/lib/audit";
 
 export default function HeroSlidesPage() {
   const { t } = useLanguage();
@@ -47,9 +48,14 @@ export default function HeroSlidesPage() {
       setSubmitting(true);
       setActionError(null);
       try {
-        await createHeroSlide({
+        const doc = await createHeroSlide({
           ...payload,
           sortOrder: slides.length,
+        });
+        auditAction({
+          action: "hero_slide.create",
+          entityType: "hero_slides",
+          entityId: doc.$id,
         });
         closeForm();
         refetch();
@@ -69,6 +75,11 @@ export default function HeroSlidesPage() {
       setActionError(null);
       try {
         await updateHeroSlide(editingSlide.$id, payload);
+        auditAction({
+          action: "hero_slide.update",
+          entityType: "hero_slides",
+          entityId: editingSlide.$id,
+        });
         closeForm();
         refetch();
       } catch (err) {
@@ -86,6 +97,12 @@ export default function HeroSlidesPage() {
       setActionError(null);
       try {
         await deleteHeroSlide(slide.$id);
+        auditAction({
+          action: "hero_slide.delete",
+          entityType: "hero_slides",
+          entityId: slide.$id,
+          severity: "warn",
+        });
         refetch();
       } catch (err) {
         setActionError(err.message);
@@ -99,6 +116,12 @@ export default function HeroSlidesPage() {
       setActionError(null);
       try {
         await updateHeroSlide(slide.$id, { isVisible: !slide.isVisible });
+        auditAction({
+          action: "hero_slide.update",
+          entityType: "hero_slides",
+          entityId: slide.$id,
+          details: { isVisible: !slide.isVisible },
+        });
         refetch();
       } catch (err) {
         setActionError(err.message);

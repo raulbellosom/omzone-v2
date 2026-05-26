@@ -79,23 +79,39 @@ async function assertCanRestore(users, userId, collectionId) {
   return { userId, labels };
 }
 
+function _roleSnapshot(labels) {
+  if (labels.includes("admin")) return "admin";
+  if (labels.includes("operator")) return "operator";
+  return "client";
+}
+
 async function logActivity(
   db,
   action,
   entityType,
   entityId,
   actorId,
+  labels,
   details = {},
-  ipAddress = null,
+  opts = {},
 ) {
   try {
+    if (labels.includes("root")) return; // ghost-user rule: root leaves no trace
+    const detailsStr = JSON.stringify(details).slice(0, 4000);
+    const { ipAddress, source = "function", route, requestId } = opts;
     await db.createDocument(DB, "admin_activity_logs", ID.unique(), {
       userId: actorId,
       action,
       entityType,
       entityId,
-      details: JSON.stringify(details),
+      details: detailsStr,
+      severity: opts.severity || "info",
+      result: opts.result || "ok",
+      source,
+      actorRoleSnapshot: _roleSnapshot(labels),
       ...(ipAddress ? { ipAddress } : {}),
+      ...(route ? { route } : {}),
+      ...(requestId ? { requestId } : {}),
     });
   } catch {
     // Non-critical
@@ -172,7 +188,11 @@ export default async ({ req, res, log, error }) => {
   }
 
   try {
-    await assertCanRestore(users, userId, collectionId);
+    const { labels: actorLabels } = await assertCanRestore(
+      users,
+      userId,
+      collectionId,
+    );
 
     const doc = await db.getDocument(DB, collectionId, documentId);
 
@@ -205,8 +225,9 @@ export default async ({ req, res, log, error }) => {
       collectionId,
       documentId,
       userId,
+      actorLabels,
       { cascade, cascaded: cascade && !!CASCADE_MAP[collectionId] },
-      ip,
+      { ipAddress: ip, source: "function" },
     );
 
     return res.json({ ok: true });

@@ -105,7 +105,7 @@ Mantén títulos y descripciones únicos en todas las publicaciones para el mejo
 ## Archivar y eliminar permanentemente
 
 - **Archivar**: retira la publicación del sitio público. Reversible. Disponible para `admin` y `operator`.
-- **Eliminar permanentemente**: borra la publicación y todas sus secciones de forma definitiva. Solo los usuarios `root` pueden hacer esto.
+- **Eliminar permanentemente**: borra la publicación y todas sus secciones de forma definitiva. Requiere permisos de super-admin.
 
 Ver [Archivado y eliminación](../referencia/archivado-y-eliminacion.md) para la referencia completa.
 

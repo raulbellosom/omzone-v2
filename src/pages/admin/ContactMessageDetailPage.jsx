@@ -6,6 +6,7 @@ import {
 } from "@/hooks/useContactMessages";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
+import { auditAction } from "@/lib/audit";
 import { Card } from "@/components/common/Card";
 import Button from "@/components/common/Button";
 import { getCategoryConfig } from "@/constants/contactCategories";
@@ -78,6 +79,12 @@ export default function ContactMessageDetailPage() {
         isRead: newIsRead,
         readAt: newIsRead ? new Date().toISOString() : null,
       });
+      auditAction({
+        action: "contact_message.read_toggle",
+        entityType: "contact_messages",
+        entityId: id,
+        details: { isRead: newIsRead },
+      });
       await refetch();
     } finally {
       setTogglingRead(false);
@@ -89,6 +96,11 @@ export default function ContactMessageDetailPage() {
     setNotesStatus(null);
     try {
       await updateContactMessage(id, { adminNotes: notes });
+      auditAction({
+        action: "contact_message.notes_update",
+        entityType: "contact_messages",
+        entityId: id,
+      });
       setNotesStatus("saved");
       setTimeout(() => setNotesStatus(null), 3000);
     } catch {

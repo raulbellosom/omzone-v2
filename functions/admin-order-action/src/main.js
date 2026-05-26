@@ -27,6 +27,7 @@ async function assertAdmin(users, userId) {
     err.status = 403;
     throw err;
   }
+  return labels;
 }
 
 async function trigger(functions, functionId, payload, log, error) {
@@ -74,7 +75,10 @@ function renderTemplate(template, vars) {
 
 function formatCurrencyAdmin(amount, currency) {
   try {
-    return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(amount);
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency,
+    }).format(amount);
   } catch {
     return `${currency} ${amount}`;
   }
@@ -114,14 +118,18 @@ async function sendPaymentLinkEmailAdmin({
       Query.limit(1),
     ]);
     if (tplRes.documents.length === 0) {
-      log(`sendPaymentLinkEmailAdmin: no active payment-link template — skipping`);
+      log(
+        `sendPaymentLinkEmailAdmin: no active payment-link template — skipping`,
+      );
       return;
     }
     const tpl = tplRes.documents[0];
     const subject = tpl.subject;
     const bodyTpl = tpl.body;
     if (!subject || !bodyTpl) {
-      log(`sendPaymentLinkEmailAdmin: template has empty subject/body — skipping`);
+      log(
+        `sendPaymentLinkEmailAdmin: template has empty subject/body — skipping`,
+      );
       return;
     }
 
@@ -160,7 +168,9 @@ async function sendPaymentLinkEmailAdmin({
         throw new Error(`Resend ${response.status}: ${errBody}`);
       }
       const data = await response.json();
-      log(`Payment link email resent via Resend id=${data.id} to ${customerEmail}`);
+      log(
+        `Payment link email resent via Resend id=${data.id} to ${customerEmail}`,
+      );
     } else if (provider === "smtp") {
       const host = process.env.SMTP_HOST;
       const port = parseInt(process.env.SMTP_PORT || "465", 10);
@@ -180,7 +190,9 @@ async function sendPaymentLinkEmailAdmin({
         subject: renderedSubject,
         html: renderedBody,
       });
-      log(`Payment link email resent via SMTP messageId=${info.messageId} to ${customerEmail}`);
+      log(
+        `Payment link email resent via SMTP messageId=${info.messageId} to ${customerEmail}`,
+      );
     } else {
       throw new Error(`EMAIL_PROVIDER="${provider}" not supported`);
     }
@@ -216,7 +228,11 @@ export default async ({ req, res, log, error }) => {
     process.env.APPWRITE_FUNCTION_SEND_NOTIFICATION || "send-notification";
 
   try {
-    await assertAdmin(users, req.headers["x-appwrite-user-id"]);
+    const actorLabels = await assertAdmin(
+      users,
+      req.headers["x-appwrite-user-id"],
+    );
+    const isActorRoot = actorLabels.includes("root");
 
     const body = JSON.parse(req.bodyText ?? req.body ?? "{}");
     const { orderId, action } = body;
@@ -399,7 +415,8 @@ export default async ({ req, res, log, error }) => {
             ok: false,
             error: {
               code: "ERR_INVALID_ORDER_TYPE",
-              message: "resend_payment_link is only for request-conversion orders",
+              message:
+                "resend_payment_link is only for request-conversion orders",
             },
           },
           400,
@@ -439,7 +456,8 @@ export default async ({ req, res, log, error }) => {
             ok: false,
             error: {
               code: "ERR_PAYMENT_LINK_EXPIRED",
-              message: "Payment link has expired. Cancel the order and create a new one.",
+              message:
+                "Payment link has expired. Cancel the order and create a new one.",
             },
           },
           409,
@@ -481,23 +499,28 @@ export default async ({ req, res, log, error }) => {
         });
       }
 
-      // Log activity
+      // Log activity (ghost-user rule: root users never leave traces)
       try {
-        const COL_ACTIVITY_LOGS =
-          process.env.APPWRITE_COLLECTION_ADMIN_ACTIVITY_LOGS ||
-          "admin_activity_logs";
-        await db.createDocument(DB, COL_ACTIVITY_LOGS, ID.unique(), {
-          userId: actorUserId,
-          action: "order.payment_link_resent",
-          entityType: "order",
-          entityId: orderId,
-          details: JSON.stringify({
-            orderNumber: order.orderNumber,
-            sentTo: order.customerEmail,
-            paymentLinkUrl: order.stripePaymentLinkUrl,
-            resentAt: new Date().toISOString(),
-          }),
-        });
+        if (!isActorRoot) {
+          const COL_ACTIVITY_LOGS =
+            process.env.APPWRITE_COLLECTION_ADMIN_ACTIVITY_LOGS ||
+            "admin_activity_logs";
+          await db.createDocument(DB, COL_ACTIVITY_LOGS, ID.unique(), {
+            userId: actorUserId,
+            action: "order.payment_link_resent",
+            entityType: "order",
+            entityId: orderId,
+            details: JSON.stringify({
+              orderNumber: order.orderNumber,
+              sentTo: order.customerEmail,
+              paymentLinkUrl: order.stripePaymentLinkUrl,
+              resentAt: new Date().toISOString(),
+            }),
+            severity: "info",
+            result: "ok",
+            source: "admin",
+          });
+        }
       } catch (logErr) {
         error("Activity log failed: " + logErr.message);
       }

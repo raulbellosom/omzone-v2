@@ -3,6 +3,7 @@ import { Suspense, lazy, useEffect } from "react";
 import { Toaster } from "sonner";
 import env from "@/config/env";
 import UnderConstructionPage from "@/pages/UnderConstructionPage";
+import ErrorBoundary from "@/components/common/ErrorBoundary";
 
 import PublicLayout from "@/layouts/PublicLayout";
 import AuthLayout from "@/layouts/AuthLayout";
@@ -148,6 +149,7 @@ const ContactMessageListPage = lazy(
 const ContactMessageDetailPage = lazy(
   () => import("@/pages/admin/ContactMessageDetailPage"),
 );
+const AuditLogPage = lazy(() => import("@/pages/admin/AuditLogPage"));
 
 // ─── Portal pages (chunked together) ───
 const PortalLayout = lazy(() => import("@/layouts/PortalLayout"));
@@ -201,7 +203,7 @@ export default function App() {
   }
 
   return (
-    <>
+    <ErrorBoundary>
       <ScrollToTop />
       <Suspense fallback={<PageLoader />}>
         <Routes>
@@ -367,6 +369,9 @@ export default function App() {
                 element={<RequireLabel labels={[ROLES.ADMIN, ROLES.ROOT]} />}
               >
                 <Route path="hero-slides" element={<HeroSlidesPage />} />
+                <Route element={<RequireLabel labels={[ROLES.ROOT]} />}>
+                  <Route path="audit" element={<AuditLogPage />} />
+                </Route>
               </Route>
               <Route path="media" element={<MediaManagerPage />} />
               <Route path="account" element={<AdminAccountPage />} />
@@ -412,6 +417,6 @@ export default function App() {
         </Routes>
       </Suspense>
       <Toaster richColors position="bottom-right" />
-    </>
+    </ErrorBoundary>
   );
 }

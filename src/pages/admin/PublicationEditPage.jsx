@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { AlertTriangle, Layers } from "lucide-react";
 import PublicationForm from "@/components/admin/publications/PublicationForm";
 import { usePublication, updatePublication } from "@/hooks/usePublications";
+import { auditAction } from "@/lib/audit";
 import { usePublicationSections } from "@/hooks/usePublicationSections";
 import { Card } from "@/components/common/Card";
 import { Button } from "@/components/common/Button";
@@ -39,6 +40,11 @@ export default function PublicationEditPage() {
     setServerError(null);
     try {
       await updatePublication(id, payload);
+      auditAction({
+        action: "publication.update",
+        entityType: "publications",
+        entityId: id,
+      });
       toast.success(t("admin.common.savedSuccess"));
     } catch (err) {
       setServerError(err.message);

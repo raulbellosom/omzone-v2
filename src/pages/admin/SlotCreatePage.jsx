@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import SlotForm from "@/components/admin/slots/SlotForm";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
 import { createSlot } from "@/hooks/useSlots";
+import { auditAction } from "@/lib/audit";
 import { useExperience } from "@/hooks/useExperiences";
 import { useLanguage } from "@/hooks/useLanguage";
 import { toast } from "sonner";
@@ -18,7 +19,12 @@ export default function SlotCreatePage() {
     setSubmitting(true);
     setServerError(null);
     try {
-      await createSlot(payload);
+      const doc = await createSlot(payload);
+      auditAction({
+        action: "slot.create",
+        entityType: "slots",
+        entityId: doc.$id,
+      });
       toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
       setServerError(err.message);

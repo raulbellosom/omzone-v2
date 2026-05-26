@@ -92,4 +92,5 @@ export const ROUTES = {
   ADMIN_ACCOUNT: "/admin/account",
   ADMIN_SETTINGS: "/admin/settings",
   ADMIN_USERS: "/admin/users",
+  ADMIN_AUDIT: "/admin/audit",
 };
