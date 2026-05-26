@@ -18,6 +18,7 @@ import {
   AlertTriangle,
   Info,
   X,
+  RefreshCw,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -26,6 +27,72 @@ const DB = env.appwriteDatabaseId;
 const COL_ACTIVITY = env.collectionAdminActivityLogs;
 const COL_SYSTEM = env.collectionSystemEventLogs;
 const PAGE_SIZE = 25;
+
+// ── Entity resolution config ────────────────────────────────────────────────
+// Maps entityType string → { col, labelFn } to resolve human-readable names.
+
+function joinFields(doc, keys) {
+  return keys.map((k) => doc[k]).filter(Boolean).join(" ") || null;
+}
+
+const ENTITY_CONFIG = {
+  experience:            { col: env.collectionExperiences,          labelFn: (d) => d.publicName || d.name },
+  edition:               { col: env.collectionEditions,             labelFn: (d) => d.name },
+  pricing_tier:          { col: env.collectionPricingTiers,         labelFn: (d) => d.name },
+  pricing_tiers:         { col: env.collectionPricingTiers,         labelFn: (d) => d.name },
+  pricing_rule:          { col: env.collectionPricingOptions,       labelFn: (d) => d.ruleType },
+  pricing_rules:         { col: env.collectionPricingOptions,       labelFn: (d) => d.ruleType },
+  addon:                 { col: env.collectionAddons,               labelFn: (d) => d.name },
+  addons:                { col: env.collectionAddons,               labelFn: (d) => d.name },
+  package:               { col: env.collectionPackages,             labelFn: (d) => d.name },
+  packages:              { col: env.collectionPackages,             labelFn: (d) => d.name },
+  pass:                  { col: env.collectionPasses,               labelFn: (d) => d.name },
+  passes:                { col: env.collectionPasses,               labelFn: (d) => d.name },
+  user_pass:             { col: env.collectionUserPasses,           labelFn: (d) => d.passId },
+  user_passes:           { col: env.collectionUserPasses,           labelFn: (d) => d.passId },
+  location:              { col: env.collectionLocations,            labelFn: (d) => d.name },
+  locations:             { col: env.collectionLocations,            labelFn: (d) => d.name },
+  room:                  { col: env.collectionRooms,                labelFn: (d) => d.name },
+  rooms:                 { col: env.collectionRooms,                labelFn: (d) => d.name },
+  resource:              { col: env.collectionResources,            labelFn: (d) => d.name },
+  resources:             { col: env.collectionResources,            labelFn: (d) => d.name },
+  slot:                  { col: env.collectionSlots,                labelFn: (d) => d.startDatetime ? new Date(d.startDatetime).toLocaleString(undefined, { month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" }) : null },
+  slots:                 { col: env.collectionSlots,                labelFn: (d) => d.startDatetime ? new Date(d.startDatetime).toLocaleString(undefined, { month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" }) : null },
+  order:                 { col: env.collectionOrders,               labelFn: (d) => d.orderNumber },
+  orders:                { col: env.collectionOrders,               labelFn: (d) => d.orderNumber },
+  ticket:                { col: env.collectionTickets,              labelFn: (d) => d.ticketCode },
+  tickets:               { col: env.collectionTickets,              labelFn: (d) => d.ticketCode },
+  user_profile:          { col: env.collectionUserProfiles,         labelFn: (d) => joinFields(d, ["firstName", "lastName"]) || d.email },
+  user_profiles:         { col: env.collectionUserProfiles,         labelFn: (d) => joinFields(d, ["firstName", "lastName"]) || d.email },
+  booking_request:       { col: env.collectionBookingRequests,      labelFn: (d) => d.contactName || d.contactEmail },
+  booking_requests:      { col: env.collectionBookingRequests,      labelFn: (d) => d.contactName || d.contactEmail },
+  contact_message:       { col: env.collectionContactMessages,      labelFn: (d) => d.subject || d.name },
+  contact_messages:      { col: env.collectionContactMessages,      labelFn: (d) => d.subject || d.name },
+  publication:           { col: env.collectionPublications,         labelFn: (d) => d.title },
+  publications:          { col: env.collectionPublications,         labelFn: (d) => d.title },
+  section:               { col: env.collectionSections,             labelFn: (d) => d.title },
+  sections:              { col: env.collectionSections,             labelFn: (d) => d.title },
+  tag:                   { col: env.collectionTags,                 labelFn: (d) => d.name },
+  tags:                  { col: env.collectionTags,                 labelFn: (d) => d.name },
+  notification_template: { col: env.collectionNotificationTemplates, labelFn: (d) => d.key },
+  notification_templates:{ col: env.collectionNotificationTemplates, labelFn: (d) => d.key },
+};
+
+// Hook: resolves a single entity label from Appwrite
+function useEntityLabel(entityType, entityId) {
+  const key = entityType?.toLowerCase().replace(/-/g, "_");
+  const config = ENTITY_CONFIG[key];
+  return useQuery({
+    queryKey: ["entity-label", key, entityId],
+    queryFn: async () => {
+      const doc = await databases.getDocument(DB, config.col, entityId);
+      return config.labelFn(doc) ?? null;
+    },
+    enabled: !!(config && entityId),
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+  });
+}
 
 function severityClass(v) {
   if (v === "critical") return "bg-red-600 text-white";
@@ -95,6 +162,42 @@ function FieldRow({ label, children }) {
   );
 }
 
+// Resolves and renders a human-readable entity label alongside its ID
+function EntityLabel({ entityType, entityId, inline = false }) {
+  const key = entityType?.toLowerCase().replace(/-/g, "_");
+  const config = ENTITY_CONFIG[key];
+  const { data: label, isLoading } = useEntityLabel(entityType, entityId);
+  const shortId = entityId ? entityId.slice(0, 8) + "…" : "—";
+
+  if (!entityId) return <span className="text-charcoal-subtle">—</span>;
+
+  if (inline) {
+    // Compact single-line version for table cells
+    return (
+      <span className="flex items-baseline gap-1.5 min-w-0">
+        {isLoading && config ? (
+          <span className="h-3 w-16 rounded bg-warm-gray animate-pulse inline-block shrink-0" />
+        ) : label ? (
+          <span className="font-medium text-charcoal truncate max-w-45" title={label}>{label}</span>
+        ) : null}
+        <span className="font-mono text-xs text-charcoal-subtle shrink-0">{shortId}</span>
+      </span>
+    );
+  }
+
+  // Full version for drawers
+  return (
+    <div className="space-y-0.5">
+      {isLoading && config ? (
+        <div className="h-4 w-32 rounded bg-warm-gray animate-pulse" />
+      ) : label ? (
+        <p className="font-medium text-charcoal">{label}</p>
+      ) : null}
+      <p className="font-mono text-xs text-charcoal-muted break-all">{entityId}</p>
+    </div>
+  );
+}
+
 // ── Drawer ─────────────────────────────────────────────────────────────────
 
 function DetailDrawer({ doc, onClose, isSystemEvent = false }) {
@@ -153,19 +256,19 @@ function DetailDrawer({ doc, onClose, isSystemEvent = false }) {
           )}
           {(doc.entityType || doc.entityId) && (
             <FieldRow label="Entity">
-              <span className="font-mono text-charcoal-muted">
-                {doc.entityType} /{" "}
-              </span>
-              <span className="font-mono">{doc.entityId}</span>
+              {doc.entityType && (
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-charcoal-subtle mb-1">
+                  {doc.entityType}
+                </p>
+              )}
+              <EntityLabel entityType={doc.entityType} entityId={doc.entityId} />
             </FieldRow>
           )}
           {doc.userId && (
             <FieldRow label="Actor">
-              <p className="font-mono text-xs text-charcoal-muted">
-                {doc.userId}
-              </p>
+              <EntityLabel entityType="user_profile" entityId={doc.userId} />
               {doc.actorRoleSnapshot && (
-                <p className="text-xs text-charcoal-subtle mt-0.5">
+                <p className="text-xs text-charcoal-subtle mt-1">
                   {displayRoleName(doc.actorRoleSnapshot)}
                 </p>
               )}
@@ -273,11 +376,11 @@ function ActivityLogTab() {
   if (source) queries.push(Query.equal("source", source));
   if (search) queries.push(Query.search("action", search));
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch, isFetching } = useQuery({
     queryKey: ["audit.activity", page, severity, source, search],
     queryFn: () => databases.listDocuments(DB, COL_ACTIVITY, queries),
     keepPreviousData: true,
-    staleTime: 30_000,
+    staleTime: 0,
   });
 
   const docs = data?.documents ?? [];
@@ -352,6 +455,15 @@ function ActivityLogTab() {
             <X className="h-3.5 w-3.5" /> Clear filters
           </button>
         )}
+        <button
+          onClick={() => refetch()}
+          disabled={isFetching}
+          className="ml-auto flex items-center gap-1.5 px-3 py-2 text-xs rounded-lg border border-sand-dark bg-white hover:bg-warm-gray disabled:opacity-50 transition-colors text-charcoal"
+          title="Refresh"
+        >
+          <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? "animate-spin" : ""}`} />
+          Refresh
+        </button>
       </div>
 
       {!isLoading && (
@@ -445,8 +557,23 @@ function ActivityLogTab() {
                   <td className="px-4 py-3 font-mono text-charcoal font-medium">
                     {doc.action}
                   </td>
-                  <td className="px-4 py-3 text-charcoal-muted font-mono text-xs hidden md:table-cell">
-                    {doc.entityType}
+                  <td className="px-4 py-3 hidden md:table-cell">
+                    {doc.entityType || doc.entityId ? (
+                      <div className="flex flex-col gap-0.5">
+                        {doc.entityType && (
+                          <span className="text-[11px] font-semibold uppercase tracking-wider text-charcoal-subtle">
+                            {doc.entityType}
+                          </span>
+                        )}
+                        <EntityLabel
+                          entityType={doc.entityType}
+                          entityId={doc.entityId}
+                          inline
+                        />
+                      </div>
+                    ) : (
+                      <span className="text-charcoal-subtle text-xs">—</span>
+                    )}
                   </td>
                   <td className="px-4 py-3 hidden lg:table-cell">
                     <Badge
@@ -498,7 +625,7 @@ function SystemErrorsTab() {
         Query.offset(page * PAGE_SIZE),
       ]),
     keepPreviousData: true,
-    staleTime: 30_000,
+    staleTime: 0,
   });
 
   const docs = data?.documents ?? [];
@@ -607,8 +734,12 @@ function SystemErrorsTab() {
                       className={sourceClass(doc.source ?? "admin")}
                     />
                   </td>
-                  <td className="px-4 py-3 text-charcoal-muted font-mono text-xs hidden lg:table-cell">
-                    {doc.userId ?? "—"}
+                  <td className="px-4 py-3 hidden lg:table-cell">
+                    {doc.userId ? (
+                      <EntityLabel entityType="user_profile" entityId={doc.userId} inline />
+                    ) : (
+                      <span className="text-charcoal-subtle text-xs">—</span>
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     <Badge

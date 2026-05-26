@@ -195,6 +195,10 @@ export default function BookingRequestDetailPage() {
         action: "booking_request.fields_update",
         entityType: "booking_requests",
         entityId: id,
+        details: {
+          hasNotes: !!adminNotes,
+          quotedAmount: quotedAmount ? parseFloat(quotedAmount) : null,
+        },
       });
       refetch();
     } catch (err) {

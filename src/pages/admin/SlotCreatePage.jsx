@@ -24,6 +24,11 @@ export default function SlotCreatePage() {
         action: "slot.create",
         entityType: "slots",
         entityId: doc.$id,
+        details: {
+          editionId: payload.editionId,
+          startsAt: payload.startsAt,
+          capacity: payload.capacity,
+        },
       });
       toast.success(t("admin.common.createdSuccess"));
     } catch (err) {

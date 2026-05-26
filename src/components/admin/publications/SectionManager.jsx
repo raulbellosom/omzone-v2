@@ -14,7 +14,7 @@ import {
   SheetDescription,
   SheetBody,
   SheetFooter,
-} from "@/components/common/Sheet";
+} from "@/components/common/sheet";
 import {
   usePublicationSections,
   createSection,
@@ -222,7 +222,9 @@ export default function SectionManager({ publicationId }) {
       {/* Section form — slide-over sheet */}
       <Sheet
         open={mode !== null}
-        onOpenChange={(open) => { if (!open) closeForm(); }}
+        onOpenChange={(open) => {
+          if (!open) closeForm();
+        }}
       >
         <SheetContent side="right-xl">
           <SheetHeader>

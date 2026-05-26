@@ -21,6 +21,7 @@ export default function PublicationCreatePage() {
         action: "publication.create",
         entityType: "publications",
         entityId: doc.$id,
+        details: { title: payload.title, type: payload.type },
       });
       // Redirect to sections page so user can start adding content
       navigate(ROUTES.ADMIN_PUBLICATION_SECTIONS.replace(":id", doc.$id));

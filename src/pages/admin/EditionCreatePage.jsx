@@ -24,7 +24,7 @@ export default function EditionCreatePage() {
         action: "edition.create",
         entityType: "editions",
         entityId: doc.$id,
-        details: { experienceId: id },
+        details: { experienceId: id, title: payload.title },
       });
       toast.success(t("admin.common.createdSuccess"));
     } catch (err) {

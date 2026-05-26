@@ -4,7 +4,7 @@ import SlotForm from "@/components/admin/slots/SlotForm";
 import SlotResourceSection from "@/components/admin/slots/SlotResourceSection";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
 import { useSlot, updateSlot } from "@/hooks/useSlots";
-import { auditAction } from "@/lib/audit";
+import { auditAction, diffFields } from "@/lib/audit";
 import { useExperience } from "@/hooks/useExperiences";
 import { Card } from "@/components/common/Card";
 import { useAuth } from "@/hooks/useAuth";
@@ -49,6 +49,7 @@ export default function SlotEditPage() {
         action: "slot.update",
         entityType: "slots",
         entityId: slotId,
+        details: diffFields(slot, payload),
       });
       toast.success(t("admin.common.savedSuccess"));
     } catch (err) {

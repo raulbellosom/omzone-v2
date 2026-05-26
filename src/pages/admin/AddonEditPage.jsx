@@ -2,7 +2,7 @@
 import { useParams } from "react-router-dom";
 import AddonForm from "@/components/admin/addons/AddonForm";
 import { useAddon, updateAddon } from "@/hooks/useAddons";
-import { auditAction } from "@/lib/audit";
+import { auditAction, diffFields } from "@/lib/audit";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Card } from "@/components/common/Card";
 import { toast } from "sonner";
@@ -39,6 +39,7 @@ export default function AddonEditPage() {
         action: "addon.update",
         entityType: "addons",
         entityId: addonId,
+        details: diffFields(addon, payload),
       });
       toast.success(t("admin.common.savedSuccess"));
     } catch (err) {

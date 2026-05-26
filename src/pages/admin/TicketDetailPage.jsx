@@ -74,6 +74,7 @@ export default function TicketDetailPage() {
         action: "ticket.invalidate",
         entityType: "tickets",
         entityId: ticketId,
+        details: { orderId: order?.$id },
         severity: "warn",
       });
       window.location.reload();

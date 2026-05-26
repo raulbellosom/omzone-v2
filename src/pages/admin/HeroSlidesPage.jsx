@@ -14,7 +14,7 @@ import {
   reorderHeroSlides,
 } from "@/hooks/useHeroSlides";
 import { useLanguage } from "@/hooks/useLanguage";
-import { auditAction } from "@/lib/audit";
+import { auditAction, diffFields } from "@/lib/audit";
 
 export default function HeroSlidesPage() {
   const { t } = useLanguage();
@@ -56,6 +56,7 @@ export default function HeroSlidesPage() {
           action: "hero_slide.create",
           entityType: "hero_slides",
           entityId: doc.$id,
+          details: { title: payload.title },
         });
         closeForm();
         refetch();
@@ -79,6 +80,7 @@ export default function HeroSlidesPage() {
           action: "hero_slide.update",
           entityType: "hero_slides",
           entityId: editingSlide.$id,
+          details: diffFields(editingSlide, payload),
         });
         closeForm();
         refetch();
@@ -101,6 +103,7 @@ export default function HeroSlidesPage() {
           action: "hero_slide.delete",
           entityType: "hero_slides",
           entityId: slide.$id,
+          details: { title: slide.title },
           severity: "warn",
         });
         refetch();

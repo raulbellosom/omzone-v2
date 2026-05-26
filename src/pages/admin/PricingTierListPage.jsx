@@ -14,7 +14,7 @@ import PricingTierTable from "@/components/admin/pricing/PricingTierTable";
 import PricingTierForm from "@/components/admin/pricing/PricingTierForm";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
-import { auditAction } from "@/lib/audit";
+import { auditAction, diffFields } from "@/lib/audit";
 
 function TableSkeleton() {
   return (
@@ -127,6 +127,7 @@ export default function PricingTierListPage() {
           action: "pricing_tier.update",
           entityType: "pricing_tiers",
           entityId: editingTier.$id,
+          details: diffFields(editingTier, payload),
         });
       } else {
         const doc = await createPricingTier({ ...payload, experienceId: id });

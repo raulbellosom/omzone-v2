@@ -172,6 +172,8 @@ export default function SlotListPage() {
         action: "slot.cancel",
         entityType: "slots",
         entityId: slot.$id,
+        details: { editionId: slot.editionId, bookedCount: slot.bookedCount },
+        severity: "warn",
       });
       refetch();
     } catch {

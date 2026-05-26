@@ -19,6 +19,7 @@ export default function ExperienceCreatePage() {
         action: "experience.create",
         entityType: "experiences",
         entityId: doc.$id,
+        details: { title: payload.title, type: payload.type },
       });
       toast.success(t("admin.common.createdSuccess"));
     } catch (err) {

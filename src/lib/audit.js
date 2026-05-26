@@ -66,7 +66,7 @@ function _enrich(payload) {
 /** Send a single event to the log-event function. Returns a Promise. */
 async function _send(payload) {
   try {
-    await functions.createExecution(
+    const execution = await functions.createExecution(
       FUNCTION_ID,
       JSON.stringify(payload),
       false, // async = false → wait for response (fast function)
@@ -74,8 +74,20 @@ async function _send(payload) {
       ExecutionMethod.POST,
       { "content-type": "application/json" },
     );
-  } catch {
-    // Silenced — audit must never crash the app
+    if (import.meta.env.DEV) {
+      let body;
+      try { body = JSON.parse(execution.responseBody || "{}"); } catch { body = execution.responseBody; }
+      if (body?.ok === false || body?.skipped) {
+        console.warn("[audit:log-event]", execution.responseStatusCode, body);
+      } else if (body?.ok) {
+        console.debug("[audit:log-event] ✓ logged", payload.action, payload.entityId);
+      }
+    }
+  } catch (err) {
+    if (import.meta.env.DEV) {
+      console.warn("[audit:log-event] ❌ execution failed:", err.message);
+    }
+    // Silenced in production — audit must never crash the app
   }
 }
 
@@ -151,6 +163,39 @@ if (typeof window !== "undefined") {
 }
 
 // ── Public API ─────────────────────────────────────────────────────────────
+
+// ── Utilities ──────────────────────────────────────────────────────────────
+
+const _SYSTEM_FIELDS = new Set([
+  "$id",
+  "$createdAt",
+  "$updatedAt",
+  "$databaseId",
+  "$collectionId",
+  "$permissions",
+  "$tenant",
+]);
+
+/**
+ * Compute a shallow diff between an old document and a new payload.
+ * Only includes fields present in newPayload that have changed.
+ * Returns undefined if nothing changed.
+ *
+ * @param {object} oldDoc   - Existing document (e.g. from useExperience)
+ * @param {object} newPayload - Form payload being submitted
+ * @returns {object|undefined}
+ */
+export function diffFields(oldDoc, newPayload) {
+  if (!oldDoc || !newPayload) return undefined;
+  const changes = {};
+  for (const key of Object.keys(newPayload)) {
+    if (_SYSTEM_FIELDS.has(key)) continue;
+    if (JSON.stringify(oldDoc[key]) !== JSON.stringify(newPayload[key])) {
+      changes[key] = { from: oldDoc[key] ?? null, to: newPayload[key] ?? null };
+    }
+  }
+  return Object.keys(changes).length > 0 ? changes : undefined;
+}
 
 /**
  * Track an admin action (mutations, navigations, UI events).

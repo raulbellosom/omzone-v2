@@ -5,7 +5,7 @@ import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetai
 import { useExperience } from "@/hooks/useExperiences";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useEdition, updateEdition } from "@/hooks/useEditions";
-import { auditAction } from "@/lib/audit";
+import { auditAction, diffFields } from "@/lib/audit";
 import { Card } from "@/components/common/Card";
 import { toast } from "sonner";
 
@@ -42,6 +42,7 @@ export default function EditionEditPage() {
         action: "edition.update",
         entityType: "editions",
         entityId: editionId,
+        details: diffFields(edition, payload),
       });
       toast.success(t("admin.common.savedSuccess"));
     } catch (err) {

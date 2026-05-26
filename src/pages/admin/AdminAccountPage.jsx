@@ -131,6 +131,11 @@ export default function AdminAccountPage() {
         action: "account.profile_update",
         entityType: "user_profiles",
         entityId: user?.$id,
+        details: {
+          firstName: trimmed.firstName,
+          lastName: trimmed.lastName,
+          language: trimmed.language,
+        },
       });
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);

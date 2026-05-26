@@ -19,6 +19,7 @@ export default function AddonCreatePage() {
         action: "addon.create",
         entityType: "addons",
         entityId: doc.$id,
+        details: { name: payload.name },
       });
       toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
