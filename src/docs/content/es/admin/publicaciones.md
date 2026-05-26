@@ -1,81 +1,113 @@
 ---
 title: Publicaciones
-description: Qué son las publicaciones en OMZONE, cómo se diferencian de las experiencias y cómo crear una página de landing
+description: Cómo crear y gestionar publicaciones de blog y contenido editorial en OMZONE
 section: admin
-order: 14
-lastUpdated: 2026-05-23
+order: 15
+lastUpdated: 2026-05-25
 ---
 
 # Publicaciones
 
-Las **publicaciones** son las páginas de contenido del sitio web: páginas de landing para experiencias, artículos del blog, páginas institucionales, FAQs. Son la parte editorial y de presentación de la plataforma.
+Una **publicación** es un artículo de blog — la capa editorial de OMZONE. Las publicaciones son donde cuentas la historia de las experiencias, compartes insights de bienestar y creas contenido que los clientes descubren en el sitio público.
+
+Las publicaciones están intencionalmente separadas de la configuración comercial (precios, horarios). Esto te permite actualizar la narrativa sin tocar la lógica de negocio, y viceversa.
 
 ---
 
-## Publicación vs. Experiencia: la diferencia clave
+## Todas las publicaciones son artículos de blog
 
-Mucha gente confunde las publicaciones con las experiencias. Aquí la distinción en lenguaje simple:
+Las publicaciones en OMZONE son ahora un único tipo de contenido: **blog**. Ya no existen tipos separados para páginas de landing, páginas institucionales o entradas de FAQ. En cambio, usa **etiquetas (tags)** para organizar y contextualizar el contenido:
 
-| Aspecto                     | Experiencia                              | Publicación                               |
-| --------------------------- | ---------------------------------------- | ----------------------------------------- |
-| ¿Para qué sirve?            | Para definir qué se vende y a qué precio | Para presentar y promocionar al público   |
-| ¿Qué contiene?              | Precios, horarios, complementos          | Textos, fotos, narrativa, SEO             |
-| ¿La ve el cliente?          | La ve al momento de comprar              | La ve al explorar el sitio (landing page) |
-| ¿Puede existir sin la otra? | Sí                                       | Sí (publicación sin venta directa)        |
+| Etiqueta        | Propósito                                                      |
+| --------------- | -------------------------------------------------------------- |
+| `featured`      | Contenido destacado / promovido                                |
+| `faq`           | Aparece en el acordeón de la página de Ayuda y FAQ             |
+| `landing`       | Contenido originalmente vinculado a la landing de experiencias |
+| `institutional` | Acerca de, misión, valores y páginas similares                 |
 
-> **Ejemplo:** "Retiro de Verano" puede tener una publicación hermosa con fotos y texto inspirador, y estar vinculada a la experiencia "Retiro de Verano" que tiene los precios y horarios reales.
-
----
-
-## Cómo llegar
-
-En el menú lateral ve a **Contenido → Publicaciones**.
-
----
-
-## La lista de publicaciones
-
-Verás todas las publicaciones que tienes creadas. Puedes:
-
-- Buscar por título o estado.
-- Filtrar por tipo o idioma.
-- Hacer clic para editar.
-- Crear una nueva con el botón **Nueva publicación**.
+Una publicación puede tener múltiples etiquetas. Las etiquetas son opcionales — un artículo de blog simple no necesita etiquetas.
 
 ---
 
 ## Crear una publicación
 
-### Título
+1. En el menú lateral ve a **Publicaciones**.
+2. Haz clic en **Nueva publicación**.
+3. Completa lo básico:
+   - **Título** — El título visible al público (bilingüe: inglés + español).
+   - **Subtítulo** — Línea corta opcional debajo del título.
+   - **Extracto** — Un teaser corto (2–3 líneas) que aparece en los listados.
+   - **Imagen de portada** — La foto principal que ven los clientes primero.
+   - **Etiquetas** — Etiquetas de contexto opcionales (ver tabla arriba).
+   - **Experiencia sugerida** — Vincula esta publicación a una experiencia para promoción cruzada. Este es un campo de recomendación — no bloquea la publicación detrás de la experiencia.
+4. Guarda. Serás llevado al **Editor de secciones** para construir el contenido.
 
-El título principal que verán los visitantes.
+---
 
-### Tipo
+## Construir el contenido
 
-El tipo de publicación define su propósito y dónde aparece:
+Una vez creada la publicación, construyes su contenido usando el **Editor de secciones** (también llamado SectionManager). Cada sección es un área de contenido (imagen hero, bloque de texto, galería, cita, etc.).
 
-| Tipo          | Para qué sirve                                  |
-| ------------- | ----------------------------------------------- |
-| Experiencia   | Página de landing para una experiencia vendible |
-| Blog          | Artículo del blog                               |
-| Institucional | Página de "Acerca de", "Misión", etc.           |
-| FAQ           | Página de preguntas frecuentes                  |
+El editor de secciones se abre como un **panel deslizante** en el lado derecho de la pantalla. Puedes:
 
-### Vinculación con experiencia
+- **Agregar** una sección desde el panel deslizante.
+- **Editar** una sección existente haciendo clic en ella.
+- **Reordenar** secciones arrastrándolas.
+- **Eliminar** una sección desde su menú de acciones.
 
-Si la publicación es de tipo "Experiencia", puedes vincularla a la experiencia correspondiente. Esto conecta la narrativa (publicación) con la parte comercial (experiencia).
+Ver **Secciones y bloques** para los detalles sobre cómo estructurar una publicación.
 
-### Estado
+---
 
-- **Borrador** — Visible solo para ti, no para el público.
-- **Publicada** — Visible en el sitio web.
-- **Archivada** — Retirada del sitio pero conservada en el sistema.
+## Estado de una publicación
 
-### Contenido
+| Estado        | Qué significa                                              |
+| ------------- | ---------------------------------------------------------- |
+| **Borrador**  | Solo visible para administradores — no en el sitio público |
+| **Publicada** | En vivo en el sitio público                                |
+| **Archivada** | Retirada del sitio público, conservada como referencia     |
 
-El cuerpo de la publicación se construye con **secciones**. Cada sección puede contener diferentes tipos de bloques de contenido: texto, imágenes, galería, preguntas frecuentes, etc.
+No existe estado "Programada" — publica y archiva manualmente según sea necesario.
 
-→ Ver cómo funciona en **Secciones y bloques**.
+---
+
+## Editar una publicación
+
+Puedes editar una publicación en cualquier momento. Los cambios de metadatos (título, etiquetas, campos SEO) toman efecto de inmediato. Los cambios en secciones requieren guardar cada sección individualmente.
+
+> Si una publicación está archivada, aparece un **banner de advertencia naranja** en la parte superior de la página de edición recordándote que no es visible públicamente.
+
+---
+
+## SEO y visibilidad
+
+Las publicaciones soportan:
+
+- **Título SEO** y **descripción SEO** — para resultados en buscadores.
+- **Slug** — la ruta URL (ej. `/blog/mi-articulo`). Establécelo una sola vez y evita cambiarlo para preservar el valor SEO.
+- Los datos estructurados se generan automáticamente para publicaciones vinculadas a una experiencia.
+
+Mantén títulos y descripciones únicos en todas las publicaciones para el mejor rendimiento en búsquedas.
+
+---
+
+## Publicaciones vs. experiencias
+
+| Publicaciones                                     | Experiencias                                    |
+| ------------------------------------------------- | ----------------------------------------------- |
+| Cuentan la historia — quién, por qué, qué esperar | Definen el producto — precio, fechas, capacidad |
+| Fotos, narrativa, bios de instructores            | Modo de venta, horario, complementos            |
+| Artículos de blog independientes                  | Pueden existir sin publicación                  |
+| Etiquetadas por contexto                          | Vinculadas a tiers de precios y horarios        |
+
+---
+
+## Archivar y eliminar permanentemente
+
+- **Archivar**: retira la publicación del sitio público. Reversible. Disponible para `admin` y `operator`.
+- **Eliminar permanentemente**: borra la publicación y todas sus secciones de forma definitiva. Solo los usuarios `root` pueden hacer esto.
+
+Ver [Archivado y eliminación](../referencia/archivado-y-eliminacion.md) para la referencia completa.
 
 ---
 

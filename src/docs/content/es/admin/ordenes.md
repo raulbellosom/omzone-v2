@@ -3,7 +3,7 @@ title: Órdenes
 description: Cómo ver, filtrar y gestionar todas las órdenes de compra en OMZONE
 section: admin
 order: 10
-lastUpdated: 2026-05-23
+lastUpdated: 2026-05-25
 ---
 
 # Órdenes
@@ -70,6 +70,20 @@ Dependiendo del estado de la orden, puedes:
 Las órdenes creadas desde el panel (venta asistida) se identifican con una etiqueta especial. En su detalle verás quién del equipo creó la orden.
 
 → Ver cómo crear una venta asistida en **Venta asistida**.
+
+---
+
+## Solicitudes de factura
+
+Cuando una orden es confirmada, el **correo de confirmación** incluye un botón que lleva al cliente a la página pública `/facturacion` con el código de orden pre-llenado:
+
+```
+¿Necesitas factura? [Solicitar factura →]  ← enlaza a /facturacion?orderCode=OMZ-XXXX
+```
+
+El cliente llena sus datos fiscales (RFC, régimen fiscal, uso del CFDI, correo fiscal). La solicitud se envía como un **Mensaje de contacto** con la categoría **Factura**. La verás en la bandeja de **Mensajes** del panel admin.
+
+→ Ver [Mensajes de contacto](../admin/mensajes.md) para gestionar las solicitudes y [Plantillas de correo](../referencia/email-templates.md) para los detalles del bloque CTA.
 
 ---
 

@@ -2,8 +2,8 @@
 title: Agenda y horarios
 description: Cómo programar horarios para tus experiencias, gestionar la capacidad y usar la agenda global
 section: admin
-order: 6
-lastUpdated: 2026-05-23
+order: 7
+lastUpdated: 2026-05-25
 ---
 
 # Agenda y horarios
@@ -66,6 +66,13 @@ Los instructores, salas o equipos necesarios para este horario. Selecciónalos d
 
 El espacio físico donde se realizará la experiencia.
 
+### Tipo de slot
+
+El tipo de sesión:
+
+- **`single_session`** — Evento individual con fecha y hora fijos (el tipo más común).
+- **`private`** — Sesión privada, generalmente vinculada a una solicitud de reserva.
+
 ### Notas internas
 
 Información adicional para tu equipo (no visible para los clientes).
@@ -74,12 +81,16 @@ Información adicional para tu equipo (no visible para los clientes).
 
 ## Estados de un horario
 
-| Estado     | Qué significa                                           |
-| ---------- | ------------------------------------------------------- |
-| Disponible | Hay lugares libres, los clientes pueden reservar        |
-| Lleno      | Se alcanzó la capacidad máxima                          |
-| Cancelado  | El horario fue cancelado (los clientes son notificados) |
-| Finalizado | El horario ya pasó                                      |
+| Estado      | Qué significa                                                      |
+| ----------- | ------------------------------------------------------------------ |
+| `draft`     | No visible para los clientes — úsalo mientras configuras           |
+| `published` | En vivo y reservable por los clientes                              |
+| `full`      | Se alcanzó la capacidad máxima — no se aceptan más reservas        |
+| `cancelled` | Horario cancelado — todos los tickets asociados quedan invalidados |
+
+El sistema transiciona automáticamente el estado a **`full`** cuando se ocupan todos los lugares. No es necesario hacerlo manualmente.
+
+> Solo los tipos **`single_session`** (sesión individual) y **`private`** (sesión privada) están disponibles en la interfaz. Otros tipos de slot existen en la base de datos para uso interno pero no están expuestos a los usuarios administradores.
 
 ---
 
