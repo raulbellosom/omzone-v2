@@ -1,25 +1,30 @@
 /**
  * @function validate-ticket
- * @description Validates a ticket by its ticketCode, marks it as used, creates a
- *   redemption record, and updates the associated booking to checked-in.
- *   Used by operators/admins at check-in points (QR scan or manual entry).
+ * @description Checks or confirms a ticket by its ticketCode. In "check" mode (default)
+ *   it is read-only: looks up the ticket, validates status and the check-in time window,
+ *   and returns display data without mutating anything. In "confirm" mode it re-validates
+ *   and then marks the ticket as used, creates a redemption record, and updates the
+ *   associated booking to checked-in. Used by operators/admins at check-in points
+ *   (QR scan, manual entry, or the kiosk overlay).
  * @trigger HTTP POST
  *
  * @input {Object} payload
  * @input {string} payload.ticketCode - The unique ticket code (required)
- * @input {string} [payload.method] - Redemption method: "qr_scan" | "manual" | "system" (default: "manual")
- * @input {string} [payload.notes] - Optional notes (e.g. location, observations)
+ * @input {string} [payload.action] - "check" (default, read-only) | "confirm" (mutates)
+ * @input {string} [payload.method] - Redemption method for "confirm": "qr_scan" | "manual" | "kiosk" | "system" (default: "manual")
+ * @input {string} [payload.notes] - Optional notes (e.g. location, observations) — only used on "confirm"
  *
  * @validates
  * - Auth: caller must be authenticated
  * - Authorize: caller must have label admin, operator, or root
- * - Input: ticketCode is present, string, alphanumeric+hyphens only
- * - Business: ticket exists, status is "valid"
+ * - Input: ticketCode is present, string, alphanumeric+hyphens only; action is "check" or "confirm"
+ * - Business: ticket exists, status is "valid" (both actions); "confirm" re-checks status
+ *   at commit time to guard against a race between check and confirm
  *
  * @entities
  * - Reads: tickets (by ticketCode), bookings (by orderId + slotId)
- * - Writes: tickets (status → used, usedAt), bookings (status → checked-in, checkedInAt)
- * - Creates: ticket_redemptions
+ * - Writes (action=confirm only): tickets (status → used, usedAt), bookings (status → checked-in, checkedInAt)
+ * - Creates (action=confirm only): ticket_redemptions
  *
  * @envVars
  * - APPWRITE_FUNCTION_API_ENDPOINT (built-in, auto-injected)
@@ -31,24 +36,28 @@
  * - APPWRITE_COLLECTION_BOOKINGS (project-level global)
  *
  * @errors
- * - 400: Missing or invalid ticketCode
+ * - 400: Missing/invalid ticketCode, ticket status not "valid"
  * - 401: Not authenticated
  * - 403: Insufficient permissions (not admin/operator/root)
  * - 404: Ticket not found
- * - 409: Ticket already used (includes usedAt)
+ * - 409: Ticket already used (includes usedAt) — action=confirm only
  * - 410: Ticket cancelled or expired
  * - 500: Internal error
  *
- * @idempotent Yes — re-validating a used ticket returns 409 without duplicating redemptions
- * @returns {Object} { ok: true, data: { ticket: {...}, redeemed: true } }
+ * @idempotent "check" is always idempotent (read-only). "confirm" on an already-used
+ *   ticket returns 409 without duplicating redemptions.
+ * @returns {Object} { ok: true, data: { ticket: {...}, schedule: {...}|null, confirmed: boolean } }
  */
 
 import { Client, Databases, Query, ID, Users } from "node-appwrite";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-const VALID_METHODS = ["qr_scan", "manual", "system"];
+const VALID_METHODS = ["qr_scan", "manual", "kiosk", "system"];
+const VALID_ACTIONS = ["check", "confirm"];
 const TICKET_CODE_PATTERN = /^[A-Za-z0-9-]+$/;
+const CHECK_IN_WINDOW_BEFORE_MS = 30 * 60 * 1000; // 30 minutes before slot start
+const CHECK_IN_FALLBACK_DURATION_MS = 3 * 60 * 60 * 1000; // used when no slotEndDate
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -64,31 +73,80 @@ function initClient(req) {
     .setKey(req.headers["x-appwrite-key"]);
 }
 
+function safeParseSnapshot(ticket) {
+  try {
+    return JSON.parse(ticket.ticketSnapshot);
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Extract display-friendly data from ticketSnapshot for the operator.
  */
 function extractSnapshotDisplay(ticket) {
-  let snapshot = null;
-  try {
-    snapshot = JSON.parse(ticket.ticketSnapshot);
-  } catch {
-    // Snapshot parsing failed — return minimal data
-  }
+  const snapshot = safeParseSnapshot(ticket);
 
   return {
+    ticketId: ticket.$id,
     ticketCode: ticket.ticketCode,
     participantName: ticket.participantName || null,
     participantEmail: ticket.participantEmail || null,
     experienceName: snapshot?.experienceName || null,
-    editionName: snapshot?.editionName || null,
-    slotDate: snapshot?.slotDate || null,
+    slotStartDatetime: snapshot?.slotStartDatetime || snapshot?.slotDate || null,
+    slotTime: snapshot?.slotTime || null,
     slotEndDate: snapshot?.slotEndDate || null,
     timezone: snapshot?.timezone || null,
-    tierName: snapshot?.tierName || null,
-    addons: snapshot?.addons || [],
+    locationName: snapshot?.locationName || null,
+    roomName: snapshot?.roomName || null,
+    tierName: snapshot?.tierName || snapshot?.passName || null,
     orderNumber: snapshot?.orderNumber || null,
     status: ticket.status,
     usedAt: ticket.usedAt || null,
+  };
+}
+
+/**
+ * Computes whether "now" falls inside the check-in window for this ticket's slot.
+ * Window: [slotStartDatetime - 30min, slotEndDate] (or +3h from start if no end date).
+ * Returns null when the snapshot has no slot start time (can't be determined).
+ */
+function getScheduleState(ticket) {
+  const snapshot = safeParseSnapshot(ticket);
+  if (!snapshot?.slotStartDatetime) return null;
+
+  const start = new Date(snapshot.slotStartDatetime);
+  if (Number.isNaN(start.getTime())) return null;
+
+  const end = snapshot.slotEndDate
+    ? new Date(snapshot.slotEndDate)
+    : new Date(start.getTime() + CHECK_IN_FALLBACK_DURATION_MS);
+  const windowStart = new Date(start.getTime() - CHECK_IN_WINDOW_BEFORE_MS);
+  const now = new Date();
+
+  if (now < windowStart) {
+    return {
+      withinWindow: false,
+      reason: "too_early",
+      validFrom: start.toISOString(),
+      validUntil: end.toISOString(),
+      now: now.toISOString(),
+    };
+  }
+  if (now > end) {
+    return {
+      withinWindow: false,
+      reason: "too_late",
+      validFrom: start.toISOString(),
+      validUntil: end.toISOString(),
+      now: now.toISOString(),
+    };
+  }
+  return {
+    withinWindow: true,
+    validFrom: start.toISOString(),
+    validUntil: end.toISOString(),
+    now: now.toISOString(),
   };
 }
 
@@ -120,6 +178,7 @@ export default async ({ req, res, log, error }) => {
     // ── Parse input ──────────────────────────────────────────────────────────
     const body = JSON.parse(req.body || "{}");
     const { ticketCode, method, notes } = body;
+    const action = VALID_ACTIONS.includes(body.action) ? body.action : "check";
 
     // ── Validate input ───────────────────────────────────────────────────────
     if (!ticketCode || typeof ticketCode !== "string") {
@@ -268,7 +327,18 @@ export default async ({ req, res, log, error }) => {
       );
     }
 
-    // ── Mark ticket as used ──────────────────────────────────────────────────
+    // ── Schedule window check (informational — does not block "check") ───────
+    const schedule = getScheduleState(ticket);
+
+    // ── "check" action stops here — read-only ─────────────────────────────────
+    if (action === "check") {
+      return res.json({
+        ok: true,
+        data: { ticket: extractSnapshotDisplay(ticket), schedule, confirmed: false },
+      });
+    }
+
+    // ── "confirm" action — mark ticket as used ────────────────────────────────
     const now = new Date().toISOString();
 
     await db.updateDocument(DB, COL_TICKETS, ticket.$id, {
@@ -276,7 +346,7 @@ export default async ({ req, res, log, error }) => {
       usedAt: now,
     });
 
-    log(`Ticket validated: ${sanitizedCode} → used (by ${userId})`);
+    log(`Ticket confirmed: ${sanitizedCode} → used (by ${userId})`);
 
     // ── Create redemption record ─────────────────────────────────────────────
     const redemptionData = {
@@ -321,7 +391,7 @@ export default async ({ req, res, log, error }) => {
           }
         }
       } catch (err) {
-        // Booking update is best-effort — don't fail the ticket validation
+        // Booking update is best-effort — don't fail the confirmation
         log(
           `WARN: Failed to update booking for ticket ${ticket.$id}: ${err.message}`,
         );
@@ -339,7 +409,8 @@ export default async ({ req, res, log, error }) => {
       ok: true,
       data: {
         ticket: displayData,
-        redeemed: true,
+        schedule,
+        confirmed: true,
         redemptionMethod,
         redeemedBy: userId,
         redeemedAt: now,
