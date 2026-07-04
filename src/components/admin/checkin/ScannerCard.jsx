@@ -28,7 +28,7 @@ export default function ScannerCard({ onSubmitCode, disabled = false, focusToken
     const scanner = new Html5Qrcode(elementId);
     scannerRef.current = scanner;
 
-    scanner
+    const startPromise = scanner
       .start(
         { facingMode: "environment" },
         { fps: 10, qrbox: { width: 220, height: 220 } },
@@ -60,8 +60,12 @@ export default function ScannerCard({ onSubmitCode, disabled = false, focusToken
 
     return () => {
       cancelled = true;
-      scanner
-        .stop()
+      // Wait for start() to settle (resolve or reject) before stopping — calling
+      // stop() while start() is still in-flight (e.g. React StrictMode's
+      // mount->cleanup->remount cycle) can leave the camera stream stuck.
+      startPromise
+        .then(() => scanner.stop())
+        .catch(() => {})
         .then(() => scanner.clear())
         .catch(() => {});
     };
