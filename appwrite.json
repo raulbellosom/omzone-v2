@@ -119,6 +119,13 @@
       "name": "validate-ticket",
       "runtime": "node-22",
       "execute": ["users"],
+      "scopes": [
+        "users.read",
+        "documents.read",
+        "documents.write",
+        "collections.read",
+        "databases.read"
+      ],
       "events": [],
       "timeout": 15,
       "enabled": true,
