@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState, useId } from "react";
+import { useEffect, useRef, useState, useId, useCallback } from "react";
 import { Html5Qrcode } from "html5-qrcode";
-import { ScanLine } from "lucide-react";
+import { ScanLine, SwitchCamera } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import Button from "@/components/common/Button";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,8 @@ export default function ScannerCard({ onSubmitCode, disabled = false, focusToken
   const elementId = useId().replace(/:/g, "");
   const [code, setCode] = useState("");
   const [cameraState, setCameraState] = useState("starting"); // starting | active | error
+  const [cameras, setCameras] = useState([]);
+  const [activeCameraId, setActiveCameraId] = useState(null);
   const inputRef = useRef(null);
   const scannerRef = useRef(null);
   const lastScannedRef = useRef({ code: "", at: 0 });
@@ -22,9 +24,38 @@ export default function ScannerCard({ onSubmitCode, disabled = false, focusToken
     return () => clearTimeout(id);
   }, [focusToken]);
 
-  // Camera lifecycle: start on mount, stop on unmount.
+  // Discover available cameras once. html5-qrcode's facingMode constraint
+  // only accepts a plain string or { exact }, both of which fail outright
+  // when the requested facing direction doesn't exist (e.g. a laptop with
+  // only a front-facing webcam) — enumerate real devices instead and default
+  // to a rear-facing one when present, but let the operator switch manually.
   useEffect(() => {
     let cancelled = false;
+    Html5Qrcode.getCameras()
+      .then((list) => {
+        if (cancelled) return;
+        if (!list || list.length === 0) {
+          throw new Error("No camera devices found");
+        }
+        setCameras(list);
+        const rearCamera = list.find((c) => /back|rear|environment/i.test(c.label));
+        setActiveCameraId((rearCamera || list[0]).id);
+      })
+      .catch((err) => {
+        console.error("ScannerCard: failed to list cameras:", err);
+        if (!cancelled) setCameraState("error");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Start/stop the scanner whenever the active camera changes.
+  useEffect(() => {
+    if (!activeCameraId) return;
+
+    let cancelled = false;
+    setCameraState("starting");
     const scanner = new Html5Qrcode(elementId);
     scannerRef.current = scanner;
 
@@ -44,55 +75,46 @@ export default function ScannerCard({ onSubmitCode, disabled = false, focusToken
       }
     }
 
-    // html5-qrcode's facingMode constraint only accepts a plain string or
-    // { exact }, both of which fail outright when the requested facing
-    // direction doesn't exist (e.g. a laptop with only a front-facing
-    // webcam). Enumerate real cameras instead and pick one, preferring a
-    // rear-facing label when present, so this works on both laptops (single
-    // camera) and tablets/phones (multiple cameras).
-    const startPromise = Html5Qrcode.getCameras()
-      .then((cameras) => {
-        if (cancelled) return;
-        if (!cameras || cameras.length === 0) {
-          throw new Error("No camera devices found");
-        }
-        const rearCamera = cameras.find((c) => /back|rear|environment/i.test(c.label));
-        const cameraId = (rearCamera || cameras[0]).id;
-        return scanner.start(
-          cameraId,
-          { fps: 10, qrbox: { width: 220, height: 220 } },
-          onDecoded,
-          () => {
-            /* per-frame decode failures are expected while no code is in view — ignore */
-          },
-        );
-      })
+    const startPromise = scanner
+      .start(
+        activeCameraId,
+        { fps: 10, qrbox: { width: 220, height: 220 } },
+        onDecoded,
+        () => {
+          /* per-frame decode failures are expected while no code is in view — ignore */
+        },
+      )
       .then(() => {
         if (!cancelled) setCameraState("active");
       })
       .catch((err) => {
-        // Surface the real reason (permission denied, no camera found, camera
-        // busy, etc.) instead of swallowing it — the UI only shows a generic
-        // fallback message, but this makes the actual cause debuggable.
+        // Surface the real reason (permission denied, camera busy, etc.)
+        // instead of swallowing it — the UI only shows a generic fallback
+        // message, but this makes the actual cause debuggable.
         console.error("ScannerCard: camera failed to start:", err);
         if (!cancelled) setCameraState("error");
       });
 
     return () => {
       cancelled = true;
-      // Wait for start() to settle (resolve or reject) before stopping — calling
-      // stop() while start() is still in-flight (e.g. React StrictMode's
-      // mount->cleanup->remount cycle) can leave the camera stream stuck.
-      // If getCameras()/start() never actually started a session, stop()
-      // rejects and the .catch(noop) below prevents an unhandled rejection.
+      // Wait for start() to settle (resolve or reject) before stopping —
+      // calling stop() while start() is still in-flight (e.g. React
+      // StrictMode's mount->cleanup->remount cycle, or switching cameras
+      // quickly) can leave the camera stream stuck.
       startPromise
         .then(() => scanner.stop())
         .catch(() => {})
         .then(() => scanner.clear())
         .catch(() => {});
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [elementId]);
+  }, [activeCameraId, elementId, onSubmitCode]);
+
+  const switchCamera = useCallback(() => {
+    if (cameras.length < 2) return;
+    const currentIndex = cameras.findIndex((c) => c.id === activeCameraId);
+    const next = cameras[(currentIndex + 1) % cameras.length];
+    setActiveCameraId(next.id);
+  }, [cameras, activeCameraId]);
 
   const submitManual = () => {
     const sanitized = code.trim().toUpperCase();
@@ -132,6 +154,17 @@ export default function ScannerCard({ onSubmitCode, disabled = false, focusToken
             <span className="h-1.5 w-1.5 rounded-full bg-sage animate-pulse" />
             {t("admin.checkin.cameraActive")}
           </div>
+        )}
+        {cameras.length > 1 && (
+          <button
+            type="button"
+            onClick={switchCamera}
+            aria-label={t("admin.checkin.switchCamera")}
+            title={t("admin.checkin.switchCamera")}
+            className="absolute top-3 right-3 h-9 w-9 rounded-full bg-charcoal/70 text-sand-light flex items-center justify-center cursor-pointer hover:bg-charcoal/90 transition-colors"
+          >
+            <SwitchCamera className="h-4 w-4" />
+          </button>
         )}
       </div>
 

@@ -653,6 +653,7 @@
       "cameraError": "Couldn't access the camera. Use the manual code instead.",
       "cameraActive": "Camera active",
       "manualSectionLabel": "Enter code manually",
+      "switchCamera": "Switch camera",
       "kioskEnter": "Kiosk Mode",
       "kioskExit": "Exit"
     },
