@@ -176,7 +176,11 @@ export default async ({ req, res, log, error }) => {
 
   try {
     // ── Parse input ──────────────────────────────────────────────────────────
-    const body = JSON.parse(req.body || "{}");
+    // req.body is a raw string on some Appwrite runtime versions and an
+    // already-parsed object on others (when Content-Type: application/json) —
+    // handle both instead of assuming a string.
+    const body =
+      typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
     const { ticketCode, method, notes } = body;
     const action = VALID_ACTIONS.includes(body.action) ? body.action : "check";
 
