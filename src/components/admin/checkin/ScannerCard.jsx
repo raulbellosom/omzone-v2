@@ -28,33 +28,53 @@ export default function ScannerCard({ onSubmitCode, disabled = false, focusToken
     const scanner = new Html5Qrcode(elementId);
     scannerRef.current = scanner;
 
-    const startPromise = scanner
-      .start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: { width: 220, height: 220 } },
-        (decodedText) => {
-          const sanitized = decodedText.trim().toUpperCase();
-          const now = Date.now();
-          // Debounce: ignore the same code re-fired within 3s (camera scans continuously).
-          if (
-            lastScannedRef.current.code === sanitized &&
-            now - lastScannedRef.current.at < 3000
-          ) {
-            return;
-          }
-          lastScannedRef.current = { code: sanitized, at: now };
-          if (TICKET_CODE_PATTERN.test(sanitized)) {
-            onSubmitCode(sanitized);
-          }
-        },
-        () => {
-          /* per-frame decode failures are expected while no code is in view — ignore */
-        },
-      )
+    function onDecoded(decodedText) {
+      const sanitized = decodedText.trim().toUpperCase();
+      const now = Date.now();
+      // Debounce: ignore the same code re-fired within 3s (camera scans continuously).
+      if (
+        lastScannedRef.current.code === sanitized &&
+        now - lastScannedRef.current.at < 3000
+      ) {
+        return;
+      }
+      lastScannedRef.current = { code: sanitized, at: now };
+      if (TICKET_CODE_PATTERN.test(sanitized)) {
+        onSubmitCode(sanitized);
+      }
+    }
+
+    // html5-qrcode's facingMode constraint only accepts a plain string or
+    // { exact }, both of which fail outright when the requested facing
+    // direction doesn't exist (e.g. a laptop with only a front-facing
+    // webcam). Enumerate real cameras instead and pick one, preferring a
+    // rear-facing label when present, so this works on both laptops (single
+    // camera) and tablets/phones (multiple cameras).
+    const startPromise = Html5Qrcode.getCameras()
+      .then((cameras) => {
+        if (cancelled) return;
+        if (!cameras || cameras.length === 0) {
+          throw new Error("No camera devices found");
+        }
+        const rearCamera = cameras.find((c) => /back|rear|environment/i.test(c.label));
+        const cameraId = (rearCamera || cameras[0]).id;
+        return scanner.start(
+          cameraId,
+          { fps: 10, qrbox: { width: 220, height: 220 } },
+          onDecoded,
+          () => {
+            /* per-frame decode failures are expected while no code is in view — ignore */
+          },
+        );
+      })
       .then(() => {
         if (!cancelled) setCameraState("active");
       })
-      .catch(() => {
+      .catch((err) => {
+        // Surface the real reason (permission denied, no camera found, camera
+        // busy, etc.) instead of swallowing it — the UI only shows a generic
+        // fallback message, but this makes the actual cause debuggable.
+        console.error("ScannerCard: camera failed to start:", err);
         if (!cancelled) setCameraState("error");
       });
 
@@ -63,6 +83,8 @@ export default function ScannerCard({ onSubmitCode, disabled = false, focusToken
       // Wait for start() to settle (resolve or reject) before stopping — calling
       // stop() while start() is still in-flight (e.g. React StrictMode's
       // mount->cleanup->remount cycle) can leave the camera stream stuck.
+      // If getCameras()/start() never actually started a session, stop()
+      // rejects and the .catch(noop) below prevents an unhandled rejection.
       startPromise
         .then(() => scanner.stop())
         .catch(() => {})
