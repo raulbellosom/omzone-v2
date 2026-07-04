@@ -196,7 +196,8 @@ export default async ({ req, res, log, error }) => {
 
   try {
     // ── Parse input ──────────────────────────────────────────────────────────
-    const body = JSON.parse(req.body || "{}");
+    const body =
+      typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
     const { orderId } = body;
 
     if (!orderId || typeof orderId !== "string") {

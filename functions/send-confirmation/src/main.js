@@ -344,7 +344,8 @@ export default async ({ req, res, log, error }) => {
     // ── 1. Parse input ──────────────────────────────────────────────────────
     let body;
     try {
-      body = JSON.parse(req.body || "{}");
+      body =
+        typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
     } catch {
       return res.json(
         {

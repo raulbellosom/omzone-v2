@@ -76,7 +76,11 @@ async function handleSignupEvent({ req, res, log, error }) {
 
   try {
     // Extract user data from event payload
-    const eventUser = req.body ? JSON.parse(req.body) : null;
+    const eventUser = req.body
+      ? typeof req.body === "string"
+        ? JSON.parse(req.body)
+        : req.body
+      : null;
 
     if (!eventUser || !eventUser.$id) {
       error("Event payload missing user $id");
@@ -351,7 +355,8 @@ async function handleManualAssignment({ req, res, log, error }) {
 
   try {
     // 1. Parse
-    const body = JSON.parse(req.body || "{}");
+    const body =
+      typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
 
     // 2. Validate input
     const { targetUserId, label } = body;
@@ -526,7 +531,8 @@ export default async (context) => {
   // Route by action field or default to manual label assignment
   let body = {};
   try {
-    body = JSON.parse(req.body || "{}");
+    body =
+      typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
   } catch {
     /* invalid JSON handled by sub-handler */
   }
