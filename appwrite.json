@@ -4233,7 +4233,7 @@
           "array": false,
           "default": null,
           "format": "enum",
-          "elements": ["qr_scan", "manual", "system"]
+          "elements": ["qr_scan", "manual", "kiosk", "system"]
         },
         {
           "key": "notes",
