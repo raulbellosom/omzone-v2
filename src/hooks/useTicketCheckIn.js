@@ -49,7 +49,7 @@ export function useTicketCheckIn() {
         const result = {
           outcome: outcomeFromErrorCode(body.error?.code),
           ticketCode: sanitized,
-          ticket: body.data || null,
+          ticket: body.data?.ticket ?? body.data ?? null,
           message: body.error?.message || "Validation failed",
           usedAt: body.error?.usedAt || null,
         };
@@ -88,7 +88,7 @@ export function useTicketCheckIn() {
         const result = {
           outcome: outcomeFromErrorCode(body.error?.code),
           ticketCode,
-          ticket: body.data || null,
+          ticket: body.data?.ticket ?? body.data ?? null,
           message: body.error?.message || "Ticket already used",
           usedAt: body.error?.usedAt || null,
         };
