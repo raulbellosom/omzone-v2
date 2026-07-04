@@ -652,7 +652,9 @@
       "cameraStarting": "Iniciando cámara…",
       "cameraError": "No se pudo acceder a la cámara. Usa el código manual.",
       "cameraActive": "Cámara activa",
-      "manualSectionLabel": "Ingresar código manualmente"
+      "manualSectionLabel": "Ingresar código manualmente",
+      "kioskEnter": "Modo Kiosco",
+      "kioskExit": "Salir"
     },
     "slots": {
       "title": "Agenda / Slots",
