@@ -646,7 +646,13 @@
       "validFrom": "Válido desde",
       "validUntil": "Válido hasta",
       "currentTime": "Hora actual",
-      "enteredSubtitle": "Ingresó a {room} · {time}"
+      "enteredSubtitle": "Ingresó a {room} · {time}",
+      "scanTitle": "Escanea el pase del cliente",
+      "scanSubtitle": "Coloca el código QR frente a la cámara o usa el scanner físico.",
+      "cameraStarting": "Iniciando cámara…",
+      "cameraError": "No se pudo acceder a la cámara. Usa el código manual.",
+      "cameraActive": "Cámara activa",
+      "manualSectionLabel": "Ingresar código manualmente"
     },
     "slots": {
       "title": "Agenda / Slots",
