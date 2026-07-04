@@ -92,7 +92,6 @@ console.log("═".repeat(60));
 let created = 0,
   updated = 0,
   alreadyOk = 0,
-  skipped = 0,
   failed = 0;
 
 for (const [key, value] of filteredVars) {
@@ -100,7 +99,6 @@ for (const [key, value] of filteredVars) {
   const existing = existingMap[key];
 
   if (!existing) {
-    // Create new variable
     const ok = trysh(
       `appwrite project create-variable --key "${key}" --value "${escaped}" --secret false`,
     );
@@ -112,16 +110,15 @@ for (const [key, value] of filteredVars) {
       failed++;
     }
   } else if (existing.value === value && !existing.secret) {
-    // Already correct
     console.log(`  ⏭️  OK        ${key}`);
     alreadyOk++;
   } else {
-    // Wrong value or wrong secret flag → delete and recreate
     const reasonParts = [];
-    if (existing.value !== value)
+    if (existing.value !== value) {
       reasonParts.push(
         `value: "${existing.value.slice(0, 30)}" → "${value.slice(0, 30)}"`,
       );
+    }
     if (existing.secret) reasonParts.push("secret:true → false");
     console.log(`  🔄 UPDATING  ${key}  (${reasonParts.join(", ")})`);
 

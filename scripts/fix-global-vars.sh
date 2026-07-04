@@ -3,11 +3,14 @@
 # Cause: push-global-vars.mjs ran via cmd.exe (execSync on Windows), which kept
 #        the shell single-quote syntax as literal characters in the stored value.
 # Fix:   Delete each quoted variable and recreate it with the clean value from .env
-# Usage: bash scripts/fix-global-vars.sh  (from Git Bash in project root)
+# Usage:
+#   bash scripts/fix-global-vars.sh             # uses .env
+#   bash scripts/fix-global-vars.sh .env.prod   # uses .env.prod
+# (from Git Bash in project root)
 
 set -e
 
-ENV_FILE=".env"
+ENV_FILE="${1:-.env}"
 
 if [[ ! -f "$ENV_FILE" ]]; then
   echo "Error: .env not found in current directory"

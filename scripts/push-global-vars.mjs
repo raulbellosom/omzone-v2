@@ -1,7 +1,9 @@
 /**
  * OMZONE — Push all global project variables to Appwrite via CLI
- * Uses values from .env file. All vars are non-secret.
- * Run: node scripts/push-global-vars.mjs
+ * Uses values from a chosen env file. All vars are non-secret.
+ * Run:
+ *   node scripts/push-global-vars.mjs            # uses .env
+ *   node scripts/push-global-vars.mjs .env.prod  # uses .env.prod
  */
 
 import { execSync } from "child_process";
@@ -10,9 +12,17 @@ import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const envPath = resolve(__dirname, "../.env");
+const envFile = process.argv[2] || ".env";
+const envPath = resolve(__dirname, "..", envFile);
 
-// Parse .env
+try {
+  readFileSync(envPath, "utf8");
+} catch {
+  console.error(`Missing env file: ${envFile}`);
+  process.exit(1);
+}
+
+// Parse selected env file
 const envRaw = readFileSync(envPath, "utf8");
 const env = {};
 for (const line of envRaw.split("\n")) {
@@ -32,7 +42,7 @@ const SKIP_KEYS = new Set([
   "APPWRITE_API_KEY", // never store API key as a var
 ]);
 
-// Keys to include — all .env keys that go into Appwrite global vars
+// Keys to include — all env keys that go into Appwrite global vars
 const vars = Object.entries(env).filter(([key]) => !SKIP_KEYS.has(key));
 
 // Use bash so single/double quote handling works correctly on Windows.

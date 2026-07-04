@@ -7,9 +7,10 @@
  *
  * Usage:
  *   1. First capture the list (must be done in an interactive terminal):
- *        appwrite project list-variables --json > /tmp/appwrite_vars.json
+ *        appwrite project list-variables --json > /d/RacoonDevs/omzone-v2/temp_vars_list.json
  *   2. Then run this script:
  *        node scripts/fix-global-vars.mjs
+ *        node scripts/fix-global-vars.mjs .env.prod temp_prod_vars_list.json
  */
 import { execSync } from "child_process";
 import { readFileSync, existsSync } from "fs";
@@ -18,9 +19,11 @@ import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, "..");
+const envFile = process.argv[2] || ".env";
+const varsFile = process.argv[3] || "temp_vars_list.json";
 
-// ─── Parse .env ──────────────────────────────────────────────────────────────
-const envPath = resolve(root, ".env");
+// ─── Parse selected env file ─────────────────────────────────────────────────
+const envPath = resolve(root, envFile);
 const envRaw = readFileSync(envPath, "utf8");
 const envVars = {};
 for (const line of envRaw.split("\n")) {
@@ -37,11 +40,17 @@ const SKIP = new Set(["VITE_UNDER_CONSTRUCTION", "VITE_SITE_URL"]);
 // ─── Load variable list from pre-saved JSON ───────────────────────────────────
 // Requires: appwrite project list-variables --json > temp_vars_list.json
 // (in bash: /tmp/appwrite_vars.json won't work on Windows Node.js — use project root)
-const varListPath = resolve(root, "temp_vars_list.json");
+const varListPath = resolve(root, varsFile);
 if (!existsSync(varListPath)) {
-  console.error("Missing variable list. Run first (in bash):");
+  console.error(`Missing variable list file: ${varsFile}`);
+  console.error("Run first (in bash):");
   console.error(
     "  appwrite project list-variables --json > /d/RacoonDevs/omzone-v2/temp_vars_list.json",
+  );
+  console.error("Then run one of:");
+  console.error("  node scripts/fix-global-vars.mjs");
+  console.error(
+    "  node scripts/fix-global-vars.mjs .env.prod temp_prod_vars_list.json",
   );
   process.exit(1);
 }
