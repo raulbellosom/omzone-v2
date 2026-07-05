@@ -1,20 +1,26 @@
 /**
  * @function assign-user-label
  * @description Assigns default label 'client' to newly registered users and creates
- *   their user_profiles document. Also exposes an HTTP endpoint for admins to
- *   manually assign labels (admin, operator, client) to other users.
- * @trigger Event: users.*.create | HTTP POST (manual label assignment) | HTTP POST { action: "ensure-profile" }
+ *   their user_profiles document. Also exposes root-only HTTP endpoints to list
+ *   Appwrite Auth users (excluding root) and to assign/remove labels
+ *   (admin, operator, client) on other users.
+ * @trigger Event: users.*.create | HTTP POST (manual label assignment) | HTTP POST { action: "ensure-profile" } | HTTP POST { action: "list-users" }
  *
  * @input {Object} payload (HTTP only)
- * @input {string} payload.targetUserId - ID of the user to assign the label to
- * @input {string} payload.label - Label to assign: 'admin' | 'operator' | 'client'
+ * @input {string} payload.targetUserId - ID of the user to assign/remove the label on
+ * @input {string} payload.label - Label to assign/remove: 'admin' | 'operator' | 'client'
+ * @input {boolean} [payload.remove] - If true, removes `label` instead of adding it
+ * @input {string} [payload.search] - list-users only: free-text search on users
+ * @input {string} [payload.cursor] - list-users only: Appwrite cursor (user $id) for pagination
  *
  * @validates
  * - Event: idempotency — skips if user_profiles document already exists for userId
  * - HTTP: Authentication — requires valid JWT (x-appwrite-user-id)
- * - HTTP: Authorization — caller must have label 'admin' or 'root'
+ * - HTTP: Authorization — caller must have label 'root' (list-users and manual assignment/removal)
  * - HTTP: Input — targetUserId required string, label must be one of allowed values
- * - HTTP: Business — 'root' label cannot be assigned via this Function
+ * - HTTP: Business — 'root' label cannot be assigned/removed via this Function
+ * - HTTP: Business — removing the target's last remaining label is rejected
+ * - HTTP: Business — list-users always excludes users labeled 'root' from the response
  *
  * @entities
  * - Reads: Appwrite Auth (users)
@@ -30,15 +36,16 @@
  * @errors
  * - 400: ERR_LABEL_MISSING_FIELDS — targetUserId or label missing
  * - 400: ERR_LABEL_INVALID — label not in allowed list or is 'root'
+ * - 400: ERR_LABEL_LAST_ROLE — removing label would leave the user with zero labels
  * - 401: ERR_AUTH_REQUIRED — no authenticated user
- * - 403: ERR_UNAUTHORIZED — caller lacks admin/root label
+ * - 403: ERR_UNAUTHORIZED — caller lacks the root label
  * - 404: ERR_USER_NOT_FOUND — targetUserId does not exist
  * - 500: ERR_INTERNAL — unexpected server error
  *
  * @returns {Object} { ok: true, data: { ... } } | { ok: false, error: { code, message } }
  */
 
-import { Client, Databases, Users } from "node-appwrite";
+import { Client, Databases, Users, Query } from "node-appwrite";
 
 const ALLOWED_LABELS = ["admin", "operator", "client"];
 
@@ -347,6 +354,94 @@ async function handleEnsureProfile({ req, res, log, error }) {
 }
 
 /**
+ * Flow D — HTTP POST { action: "list-users" }
+ * Root-only. Lists Appwrite Auth users, always excluding anyone labeled 'root'.
+ */
+async function handleListUsers({ req, res, log, error }) {
+  const client = initClient(req);
+  const users = new Users(client);
+
+  try {
+    const body =
+      typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
+    const { search, cursor } = body;
+
+    const callerId = req.headers["x-appwrite-user-id"];
+    if (!callerId) {
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_AUTH_REQUIRED",
+            message: "Authentication required",
+          },
+        },
+        401,
+      );
+    }
+
+    const caller = await users.get(callerId);
+    const callerLabels = caller.labels || [];
+    if (!callerLabels.includes("root")) {
+      return res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_UNAUTHORIZED",
+            message: "Insufficient permissions",
+          },
+        },
+        403,
+      );
+    }
+
+    const limit = 50;
+    const queries = [Query.limit(limit)];
+    if (cursor && typeof cursor === "string" && cursor.trim()) {
+      queries.push(Query.cursorAfter(cursor.trim()));
+    }
+
+    const searchTerm =
+      search && typeof search === "string" && search.trim()
+        ? search.trim()
+        : undefined;
+
+    const result = await users.list(queries, searchTerm);
+
+    const nextCursor =
+      result.users.length > 0
+        ? result.users[result.users.length - 1].$id
+        : null;
+    const hasMore = result.users.length === limit;
+
+    const visible = result.users
+      .filter((u) => !(u.labels || []).includes("root"))
+      .map((u) => ({
+        $id: u.$id,
+        name: u.name,
+        email: u.email,
+        phone: u.phone,
+        labels: u.labels || [],
+        status: u.status,
+        registration: u.registration,
+      }));
+
+    log(`list-users: returned ${visible.length} users (raw batch ${result.users.length}) to root caller ${callerId}`);
+
+    return res.json({
+      ok: true,
+      data: { users: visible, hasMore, nextCursor },
+    });
+  } catch (err) {
+    error(`List users failed: ${err.message}`);
+    return res.json(
+      { ok: false, error: { code: "ERR_INTERNAL", message: "Internal error" } },
+      500,
+    );
+  }
+}
+
+/**
  * Flow B — HTTP POST: Manual label assignment by admin
  */
 async function handleManualAssignment({ req, res, log, error }) {
@@ -359,7 +454,7 @@ async function handleManualAssignment({ req, res, log, error }) {
       typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
 
     // 2. Validate input
-    const { targetUserId, label } = body;
+    const { targetUserId, label, remove } = body;
 
     if (
       !targetUserId ||
@@ -434,11 +529,11 @@ async function handleManualAssignment({ req, res, log, error }) {
       );
     }
 
-    // 6. Authorize — verify caller has admin or root label
+    // 6. Authorize — only root may assign/remove admin, operator, or client labels
     const caller = await users.get(callerId);
     const callerLabels = caller.labels || [];
 
-    if (!callerLabels.includes("admin") && !callerLabels.includes("root")) {
+    if (!callerLabels.includes("root")) {
       return res.json(
         {
           ok: false,
@@ -471,8 +566,40 @@ async function handleManualAssignment({ req, res, log, error }) {
       throw fetchErr;
     }
 
-    // 8. Merge labels — preserve existing, add new
+    // 8. Merge labels — preserve existing, add or remove the requested one
     const targetLabels = targetUser.labels || [];
+
+    if (remove === true) {
+      if (!targetLabels.includes(label)) {
+        log(`User ${targetUserId} does not have label '${label}' — no change`);
+        return res.json({
+          ok: true,
+          data: { userId: targetUserId, labels: targetLabels },
+        });
+      }
+
+      const remainingLabels = targetLabels.filter((l) => l !== label);
+      if (remainingLabels.length === 0) {
+        return res.json(
+          {
+            ok: false,
+            error: {
+              code: "ERR_LABEL_LAST_ROLE",
+              message: "User must keep at least one role label",
+            },
+          },
+          400,
+        );
+      }
+
+      await users.updateLabels(targetUserId.trim(), remainingLabels);
+      log(`Label '${label}' removed from user ${targetUserId} by ${callerId}`);
+
+      return res.json({
+        ok: true,
+        data: { userId: targetUserId, labels: remainingLabels },
+      });
+    }
 
     if (targetLabels.includes(label)) {
       log(`User ${targetUserId} already has label '${label}' — no change`);
@@ -541,6 +668,11 @@ export default async (context) => {
     log("Trigger: HTTP POST (ensure-profile)");
     logConfig(log);
     return handleEnsureProfile(context);
+  }
+
+  if (body.action === "list-users") {
+    log("Trigger: HTTP POST (list-users)");
+    return handleListUsers(context);
   }
 
   log("Trigger: HTTP POST (manual label assignment)");
