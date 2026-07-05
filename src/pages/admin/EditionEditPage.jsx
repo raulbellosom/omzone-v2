@@ -4,6 +4,7 @@ import EditionForm from "@/components/admin/experiences/EditionForm";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
 import { useExperience } from "@/hooks/useExperiences";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { useEdition, updateEdition } from "@/hooks/useEditions";
 import { auditAction, diffFields } from "@/lib/audit";
 import { Card } from "@/components/common/Card";
@@ -46,8 +47,9 @@ export default function EditionEditPage() {
       });
       toast.success(t("admin.common.savedSuccess"));
     } catch (err) {
-      setServerError(err.message);
-      toast.error(err.message);
+      const msg = getErrorMessage(err, t, "common.errorSaveFailed");
+      setServerError(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }

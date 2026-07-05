@@ -4,6 +4,7 @@ import PublicationForm from "@/components/admin/publications/PublicationForm";
 import { createPublication } from "@/hooks/usePublications";
 import { ROUTES } from "@/constants/routes";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { auditAction } from "@/lib/audit";
 
 export default function PublicationCreatePage() {
@@ -26,7 +27,7 @@ export default function PublicationCreatePage() {
       // Redirect to sections page so user can start adding content
       navigate(ROUTES.ADMIN_PUBLICATION_SECTIONS.replace(":id", doc.$id));
     } catch (err) {
-      setServerError(err.message);
+      setServerError(getErrorMessage(err, t, "common.errorSaveFailed"));
     } finally {
       setSubmitting(false);
     }

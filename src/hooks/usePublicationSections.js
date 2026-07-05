@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { databases, Query, ID } from "@/lib/appwrite";
 import env from "@/config/env";
 
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
+
 const DB = env.appwriteDatabaseId;
 const COL = env.collectionSections;
 
@@ -10,6 +13,7 @@ export function usePublicationSections(publicationId) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   const fetch = useCallback(async () => {
     if (!publicationId) return;
     setLoading(true);
@@ -22,7 +26,7 @@ export function usePublicationSections(publicationId) {
       ]);
       setData(res.documents);
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

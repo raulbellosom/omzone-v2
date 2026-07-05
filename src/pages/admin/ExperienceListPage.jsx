@@ -12,6 +12,7 @@ import { useExperiences, updateExperience } from "@/hooks/useExperiences";
 import { useArchive } from "@/hooks/useArchive";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { ROUTES } from "@/constants/routes";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
@@ -105,7 +106,7 @@ export default function ExperienceListPage() {
         });
         refetch();
       } catch (err) {
-        setActionError(err.message);
+        setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
       }
     },
     [refetch],

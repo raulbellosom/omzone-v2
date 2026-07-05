@@ -20,7 +20,15 @@
     "phoneNoCountries": "No results",
     "updateAvailable": "A new version of OMZONE is available. Reload the page to get the latest experience.",
     "reload": "Reload",
-    "dismiss": "Later"
+    "dismiss": "Later",
+    "errorLoadFailed": "We couldn't load this information. Please try again.",
+    "errorSaveFailed": "We couldn't save your changes. Please try again.",
+    "errorNotFound": "The requested item could not be found.",
+    "errorUnauthorized": "You don't have permission for this action, or your session expired.",
+    "errorRateLimit": "Too many attempts. Please wait a moment and try again.",
+    "errorNetwork": "Connection problem. Check your internet and try again.",
+    "errorFileTypeDetail": "File type not allowed. Accepted: {exts}",
+    "errorFileSizeDetail": "The file exceeds the maximum size of {mb} MB"
   },
   "auth": {
     "brandTagline": "Experiences in Puerto Vallarta",

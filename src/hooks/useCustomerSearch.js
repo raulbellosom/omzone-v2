@@ -1,5 +1,7 @@
 import { useState, useCallback } from "react";
 import { databases, Query } from "@/lib/appwrite";
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import env from "@/config/env";
 
 const DB = env.appwriteDatabaseId;
@@ -11,6 +13,7 @@ const COL = env.collectionUserProfiles;
  * @returns {{ results, loading, error, search, reset }}
  */
 export function useCustomerSearch() {
+  const { t } = useLanguage();
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -37,7 +40,7 @@ export function useCustomerSearch() {
       ]);
       setResults(res.documents);
     } catch (err) {
-      setError(err?.message ?? "Error al buscar clientes");
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

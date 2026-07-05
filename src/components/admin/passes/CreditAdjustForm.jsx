@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 
 export default function CreditAdjustForm({ userPass, onSubmit, onClose }) {
   const { t } = useLanguage();
@@ -46,7 +47,7 @@ export default function CreditAdjustForm({ userPass, onSubmit, onClose }) {
         notes: notes.trim(),
       });
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err, t, "common.errorSaveFailed"));
       setSubmitting(false);
     }
   }

@@ -23,6 +23,7 @@ import {
   reorderSections,
 } from "@/hooks/usePublicationSections";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 
 export default function SectionManager({ publicationId }) {
   const {
@@ -69,7 +70,7 @@ export default function SectionManager({ publicationId }) {
         closeForm();
         refetch();
       } catch (err) {
-        setActionError(err.message);
+        setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
       } finally {
         setSubmitting(false);
       }
@@ -87,7 +88,7 @@ export default function SectionManager({ publicationId }) {
         closeForm();
         refetch();
       } catch (err) {
-        setActionError(err.message);
+        setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
       } finally {
         setSubmitting(false);
       }
@@ -111,7 +112,7 @@ export default function SectionManager({ publicationId }) {
         await deleteSection(section.$id);
         refetch();
       } catch (err) {
-        setActionError(err.message);
+        setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
       }
     },
     [refetch],
@@ -124,7 +125,7 @@ export default function SectionManager({ publicationId }) {
         await updateSection(section.$id, { isVisible: !section.isVisible });
         refetch();
       } catch (err) {
-        setActionError(err.message);
+        setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
       }
     },
     [refetch],
@@ -138,7 +139,7 @@ export default function SectionManager({ publicationId }) {
         await reorderSections(reordered);
         refetch();
       } catch (err) {
-        setActionError(err.message);
+        setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
       } finally {
         setReordering(false);
       }

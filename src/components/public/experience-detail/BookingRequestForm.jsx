@@ -6,6 +6,7 @@ import PhoneInput from "@/components/common/PhoneInput";
 import { Button } from "@/components/common/Button";
 import { Send, CheckCircle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { isValidPhone } from "@/lib/utils";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -60,7 +61,7 @@ export default function BookingRequestForm({ experience }) {
       });
       setSubmitted(true);
     } catch (err) {
-      setErrors({ _form: err.message || t("bookingRequest.error") });
+      setErrors({ _form: getErrorMessage(err, t, "bookingRequest.error") });
     } finally {
       setSubmitting(false);
     }

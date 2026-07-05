@@ -3,6 +3,9 @@ import { databases, Query } from "@/lib/appwrite";
 import { storage } from "@/lib/appwrite";
 import env from "@/config/env";
 
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
+
 const DB = env.appwriteDatabaseId;
 const COL_EXP = env.collectionExperiences;
 const COL_TIERS = env.collectionPricingTiers;
@@ -23,6 +26,7 @@ export function usePublicExperiences() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   const fetch = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -70,7 +74,7 @@ export function usePublicExperiences() {
       }
       setPriceMap(pm);
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

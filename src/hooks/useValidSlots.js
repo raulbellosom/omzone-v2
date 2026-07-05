@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { databases, Query } from "@/lib/appwrite";
 import env from "@/config/env";
 
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
+
 const DB = env.appwriteDatabaseId;
 const COL = env.collectionSlots;
 
@@ -14,6 +17,7 @@ export function useValidSlots({ experienceId = "" } = {}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   const fetch = useCallback(async () => {
     if (!experienceId) {
       setData([]);
@@ -38,7 +42,7 @@ export function useValidSlots({ experienceId = "" } = {}) {
       const available = res.documents.filter((s) => s.bookedCount < s.capacity);
       setData(available);
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

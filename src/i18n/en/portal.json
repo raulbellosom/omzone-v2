@@ -37,6 +37,8 @@
       "changePhoto": "Change photo",
       "uploading": "Uploading…",
       "photoHint": "JPG, PNG or WebP · max. 2 MB",
+      "errorFileType": "Only JPG, PNG, or WebP images are allowed.",
+      "errorFileSize": "The image can't be larger than 2 MB.",
       "noProfileYet": "Your profile hasn't been set up yet. Please try again later or contact support."
     },
     "sidebar": {
@@ -167,6 +169,10 @@
       "loadMore": "Load more",
       "archiveTitle": "Archive",
       "restoreTitle": "Restore"
+    },
+    "usePass": {
+      "errorMissingData": "Missing information to consume the pass",
+      "errorGeneric": "We couldn't consume the pass. Please try again."
     }
   }
 }

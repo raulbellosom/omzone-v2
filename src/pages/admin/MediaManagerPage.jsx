@@ -3,6 +3,7 @@ import { useBucketFiles } from "@/hooks/useBucketFiles";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { ROLES } from "@/constants/roles";
 import env from "@/config/env";
 import { Card } from "@/components/common/Card";
@@ -108,7 +109,7 @@ export default function MediaManagerPage() {
         } catch (err) {
           toast.error(file.name, {
             id: toastId,
-            description: err?.message ?? t("admin.mediaManager.uploadError"),
+            description: getErrorMessage(err, t, "admin.mediaManager.uploadError"),
           });
         }
       }

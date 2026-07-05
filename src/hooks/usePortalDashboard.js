@@ -4,6 +4,9 @@ import { Query } from "appwrite";
 import env from "@/config/env";
 import { useAuth } from "@/hooks/useAuth";
 
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
+
 const DB = env.appwriteDatabaseId;
 const COL_TICKETS = env.collectionTickets;
 const COL_ORDERS = env.collectionOrders;
@@ -23,6 +26,7 @@ export function usePortalDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   const fetch = useCallback(async () => {
     if (!user?.$id) {
       setLoading(false);
@@ -91,7 +95,7 @@ export function usePortalDashboard() {
         recentOrders: orders?.total ?? 0,
       });
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

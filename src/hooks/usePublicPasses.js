@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { databases, storage, Query } from "@/lib/appwrite";
 import env from "@/config/env";
 
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
+
 const DB = env.appwriteDatabaseId;
 const COL = env.collectionPasses;
 const BUCKET = env.bucketExperienceMedia;
@@ -16,6 +19,7 @@ export function usePublicPasses() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   const fetch = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -28,7 +32,7 @@ export function usePublicPasses() {
       ]);
       setPasses(res.documents);
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

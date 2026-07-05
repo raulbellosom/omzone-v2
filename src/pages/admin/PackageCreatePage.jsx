@@ -2,6 +2,7 @@
 import PackageForm from "@/components/admin/packages/PackageForm";
 import { createPackage } from "@/hooks/usePackages";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { createPackageItem } from "@/hooks/usePackageItems";
 import { toast } from "sonner";
 
@@ -27,8 +28,8 @@ export default function PackageCreatePage() {
 
       toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
-      setServerError(err.message);
-      toast.error(err.message);
+      setServerError(getErrorMessage(err, t, "common.errorSaveFailed"));
+      toast.error(getErrorMessage(err, t, "common.errorSaveFailed"));
     } finally {
       setSubmitting(false);
     }

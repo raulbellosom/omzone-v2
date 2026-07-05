@@ -12,6 +12,7 @@ import { useRooms } from "@/hooks/useRooms";
 import { createSlot } from "@/hooks/useSlots";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { toast } from "sonner";
 import { auditAction } from "@/lib/audit";
 
@@ -178,8 +179,9 @@ export default function SlotQuickCreatePage() {
         ),
       );
     } catch (err) {
-      setServerError(err.message);
-      toast.error(err.message);
+      const msg = getErrorMessage(err, t, "common.errorSaveFailed");
+      setServerError(msg);
+      toast.error(msg);
     } finally {
       setCreating(false);
     }

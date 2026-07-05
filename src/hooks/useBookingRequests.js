@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { databases } from "@/lib/appwrite";
 import { Query, ID } from "appwrite";
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import env from "@/config/env";
 
 const DB = env.appwriteDatabaseId;
@@ -70,6 +72,7 @@ export function useBookingRequests({
   limit = 25,
   offset = 0,
 } = {}) {
+  const { t } = useLanguage();
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -114,11 +117,11 @@ export function useBookingRequests({
       setData(enriched);
       setTotal(result.total);
     } catch (err) {
-      setError(err.message || "Failed to load booking requests");
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }
-  }, [status, search, limit, offset]);
+  }, [status, search, limit, offset, t]);
 
   useEffect(() => {
     fetch();

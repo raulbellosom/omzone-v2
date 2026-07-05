@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import PassForm from "@/components/admin/passes/PassForm";
 import { usePass, updatePass } from "@/hooks/usePasses";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { Card } from "@/components/common/Card";
 import { toast } from "sonner";
 
@@ -36,8 +37,9 @@ export default function PassEditPage() {
       await updatePass(passId, payload);
       toast.success(t("admin.common.savedSuccess"));
     } catch (err) {
-      setServerError(err.message);
-      toast.error(err.message);
+      const msg = getErrorMessage(err, t, "common.errorSaveFailed");
+      setServerError(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }

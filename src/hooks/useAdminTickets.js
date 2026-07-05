@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { databases, Query } from "@/lib/appwrite";
 import env from "@/config/env";
 
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
+
 const DB = env.appwriteDatabaseId;
 const COL_TICKETS = env.collectionTickets;
 const COL_EXPERIENCES = env.collectionExperiences;
@@ -23,6 +26,7 @@ export function useAdminTickets({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   const fetch = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -41,7 +45,7 @@ export function useAdminTickets({
       setData(res.documents);
       setTotal(res.total);
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }
@@ -64,6 +68,7 @@ export function useTicketDetail(ticketId) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   useEffect(() => {
     if (!ticketId) return;
 
@@ -115,7 +120,7 @@ export function useTicketDetail(ticketId) {
         setSlot(sl);
         setOrder(ord);
       })
-      .catch((err) => setError(err.message))
+      .catch((err) => setError(getErrorMessage(err, t)))
       .finally(() => setLoading(false));
   }, [ticketId]);
 

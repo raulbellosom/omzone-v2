@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { databases, Query } from "@/lib/appwrite";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import env from "@/config/env";
 
 const DB = env.appwriteDatabaseId;
@@ -16,6 +18,7 @@ const COL_TICKETS = env.collectionTickets;
  */
 export function useUserOrderDetail(orderId) {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [order, setOrder] = useState(null);
   const [items, setItems] = useState([]);
   const [tickets, setTickets] = useState([]);
@@ -58,7 +61,7 @@ export function useUserOrderDetail(orderId) {
           setTickets(results[1].value.documents);
         }
       })
-      .catch((err) => setError(err.message || "Could not load order"))
+      .catch((err) => setError(getErrorMessage(err, t)))
       .finally(() => setLoading(false));
   }, [orderId, user?.$id]);
 

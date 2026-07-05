@@ -3,6 +3,9 @@ import { databases, Query } from "@/lib/appwrite";
 import { useAuth } from "@/hooks/useAuth";
 import env from "@/config/env";
 
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
+
 const DB = env.appwriteDatabaseId;
 const COL_ORDERS = env.collectionOrders;
 const COL_ORDER_ITEMS = env.collectionOrderItems;
@@ -20,6 +23,7 @@ export function useOrderBySession(sessionId, orderId) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   useEffect(() => {
     if (authLoading) return;
 
@@ -28,7 +32,7 @@ export function useOrderBySession(sessionId, orderId) {
       setItems([]);
       setTickets([]);
       setLoading(false);
-      setError("Order not found");
+      setError(t("common.errorNotFound"));
       return;
     }
 
@@ -107,7 +111,7 @@ export function useOrderBySession(sessionId, orderId) {
           pollTimer = window.setTimeout(fetch, 2500);
         }
       } catch (err) {
-        if (!cancelled) setError(err.message);
+        if (!cancelled) setError(getErrorMessage(err, t));
       } finally {
         if (!cancelled) setLoading(false);
       }

@@ -1,5 +1,7 @@
 import { useState, useCallback } from "react";
 import { storage, ID } from "@/lib/appwrite";
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import env from "@/config/env";
 
 // ─── Per-bucket constraints ───────────────────────────────────────────────────
@@ -52,6 +54,7 @@ const DEFAULT_CONFIG = {
  * @returns {{ upload, deleteFile, getPreviewUrl, getFileViewUrl, uploading, progress, error, clearError }}
  */
 export function useFileUpload(bucketId = env.bucketExperienceMedia) {
+  const { t } = useLanguage();
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState(null);
@@ -67,11 +70,11 @@ export function useFileUpload(bucketId = env.bucketExperienceMedia) {
   function validate(file) {
     if (!config.allowedTypes.includes(file.type)) {
       const exts = config.label.split("·")[0].trim();
-      return `Tipo de archivo no permitido. Se aceptan: ${exts}`;
+      return t("common.errorFileTypeDetail", { exts });
     }
     if (file.size > config.maxSize) {
       const mb = (config.maxSize / (1024 * 1024)).toFixed(0);
-      return `El archivo supera el tamaño máximo de ${mb} MB`;
+      return t("common.errorFileSizeDetail", { mb });
     }
     return null;
   }
@@ -108,8 +111,7 @@ export function useFileUpload(bucketId = env.bucketExperienceMedia) {
       const previewUrl = getPreviewUrl(result.$id);
       return { fileId: result.$id, previewUrl };
     } catch (err) {
-      const msg = err?.message ?? "Error al subir el archivo";
-      setError(msg);
+      setError(getErrorMessage(err, t, "admin.mediaManager.uploadError"));
       throw err;
     } finally {
       setUploading(false);

@@ -4,6 +4,7 @@ import AddonForm from "@/components/admin/addons/AddonForm";
 import { useAddon, updateAddon } from "@/hooks/useAddons";
 import { auditAction, diffFields } from "@/lib/audit";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { Card } from "@/components/common/Card";
 import { toast } from "sonner";
 
@@ -43,8 +44,9 @@ export default function AddonEditPage() {
       });
       toast.success(t("admin.common.savedSuccess"));
     } catch (err) {
-      setServerError(err.message);
-      toast.error(err.message);
+      const msg = getErrorMessage(err, t, "common.errorSaveFailed");
+      setServerError(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }

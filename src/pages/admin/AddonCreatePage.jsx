@@ -2,6 +2,7 @@
 import AddonForm from "@/components/admin/addons/AddonForm";
 import { createAddon } from "@/hooks/useAddons";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { toast } from "sonner";
 import { auditAction } from "@/lib/audit";
 
@@ -23,8 +24,8 @@ export default function AddonCreatePage() {
       });
       toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
-      setServerError(err.message);
-      toast.error(err.message);
+      setServerError(getErrorMessage(err, t, "common.errorSaveFailed"));
+      toast.error(getErrorMessage(err, t, "common.errorSaveFailed"));
     } finally {
       setSubmitting(false);
     }

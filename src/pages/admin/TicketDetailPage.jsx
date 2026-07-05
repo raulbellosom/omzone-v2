@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useTicketDetail, invalidateTicket } from "@/hooks/useAdminTickets";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { ROLES } from "@/constants/roles";
 import { ROUTES } from "@/constants/routes";
 import { auditAction } from "@/lib/audit";
@@ -79,7 +80,7 @@ export default function TicketDetailPage() {
       });
       window.location.reload();
     } catch (err) {
-      setActionError(err.message);
+      setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
     } finally {
       setInvalidating(false);
     }

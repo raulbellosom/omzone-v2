@@ -6,6 +6,8 @@ import {
   archivePersonal,
   restorePersonal,
 } from "@/lib/archive";
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 
 /**
  * useArchive — unified hook for archive, restore, and hard-delete operations.
@@ -14,6 +16,7 @@ import {
  * @param {Function} [onSuccess] - Callback after successful operation (e.g. refetch list)
  */
 export function useArchive(collectionId, onSuccess) {
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -25,13 +28,13 @@ export function useArchive(collectionId, onSuccess) {
         await fn();
         onSuccess?.();
       } catch (err) {
-        setError(err.message || "Operation failed");
+        setError(getErrorMessage(err, t, "common.errorSaveFailed"));
         throw err;
       } finally {
         setLoading(false);
       }
     },
-    [onSuccess],
+    [onSuccess, t],
   );
 
   /** Soft-archive a document (admin). Cascade applies to experiences → editions/slots. */

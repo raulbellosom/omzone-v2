@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { databases, Query, ID } from "@/lib/appwrite";
 import env from "@/config/env";
 
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
+
 const DB = env.appwriteDatabaseId;
 const COL = env.collectionEditions;
 
@@ -14,6 +17,7 @@ export function useEditions(
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   const fetch = useCallback(async () => {
     if (!experienceId) return;
     setLoading(true);
@@ -33,7 +37,7 @@ export function useEditions(
       setData(res.documents);
       setTotal(res.total);
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }
@@ -51,13 +55,14 @@ export function useEdition(id) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   useEffect(() => {
     if (!id) return;
     setLoading(true);
     databases
       .getDocument(DB, COL, id)
       .then(setData)
-      .catch((err) => setError(err.message))
+      .catch((err) => setError(getErrorMessage(err, t)))
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -82,6 +87,7 @@ export function usePublicEditions(experienceId) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   useEffect(() => {
     if (!experienceId) {
       setData([]);
@@ -103,7 +109,7 @@ export function usePublicEditions(experienceId) {
         if (!cancelled) setData(res.documents);
       })
       .catch((err) => {
-        if (!cancelled) setError(err.message);
+        if (!cancelled) setError(getErrorMessage(err, t));
       })
       .finally(() => {
         if (!cancelled) setLoading(false);

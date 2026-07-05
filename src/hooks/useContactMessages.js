@@ -3,6 +3,9 @@ import { databases } from "@/lib/appwrite";
 import { Query } from "appwrite";
 import env from "@/config/env";
 
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
+
 const DB = env.appwriteDatabaseId;
 const COL = env.collectionContactMessages;
 
@@ -15,6 +18,7 @@ export function useContactMessages({ filter = "all", search = "", page = 0 } = {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   const fetch = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -41,7 +45,7 @@ export function useContactMessages({ filter = "all", search = "", page = 0 } = {
       setData(docs);
       setTotal(result.total);
     } catch (err) {
-      setError(err);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }
@@ -60,6 +64,7 @@ export function useContactMessage(id) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   const fetch = useCallback(async () => {
     if (!id) return;
     setLoading(true);
@@ -68,7 +73,7 @@ export function useContactMessage(id) {
       const doc = await databases.getDocument(DB, COL, id);
       setMessage(doc);
     } catch (err) {
-      setError(err);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

@@ -9,6 +9,7 @@ import { Card } from "@/components/common/Card";
 import { Button } from "@/components/common/Button";
 import { ROUTES } from "@/constants/routes";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { toast } from "sonner";
 
 function LoadingSkeleton() {
@@ -48,8 +49,9 @@ export default function PublicationEditPage() {
       });
       toast.success(t("admin.common.savedSuccess"));
     } catch (err) {
-      setServerError(err.message);
-      toast.error(err.message);
+      const msg = getErrorMessage(err, t, "common.errorSaveFailed");
+      setServerError(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }

@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { databases, Query } from "@/lib/appwrite";
 import env from "@/config/env";
 
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
+
 const DB = env.appwriteDatabaseId;
 const COL = env.collectionNotificationTemplates;
 
@@ -10,6 +13,7 @@ export function useNotificationTemplates({ includeArchived = false } = {}) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   const fetch = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -19,7 +23,7 @@ export function useNotificationTemplates({ includeArchived = false } = {}) {
       const res = await databases.listDocuments(DB, COL, queries);
       setTemplates(res.documents);
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

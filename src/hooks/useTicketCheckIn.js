@@ -1,5 +1,7 @@
 import { useState, useCallback } from "react";
 import { functions } from "@/lib/appwrite";
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import env from "@/config/env";
 
 async function callValidateTicket(payload) {
@@ -28,12 +30,13 @@ function outcomeFromErrorCode(code) {
  * it used. Returns { state, checkTicket, confirmEntry, reset }.
  */
 export function useTicketCheckIn() {
+  const { t } = useLanguage();
   const [state, setState] = useState({ phase: "idle", data: null, error: null });
 
   const checkTicket = useCallback(async (ticketCode) => {
     const sanitized = (ticketCode || "").trim();
     if (!sanitized) {
-      setState({ phase: "idle", data: null, error: "Ingresa o escanea un código de pase" });
+      setState({ phase: "idle", data: null, error: t("admin.checkin.errorEmptyCode") });
       return null;
     }
 
@@ -50,7 +53,7 @@ export function useTicketCheckIn() {
           outcome: outcomeFromErrorCode(body.error?.code),
           ticketCode: sanitized,
           ticket: body.data?.ticket ?? body.data ?? null,
-          message: body.error?.message || "Validation failed",
+          message: body.error?.message || t("admin.checkin.errorValidation"),
           usedAt: body.error?.usedAt || null,
         };
         setState({ phase: "result", data: result, error: null });
@@ -68,10 +71,10 @@ export function useTicketCheckIn() {
       setState({ phase: "result", data: result, error: null });
       return result;
     } catch (err) {
-      setState({ phase: "idle", data: null, error: err.message || "Failed to check ticket" });
+      setState({ phase: "idle", data: null, error: getErrorMessage(err, t, "admin.checkin.errorValidation") });
       return null;
     }
-  }, []);
+  }, [t]);
 
   const confirmEntry = useCallback(async (ticketCode, method = "manual") => {
     setState((s) => ({ ...s, phase: "confirming" }));
@@ -89,7 +92,7 @@ export function useTicketCheckIn() {
           outcome: outcomeFromErrorCode(body.error?.code),
           ticketCode,
           ticket: body.data?.ticket ?? body.data ?? null,
-          message: body.error?.message || "Ticket already used",
+          message: body.error?.message || t("admin.checkin.errorAlreadyUsed"),
           usedAt: body.error?.usedAt || null,
         };
         setState({ phase: "result", data: result, error: null });
@@ -100,10 +103,10 @@ export function useTicketCheckIn() {
       setState({ phase: "entered", data: result, error: null });
       return result;
     } catch (err) {
-      setState((s) => ({ ...s, phase: "result", error: err.message || "Failed to confirm entry" }));
+      setState((s) => ({ ...s, phase: "result", error: getErrorMessage(err, t, "admin.checkin.errorConfirm") }));
       return null;
     }
-  }, []);
+  }, [t]);
 
   const reset = useCallback(() => {
     setState({ phase: "idle", data: null, error: null });

@@ -9,6 +9,7 @@ import { Loader2, ShieldCheck } from "lucide-react";
 import { getStripe } from "@/lib/stripe";
 import { Button } from "@/components/common/Button";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { ROUTES } from "@/constants/routes";
 
 // ─── Stripe appearance matching OMZONE theme ─────────────────────────────────
@@ -95,12 +96,12 @@ function PaymentForm({
         if (stripeError.type === "card_error" || stripeError.type === "validation_error") {
           setError(stripeError.message);
         } else {
-          setError(stripeError.message || t("paymentStep.errorGeneric"));
+          setError(getErrorMessage(stripeError, t, "paymentStep.errorGeneric"));
         }
       }
       // On success Stripe redirects to the session's return_url automatically.
     } catch (err) {
-      setError(err?.message || t("paymentStep.errorGeneric"));
+      setError(getErrorMessage(err, t, "paymentStep.errorGeneric"));
     }
 
     setProcessing(false);

@@ -14,6 +14,7 @@ import { ROUTES } from "@/constants/routes";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import env from "@/config/env";
 import { auditAction } from "@/lib/audit";
 
@@ -88,7 +89,7 @@ export default function PublicationListPage() {
         });
         refetch();
       } catch (err) {
-        setActionError(err.message);
+        setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
       }
     },
     [refetch],

@@ -3,6 +3,9 @@ import { databases, Query } from "@/lib/appwrite";
 import { useAuth } from "@/hooks/useAuth";
 import env from "@/config/env";
 
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
+
 const DB = env.appwriteDatabaseId;
 const COL_TICKETS = env.collectionTickets;
 
@@ -18,6 +21,7 @@ export function useUserTickets({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   const fetch = useCallback(async () => {
     if (!user?.$id) return;
 
@@ -44,7 +48,7 @@ export function useUserTickets({
       const res = await databases.listDocuments(DB, COL_TICKETS, queries);
       setData(res.documents);
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

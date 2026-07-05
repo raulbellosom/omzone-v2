@@ -9,6 +9,7 @@ import { useResources, updateResource } from "@/hooks/useResources";
 import { useArchive } from "@/hooks/useArchive";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import AdminSelect from "@/components/common/AdminSelect";
 import ArchiveActionsMenu from "@/components/admin/ArchiveActionsMenu";
 import ConfirmHardDeleteModal from "@/components/admin/ConfirmHardDeleteModal";
@@ -197,7 +198,7 @@ export default function ResourceListTab() {
         await updateResource(id, { isActive: newValue });
         refetch();
       } catch (err) {
-        setActionError(err.message);
+        setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
       }
     },
     [refetch],

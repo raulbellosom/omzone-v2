@@ -10,6 +10,7 @@ import {
 import { useExperience } from "@/hooks/useExperiences";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import PricingTierTable from "@/components/admin/pricing/PricingTierTable";
 import PricingTierForm from "@/components/admin/pricing/PricingTierForm";
 import { Button } from "@/components/common/Button";
@@ -141,7 +142,7 @@ export default function PricingTierListPage() {
       closeForm();
       refetch();
     } catch (err) {
-      setServerError(err.message);
+      setServerError(getErrorMessage(err, t, "common.errorSaveFailed"));
     } finally {
       setSubmitting(false);
     }

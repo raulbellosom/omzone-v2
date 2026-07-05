@@ -20,7 +20,15 @@
     "phoneNoCountries": "Sin resultados",
     "updateAvailable": "Hay una nueva versión de OMZONE disponible. Recarga la página para obtener la última experiencia.",
     "reload": "Recargar",
-    "dismiss": "Después"
+    "dismiss": "Después",
+    "errorLoadFailed": "No pudimos cargar esta información. Intenta de nuevo.",
+    "errorSaveFailed": "No pudimos guardar los cambios. Intenta de nuevo.",
+    "errorNotFound": "No se encontró el elemento solicitado.",
+    "errorUnauthorized": "No tienes permiso para esta acción, o tu sesión expiró.",
+    "errorRateLimit": "Demasiados intentos. Espera un momento e intenta de nuevo.",
+    "errorNetwork": "Problema de conexión. Revisa tu internet e intenta de nuevo.",
+    "errorFileTypeDetail": "Tipo de archivo no permitido. Se aceptan: {exts}",
+    "errorFileSizeDetail": "El archivo supera el tamaño máximo de {mb} MB"
   },
   "auth": {
     "brandTagline": "Experiencias de Bienestar",

@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { useOrderDetail, updateOrderStatus, resendPaymentLink } from "@/hooks/useOrders";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { ROLES } from "@/constants/roles";
 import { ROUTES } from "@/constants/routes";
 import { Card } from "@/components/common/Card";
@@ -82,7 +83,7 @@ export default function OrderDetailPage() {
       await updateOrderStatus(orderId, newStatus);
       window.location.reload();
     } catch (err) {
-      setActionError(err.message);
+      setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
     } finally {
       setUpdating(false);
     }
@@ -96,7 +97,7 @@ export default function OrderDetailPage() {
       await resendPaymentLink(orderId);
       setResendSuccess(true);
     } catch (err) {
-      setActionError(err.message);
+      setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
     } finally {
       setResending(false);
     }

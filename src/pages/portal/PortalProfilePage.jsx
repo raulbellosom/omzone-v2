@@ -21,6 +21,7 @@ import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 import PhoneInput from "@/components/common/PhoneInput";
 import { account } from "@/lib/appwrite";
+import { getErrorMessage } from "@/lib/errors";
 import { isValidPhone, sanitizePhone } from "@/lib/utils";
 
 const BIO_MAX = 1000;
@@ -90,7 +91,7 @@ export default function PortalProfilePage() {
     try {
       await updateProfile({ photoId: fileId });
     } catch (err) {
-      setSaveError(err.message);
+      setSaveError(getErrorMessage(err, t, "common.errorSaveFailed"));
     }
   }
 
@@ -130,7 +131,7 @@ export default function PortalProfilePage() {
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
-      setSaveError(err.message);
+      setSaveError(getErrorMessage(err, t, "common.errorSaveFailed"));
     } finally {
       setSaving(false);
     }
@@ -171,7 +172,7 @@ export default function PortalProfilePage() {
       ) {
         setPhoneError(t("portal.profile.phoneErrorWrongPassword"));
       } else {
-        setPhoneError(msg);
+        setPhoneError(getErrorMessage(err, t, "common.errorSaveFailed"));
       }
     } finally {
       setPhoneSaving(false);

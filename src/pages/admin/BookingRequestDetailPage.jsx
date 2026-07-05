@@ -11,6 +11,7 @@ import {
 } from "@/hooks/useBookingRequests";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { ROLES } from "@/constants/roles";
 import { ROUTES } from "@/constants/routes";
 import { auditAction } from "@/lib/audit";
@@ -202,7 +203,7 @@ export default function BookingRequestDetailPage() {
       });
       refetch();
     } catch (err) {
-      setActionError(err.message);
+      setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
     } finally {
       setSaving(false);
     }
@@ -232,7 +233,7 @@ export default function BookingRequestDetailPage() {
       refetch();
       setNotesLoaded(false); // re-sync
     } catch (err) {
-      setActionError(err.message);
+      setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
     } finally {
       setActing(false);
     }
@@ -283,7 +284,7 @@ export default function BookingRequestDetailPage() {
       refetch();
       setNotesLoaded(false);
     } catch (err) {
-      setActionError(err.message);
+      setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
     } finally {
       setConverting(false);
     }
@@ -298,7 +299,7 @@ export default function BookingRequestDetailPage() {
       await resendPaymentLink(orderId);
       setResendSuccess(true);
     } catch (err) {
-      setActionError(err.message);
+      setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
     } finally {
       setResending(false);
     }

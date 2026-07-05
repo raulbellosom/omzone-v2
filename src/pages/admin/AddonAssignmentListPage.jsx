@@ -15,6 +15,7 @@ import AddonAssignmentForm from "@/components/admin/addons/AddonAssignmentForm";
 import { Button } from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 
 function TableSkeleton() {
   const { t } = useLanguage();
@@ -122,7 +123,7 @@ export default function AddonAssignmentListPage() {
       setShowForm(false);
       refetch();
     } catch (err) {
-      setServerError(err.message);
+      setServerError(getErrorMessage(err, t, "common.errorSaveFailed"));
     } finally {
       setSubmitting(false);
     }
@@ -136,7 +137,7 @@ export default function AddonAssignmentListPage() {
       setEditing(null);
       refetch();
     } catch (err) {
-      setServerError(err.message);
+      setServerError(getErrorMessage(err, t, "common.errorSaveFailed"));
     } finally {
       setSubmitting(false);
     }

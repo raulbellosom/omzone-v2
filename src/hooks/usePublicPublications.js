@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { databases, storage, Query } from "@/lib/appwrite";
 import env from "@/config/env";
 
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
+
 const DB = env.appwriteDatabaseId;
 const COL = env.collectionPublications;
 const BUCKET = env.bucketPublicationMedia;
@@ -19,6 +22,7 @@ export function usePublicPublications() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   const fetch = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -31,7 +35,7 @@ export function usePublicPublications() {
       ]);
       setPublications(res.documents);
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

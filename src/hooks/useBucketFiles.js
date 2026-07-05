@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { storage, Query } from "@/lib/appwrite";
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 
 const PAGE_SIZE = 24;
 
@@ -11,6 +13,7 @@ const PAGE_SIZE = 24;
  * @returns {{ files, loading, error, hasMore, loadMore, refresh }}
  */
 export function useBucketFiles(bucketId, { search = "" } = {}) {
+  const { t } = useLanguage();
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -46,7 +49,7 @@ export function useBucketFiles(bucketId, { search = "" } = {}) {
       })
       .catch((err) => {
         if (cancelled) return;
-        setError(err?.message ?? "Error al cargar archivos");
+        setError(getErrorMessage(err, t));
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -71,7 +74,7 @@ export function useBucketFiles(bucketId, { search = "" } = {}) {
       setHasMore(res.files.length === PAGE_SIZE);
       setCursor(res.files.length > 0 ? res.files[res.files.length - 1].$id : cursor);
     } catch (err) {
-      setError(err?.message ?? "Error al cargar más archivos");
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

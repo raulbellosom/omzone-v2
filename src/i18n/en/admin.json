@@ -643,6 +643,10 @@
       "scanAnother": "Scan another",
       "viewDetails": "View details",
       "searchClient": "Search client",
+      "errorEmptyCode": "Enter or scan a pass code",
+      "errorValidation": "We couldn't validate the pass",
+      "errorAlreadyUsed": "The pass was already used",
+      "errorConfirm": "We couldn't register the entry",
       "room": "Room",
       "time": "Time",
       "validFrom": "Valid from",
@@ -1243,6 +1247,7 @@
       "confirmSale": "Confirm sale",
       "next": "Next",
       "newSale": "New sale",
+      "errorGeneric": "We couldn't process the sale. Please try again.",
       "customer": {
         "title": "Customer",
         "description": "Search for an existing customer by name or email, or create a new one.",

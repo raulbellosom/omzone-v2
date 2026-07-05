@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { databases, Query, ID } from "@/lib/appwrite";
 import env from "@/config/env";
 
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
+
 const DB = env.appwriteDatabaseId;
 const COL = env.collectionResources;
 
@@ -19,7 +22,7 @@ export function useResources({
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const { t } = useLanguage();
   const fetch = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -41,7 +44,7 @@ export function useResources({
       setData(res.documents);
       setTotal(res.total);
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }
@@ -58,14 +61,14 @@ export function useResource(id) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const { t } = useLanguage();
   useEffect(() => {
     if (!id) return;
     setLoading(true);
     databases
       .getDocument(DB, COL, id)
       .then(setData)
-      .catch((err) => setError(err.message))
+      .catch((err) => setError(getErrorMessage(err, t)))
       .finally(() => setLoading(false));
   }, [id]);
 

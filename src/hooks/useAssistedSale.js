@@ -1,5 +1,7 @@
 import { useState, useCallback } from "react";
 import { functions } from "@/lib/appwrite";
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import env from "@/config/env";
 
 const FN_ID = env.functionCreateCheckout;
@@ -40,6 +42,7 @@ const EMPTY_WIZARD = {
  * @returns {{ wizard, setWizardField, submitSale, submitting, result, submitError, resetWizard }}
  */
 export function useAssistedSale() {
+  const { t } = useLanguage();
   const [wizard, setWizard] = useState({ ...EMPTY_WIZARD });
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
@@ -108,14 +111,14 @@ export function useAssistedSale() {
       const body = JSON.parse(execution.responseBody || "{}");
 
       if (!body.ok) {
-        setSubmitError(body.error?.message ?? "Error al procesar la venta");
+        setSubmitError(t("admin.assistedSale.errorGeneric"));
         return false;
       }
 
       setResult(body.data);
       return true;
     } catch (err) {
-      setSubmitError(err?.message ?? "Error de conexión");
+      setSubmitError(getErrorMessage(err, t, "admin.assistedSale.errorGeneric"));
       return false;
     } finally {
       setSubmitting(false);

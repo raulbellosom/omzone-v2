@@ -14,6 +14,7 @@ import {
   reorderHeroSlides,
 } from "@/hooks/useHeroSlides";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { auditAction, diffFields } from "@/lib/audit";
 
 export default function HeroSlidesPage() {
@@ -61,7 +62,7 @@ export default function HeroSlidesPage() {
         closeForm();
         refetch();
       } catch (err) {
-        setActionError(err.message);
+        setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
       } finally {
         setSubmitting(false);
       }
@@ -85,7 +86,7 @@ export default function HeroSlidesPage() {
         closeForm();
         refetch();
       } catch (err) {
-        setActionError(err.message);
+        setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
       } finally {
         setSubmitting(false);
       }
@@ -108,7 +109,7 @@ export default function HeroSlidesPage() {
         });
         refetch();
       } catch (err) {
-        setActionError(err.message);
+        setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
       }
     },
     [refetch, t],
@@ -127,7 +128,7 @@ export default function HeroSlidesPage() {
         });
         refetch();
       } catch (err) {
-        setActionError(err.message);
+        setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
       }
     },
     [refetch],
@@ -141,7 +142,7 @@ export default function HeroSlidesPage() {
         await reorderHeroSlides(reordered);
         refetch();
       } catch (err) {
-        setActionError(err.message);
+        setActionError(getErrorMessage(err, t, "common.errorSaveFailed"));
       } finally {
         setReordering(false);
       }

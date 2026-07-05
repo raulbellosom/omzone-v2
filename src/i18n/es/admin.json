@@ -643,6 +643,10 @@
       "scanAnother": "Escanear otro",
       "viewDetails": "Ver detalles",
       "searchClient": "Buscar cliente",
+      "errorEmptyCode": "Ingresa o escanea un código de pase",
+      "errorValidation": "No se pudo validar el pase",
+      "errorAlreadyUsed": "El pase ya fue utilizado",
+      "errorConfirm": "No se pudo registrar la entrada",
       "room": "Salón",
       "time": "Hora",
       "validFrom": "Válido desde",
@@ -1243,6 +1247,7 @@
       "confirmSale": "Confirmar venta",
       "next": "Siguiente",
       "newSale": "Nueva venta",
+      "errorGeneric": "No pudimos procesar la venta. Intenta de nuevo.",
       "customer": {
         "title": "Cliente",
         "description": "Busca un cliente existente por nombre o email, o crea uno nuevo.",

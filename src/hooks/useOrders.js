@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { databases, functions, Query } from "@/lib/appwrite";
 import env from "@/config/env";
 
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
+
 const DB = env.appwriteDatabaseId;
 const COL_ORDERS = env.collectionOrders;
 const COL_ORDER_ITEMS = env.collectionOrderItems;
@@ -41,6 +44,7 @@ export function useOrders({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   const fetch = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -60,7 +64,7 @@ export function useOrders({
       setData(res.documents);
       setTotal(res.total);
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }
@@ -82,6 +86,7 @@ export function useOrderDetail(orderId) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   useEffect(() => {
     if (!orderId) return;
 
@@ -125,7 +130,7 @@ export function useOrderDetail(orderId) {
         setItems(itemsRes.documents);
         setPayments(paymentsRes.documents);
       })
-      .catch((err) => setError(err.message))
+      .catch((err) => setError(getErrorMessage(err, t)))
       .finally(() => setLoading(false));
   }, [orderId]);
 

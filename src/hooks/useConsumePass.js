@@ -1,5 +1,7 @@
 import { useState, useCallback } from "react";
 import { functions } from "@/lib/appwrite";
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import env from "@/config/env";
 
 /**
@@ -7,13 +9,14 @@ import env from "@/config/env";
  * Returns { consume, result, loading, error, reset }.
  */
 export function useConsumePass() {
+  const { t } = useLanguage();
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const consume = useCallback(async ({ userPassId, slotId }) => {
     if (!userPassId || !slotId) {
-      setError("Faltan datos para consumir el pase");
+      setError(t("portal.usePass.errorMissingData"));
       return null;
     }
 
@@ -34,20 +37,19 @@ export function useConsumePass() {
       const body = JSON.parse(execution.responseBody);
 
       if (execution.responseStatusCode >= 400 || !body.ok) {
-        const msg = body?.error?.message || "Error al consumir el pase";
-        setError(msg);
+        setError(t("portal.usePass.errorGeneric"));
         return null;
       }
 
       setResult(body.data);
       return body.data;
     } catch (err) {
-      setError(err.message || "Error de conexión");
+      setError(getErrorMessage(err, t, "portal.usePass.errorGeneric"));
       return null;
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   const reset = useCallback(() => {
     setResult(null);

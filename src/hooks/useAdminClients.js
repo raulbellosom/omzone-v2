@@ -4,6 +4,9 @@ import env from "@/config/env";
 import { useAuth } from "@/hooks/useAuth";
 import { excludeGhostUsers } from "@/constants/roles";
 
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
+
 const DB = env.appwriteDatabaseId;
 const COL_PROFILES = env.collectionUserProfiles;
 const COL_ORDERS = env.collectionOrders;
@@ -23,6 +26,7 @@ export function useAdminClients({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   const fetch = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -46,7 +50,7 @@ export function useAdminClients({
       setData(filtered);
       setTotal(filtered.length);
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }
@@ -69,6 +73,7 @@ export function useClientDetail(userId) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   const fetch = useCallback(async () => {
     if (!userId) return;
     setLoading(true);
@@ -98,7 +103,7 @@ export function useClientDetail(userId) {
       setTickets(ticketsRes.documents);
       setPasses(passesRes.documents);
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

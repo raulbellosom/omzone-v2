@@ -2,6 +2,7 @@ import { useState } from "react";
 import RoomForm from "@/components/admin/resources/RoomForm";
 import { createRoom } from "@/hooks/useRooms";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { toast } from "sonner";
 
 export default function RoomCreatePage() {
@@ -16,8 +17,9 @@ export default function RoomCreatePage() {
       await createRoom(payload);
       toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
-      setServerError(err.message);
-      toast.error(err.message);
+      const msg = getErrorMessage(err, t, "common.errorSaveFailed");
+      setServerError(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }

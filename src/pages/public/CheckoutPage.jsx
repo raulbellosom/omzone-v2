@@ -103,10 +103,12 @@ function CheckoutErrorBanner({ error, t, onDismiss }) {
 
   const code = typeof error === "object" ? error.code : null;
   const i18nKey = code && i18nMap[code];
+  // Unmapped codes fall back to a generic translated message — never the raw
+  // backend error text, which is untranslated and often too technical.
   const message = i18nKey
     ? t(i18nKey)
     : typeof error === "object"
-      ? error.message
+      ? t("checkoutErrors.internal")
       : error;
 
   return (

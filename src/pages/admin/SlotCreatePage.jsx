@@ -6,6 +6,7 @@ import { createSlot } from "@/hooks/useSlots";
 import { auditAction } from "@/lib/audit";
 import { useExperience } from "@/hooks/useExperiences";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
 import { toast } from "sonner";
 
 export default function SlotCreatePage() {
@@ -32,8 +33,8 @@ export default function SlotCreatePage() {
       });
       toast.success(t("admin.common.createdSuccess"));
     } catch (err) {
-      setServerError(err.message);
-      toast.error(err.message);
+      setServerError(getErrorMessage(err, t, "common.errorSaveFailed"));
+      toast.error(getErrorMessage(err, t, "common.errorSaveFailed"));
     } finally {
       setSubmitting(false);
     }

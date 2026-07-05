@@ -3,6 +3,9 @@ import { databases, Query } from "@/lib/appwrite";
 import { useAuth } from "@/hooks/useAuth";
 import env from "@/config/env";
 
+import { useLanguage } from "@/hooks/useLanguage";
+import { getErrorMessage } from "@/lib/errors";
+
 const DB = env.appwriteDatabaseId;
 const COL = env.collectionUserPasses;
 
@@ -22,6 +25,7 @@ export function usePortalPasses({
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
 
+  const { t } = useLanguage();
   const fetch = useCallback(
     async (offset = 0, append = false) => {
       if (!user?.$id) return;
@@ -59,7 +63,7 @@ export function usePortalPasses({
         }
         setTotal(res.total);
       } catch (err) {
-        setError(err.message);
+        setError(getErrorMessage(err, t));
       } finally {
         setLoading(false);
         setLoadingMore(false);
