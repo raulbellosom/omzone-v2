@@ -23,6 +23,7 @@ import {
   UserCog,
   BookOpen,
   Shield,
+  ShieldCheck,
 } from "lucide-react";
 
 const NAV_SECTIONS = [
@@ -136,6 +137,12 @@ const NAV_SECTIONS = [
         nameKey: "admin.sidebar.audit",
         path: ROUTES.ADMIN_AUDIT,
         icon: Shield,
+        rootOnly: true,
+      },
+      {
+        nameKey: "admin.sidebar.users",
+        path: ROUTES.ADMIN_USERS,
+        icon: ShieldCheck,
         rootOnly: true,
       },
     ],

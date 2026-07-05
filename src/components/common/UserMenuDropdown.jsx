@@ -144,12 +144,14 @@ export default function UserMenuDropdown({ transparent = false }) {
                   Mi cuenta admin
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to={ROUTES.ADMIN_USERS}>
-                  <Users className="h-4 w-4 text-charcoal-muted" />
-                  Gestión de usuarios
-                </Link>
-              </DropdownMenuItem>
+              {isRoot && (
+                <DropdownMenuItem asChild>
+                  <Link to={ROUTES.ADMIN_USERS}>
+                    <Users className="h-4 w-4 text-charcoal-muted" />
+                    Gestión de usuarios
+                  </Link>
+                </DropdownMenuItem>
+              )}
               {isRoot && (
                 <DropdownMenuItem asChild>
                   <Link to="/help/docs/en">

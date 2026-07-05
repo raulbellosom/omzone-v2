@@ -118,6 +118,7 @@ const AdminTicketDetailPage = lazy(
 const MediaManagerPage = lazy(() => import("@/pages/admin/MediaManagerPage"));
 const ClientListPage = lazy(() => import("@/pages/admin/ClientListPage"));
 const ClientDetailPage = lazy(() => import("@/pages/admin/ClientDetailPage"));
+const UserListPage = lazy(() => import("@/pages/admin/UserListPage"));
 const SettingsPage = lazy(() => import("@/pages/admin/SettingsPage"));
 const AdminAccountPage = lazy(() => import("@/pages/admin/AdminAccountPage"));
 const CheckInPage = lazy(() => import("@/pages/admin/CheckInPage"));
@@ -371,6 +372,7 @@ export default function App() {
                 <Route path="hero-slides" element={<HeroSlidesPage />} />
                 <Route element={<RequireLabel labels={[ROLES.ROOT]} />}>
                   <Route path="audit" element={<AuditLogPage />} />
+                  <Route path="users" element={<UserListPage />} />
                 </Route>
               </Route>
               <Route path="media" element={<MediaManagerPage />} />
