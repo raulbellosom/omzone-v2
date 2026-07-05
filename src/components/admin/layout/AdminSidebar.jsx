@@ -6,6 +6,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import {
   LayoutDashboard,
+  ScanLine,
   Sparkles,
   Puzzle,
   CalendarDays,
@@ -33,6 +34,11 @@ const NAV_SECTIONS = [
         path: ROUTES.ADMIN,
         icon: LayoutDashboard,
         end: true,
+      },
+      {
+        nameKey: "admin.sidebar.checkin",
+        path: ROUTES.ADMIN_CHECK_IN,
+        icon: ScanLine,
       },
     ],
   },
