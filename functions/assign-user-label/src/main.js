@@ -408,6 +408,10 @@ async function handleListUsers({ req, res, log, error }) {
 
     const result = await users.list(queries, searchTerm);
 
+    // cursor and hasMore are based on the raw fetched page (before root-filtering).
+    // This ensures pagination works correctly — filtering root users afterward means
+    // a page can legitimately contain fewer visible users than the limit while hasMore
+    // is still true. Basing cursor/hasMore on the filtered result would skip users.
     const nextCursor =
       result.users.length > 0
         ? result.users[result.users.length - 1].$id
