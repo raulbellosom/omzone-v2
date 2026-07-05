@@ -26,9 +26,9 @@ Build a root-only "Gestión de usuarios" page at `/admin/users` that lists all A
 **New action `"list-users"`** (HTTP POST `{ action: "list-users", search?: string, cursor?: string }`):
 - 401 `ERR_AUTH_REQUIRED` if no `x-appwrite-user-id` header.
 - 403 `ERR_UNAUTHORIZED` unless caller's labels include `root` (root-only, no `admin` fallback — this differs from `handleManualAssignment`'s current behavior on purpose, see below).
-- Calls `users.list(queries)` with `Query.limit(50)` (+ `Query.cursorAfter(cursor)` if provided) and `Query.search(search)` if `search` is non-empty.
+- Calls `users.list(queries, search)` with `Query.limit(50)` (+ `Query.cursorAfter(cursor)` if provided) and `search` (capped at 256 chars) passed as the SDK's free-text search parameter.
 - **Unconditionally filters out any user whose `labels` includes `root`** from the result — no exception for the root caller. This matches the documented policy ("Ver root en listados: ❌" for every viewer) and is intentionally stricter than `excludeGhostUsers()` in `roles.js` (which has a root-sees-everything exception) — that helper is not reused here.
-- Returns `{ ok: true, data: { users: [{ $id, name, email, phone, labels, status, registration }], total } }` (only the fields the UI needs — never the full Appwrite user object).
+- Returns `{ ok: true, data: { users: [{ $id, name, email, phone, labels, status, registration }], hasMore, nextCursor } }` (only the fields the UI needs — never the full Appwrite user object). `hasMore`/`nextCursor` are deliberately derived from the raw fetched page *before* root-filtering (a page can legitimately contain fewer visible users than the limit while `hasMore` is still `true`) — basing them on the filtered result would break keyset pagination. No `total` count is returned: filtering root server-side makes an offset/total count misleading, so pagination is cursor-based only.
 
 **`handleManualAssignment` authorization is tightened**: the existing check
 ```js
@@ -69,10 +69,10 @@ New `src/hooks/useAdminUsers.js`, parallel in shape to `useAdminClients.js` but 
 
 New `src/pages/admin/UserListPage.jsx` + a presentational table component, following the responsive pattern already used in [PricingTierTable.jsx](../../../src/components/admin/pricing/PricingTierTable.jsx) (desktop `<table>`, mobile stacked `Card`s):
 
-- Search input (name/email) wired to `useAdminUsers({ search })`.
+- Search input (name/email) wired to `useAdminUsers({ search })`, debounced 300ms inside the hook (same pattern as `useDocsSearch.js`) so typing doesn't fire a Function execution per keystroke.
 - Per row: name, email, current labels as `Badge`s, and label-management controls — one action per assignable label (`admin`, `operator`, `client`) toggled on/off, calling `assignLabel`/`removeLabel`. Disable the toggle that would remove a user's last remaining label (matches the backend's `ERR_LABEL_LAST_ROLE`).
 - Loading skeleton and error state follow the existing convention (see `AdminAccountPage.jsx`'s loading/error blocks).
-- No pagination beyond the Function's cursor param for v1 — a "Load more" button appends the next page if `total` exceeds the loaded count (kept simple; OMZONE's user base doesn't need virtualized/infinite scroll yet).
+- No pagination beyond the Function's cursor param for v1 — a "Load more" button appears whenever `hasMore` is true and appends the next page (kept simple; OMZONE's user base doesn't need virtualized/infinite scroll yet).
 
 ### 5. i18n
 
