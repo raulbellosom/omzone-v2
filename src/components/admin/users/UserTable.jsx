@@ -3,15 +3,6 @@ import { useLanguage } from "@/hooks/useLanguage";
 
 const MANAGED_LABELS = ["admin", "operator", "client"];
 
-function formatDate(iso) {
-  if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("es-MX", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-}
-
 function LabelBadges({ labels, t }) {
   if (!labels || labels.length === 0) {
     return <span className="text-charcoal-subtle">—</span>;
@@ -153,5 +144,3 @@ export default function UserTable({
     </div>
   );
 }
-
-export { formatDate };
