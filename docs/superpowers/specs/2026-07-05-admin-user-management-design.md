@@ -5,7 +5,7 @@
 
 ## Context
 
-The route `ADMIN_USERS: "/admin/users"` ([routes.js](../../../src/constants/routes.js)) and the sidebar/menu link ("Gestión de usuarios") already exist, but no page was ever built behind them — [App.jsx](../../../src/App.jsx) has no `path="users"` route under `/admin`. The i18n key `admin.sidebar.users` already exists in both [en/admin.json](../../../src/i18n/en/admin.json) and [es/admin.json](../../../src/i18n/es/admin.json) but is unused.
+The route `ADMIN_USERS: "/admin/users"` ([routes.js](../../../src/constants/routes.js)) and the sidebar/menu link ("Gestión de usuarios") already exist, but no page was ever built behind them — [App.jsx](../../../src/App.jsx) has no `path="users"` route under `/admin`. [Breadcrumbs.jsx](../../../src/components/admin/layout/Breadcrumbs.jsx) already maps the `users` path segment to `admin.breadcrumbs.users` (defined in both `en/admin.json` and `es/admin.json`) — that piece needs no changes. There is, however, no `admin.sidebar.users` key yet; that must be added for the new sidebar nav item.
 
 The project already has a full labels/roles model:
 - [constants/roles.js](../../../src/constants/roles.js) — `ROLES.ROOT/ADMIN/OPERATOR/CLIENT`, `isGhostUser`/`excludeGhostUsers` (root is meant to be invisible), `canHardDelete`, etc.
@@ -54,7 +54,7 @@ In [App.jsx](../../../src/App.jsx), inside the `/admin` route block, add a `user
 </Route>
 ```
 
-- **`AdminSidebar.jsx`**: add a `users` nav item (icon: reuse an appropriate `lucide-react` icon not already used for `clients`, e.g. `ShieldCheck` or `UserCog`) in the `system` section, with `rootOnly: true` — same mechanism already used for `admin.sidebar.audit`. Uses the pre-existing `admin.sidebar.users` i18n key.
+- **`AdminSidebar.jsx`**: add a `users` nav item (icon: `ShieldCheck` from `lucide-react`, distinct from the `Users` icon already used for `clients`) in the `system` section, with `rootOnly: true` — same mechanism already used for `admin.sidebar.audit`. Requires adding the new `admin.sidebar.users` i18n key (the existing `admin.breadcrumbs.users` key is unrelated and already wired).
 - **`UserMenuDropdown.jsx`**: the existing "Gestión de usuarios" `DropdownMenuItem` (line ~147) currently renders whenever `isAdmin` is true (which includes root). Change its guard to `isRoot` only, matching the new access rule.
 
 ### 3. Data layer — `useAdminUsers` hook
