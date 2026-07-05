@@ -73,6 +73,48 @@ function initClient(req) {
 }
 
 /**
+ * Shared root-only auth check for the list-users and manual-assignment
+ * HTTP actions. Returns { errorResponse } if the caller isn't authenticated
+ * or lacks the root label, otherwise { callerId }.
+ */
+async function requireRoot({ req, res, users }) {
+  const callerId = req.headers["x-appwrite-user-id"];
+  if (!callerId) {
+    return {
+      errorResponse: res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_AUTH_REQUIRED",
+            message: "Authentication required",
+          },
+        },
+        401,
+      ),
+    };
+  }
+
+  const caller = await users.get(callerId);
+  const callerLabels = caller.labels || [];
+  if (!callerLabels.includes("root")) {
+    return {
+      errorResponse: res.json(
+        {
+          ok: false,
+          error: {
+            code: "ERR_UNAUTHORIZED",
+            message: "Insufficient permissions",
+          },
+        },
+        403,
+      ),
+    };
+  }
+
+  return { callerId };
+}
+
+/**
  * Flow A — Event trigger: users.*.create
  * Creates user_profiles document and assigns 'client' label.
  */
@@ -366,34 +408,9 @@ async function handleListUsers({ req, res, log, error }) {
       typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
     const { search, cursor } = body;
 
-    const callerId = req.headers["x-appwrite-user-id"];
-    if (!callerId) {
-      return res.json(
-        {
-          ok: false,
-          error: {
-            code: "ERR_AUTH_REQUIRED",
-            message: "Authentication required",
-          },
-        },
-        401,
-      );
-    }
-
-    const caller = await users.get(callerId);
-    const callerLabels = caller.labels || [];
-    if (!callerLabels.includes("root")) {
-      return res.json(
-        {
-          ok: false,
-          error: {
-            code: "ERR_UNAUTHORIZED",
-            message: "Insufficient permissions",
-          },
-        },
-        403,
-      );
-    }
+    const authResult = await requireRoot({ req, res, users });
+    if (authResult.errorResponse) return authResult.errorResponse;
+    const { callerId } = authResult;
 
     const limit = 50;
     const queries = [Query.limit(limit)];
@@ -401,9 +418,10 @@ async function handleListUsers({ req, res, log, error }) {
       queries.push(Query.cursorAfter(cursor.trim()));
     }
 
+    const MAX_SEARCH_LENGTH = 256;
     const searchTerm =
       search && typeof search === "string" && search.trim()
-        ? search.trim()
+        ? search.trim().slice(0, MAX_SEARCH_LENGTH)
         : undefined;
 
     const result = await users.list(queries, searchTerm);
@@ -518,37 +536,10 @@ async function handleManualAssignment({ req, res, log, error }) {
       );
     }
 
-    // 5. Authenticate — verify caller
-    const callerId = req.headers["x-appwrite-user-id"];
-    if (!callerId) {
-      return res.json(
-        {
-          ok: false,
-          error: {
-            code: "ERR_AUTH_REQUIRED",
-            message: "Authentication required",
-          },
-        },
-        401,
-      );
-    }
-
-    // 6. Authorize — only root may assign/remove admin, operator, or client labels
-    const caller = await users.get(callerId);
-    const callerLabels = caller.labels || [];
-
-    if (!callerLabels.includes("root")) {
-      return res.json(
-        {
-          ok: false,
-          error: {
-            code: "ERR_UNAUTHORIZED",
-            message: "Insufficient permissions",
-          },
-        },
-        403,
-      );
-    }
+    // 5-6. Authenticate + authorize — only root may assign/remove admin, operator, or client labels
+    const authResult = await requireRoot({ req, res, users });
+    if (authResult.errorResponse) return authResult.errorResponse;
+    const { callerId } = authResult;
 
     // 7. Fetch target user
     let targetUser;
