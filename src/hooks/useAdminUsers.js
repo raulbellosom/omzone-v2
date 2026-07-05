@@ -3,9 +3,21 @@ import { functions } from "@/lib/appwrite";
 import env from "@/config/env";
 
 const ROOT_LABEL = "root";
+const SEARCH_DEBOUNCE_MS = 300;
 
 function stripRoot(users) {
   return (users || []).filter((u) => !(u.labels || []).includes(ROOT_LABEL));
+}
+
+function useDebouncedValue(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebouncedValue(value), delay);
+    return () => window.clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
 }
 
 async function callAssignLabelFunction(payload) {
@@ -15,6 +27,7 @@ async function callAssignLabelFunction(payload) {
     false,
     "/",
     "POST",
+    { "Content-Type": "application/json" },
   );
 
   let parsed;
@@ -36,6 +49,7 @@ async function callAssignLabelFunction(payload) {
  * assigning/removing admin, operator, and client labels on them.
  */
 export function useAdminUsers({ search = "" } = {}) {
+  const debouncedSearch = useDebouncedValue(search, SEARCH_DEBOUNCE_MS);
   const [data, setData] = useState([]);
   const [cursor, setCursor] = useState(null);
   const [hasMore, setHasMore] = useState(false);
@@ -49,7 +63,7 @@ export function useAdminUsers({ search = "" } = {}) {
     try {
       const result = await callAssignLabelFunction({
         action: "list-users",
-        search,
+        search: debouncedSearch,
       });
       setData(stripRoot(result.users));
       setCursor(result.nextCursor ?? null);
@@ -59,7 +73,7 @@ export function useAdminUsers({ search = "" } = {}) {
     } finally {
       setLoading(false);
     }
-  }, [search]);
+  }, [debouncedSearch]);
 
   useEffect(() => {
     fetchFirstPage();
@@ -72,7 +86,7 @@ export function useAdminUsers({ search = "" } = {}) {
     try {
       const result = await callAssignLabelFunction({
         action: "list-users",
-        search,
+        search: debouncedSearch,
         cursor,
       });
       setData((prev) => [...prev, ...stripRoot(result.users)]);
@@ -83,7 +97,7 @@ export function useAdminUsers({ search = "" } = {}) {
     } finally {
       setLoadingMore(false);
     }
-  }, [search, cursor, hasMore, loadingMore]);
+  }, [debouncedSearch, cursor, hasMore, loadingMore]);
 
   const assignLabel = useCallback(
     async (userId, label) => {
