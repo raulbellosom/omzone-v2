@@ -9,13 +9,21 @@ const TICKET_CODE_PATTERN = /^[A-Za-z0-9-]+$/;
 // once, at start time) and never sets a height or re-measures on resize —
 // its own inline style always beats our Tailwind classes, and rotating a
 // tablet never fixes it. Force it to responsive sizing right after start.
+//
+// Deliberately NOT setting width/height:100% here: this component nests the
+// mount element inside an aspect-ratio-sized ancestor, and percentage
+// height doesn't reliably resolve through that chain (the ancestor's
+// height, while visually stretched via inset:0, isn't treated as
+// "definite" for a grandchild's percentage-height calculation in this
+// case — the computed height silently collapses to 0, making the video
+// invisible even though it's actively playing). `position: absolute` +
+// `inset: 0` alone stretches the video to fill its DIRECT parent (the
+// mount div) without depending on percentage resolution at all.
 function forceResponsiveVideoSizing(mountElementId) {
   const video = document.querySelector(`#${mountElementId} video`);
   if (!video) return;
   video.style.setProperty("position", "absolute", "important");
   video.style.setProperty("inset", "0", "important");
-  video.style.setProperty("width", "100%", "important");
-  video.style.setProperty("height", "100%", "important");
   video.style.setProperty("object-fit", "cover", "important");
 }
 
