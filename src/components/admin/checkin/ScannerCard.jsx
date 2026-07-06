@@ -32,11 +32,19 @@ function forceResponsiveVideoSizing(mountElementId) {
   // qrbox size is configured — it has a fixed, library-wide id. We render
   // our own vignette + green corner UI instead, so hide the library's to
   // avoid double-darkening the feed and showing mismatched white indicators
-  // on top of ours.
-  const shadedRegion = document.getElementById("qr-shaded-region");
-  if (shadedRegion) {
-    shadedRegion.style.setProperty("display", "none", "important");
-  }
+  // on top of ours. It's inserted asynchronously (on the video's "playing"
+  // event, which fires *after* start() already resolved), so a one-time
+  // check right here is too early — watch for it with a MutationObserver
+  // instead of guessing the timing.
+  const hideShadedRegion = () => {
+    const shadedRegion = document.getElementById("qr-shaded-region");
+    if (shadedRegion) {
+      shadedRegion.style.setProperty("display", "none", "important");
+    }
+  };
+  hideShadedRegion();
+  const shadeObserver = new MutationObserver(hideShadedRegion);
+  shadeObserver.observe(mount, { childList: true });
 
   const container = mount.parentElement || mount;
 
@@ -51,9 +59,12 @@ function forceResponsiveVideoSizing(mountElementId) {
   };
 
   applySize();
-  const observer = new ResizeObserver(applySize);
-  observer.observe(container);
-  return () => observer.disconnect();
+  const resizeObserver = new ResizeObserver(applySize);
+  resizeObserver.observe(container);
+  return () => {
+    shadeObserver.disconnect();
+    resizeObserver.disconnect();
+  };
 }
 
 // Serializes camera start/stop across mounts (Kiosk mode fully unmounts and
