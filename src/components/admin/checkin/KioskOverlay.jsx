@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
+import SessionHistoryList from "@/components/admin/checkin/SessionHistoryList";
 
 function useClock() {
   const [now, setNow] = useState(new Date());
@@ -10,7 +11,13 @@ function useClock() {
   return now;
 }
 
-export default function KioskOverlay({ onExit, children }) {
+export default function KioskOverlay({
+  onExit,
+  scanner,
+  manualInput,
+  history,
+  children,
+}) {
   const { t, language } = useLanguage();
   const now = useClock();
 
@@ -38,14 +45,23 @@ export default function KioskOverlay({ onExit, children }) {
         </div>
         <button
           onClick={onExit}
-          className="h-10 px-4 rounded-xl border border-sand-dark bg-white text-sm font-semibold text-charcoal hover:bg-warm-gray transition-colors cursor-pointer"
+          className="h-14 px-6 rounded-xl border border-sand-dark bg-white text-sm font-semibold text-charcoal hover:bg-warm-gray transition-colors cursor-pointer"
         >
           {t("admin.checkin.kioskExit")}
         </button>
       </div>
-      <div className="flex-1 flex items-center justify-center p-6">
-        <div className="w-full max-w-xl">{children}</div>
+      <div className="flex-1 overflow-auto p-6 flex items-start justify-center">
+        <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 items-start">
+          {scanner}
+          <div className="flex flex-col gap-6">
+            {manualInput}
+            <div className="hidden lg:block">
+              <SessionHistoryList history={history} />
+            </div>
+          </div>
+        </div>
       </div>
+      {children}
     </div>
   );
 }

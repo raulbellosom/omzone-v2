@@ -2,31 +2,38 @@ import { useEffect, useRef, useState, useId, useCallback } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 import { ScanLine, SwitchCamera, AlertTriangle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-import Button from "@/components/common/Button";
-import { cn } from "@/lib/utils";
 
 const TICKET_CODE_PATTERN = /^[A-Za-z0-9-]+$/;
 
-export default function ScannerCard({
-  onSubmitCode,
-  disabled = false,
-  focusToken = 0,
-}) {
+// html5-qrcode sets the injected <video>'s width in fixed pixels (computed
+// once, at start time) and never sets a height or re-measures on resize —
+// its own inline style always beats our Tailwind classes, and rotating a
+// tablet never fixes it. Force it to responsive sizing right after start.
+function forceResponsiveVideoSizing(mountElementId) {
+  const video = document.querySelector(`#${mountElementId} video`);
+  if (!video) return;
+  video.style.setProperty("position", "absolute", "important");
+  video.style.setProperty("inset", "0", "important");
+  video.style.setProperty("width", "100%", "important");
+  video.style.setProperty("height", "100%", "important");
+  video.style.setProperty("object-fit", "cover", "important");
+}
+
+// Serializes camera start/stop across mounts (Kiosk mode fully unmounts and
+// remounts ScannerCard on toggle; switching cameras remounts the effect too)
+// so two Html5Qrcode instances can never hold the same physical camera
+// device concurrently — that race is what makes the feed go black on some
+// tablet camera drivers even though start() itself resolves without error.
+let pendingCameraTeardown = Promise.resolve();
+
+export default function ScannerCard({ onSubmitCode }) {
   const { t } = useLanguage();
   const elementId = useId().replace(/:/g, "");
-  const [code, setCode] = useState("");
   const [cameraState, setCameraState] = useState("starting"); // starting | active | error
   const [cameras, setCameras] = useState([]);
   const [activeCameraId, setActiveCameraId] = useState(null);
-  const inputRef = useRef(null);
   const scannerRef = useRef(null);
   const lastScannedRef = useRef({ code: "", at: 0 });
-
-  // Refocus the manual/HID input whenever the parent asks (e.g. modal closed).
-  useEffect(() => {
-    const id = setTimeout(() => inputRef.current?.focus(), 60);
-    return () => clearTimeout(id);
-  }, [focusToken]);
 
   // Discover available cameras once.
   useEffect(() => {
@@ -71,15 +78,21 @@ export default function ScannerCard({
       if (TICKET_CODE_PATTERN.test(sanitized)) onSubmitCode(sanitized);
     }
 
-    const startPromise = scanner
-      .start(
+    const startPromise = pendingCameraTeardown.then(() =>
+      scanner.start(
         activeCameraId,
         { fps: 10, qrbox: { width: 220, height: 220 } },
         onDecoded,
         () => {},
-      )
+      ),
+    );
+
+    startPromise
       .then(() => {
-        if (!cancelled) setCameraState("active");
+        if (!cancelled) {
+          forceResponsiveVideoSizing(elementId);
+          setCameraState("active");
+        }
       })
       .catch((err) => {
         console.error("ScannerCard: camera failed to start:", err);
@@ -88,7 +101,8 @@ export default function ScannerCard({
 
     return () => {
       cancelled = true;
-      startPromise
+      pendingCameraTeardown = startPromise
+        .catch(() => {})
         .then(() => scanner.stop())
         .catch(() => {})
         .then(() => scanner.clear())
@@ -102,25 +116,11 @@ export default function ScannerCard({
     setActiveCameraId(cameras[(currentIndex + 1) % cameras.length].id);
   }, [cameras, activeCameraId]);
 
-  const submitManual = () => {
-    const sanitized = code.trim().toUpperCase();
-    if (!sanitized) return;
-    onSubmitCode(sanitized);
-    setCode("");
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      submitManual();
-    }
-  };
-
   const isActive = cameraState === "active";
   const isError = cameraState === "error";
 
   return (
-    <div className="bg-white rounded-2xl border border-sand-dark/30 shadow-sm overflow-hidden max-w-2xl mx-auto">
+    <div className="bg-white rounded-2xl border border-sand-dark/30 shadow-sm overflow-hidden">
       {/* ── Camera ─────────────────────────────────────────────── */}
       <div className="relative w-full aspect-4/3 bg-[#0c0e13] overflow-hidden">
         {/* html5-qrcode mount */}
@@ -189,47 +189,11 @@ export default function ScannerCard({
             onClick={switchCamera}
             aria-label={t("admin.checkin.switchCamera")}
             title={t("admin.checkin.switchCamera")}
-            className="absolute top-4 right-4 z-20 h-9 w-9 rounded-xl bg-black/50 backdrop-blur-sm border border-white/10 text-white/80 flex items-center justify-center hover:bg-black/70 transition-colors cursor-pointer"
+            className="absolute top-4 right-4 z-20 h-12 w-12 rounded-xl bg-black/50 backdrop-blur-sm border border-white/10 text-white/80 flex items-center justify-center hover:bg-black/70 transition-colors cursor-pointer"
           >
-            <SwitchCamera className="h-4 w-4" />
+            <SwitchCamera className="h-5 w-5" />
           </button>
         )}
-      </div>
-
-      {/* ── Manual input ──────────────────────────────────────── */}
-      <div className="p-5">
-        <label
-          htmlFor="ticket-code-input"
-          className="block text-[11px] font-semibold uppercase tracking-wider text-charcoal-muted mb-2"
-        >
-          {t("admin.checkin.manualSectionLabel")}
-        </label>
-        <div className="flex gap-3">
-          <input
-            ref={inputRef}
-            id="ticket-code-input"
-            type="text"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={t("admin.checkin.placeholder")}
-            autoFocus
-            autoComplete="off"
-            disabled={disabled}
-            className={cn(
-              "flex-1 h-12 rounded-xl border border-sand-dark bg-white px-4 text-charcoal font-mono text-sm uppercase tracking-wide placeholder:text-charcoal-muted/40 placeholder:normal-case focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 transition-shadow",
-              disabled && "opacity-50",
-            )}
-          />
-          <Button
-            type="button"
-            size="lg"
-            disabled={disabled || !code.trim()}
-            onClick={submitManual}
-          >
-            {t("admin.checkin.validate")}
-          </Button>
-        </div>
       </div>
     </div>
   );
