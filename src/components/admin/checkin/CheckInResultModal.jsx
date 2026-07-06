@@ -100,7 +100,7 @@ export default function CheckInResultModal({
                 </div>
                 <button
                   onClick={onScanAnother}
-                  className="w-full h-12 rounded-xl bg-sage text-white font-semibold hover:bg-sage-dark transition-colors cursor-pointer"
+                  className="w-full h-14 rounded-xl bg-sage text-white font-semibold hover:bg-sage-dark transition-colors cursor-pointer"
                 >
                   {t("admin.checkin.scanAnother")}
                 </button>
@@ -185,20 +185,20 @@ export default function CheckInResultModal({
                     </div>
                   )}
 
-                  <div className="flex flex-col gap-2.5 pt-2">
+                  <div className="flex flex-col gap-3 pt-2">
                     {group === "valid" && (
                       <button
                         onClick={() => onConfirm(data.ticketCode)}
-                        className="w-full h-12 rounded-xl bg-sage text-white font-semibold hover:bg-sage-dark transition-colors cursor-pointer"
+                        className="w-full h-14 rounded-xl bg-sage text-white font-semibold hover:bg-sage-dark transition-colors cursor-pointer"
                       >
                         {t("admin.checkin.confirmEntry")}
                       </button>
                     )}
-                    <div className="flex gap-2.5">
+                    <div className="flex gap-3">
                       {group === "valid" && data.ticket?.ticketId && (
                         <button
                           onClick={() => onViewDetails(data.ticket.ticketId)}
-                          className="flex-1 h-11 rounded-xl border border-sand-dark text-charcoal font-medium hover:bg-warm-gray transition-colors cursor-pointer"
+                          className="flex-1 h-14 rounded-xl border border-sand-dark text-charcoal font-medium hover:bg-warm-gray transition-colors cursor-pointer"
                         >
                           {t("admin.checkin.viewDetails")}
                         </button>
@@ -206,14 +206,14 @@ export default function CheckInResultModal({
                       {group === "invalid" && (
                         <button
                           onClick={onSearchClient}
-                          className="flex-1 h-11 rounded-xl border border-sand-dark text-charcoal font-medium hover:bg-warm-gray transition-colors cursor-pointer"
+                          className="flex-1 h-14 rounded-xl border border-sand-dark text-charcoal font-medium hover:bg-warm-gray transition-colors cursor-pointer"
                         >
                           {t("admin.checkin.searchClient")}
                         </button>
                       )}
                       <button
                         onClick={onScanAnother}
-                        className="flex-1 h-11 rounded-xl border border-sand-dark text-charcoal font-medium hover:bg-warm-gray transition-colors cursor-pointer"
+                        className="flex-1 h-14 rounded-xl border border-sand-dark text-charcoal font-medium hover:bg-warm-gray transition-colors cursor-pointer"
                       >
                         {t("admin.checkin.scanAnother")}
                       </button>

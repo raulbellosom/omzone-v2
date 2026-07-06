@@ -189,9 +189,9 @@ export default function ScannerCard({ onSubmitCode }) {
             onClick={switchCamera}
             aria-label={t("admin.checkin.switchCamera")}
             title={t("admin.checkin.switchCamera")}
-            className="absolute top-4 right-4 z-20 h-9 w-9 rounded-xl bg-black/50 backdrop-blur-sm border border-white/10 text-white/80 flex items-center justify-center hover:bg-black/70 transition-colors cursor-pointer"
+            className="absolute top-4 right-4 z-20 h-12 w-12 rounded-xl bg-black/50 backdrop-blur-sm border border-white/10 text-white/80 flex items-center justify-center hover:bg-black/70 transition-colors cursor-pointer"
           >
-            <SwitchCamera className="h-4 w-4" />
+            <SwitchCamera className="h-5 w-5" />
           </button>
         )}
       </div>
