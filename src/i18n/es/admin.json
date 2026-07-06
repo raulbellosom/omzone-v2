@@ -661,7 +661,10 @@
       "manualSectionLabel": "Ingresar código manualmente",
       "switchCamera": "Cambiar cámara",
       "kioskEnter": "Modo Kiosco",
-      "kioskExit": "Salir"
+      "kioskExit": "Salir",
+      "tipQr": "Apunta la cámara al código QR del ticket",
+      "tipHid": "Compatible con lectores HID (USB / Bluetooth)",
+      "tipManual": "O escribe el código directamente"
     },
     "slots": {
       "title": "Agenda / Slots",

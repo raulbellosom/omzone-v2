@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState, useId, useCallback } from "react";
 import { Html5Qrcode } from "html5-qrcode";
-import { ScanLine, SwitchCamera } from "lucide-react";
+import { ScanLine, SwitchCamera, AlertTriangle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import Button from "@/components/common/Button";
 import { cn } from "@/lib/utils";
 
 const TICKET_CODE_PATTERN = /^[A-Za-z0-9-]+$/;
 
-export default function ScannerCard({ onSubmitCode, disabled = false, focusToken = 0 }) {
+export default function ScannerCard({
+  onSubmitCode,
+  disabled = false,
+  focusToken = 0,
+}) {
   const { t } = useLanguage();
   const elementId = useId().replace(/:/g, "");
   const [code, setCode] = useState("");
@@ -24,21 +28,18 @@ export default function ScannerCard({ onSubmitCode, disabled = false, focusToken
     return () => clearTimeout(id);
   }, [focusToken]);
 
-  // Discover available cameras once. html5-qrcode's facingMode constraint
-  // only accepts a plain string or { exact }, both of which fail outright
-  // when the requested facing direction doesn't exist (e.g. a laptop with
-  // only a front-facing webcam) — enumerate real devices instead and default
-  // to a rear-facing one when present, but let the operator switch manually.
+  // Discover available cameras once.
   useEffect(() => {
     let cancelled = false;
     Html5Qrcode.getCameras()
       .then((list) => {
         if (cancelled) return;
-        if (!list || list.length === 0) {
+        if (!list || list.length === 0)
           throw new Error("No camera devices found");
-        }
         setCameras(list);
-        const rearCamera = list.find((c) => /back|rear|environment/i.test(c.label));
+        const rearCamera = list.find((c) =>
+          /back|rear|environment/i.test(c.label),
+        );
         setActiveCameraId((rearCamera || list[0]).id);
       })
       .catch((err) => {
@@ -50,10 +51,9 @@ export default function ScannerCard({ onSubmitCode, disabled = false, focusToken
     };
   }, []);
 
-  // Start/stop the scanner whenever the active camera changes.
+  // Start/stop scanner on camera change.
   useEffect(() => {
     if (!activeCameraId) return;
-
     let cancelled = false;
     setCameraState("starting");
     const scanner = new Html5Qrcode(elementId);
@@ -62,17 +62,13 @@ export default function ScannerCard({ onSubmitCode, disabled = false, focusToken
     function onDecoded(decodedText) {
       const sanitized = decodedText.trim().toUpperCase();
       const now = Date.now();
-      // Debounce: ignore the same code re-fired within 3s (camera scans continuously).
       if (
         lastScannedRef.current.code === sanitized &&
         now - lastScannedRef.current.at < 3000
-      ) {
+      )
         return;
-      }
       lastScannedRef.current = { code: sanitized, at: now };
-      if (TICKET_CODE_PATTERN.test(sanitized)) {
-        onSubmitCode(sanitized);
-      }
+      if (TICKET_CODE_PATTERN.test(sanitized)) onSubmitCode(sanitized);
     }
 
     const startPromise = scanner
@@ -80,27 +76,18 @@ export default function ScannerCard({ onSubmitCode, disabled = false, focusToken
         activeCameraId,
         { fps: 10, qrbox: { width: 220, height: 220 } },
         onDecoded,
-        () => {
-          /* per-frame decode failures are expected while no code is in view — ignore */
-        },
+        () => {},
       )
       .then(() => {
         if (!cancelled) setCameraState("active");
       })
       .catch((err) => {
-        // Surface the real reason (permission denied, camera busy, etc.)
-        // instead of swallowing it — the UI only shows a generic fallback
-        // message, but this makes the actual cause debuggable.
         console.error("ScannerCard: camera failed to start:", err);
         if (!cancelled) setCameraState("error");
       });
 
     return () => {
       cancelled = true;
-      // Wait for start() to settle (resolve or reject) before stopping —
-      // calling stop() while start() is still in-flight (e.g. React
-      // StrictMode's mount->cleanup->remount cycle, or switching cameras
-      // quickly) can leave the camera stream stuck.
       startPromise
         .then(() => scanner.stop())
         .catch(() => {})
@@ -112,8 +99,7 @@ export default function ScannerCard({ onSubmitCode, disabled = false, focusToken
   const switchCamera = useCallback(() => {
     if (cameras.length < 2) return;
     const currentIndex = cameras.findIndex((c) => c.id === activeCameraId);
-    const next = cameras[(currentIndex + 1) % cameras.length];
-    setActiveCameraId(next.id);
+    setActiveCameraId(cameras[(currentIndex + 1) % cameras.length].id);
   }, [cameras, activeCameraId]);
 
   const submitManual = () => {
@@ -130,45 +116,88 @@ export default function ScannerCard({ onSubmitCode, disabled = false, focusToken
     }
   };
 
-  return (
-    <div className="bg-white rounded-2xl border border-sand-dark/30 shadow-sm p-6 space-y-5">
-      <div>
-        <h2 className="font-display text-xl font-semibold text-charcoal">
-          {t("admin.checkin.scanTitle")}
-        </h2>
-        <p className="text-sm text-charcoal-muted mt-1">{t("admin.checkin.scanSubtitle")}</p>
-      </div>
+  const isActive = cameraState === "active";
+  const isError = cameraState === "error";
 
-      <div className="relative h-64 rounded-2xl overflow-hidden bg-charcoal">
-        <div id={elementId} className="w-full h-full [&_video]:w-full [&_video]:h-full [&_video]:object-cover" />
-        {cameraState !== "active" && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-sand-light bg-charcoal/80 pointer-events-none">
-            <ScanLine className="h-8 w-8" />
-            <span className="text-xs">
-              {cameraState === "error" ? t("admin.checkin.cameraError") : t("admin.checkin.cameraStarting")}
-            </span>
+  return (
+    <div className="bg-white rounded-2xl border border-sand-dark/30 shadow-sm overflow-hidden max-w-2xl mx-auto">
+      {/* ── Camera ─────────────────────────────────────────────── */}
+      <div className="relative w-full aspect-4/3 bg-[#0c0e13] overflow-hidden">
+        {/* html5-qrcode mount */}
+        <div
+          id={elementId}
+          className="absolute inset-0 [&_video]:absolute [&_video]:inset-0 [&_video]:w-full [&_video]:h-full [&_video]:object-cover"
+        />
+
+        {/* Radial vignette */}
+        <div
+          className="absolute inset-0 z-10 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse 60% 55% at 50% 50%, transparent 0%, rgba(0,0,0,0.55) 100%)",
+          }}
+        />
+
+        {/* Targeting frame */}
+        {isActive && (
+          <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+            <div className="relative h-55 w-55">
+              <span className="absolute top-0 left-0 h-7 w-7 border-t-[3px] border-l-[3px] border-sage rounded-tl-sm" />
+              <span className="absolute top-0 right-0 h-7 w-7 border-t-[3px] border-r-[3px] border-sage rounded-tr-sm" />
+              <span className="absolute bottom-0 left-0 h-7 w-7 border-b-[3px] border-l-[3px] border-sage rounded-bl-sm" />
+              <span className="absolute bottom-0 right-0 h-7 w-7 border-b-[3px] border-r-[3px] border-sage rounded-br-sm" />
+              <div
+                className="absolute left-3 right-3 h-0.5 rounded-full bg-linear-to-r from-transparent via-sage to-transparent"
+                style={{ animation: "scan-line 2.2s ease-in-out infinite" }}
+              />
+            </div>
           </div>
         )}
-        {cameraState === "active" && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-full bg-charcoal/70 px-3 py-1.5 text-xs text-sand-light">
-            <span className="h-1.5 w-1.5 rounded-full bg-sage animate-pulse" />
-            {t("admin.checkin.cameraActive")}
+
+        {/* Starting / Error overlay */}
+        {!isActive && (
+          <div className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-4 bg-[#0c0e13]/95">
+            <div className="h-16 w-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+              {isError ? (
+                <AlertTriangle className="h-7 w-7 text-amber-400" />
+              ) : (
+                <ScanLine className="h-7 w-7 text-sage animate-pulse" />
+              )}
+            </div>
+            <p className="text-sm text-white/60 text-center px-8 leading-relaxed">
+              {isError
+                ? t("admin.checkin.cameraError")
+                : t("admin.checkin.cameraStarting")}
+            </p>
           </div>
         )}
+
+        {/* Active status pill */}
+        {isActive && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20">
+            <div className="flex items-center gap-2 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 px-4 py-1.5 text-xs text-white/80">
+              <span className="h-1.5 w-1.5 rounded-full bg-sage animate-pulse" />
+              {t("admin.checkin.cameraActive")}
+            </div>
+          </div>
+        )}
+
+        {/* Camera switch */}
         {cameras.length > 1 && (
           <button
             type="button"
             onClick={switchCamera}
             aria-label={t("admin.checkin.switchCamera")}
             title={t("admin.checkin.switchCamera")}
-            className="absolute top-3 right-3 h-9 w-9 rounded-full bg-charcoal/70 text-sand-light flex items-center justify-center cursor-pointer hover:bg-charcoal/90 transition-colors"
+            className="absolute top-4 right-4 z-20 h-9 w-9 rounded-xl bg-black/50 backdrop-blur-sm border border-white/10 text-white/80 flex items-center justify-center hover:bg-black/70 transition-colors cursor-pointer"
           >
             <SwitchCamera className="h-4 w-4" />
           </button>
         )}
       </div>
 
-      <div>
+      {/* ── Manual input ──────────────────────────────────────── */}
+      <div className="p-5">
         <label
           htmlFor="ticket-code-input"
           className="block text-[11px] font-semibold uppercase tracking-wider text-charcoal-muted mb-2"
@@ -188,11 +217,16 @@ export default function ScannerCard({ onSubmitCode, disabled = false, focusToken
             autoComplete="off"
             disabled={disabled}
             className={cn(
-              "flex-1 h-12 rounded-xl border border-sand-dark bg-white px-4 text-charcoal font-mono text-sm uppercase tracking-wide placeholder:text-charcoal-muted/40 placeholder:normal-case focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20",
+              "flex-1 h-12 rounded-xl border border-sand-dark bg-white px-4 text-charcoal font-mono text-sm uppercase tracking-wide placeholder:text-charcoal-muted/40 placeholder:normal-case focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 transition-shadow",
               disabled && "opacity-50",
             )}
           />
-          <Button type="button" size="lg" disabled={disabled || !code.trim()} onClick={submitManual}>
+          <Button
+            type="button"
+            size="lg"
+            disabled={disabled || !code.trim()}
+            onClick={submitManual}
+          >
             {t("admin.checkin.validate")}
           </Button>
         </div>
