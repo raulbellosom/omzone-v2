@@ -9,6 +9,7 @@ function versionPlugin() {
   const buildId = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
   return {
     name: "omzone-version",
+    apply: "build",
     config() {
       return { define: { __APP_BUILD_ID__: JSON.stringify(buildId) } };
     },
