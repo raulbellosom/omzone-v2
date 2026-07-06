@@ -21,6 +21,13 @@ function forceResponsiveVideoSizing(mountElementId) {
   video.style.setProperty("object-fit", "cover", "important");
 }
 
+// Serializes camera start/stop across mounts (Kiosk mode fully unmounts and
+// remounts ScannerCard on toggle; switching cameras remounts the effect too)
+// so two Html5Qrcode instances can never hold the same physical camera
+// device concurrently — that race is what makes the feed go black on some
+// tablet camera drivers even though start() itself resolves without error.
+let pendingCameraTeardown = Promise.resolve();
+
 export default function ScannerCard({
   onSubmitCode,
   disabled = false,
@@ -85,13 +92,16 @@ export default function ScannerCard({
       if (TICKET_CODE_PATTERN.test(sanitized)) onSubmitCode(sanitized);
     }
 
-    const startPromise = scanner
-      .start(
+    const startPromise = pendingCameraTeardown.then(() =>
+      scanner.start(
         activeCameraId,
         { fps: 10, qrbox: { width: 220, height: 220 } },
         onDecoded,
         () => {},
-      )
+      ),
+    );
+
+    startPromise
       .then(() => {
         if (!cancelled) {
           forceResponsiveVideoSizing(elementId);
@@ -105,7 +115,8 @@ export default function ScannerCard({
 
     return () => {
       cancelled = true;
-      startPromise
+      pendingCameraTeardown = startPromise
+        .catch(() => {})
         .then(() => scanner.stop())
         .catch(() => {})
         .then(() => scanner.clear())
