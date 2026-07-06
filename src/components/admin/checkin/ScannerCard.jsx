@@ -2,8 +2,6 @@ import { useEffect, useRef, useState, useId, useCallback } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 import { ScanLine, SwitchCamera, AlertTriangle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-import Button from "@/components/common/Button";
-import { cn } from "@/lib/utils";
 
 const TICKET_CODE_PATTERN = /^[A-Za-z0-9-]+$/;
 
@@ -28,26 +26,14 @@ function forceResponsiveVideoSizing(mountElementId) {
 // tablet camera drivers even though start() itself resolves without error.
 let pendingCameraTeardown = Promise.resolve();
 
-export default function ScannerCard({
-  onSubmitCode,
-  disabled = false,
-  focusToken = 0,
-}) {
+export default function ScannerCard({ onSubmitCode }) {
   const { t } = useLanguage();
   const elementId = useId().replace(/:/g, "");
-  const [code, setCode] = useState("");
   const [cameraState, setCameraState] = useState("starting"); // starting | active | error
   const [cameras, setCameras] = useState([]);
   const [activeCameraId, setActiveCameraId] = useState(null);
-  const inputRef = useRef(null);
   const scannerRef = useRef(null);
   const lastScannedRef = useRef({ code: "", at: 0 });
-
-  // Refocus the manual/HID input whenever the parent asks (e.g. modal closed).
-  useEffect(() => {
-    const id = setTimeout(() => inputRef.current?.focus(), 60);
-    return () => clearTimeout(id);
-  }, [focusToken]);
 
   // Discover available cameras once.
   useEffect(() => {
@@ -130,25 +116,11 @@ export default function ScannerCard({
     setActiveCameraId(cameras[(currentIndex + 1) % cameras.length].id);
   }, [cameras, activeCameraId]);
 
-  const submitManual = () => {
-    const sanitized = code.trim().toUpperCase();
-    if (!sanitized) return;
-    onSubmitCode(sanitized);
-    setCode("");
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      submitManual();
-    }
-  };
-
   const isActive = cameraState === "active";
   const isError = cameraState === "error";
 
   return (
-    <div className="bg-white rounded-2xl border border-sand-dark/30 shadow-sm overflow-hidden max-w-2xl mx-auto">
+    <div className="bg-white rounded-2xl border border-sand-dark/30 shadow-sm overflow-hidden">
       {/* ── Camera ─────────────────────────────────────────────── */}
       <div className="relative w-full aspect-4/3 bg-[#0c0e13] overflow-hidden">
         {/* html5-qrcode mount */}
@@ -222,42 +194,6 @@ export default function ScannerCard({
             <SwitchCamera className="h-4 w-4" />
           </button>
         )}
-      </div>
-
-      {/* ── Manual input ──────────────────────────────────────── */}
-      <div className="p-5">
-        <label
-          htmlFor="ticket-code-input"
-          className="block text-[11px] font-semibold uppercase tracking-wider text-charcoal-muted mb-2"
-        >
-          {t("admin.checkin.manualSectionLabel")}
-        </label>
-        <div className="flex gap-3">
-          <input
-            ref={inputRef}
-            id="ticket-code-input"
-            type="text"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={t("admin.checkin.placeholder")}
-            autoFocus
-            autoComplete="off"
-            disabled={disabled}
-            className={cn(
-              "flex-1 h-12 rounded-xl border border-sand-dark bg-white px-4 text-charcoal font-mono text-sm uppercase tracking-wide placeholder:text-charcoal-muted/40 placeholder:normal-case focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 transition-shadow",
-              disabled && "opacity-50",
-            )}
-          />
-          <Button
-            type="button"
-            size="lg"
-            disabled={disabled || !code.trim()}
-            onClick={submitManual}
-          >
-            {t("admin.checkin.validate")}
-          </Button>
-        </div>
       </div>
     </div>
   );
