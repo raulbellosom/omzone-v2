@@ -63,7 +63,7 @@ Failure shape matches `validate-ticket`'s convention: `{ ok: false, error: { cod
 
 ### 2. `validate-ticket` — log duplicate scan attempts
 
-In the existing "confirm" action's `status === "used"` branch (409 `ERR_VALIDATE_ALREADY_USED` response), before returning, write one row to `admin_activity_logs` using the copied `logActivity` helper from [functions/_shared/logger.js](../../../functions/_shared/logger.js):
+The `status === "used"` check (409 `ERR_VALIDATE_ALREADY_USED` response) runs *before* the function branches on `action`, so it fires for both `"check"` (the camera/manual-input flow's default action, used on every scan) and `"confirm"` — the log write must happen at this shared point, not inside a `"confirm"`-only branch, since the normal camera-scan flow never reaches `"confirm"` for an already-used ticket (the UI only shows a confirm button for valid, unused tickets). Right before this shared branch returns its 409, write one row to `admin_activity_logs` using the copied `logActivity` helper from [functions/_shared/logger.js](../../../functions/_shared/logger.js):
 ```js
 await logActivity(db, "checkin.duplicate_scan_attempt", "ticket", ticket.$id, userId, callerLabels, {
   ticketCode: sanitizedCode,
