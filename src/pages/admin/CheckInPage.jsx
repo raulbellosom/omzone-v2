@@ -4,6 +4,8 @@ import { useTicketCheckIn } from "@/hooks/useTicketCheckIn";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 import ScannerCard from "@/components/admin/checkin/ScannerCard";
+import ManualCodeInput from "@/components/admin/checkin/ManualCodeInput";
+import SessionHistoryList from "@/components/admin/checkin/SessionHistoryList";
 import CheckInResultModal from "@/components/admin/checkin/CheckInResultModal";
 import KioskOverlay from "@/components/admin/checkin/KioskOverlay";
 import Button from "@/components/common/Button";
@@ -60,10 +62,14 @@ export default function CheckInPage() {
     navigate(ROUTES.ADMIN_CLIENTS);
   }, [navigate]);
 
-  const scanner = (
-    <ScannerCard
+  const disabled = state.phase === "loading" || state.phase === "confirming";
+
+  const scanner = <ScannerCard onSubmitCode={handleSubmitCode} />;
+
+  const manualInput = (
+    <ManualCodeInput
       onSubmitCode={handleSubmitCode}
-      disabled={state.phase === "loading" || state.phase === "confirming"}
+      disabled={disabled}
       focusToken={focusToken}
     />
   );
@@ -80,8 +86,12 @@ export default function CheckInPage() {
 
   if (kioskMode) {
     return (
-      <KioskOverlay onExit={() => setKioskMode(false)}>
-        {scanner}
+      <KioskOverlay
+        onExit={() => setKioskMode(false)}
+        scanner={scanner}
+        manualInput={manualInput}
+        history={history}
+      >
         {modal}
       </KioskOverlay>
     );
@@ -108,32 +118,16 @@ export default function CheckInPage() {
         </Button>
       </div>
 
-      {scanner}
-      {modal}
-
-      {/* Session history */}
-      {history.length > 0 && (
-        <div className="space-y-3">
-          <h2 className="text-sm font-semibold text-charcoal-muted uppercase tracking-wider">
-            {t("admin.checkin.sessionHistory")}
-          </h2>
-          <div className="space-y-2">
-            {history.map((entry, idx) => (
-              <div
-                key={`${entry.ticketCode}-${idx}`}
-                className={`rounded-xl border px-4 py-3 text-sm flex items-center justify-between ${
-                  entry.outcome === "valid" || entry.outcome === "entered"
-                    ? "bg-emerald-50/50 border-emerald-200/60 text-emerald-800"
-                    : "bg-red-50/50 border-red-200/60 text-red-800"
-                }`}
-              >
-                <span className="font-mono text-xs">{entry.ticketCode}</span>
-                <span className="text-xs">{entry.outcome}</span>
-              </div>
-            ))}
-          </div>
+      {/* Camera on top under lg, side-by-side with manual input + history at lg+ */}
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 items-start">
+        {scanner}
+        <div className="flex flex-col gap-6">
+          {manualInput}
+          <SessionHistoryList history={history} />
         </div>
-      )}
+      </div>
+
+      {modal}
     </div>
   );
 }
