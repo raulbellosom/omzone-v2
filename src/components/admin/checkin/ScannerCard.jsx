@@ -8,23 +8,41 @@ const TICKET_CODE_PATTERN = /^[A-Za-z0-9-]+$/;
 // html5-qrcode sets the injected <video>'s width in fixed pixels (computed
 // once, at start time) and never sets a height or re-measures on resize —
 // its own inline style always beats our Tailwind classes, and rotating a
-// tablet never fixes it. Force it to responsive sizing right after start.
+// tablet never fixes it.
 //
-// Deliberately NOT setting width/height:100% here: this component nests the
-// mount element inside an aspect-ratio-sized ancestor, and percentage
-// height doesn't reliably resolve through that chain (the ancestor's
-// height, while visually stretched via inset:0, isn't treated as
-// "definite" for a grandchild's percentage-height calculation in this
-// case — the computed height silently collapses to 0, making the video
-// invisible even though it's actively playing). `position: absolute` +
-// `inset: 0` alone stretches the video to fill its DIRECT parent (the
-// mount div) without depending on percentage resolution at all.
+// Neither `width/height: 100%` nor `position: absolute; inset: 0` alone
+// reliably resolves here: the mount element sits inside an aspect-ratio
+// sized ancestor, and that ancestor's height — though it clearly renders
+// with a real size on screen — isn't treated as "definite" for a
+// descendant's stretch/percentage sizing at this nesting depth in this
+// browser, so both approaches silently collapse the video to 0 height
+// (invisible, despite the stream playing correctly). Instead, measure the
+// container's actual rendered box in JS and set explicit pixel
+// dimensions on the video, bypassing that CSS ambiguity entirely. A
+// ResizeObserver keeps this correct across window resize/tablet rotation
+// (the exact scenario this exists for), since pixel values (unlike
+// percentages) don't auto-update.
 function forceResponsiveVideoSizing(mountElementId) {
-  const video = document.querySelector(`#${mountElementId} video`);
-  if (!video) return;
-  video.style.setProperty("position", "absolute", "important");
-  video.style.setProperty("inset", "0", "important");
-  video.style.setProperty("object-fit", "cover", "important");
+  const mount = document.getElementById(mountElementId);
+  const video = mount?.querySelector("video");
+  if (!mount || !video) return () => {};
+
+  const container = mount.parentElement || mount;
+
+  const applySize = () => {
+    const rect = container.getBoundingClientRect();
+    video.style.setProperty("position", "absolute", "important");
+    video.style.setProperty("top", "0", "important");
+    video.style.setProperty("left", "0", "important");
+    video.style.setProperty("width", `${rect.width}px`, "important");
+    video.style.setProperty("height", `${rect.height}px`, "important");
+    video.style.setProperty("object-fit", "cover", "important");
+  };
+
+  applySize();
+  const observer = new ResizeObserver(applySize);
+  observer.observe(container);
+  return () => observer.disconnect();
 }
 
 // Serializes camera start/stop across mounts (Kiosk mode fully unmounts and
@@ -86,6 +104,8 @@ export default function ScannerCard({ onSubmitCode }) {
       if (TICKET_CODE_PATTERN.test(sanitized)) onSubmitCode(sanitized);
     }
 
+    let disconnectVideoSizing = () => {};
+
     const startPromise = pendingCameraTeardown.then(() =>
       scanner.start(
         activeCameraId,
@@ -98,7 +118,7 @@ export default function ScannerCard({ onSubmitCode }) {
     startPromise
       .then(() => {
         if (!cancelled) {
-          forceResponsiveVideoSizing(elementId);
+          disconnectVideoSizing = forceResponsiveVideoSizing(elementId);
           setCameraState("active");
         }
       })
@@ -109,6 +129,7 @@ export default function ScannerCard({ onSubmitCode }) {
 
     return () => {
       cancelled = true;
+      disconnectVideoSizing();
       pendingCameraTeardown = startPromise
         .catch(() => {})
         .then(() => scanner.stop())
