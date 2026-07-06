@@ -43,3 +43,6 @@ temp/
 *.bak
 *.bak2
 *.txt
+
+# Git worktrees (superpowers)
+.worktrees/
