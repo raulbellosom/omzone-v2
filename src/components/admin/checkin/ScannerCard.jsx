@@ -27,6 +27,17 @@ function forceResponsiveVideoSizing(mountElementId) {
   const video = mount?.querySelector("video");
   if (!mount || !video) return () => {};
 
+  // html5-qrcode injects its own "shaded region" overlay (a semi-transparent
+  // black border around the qrbox, plus white corner indicator lines) when a
+  // qrbox size is configured — it has a fixed, library-wide id. We render
+  // our own vignette + green corner UI instead, so hide the library's to
+  // avoid double-darkening the feed and showing mismatched white indicators
+  // on top of ours.
+  const shadedRegion = document.getElementById("qr-shaded-region");
+  if (shadedRegion) {
+    shadedRegion.style.setProperty("display", "none", "important");
+  }
+
   const container = mount.parentElement || mount;
 
   const applySize = () => {

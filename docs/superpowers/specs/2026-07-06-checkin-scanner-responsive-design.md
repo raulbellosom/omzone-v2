@@ -17,11 +17,15 @@ Separately, the module needs a genuine responsive redesign: it currently assumes
 
 ### 1. Camera fix — force responsive video sizing + lock the start/stop lifecycle
 
+> **Update (post-ship):** the fix actually shipped differs from what's described below — see the "Post-ship correction" note at the end of this section. The original plan (forcing `width/height: 100%` or relying on `position: absolute; inset: 0` alone) turned out to be insufficient: live DOM inspection on a real device showed the video's `getBoundingClientRect().height` collapsing to exactly `0` even with those styles applied, because the mount element's own height — inherited via `inset: 0` from an `aspect-ratio`-sized ancestor — isn't treated as "definite" for a descendant's stretch/percentage sizing at this nesting depth in the browsers tested, despite that ancestor clearly rendering with a real size on screen. The stream itself was always healthy (`videoWidth`/`videoHeight`/`readyState` all correct) — only the CSS-derived box height was broken.
+
 In `ScannerCard.jsx`, right after `scanner.start(...)` resolves (before `setCameraState("active")`), query the mount element for the `<video>` html5-qrcode inserted and force, via `element.style.setProperty(prop, value, "important")`:
 ```
 position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
 ```
 Using `!important` on an inline style beats html5-qrcode's own inline `width: Npx`. Because these are percentage/keyword values (not pixels), the video stays correctly sized across any container resize — including tablet rotation — with no resize listener needed.
+
+**Post-ship correction:** the shipped fix measures the container's real rendered box with `getBoundingClientRect()` in JS and sets explicit **pixel** `width`/`height` on the video (bypassing the percentage/stretch ambiguity entirely), kept in sync across resizes/rotation via a `ResizeObserver` that's disconnected in the effect's cleanup. This was reached by testing the percentage and inset-only approaches live on a real device via the browser console — both left `getBoundingClientRect().height === 0` on the actual video element — before landing on direct pixel measurement as the reliable fix. See `ScannerCard.jsx`'s `forceResponsiveVideoSizing` for the final implementation.
 
 Harden the start/stop lifecycle with a module-external or ref-based async lock: track an in-flight teardown promise in a ref that persists across the `activeCameraId`/mount effect; before calling `new Html5Qrcode(elementId).start(...)`, `await` any pending teardown from a previous instance so two `Html5Qrcode` instances can never hold the same physical camera device concurrently. This applies uniformly to first mount, camera switch, and Kiosk mode's full remount.
 
