@@ -150,6 +150,32 @@ function getScheduleState(ticket) {
   };
 }
 
+function _roleSnapshot(labels) {
+  if (labels.includes("admin")) return "admin";
+  if (labels.includes("operator")) return "operator";
+  return "client";
+}
+
+async function logActivity(db, dbId, action, entityType, entityId, actorId, labels, details = {}) {
+  try {
+    if (labels.includes("root")) return; // ghost-user rule
+    const detailsStr = JSON.stringify(details).slice(0, 4000);
+    await db.createDocument(dbId, "admin_activity_logs", ID.unique(), {
+      userId: actorId,
+      action,
+      entityType,
+      entityId,
+      details: detailsStr,
+      severity: "warn",
+      result: "ok",
+      source: "function",
+      actorRoleSnapshot: _roleSnapshot(labels),
+    });
+  } catch {
+    /* non-critical — never let logging break the check-in flow */
+  }
+}
+
 // ─── Main Handler ────────────────────────────────────────────────────────────
 
 export default async ({ req, res, log, error }) => {
@@ -276,6 +302,11 @@ export default async ({ req, res, log, error }) => {
     // ── Check ticket status ──────────────────────────────────────────────────
     if (ticket.status === "used") {
       log(`Ticket already used: ${sanitizedCode} (usedAt: ${ticket.usedAt})`);
+      await logActivity(db, DB, "checkin.duplicate_scan_attempt", "ticket", ticket.$id, userId, labels, {
+        ticketCode: sanitizedCode,
+        participantName: ticket.participantName || null,
+        originalUsedAt: ticket.usedAt,
+      });
       return res.json(
         {
           ok: false,
