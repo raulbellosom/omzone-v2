@@ -37,8 +37,8 @@ Data availability research (against `appwrite.json` and existing hooks):
       { "slotId": "...", "time": "10:30", "experienceName": "Recuperación de Rendimiento", "roomName": "Recovery Room 2", "bookedCount": 1 }
     ],
     "alerts": [
-      { "type": "unpaid_order", "title": "Orden no pagada", "detail": "Tomás Vega · Evaluación en Apnea", "orderId": "...", "ticketId": "..." },
-      { "type": "duplicate_scan", "title": "Pase duplicado detectado", "detail": "Daniel Herrera · 09:15 AM", "ticketId": "..." }
+      { "type": "unpaid_order", "detail": "Tomás Vega · Evaluación en Apnea", "orderId": "...", "ticketId": "...", "createdAt": "2026-07-06T14:00:00.000Z" },
+      { "type": "duplicate_scan", "detail": "Daniel Herrera · 09:15 AM", "ticketId": "...", "createdAt": "2026-07-06T15:15:00.000Z" }
     ],
     "recentActivity": [
       { "ticketCode": "OMZ-8F42K", "participantName": "Daniel Herrera", "experienceName": "Rehabilitación Deportiva", "redeemedByName": "Raúl M.", "redeemedAt": "2026-07-06T15:52:00.000Z", "method": "kiosk" }

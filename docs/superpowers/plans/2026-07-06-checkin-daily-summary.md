@@ -706,6 +706,8 @@ In `src/i18n/es/admin.json`, inside the existing `"checkin": { ... }` block, rem
       "upcomingTitle": "Próximas sesiones",
       "people": "persona(s)",
       "alertsTitle": "Alertas",
+      "alertTypeUnpaidOrder": "Orden no pagada",
+      "alertTypeDuplicateScan": "Pase duplicado detectado",
       "recentActivityTitle": "Actividad reciente"
 ```
 
@@ -720,6 +722,8 @@ In `src/i18n/en/admin.json`, inside `"checkin": { ... }`, remove the unused `"se
       "upcomingTitle": "Upcoming sessions",
       "people": "people",
       "alertsTitle": "Alerts",
+      "alertTypeUnpaidOrder": "Unpaid order",
+      "alertTypeDuplicateScan": "Duplicate pass detected",
       "recentActivityTitle": "Recent activity"
 ```
 
@@ -822,6 +826,11 @@ const DOT_COLOR = {
   duplicate_scan: "bg-amber-500",
 };
 
+const TITLE_KEY = {
+  unpaid_order: "admin.checkin.alertTypeUnpaidOrder",
+  duplicate_scan: "admin.checkin.alertTypeDuplicateScan",
+};
+
 export default function AlertsCard({ alerts, loading }) {
   const { t } = useLanguage();
   const list = alerts || [];
@@ -843,7 +852,9 @@ export default function AlertsCard({ alerts, loading }) {
               className={`h-2 w-2 rounded-full mt-1.5 shrink-0 ${DOT_COLOR[alert.type] || "bg-charcoal-muted"}`}
             />
             <div className="min-w-0 flex-1">
-              <div className="text-sm font-semibold text-charcoal">{alert.title}</div>
+              <div className="text-sm font-semibold text-charcoal">
+                {t(TITLE_KEY[alert.type] || "admin.checkin.alertsTitle")}
+              </div>
               <div className="text-xs text-charcoal-muted truncate">{alert.detail}</div>
             </div>
           </div>
