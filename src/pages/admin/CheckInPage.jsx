@@ -1,24 +1,27 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTicketCheckIn } from "@/hooks/useTicketCheckIn";
+import { useCheckInSummary } from "@/hooks/useCheckInSummary";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/constants/routes";
 import ScannerCard from "@/components/admin/checkin/ScannerCard";
 import ManualCodeInput from "@/components/admin/checkin/ManualCodeInput";
-import SessionHistoryList from "@/components/admin/checkin/SessionHistoryList";
+import DailySummaryCard from "@/components/admin/checkin/DailySummaryCard";
+import UpcomingSessionsCard from "@/components/admin/checkin/UpcomingSessionsCard";
+import AlertsCard from "@/components/admin/checkin/AlertsCard";
+import RecentActivityList from "@/components/admin/checkin/RecentActivityList";
 import CheckInResultModal from "@/components/admin/checkin/CheckInResultModal";
 import KioskOverlay from "@/components/admin/checkin/KioskOverlay";
 import Button from "@/components/common/Button";
 import { ScanLine, Maximize2 } from "lucide-react";
 
-const MAX_HISTORY = 10;
-
 export default function CheckInPage() {
   const { state, checkTicket, confirmEntry, reset } = useTicketCheckIn();
+  const { data: summary, loading: summaryLoading, refetch: refetchSummary } =
+    useCheckInSummary();
   const { t } = useLanguage();
   const navigate = useNavigate();
 
-  const [history, setHistory] = useState([]);
   const [kioskMode, setKioskMode] = useState(false);
   const [focusToken, setFocusToken] = useState(0);
 
@@ -36,20 +39,16 @@ export default function CheckInPage() {
       const method = kioskMode ? "kiosk" : "manual";
       const result = await confirmEntry(ticketCode, method);
       if (result) {
-        setHistory((prev) => [result, ...prev].slice(0, MAX_HISTORY));
+        refetchSummary();
       }
     },
-    [confirmEntry, kioskMode],
+    [confirmEntry, kioskMode, refetchSummary],
   );
 
   const handleScanAnother = useCallback(() => {
-    // Record failed/terminal outcomes in session history too, before resetting.
-    if (state.phase === "result" && state.data) {
-      setHistory((prev) => [state.data, ...prev].slice(0, MAX_HISTORY));
-    }
     reset();
     bumpFocus();
-  }, [state, reset, bumpFocus]);
+  }, [reset, bumpFocus]);
 
   const handleViewDetails = useCallback(
     (ticketId) => {
@@ -74,6 +73,15 @@ export default function CheckInPage() {
     />
   );
 
+  const summaryPanel = (
+    <>
+      <DailySummaryCard stats={summary?.stats} loading={summaryLoading} />
+      <UpcomingSessionsCard sessions={summary?.upcomingSessions} loading={summaryLoading} />
+      <AlertsCard alerts={summary?.alerts} loading={summaryLoading} />
+      <RecentActivityList activity={summary?.recentActivity} loading={summaryLoading} />
+    </>
+  );
+
   const modal = (
     <CheckInResultModal
       state={state}
@@ -90,7 +98,7 @@ export default function CheckInPage() {
         onExit={() => setKioskMode(false)}
         scanner={scanner}
         manualInput={manualInput}
-        history={history}
+        summaryPanel={summaryPanel}
       >
         {modal}
       </KioskOverlay>
@@ -118,12 +126,12 @@ export default function CheckInPage() {
         </Button>
       </div>
 
-      {/* Camera on top under lg, side-by-side with manual input + history at lg+ */}
+      {/* Camera on top under lg, side-by-side with manual input + summary at lg+ */}
       <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 items-start">
         {scanner}
         <div className="flex flex-col gap-6">
           {manualInput}
-          <SessionHistoryList history={history} />
+          {summaryPanel}
         </div>
       </div>
 
