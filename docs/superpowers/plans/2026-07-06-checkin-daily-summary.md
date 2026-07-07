@@ -782,7 +782,7 @@ export default function UpcomingSessionsCard({ sessions, loading }) {
   const { t } = useLanguage();
   const list = sessions || [];
 
-  if (!loading && list.length === 0) return null;
+  if (loading || list.length === 0) return null;
 
   return (
     <div className="bg-white rounded-2xl border border-sand-dark/30 shadow-sm p-5">
@@ -835,7 +835,7 @@ export default function AlertsCard({ alerts, loading }) {
   const { t } = useLanguage();
   const list = alerts || [];
 
-  if (!loading && list.length === 0) return null;
+  if (loading || list.length === 0) return null;
 
   return (
     <div className="bg-white rounded-2xl border border-sand-dark/30 shadow-sm p-5">
@@ -872,19 +872,19 @@ Create `src/components/admin/checkin/RecentActivityList.jsx`:
 ```jsx
 import { useLanguage } from "@/hooks/useLanguage";
 
-function formatTime(iso) {
+function formatTime(iso, language) {
   if (!iso) return "";
-  return new Date(iso).toLocaleTimeString("es-MX", {
+  return new Date(iso).toLocaleTimeString(language === "es" ? "es-MX" : "en-US", {
     hour: "2-digit",
     minute: "2-digit",
   });
 }
 
 export default function RecentActivityList({ activity, loading }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const list = activity || [];
 
-  if (!loading && list.length === 0) return null;
+  if (loading || list.length === 0) return null;
 
   return (
     <div className="bg-white rounded-2xl border border-sand-dark/30 shadow-sm p-5">
@@ -898,7 +898,7 @@ export default function RecentActivityList({ activity, loading }) {
             className="flex items-center gap-3 py-2.5 border-t border-sand-dark/15 first:border-t-0"
           >
             <div className="text-xs font-semibold text-charcoal-muted w-14 shrink-0">
-              {formatTime(entry.redeemedAt)}
+              {formatTime(entry.redeemedAt, language)}
             </div>
             <div className="min-w-0 flex-1">
               <div className="text-sm font-semibold text-charcoal truncate">
