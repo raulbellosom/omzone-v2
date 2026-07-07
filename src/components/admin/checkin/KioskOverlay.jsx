@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
-import SessionHistoryList from "@/components/admin/checkin/SessionHistoryList";
 
 function useClock() {
   const [now, setNow] = useState(new Date());
@@ -15,7 +14,7 @@ export default function KioskOverlay({
   onExit,
   scanner,
   manualInput,
-  history,
+  summaryPanel,
   children,
 }) {
   const { t, language } = useLanguage();
@@ -55,9 +54,7 @@ export default function KioskOverlay({
           {scanner}
           <div className="flex flex-col gap-6">
             {manualInput}
-            <div className="hidden lg:block">
-              <SessionHistoryList history={history} />
-            </div>
+            <div className="hidden lg:flex lg:flex-col lg:gap-6">{summaryPanel}</div>
           </div>
         </div>
       </div>

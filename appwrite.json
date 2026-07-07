@@ -150,6 +150,28 @@
             "path": "functions/validate-ticket"
         },
         {
+            "$id": "checkin-summary",
+            "name": "checkin-summary",
+            "runtime": "node-22",
+            "execute": [
+                "users"
+            ],
+            "scopes": [
+                "users.read",
+                "documents.read",
+                "collections.read",
+                "databases.read"
+            ],
+            "events": [],
+            "timeout": 15,
+            "enabled": true,
+            "logging": true,
+            "deploymentRetention": 0,
+            "entrypoint": "src/main.js",
+            "commands": "npm install",
+            "path": "functions/checkin-summary"
+        },
+        {
             "$id": "consume-pass",
             "name": "consume-pass",
             "runtime": "node-22",

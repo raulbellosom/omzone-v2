@@ -139,6 +139,8 @@ const env = {
     import.meta.env.VITE_APPWRITE_FUNCTION_GENERATE_TICKET || "generate-ticket",
   functionValidateTicket:
     import.meta.env.VITE_APPWRITE_FUNCTION_VALIDATE_TICKET || "validate-ticket",
+  functionCheckinSummary:
+    import.meta.env.VITE_APPWRITE_FUNCTION_CHECKIN_SUMMARY || "checkin-summary",
   functionConsumePass:
     import.meta.env.VITE_APPWRITE_FUNCTION_CONSUME_PASS || "consume-pass",
   functionAssignLabel:
