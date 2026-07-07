@@ -621,7 +621,6 @@
       "validate": "Validate",
       "validating": "Validating…",
       "clear": "Clear",
-      "sessionHistory": "This session's check-ins",
       "valid": "Valid",
       "success": "Check-in Successful",
       "failed": "Check-in Failed",
@@ -664,7 +663,18 @@
       "kioskExit": "Exit",
       "tipQr": "Point the camera at the ticket QR code",
       "tipHid": "Compatible with HID scanners (USB / Bluetooth)",
-      "tipManual": "Or type the code directly"
+      "tipManual": "Or type the code directly",
+      "summaryTitle": "Today's summary",
+      "summaryCheckins": "Check-ins completed",
+      "summaryPending": "Pending passes",
+      "summaryUpcoming": "Upcoming sessions",
+      "summaryAlerts": "Alerts",
+      "upcomingTitle": "Upcoming sessions",
+      "people": "people",
+      "alertsTitle": "Alerts",
+      "alertTypeUnpaidOrder": "Unpaid order",
+      "alertTypeDuplicateScan": "Duplicate pass detected",
+      "recentActivityTitle": "Recent activity"
     },
     "slots": {
       "title": "Agenda / Slots",
