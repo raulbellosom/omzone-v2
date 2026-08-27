@@ -10,7 +10,7 @@ import {
   CardFooter,
 } from "@/components/common/Card";
 import { Clock, Loader2 } from "lucide-react";
-import { auditAction } from "@/lib/audit";
+import { auditAction, captureError } from "@/lib/audit";
 
 const MIN_MINUTES = 0;
 const MAX_MINUTES = 1440;
@@ -52,7 +52,8 @@ export default function CheckInWindowPanel() {
         details: values,
       });
       setSaveState("success");
-    } catch {
+    } catch (err) {
+      captureError(err, { source: "admin", context: "checkin_window_save" });
       setSaveState("error");
     } finally {
       setSaving(false);
@@ -90,6 +91,7 @@ export default function CheckInWindowPanel() {
             max={MAX_MINUTES}
             value={beforeInput}
             onChange={(e) => setBeforeInput(e.target.value)}
+            disabled={saving}
             className="w-full max-w-xs rounded-lg border border-sand-dark px-3 py-2 text-sm"
           />
         </div>
@@ -103,6 +105,7 @@ export default function CheckInWindowPanel() {
             max={MAX_MINUTES}
             value={afterInput}
             onChange={(e) => setAfterInput(e.target.value)}
+            disabled={saving}
             className="w-full max-w-xs rounded-lg border border-sand-dark px-3 py-2 text-sm"
           />
         </div>
