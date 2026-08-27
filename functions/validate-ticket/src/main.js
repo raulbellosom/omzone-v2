@@ -22,7 +22,8 @@
  *   at commit time to guard against a race between check and confirm
  *
  * @entities
- * - Reads: tickets (by ticketCode), bookings (by orderId + slotId)
+ * - Reads: tickets (by ticketCode), bookings (by orderId + slotId), settings
+ *   (checkin_window_before_minutes, checkin_window_after_minutes)
  * - Writes (action=confirm only): tickets (status → used, usedAt), bookings (status → checked-in, checkedInAt)
  * - Creates (action=confirm only): ticket_redemptions
  *
@@ -34,6 +35,7 @@
  * - APPWRITE_COLLECTION_TICKETS (project-level global)
  * - APPWRITE_COLLECTION_TICKET_REDEMPTIONS (project-level global)
  * - APPWRITE_COLLECTION_BOOKINGS (project-level global)
+ * - APPWRITE_COLLECTION_SETTINGS (project-level global)
  *
  * @errors
  * - 400: Missing/invalid ticketCode, ticket status not "valid"
@@ -50,14 +52,20 @@
  */
 
 import { Client, Databases, Query, ID, Users } from "node-appwrite";
+import {
+  DEFAULT_CHECKIN_WINDOW_BEFORE_MINUTES,
+  DEFAULT_CHECKIN_WINDOW_AFTER_MINUTES,
+  parseWindowMinutes,
+  computeScheduleState,
+} from "./scheduleWindow.js";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const VALID_METHODS = ["qr_scan", "manual", "kiosk", "system"];
 const VALID_ACTIONS = ["check", "confirm"];
 const TICKET_CODE_PATTERN = /^[A-Za-z0-9-]+$/;
-const CHECK_IN_WINDOW_BEFORE_MS = 30 * 60 * 1000; // 30 minutes before slot start
-const CHECK_IN_FALLBACK_DURATION_MS = 3 * 60 * 60 * 1000; // used when no slotEndDate
+const SETTING_KEY_BEFORE = "checkin_window_before_minutes";
+const SETTING_KEY_AFTER = "checkin_window_after_minutes";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -107,47 +115,49 @@ function extractSnapshotDisplay(ticket) {
 }
 
 /**
- * Computes whether "now" falls inside the check-in window for this ticket's slot.
- * Window: [slotStartDatetime - 30min, slotEndDate] (or +3h from start if no end date).
- * Returns null when the snapshot has no slot start time (can't be determined).
+ * Computes whether "now" falls inside the ticket's check-in window. The
+ * window bounds and the pure calculation live in scheduleWindow.js so they
+ * can be unit-tested without spinning up the whole function runtime.
  */
-function getScheduleState(ticket) {
+function getScheduleState(ticket, beforeMinutes, afterMinutes) {
   const snapshot = safeParseSnapshot(ticket);
-  if (!snapshot?.slotStartDatetime) return null;
+  return computeScheduleState(
+    snapshot?.slotStartDatetime,
+    beforeMinutes,
+    afterMinutes,
+  );
+}
 
-  const start = new Date(snapshot.slotStartDatetime);
-  if (Number.isNaN(start.getTime())) return null;
-
-  const end = snapshot.slotEndDate
-    ? new Date(snapshot.slotEndDate)
-    : new Date(start.getTime() + CHECK_IN_FALLBACK_DURATION_MS);
-  const windowStart = new Date(start.getTime() - CHECK_IN_WINDOW_BEFORE_MS);
-  const now = new Date();
-
-  if (now < windowStart) {
+/**
+ * Reads the admin-configurable check-in tolerance window from the settings
+ * collection. Falls back to defaults if the documents don't exist yet or the
+ * stored values are invalid — a bad/missing setting must never break check-in.
+ */
+async function fetchCheckInWindowMinutes(db, dbId, colSettings) {
+  try {
+    const result = await db.listDocuments(dbId, colSettings, [
+      Query.equal("key", [SETTING_KEY_BEFORE, SETTING_KEY_AFTER]),
+      Query.limit(2),
+    ]);
+    const byKey = Object.fromEntries(
+      result.documents.map((doc) => [doc.key, doc.value]),
+    );
     return {
-      withinWindow: false,
-      reason: "too_early",
-      validFrom: start.toISOString(),
-      validUntil: end.toISOString(),
-      now: now.toISOString(),
+      beforeMinutes: parseWindowMinutes(
+        byKey[SETTING_KEY_BEFORE],
+        DEFAULT_CHECKIN_WINDOW_BEFORE_MINUTES,
+      ),
+      afterMinutes: parseWindowMinutes(
+        byKey[SETTING_KEY_AFTER],
+        DEFAULT_CHECKIN_WINDOW_AFTER_MINUTES,
+      ),
+    };
+  } catch {
+    return {
+      beforeMinutes: DEFAULT_CHECKIN_WINDOW_BEFORE_MINUTES,
+      afterMinutes: DEFAULT_CHECKIN_WINDOW_AFTER_MINUTES,
     };
   }
-  if (now > end) {
-    return {
-      withinWindow: false,
-      reason: "too_late",
-      validFrom: start.toISOString(),
-      validUntil: end.toISOString(),
-      now: now.toISOString(),
-    };
-  }
-  return {
-    withinWindow: true,
-    validFrom: start.toISOString(),
-    validUntil: end.toISOString(),
-    now: now.toISOString(),
-  };
 }
 
 function _roleSnapshot(labels) {
@@ -199,6 +209,7 @@ export default async ({ req, res, log, error }) => {
   const COL_REDEMPTIONS =
     process.env.APPWRITE_COLLECTION_TICKET_REDEMPTIONS || "ticket_redemptions";
   const COL_BOOKINGS = process.env.APPWRITE_COLLECTION_BOOKINGS || "bookings";
+  const COL_SETTINGS = process.env.APPWRITE_COLLECTION_SETTINGS || "settings";
 
   try {
     // ── Parse input ──────────────────────────────────────────────────────────
@@ -277,10 +288,13 @@ export default async ({ req, res, log, error }) => {
       );
     }
 
-    // ── Lookup ticket by ticketCode ──────────────────────────────────────────
-    const ticketResult = await db.listDocuments(DB, COL_TICKETS, [
-      Query.equal("ticketCode", sanitizedCode),
-      Query.limit(1),
+    // ── Lookup ticket by ticketCode + check-in window settings (parallel) ────
+    const [ticketResult, checkInWindow] = await Promise.all([
+      db.listDocuments(DB, COL_TICKETS, [
+        Query.equal("ticketCode", sanitizedCode),
+        Query.limit(1),
+      ]),
+      fetchCheckInWindowMinutes(db, DB, COL_SETTINGS),
     ]);
 
     if (ticketResult.total === 0) {
@@ -363,7 +377,11 @@ export default async ({ req, res, log, error }) => {
     }
 
     // ── Schedule window check (informational — does not block "check") ───────
-    const schedule = getScheduleState(ticket);
+    const schedule = getScheduleState(
+      ticket,
+      checkInWindow.beforeMinutes,
+      checkInWindow.afterMinutes,
+    );
 
     // ── "check" action stops here — read-only ─────────────────────────────────
     if (action === "check") {
