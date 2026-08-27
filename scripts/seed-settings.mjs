@@ -90,6 +90,20 @@ async function seedSettings() {
     description: "Public contact phone number",
   });
 
+  await createDoc("settings", "setting-checkin-window-before", {
+    key: "checkin_window_before_minutes",
+    value: "60",
+    category: "general",
+    description: "Minutes before a class starts that check-in is still allowed",
+  });
+
+  await createDoc("settings", "setting-checkin-window-after", {
+    key: "checkin_window_after_minutes",
+    value: "30",
+    category: "general",
+    description: "Minutes after a class starts that check-in is still allowed",
+  });
+
   // ── Branding ──
   await createDoc("settings", "setting-brand-primary", {
     key: "brand_primary_color",
