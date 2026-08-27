@@ -7,13 +7,20 @@
  * at all, which is why the confirmation email's date/time/location fields were
  * always coming through empty.
  *
+ * `slotStartDatetime` is stored as an absolute UTC instant. It MUST be
+ * formatted with the venue's `timezone` (also in ticketSnapshot) explicitly —
+ * without it, Intl falls back to the Appwrite function runtime's default
+ * timezone (UTC), which can land on the wrong day entirely for evening slots
+ * (e.g. 18:30 in Mexico City is already past midnight UTC, the next day).
+ *
  * Only the first ticket is used, matching the single-ticket-representative
  * assumption already made for the QR code in this same function.
  */
 
-export function formatSlotDate(iso) {
+export function formatSlotDate(iso, timeZone) {
   if (!iso) return "";
   const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
   return d.toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
@@ -21,6 +28,7 @@ export function formatSlotDate(iso) {
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    ...(timeZone ? { timeZone } : {}),
   });
 }
 
@@ -37,7 +45,7 @@ export function extractScheduleVars(tickets) {
   }
 
   return {
-    date: formatSlotDate(snapshot.slotStartDatetime),
+    date: formatSlotDate(snapshot.slotStartDatetime, snapshot.timezone),
     time: "",
     location: snapshot.locationName || "",
   };

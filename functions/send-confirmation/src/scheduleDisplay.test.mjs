@@ -6,10 +6,22 @@ import { formatSlotDate, extractScheduleVars } from "./scheduleDisplay.js";
 assert.equal(formatSlotDate(""), "");
 assert.equal(formatSlotDate(null), "");
 assert.equal(formatSlotDate(undefined), "");
+assert.equal(formatSlotDate("not-a-date", "America/Mexico_City"), "");
 
-const formatted = formatSlotDate("2026-08-27T15:00:00.000Z");
-assert.ok(formatted.includes("2026"), `expected year in "${formatted}"`);
-assert.ok(formatted.includes("August"), `expected month name in "${formatted}"`);
+// Deterministic regardless of the machine/runtime's default timezone, because
+// timeZone is passed explicitly — this is the actual reported bug: a slot at
+// 18:30 in Mexico City (America/Mexico_City) is already 00:30 the NEXT day in
+// UTC, which is what the Appwrite function runtime defaults to without an
+// explicit timeZone. Confirmed against a real order (OMZ-20260827-YQR).
+assert.equal(
+  formatSlotDate("2026-08-28T00:30:00.000+00:00", "America/Mexico_City"),
+  "Thursday, August 27, 2026 at 06:30 PM",
+);
+// Locks in what the bug looked like (no/wrong timezone -> wrong day + time):
+assert.equal(
+  formatSlotDate("2026-08-28T00:30:00.000+00:00", "UTC"),
+  "Friday, August 28, 2026 at 12:30 AM",
+);
 
 // ── extractScheduleVars — no tickets ────────────────────────────────────────
 
@@ -48,6 +60,31 @@ const result = extractScheduleVars([{ ticketSnapshot: realTicketSnapshot }]);
 assert.ok(result.date.length > 0, "date must not be empty for a valid ticketSnapshot");
 assert.ok(result.date.includes("2026"), `expected year in "${result.date}"`);
 assert.equal(result.location, "Omzone Coapinole");
+
+// ── extractScheduleVars — real regression: evening slot near midnight UTC ───
+// Captured from order OMZ-20260827-YQR, which is what surfaced this bug: the
+// email showed "Friday, August 28 at 12:30 AM" instead of the correct
+// "Thursday, August 27 at 6:30 PM" because slotStartDatetime wasn't converted
+// to the venue's timezone before formatting.
+
+const midnightCrossingSnapshot = JSON.stringify({
+  orderNumber: "OMZ-20260827-YQR",
+  experienceName: "Performance Recovery Program",
+  slotStartDatetime: "2026-08-28T00:30:00.000+00:00",
+  slotTime: "18:30",
+  slotEndDate: "2026-08-28T02:30:00.000+00:00",
+  timezone: "America/Mexico_City",
+  locationName: "Omzone Coapinole",
+  roomName: "Physiotherapy Treatment Rooms",
+});
+
+const midnightCrossingResult = extractScheduleVars([
+  { ticketSnapshot: midnightCrossingSnapshot },
+]);
+assert.equal(
+  midnightCrossingResult.date,
+  "Thursday, August 27, 2026 at 06:30 PM",
+);
 
 // ── extractScheduleVars — the OLD buggy field names (order_items.itemSnapshot shape) ──
 // Reproduces the actual bug: this shape must NOT accidentally produce a date/location,
