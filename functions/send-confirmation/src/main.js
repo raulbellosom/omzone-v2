@@ -44,6 +44,7 @@
 import { Client, Databases, Query, Users } from "node-appwrite";
 import QRCode from "qrcode";
 import nodemailer from "nodemailer";
+import { extractScheduleVars } from "./scheduleDisplay.js";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -143,19 +144,6 @@ function formatCurrency(amount, currency) {
   } catch {
     return `${currency} ${amount}`;
   }
-}
-
-function formatDatetime(iso) {
-  if (!iso) return "";
-  const d = new Date(iso);
-  return d.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 }
 
 // ─── Email senders ────────────────────────────────────────────────────────────
@@ -334,8 +322,6 @@ export default async ({ req, res, log, error }) => {
     "notification_templates";
   const COL_USER_PROFILES =
     process.env.APPWRITE_COLLECTION_USER_PROFILES || "user_profiles";
-  const COL_LOCATIONS =
-    process.env.APPWRITE_COLLECTION_LOCATIONS || "locations";
   const executionId = req.headers["x-appwrite-execution-id"] || "unknown";
   const trigger = req.headers["x-appwrite-trigger"] || "http";
   const callerUserId = req.headers["x-appwrite-user-id"] || null;
@@ -521,35 +507,16 @@ export default async ({ req, res, log, error }) => {
     }
 
     // ── 8. Build template variables ─────────────────────────────────────────
-    // Extract experience names and slot dates from order snapshot or items
+    // Experience names come from order_items.itemSnapshot (handles multi-item
+    // orders). Date/time/location come from the first ticket's ticketSnapshot
+    // (see extractScheduleVars) — NOT order_items.itemSnapshot, which uses
+    // different field names and never carries a location.
     const experienceNames = [];
-    const slotDates = [];
-    const locationNames = [];
-    let firstSlotId = null;
 
     for (const item of items) {
       try {
         const snap = JSON.parse(item.itemSnapshot || "{}");
         if (snap.experienceName) experienceNames.push(snap.experienceName);
-        if (snap.slotStartDatetime)
-          slotDates.push(formatDatetime(snap.slotStartDatetime));
-        if (snap.locationName) locationNames.push(snap.locationName);
-        if (!firstSlotId && snap.slotId) firstSlotId = snap.slotId;
-        if (!firstSlotId && snap.locationId) {
-          // Try to fetch location by ID from snapshot
-          try {
-            const locDoc = await db.getDocument(
-              DB,
-              COL_LOCATIONS,
-              snap.locationId,
-            );
-            if (locDoc.name && !locationNames.includes(locDoc.name)) {
-              locationNames.push(locDoc.name);
-            }
-          } catch {
-            /* location fetch failed — non-critical */
-          }
-        }
       } catch {
         // Snapshot parse failed — skip
       }
@@ -570,14 +537,15 @@ export default async ({ req, res, log, error }) => {
     }
 
     const ticketCodes = tickets.map((t) => t.ticketCode).join(", ");
+    const scheduleVars = extractScheduleVars(tickets);
 
     const vars = {
       orderNumber: order.orderNumber,
       customerName: order.customerName || "",
       experienceName: experienceNames.join(", ") || "—",
-      date: slotDates.length > 0 ? slotDates[0] : "",
-      time: "",
-      location: locationNames.length > 0 ? locationNames[0] : "",
+      date: scheduleVars.date,
+      time: scheduleVars.time,
+      location: scheduleVars.location,
       ticketCodes: ticketCodes || "—",
       ticketCode: tickets.length > 0 ? tickets[0].ticketCode : "—",
       totalAmount: formatCurrency(order.totalAmount, order.currency || "MXN"),
