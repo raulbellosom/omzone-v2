@@ -13,6 +13,17 @@ const KEY_AFTER = "checkin_window_after_minutes";
 export const DEFAULT_BEFORE_MINUTES = 60;
 export const DEFAULT_AFTER_MINUTES = 30;
 
+const MIN_MINUTES = 0;
+const MAX_MINUTES = 1440;
+
+function parseStoredMinutes(rawValue, fallback) {
+  const parsed = Number.parseInt(rawValue, 10);
+  if (!Number.isFinite(parsed) || parsed < MIN_MINUTES || parsed > MAX_MINUTES) {
+    return fallback;
+  }
+  return parsed;
+}
+
 /**
  * Reads/writes the admin-configurable check-in tolerance window
  * (checkin_window_before_minutes / checkin_window_after_minutes) from the
@@ -40,10 +51,14 @@ export function useCheckInSettings() {
       const after = res.documents.find((d) => d.key === KEY_AFTER) || null;
       setDocs({ before, after });
       setBeforeMinutes(
-        before ? Number.parseInt(before.value, 10) : DEFAULT_BEFORE_MINUTES,
+        before
+          ? parseStoredMinutes(before.value, DEFAULT_BEFORE_MINUTES)
+          : DEFAULT_BEFORE_MINUTES,
       );
       setAfterMinutes(
-        after ? Number.parseInt(after.value, 10) : DEFAULT_AFTER_MINUTES,
+        after
+          ? parseStoredMinutes(after.value, DEFAULT_AFTER_MINUTES)
+          : DEFAULT_AFTER_MINUTES,
       );
     } catch (err) {
       setError(getErrorMessage(err, t));
