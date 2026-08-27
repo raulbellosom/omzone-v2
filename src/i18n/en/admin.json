@@ -1172,7 +1172,16 @@
       "endpoint": "Endpoint",
       "projectId": "Project ID",
       "databaseId": "Database ID",
-      "storageBuckets": "Storage Buckets"
+      "storageBuckets": "Storage Buckets",
+      "checkinTab": "Check-in",
+      "checkinWindowTitle": "Check-in tolerance window",
+      "checkinWindowSubtitle": "Configure how many minutes before and after a class starts that check-in is still allowed.",
+      "checkinBeforeMinutesLabel": "Minutes before class start",
+      "checkinAfterMinutesLabel": "Minutes after class start",
+      "checkinSaveButton": "Save",
+      "checkinSaving": "Saving…",
+      "checkinSaveSuccess": "Check-in window updated.",
+      "checkinSaveError": "Couldn't save the check-in window. Please try again."
     },
     "mediaManager": {
       "title": "Media Manager",

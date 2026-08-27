@@ -4,10 +4,17 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { Card } from "@/components/common/Card";
 import TemplateEditor from "@/components/admin/settings/TemplateEditor";
 import SystemInfoPanel from "@/components/admin/settings/SystemInfoPanel";
-import { Mail, Settings, Bell, Loader2 } from "lucide-react";
+import { Mail, Settings, Bell, Loader2, Clock } from "lucide-react";
 import { auditAction } from "@/lib/audit";
+import CheckInWindowPanel from "@/components/admin/settings/CheckInWindowPanel";
 
-const SECTION_TABS = ["templates", "system"];
+const SECTION_TABS = ["templates", "checkin", "system"];
+
+const TAB_META = {
+  templates: { icon: Bell, labelKey: "admin.settings.notificationTemplates" },
+  checkin: { icon: Clock, labelKey: "admin.settings.checkinTab" },
+  system: { icon: Settings, labelKey: "admin.settings.systemInfo" },
+};
 
 function TemplateBadge({ type }) {
   const colors = {
@@ -64,26 +71,23 @@ export default function SettingsPage() {
 
       {/* Section tabs */}
       <div className="flex gap-1 border-b border-sand-dark/30">
-        {SECTION_TABS.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors border-b-2 ${
-              activeTab === tab
-                ? "border-sage text-sage"
-                : "border-transparent text-charcoal-muted hover:text-charcoal"
-            }`}
-          >
-            {tab === "templates" ? (
-              <Bell className="h-4 w-4" />
-            ) : (
-              <Settings className="h-4 w-4" />
-            )}
-            {tab === "templates"
-              ? t("admin.settings.notificationTemplates")
-              : t("admin.settings.systemInfo")}
-          </button>
-        ))}
+        {SECTION_TABS.map((tab) => {
+          const { icon: Icon, labelKey } = TAB_META[tab];
+          return (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors border-b-2 ${
+                activeTab === tab
+                  ? "border-sage text-sage"
+                  : "border-transparent text-charcoal-muted hover:text-charcoal"
+              }`}
+            >
+              <Icon className="h-4 w-4" />
+              {t(labelKey)}
+            </button>
+          );
+        })}
       </div>
 
       {/* Templates section */}
@@ -199,6 +203,9 @@ export default function SettingsPage() {
           )}
         </div>
       )}
+
+      {/* Check-in window section */}
+      {activeTab === "checkin" && <CheckInWindowPanel />}
 
       {/* System info section */}
       {activeTab === "system" && <SystemInfoPanel />}
