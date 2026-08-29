@@ -4409,6 +4409,14 @@
                     "format": ""
                 },
                 {
+                    "key": "arrivedAt",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "format": ""
+                },
+                {
                     "key": "ticketSnapshot",
                     "type": "text",
                     "required": true,
@@ -4531,6 +4539,15 @@
                     "status": "available",
                     "columns": [
                         "userArchivedAt"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "idx_arrivedAt",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "arrivedAt"
                     ],
                     "orders": []
                 }
