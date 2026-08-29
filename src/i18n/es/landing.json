@@ -13,6 +13,11 @@
     "myOrders": "Mis Compras",
     "myTickets": "Mis Reservaciones"
   },
+  "notifications": {
+    "bellLabel": "Notificaciones",
+    "title": "Notificaciones",
+    "empty": "No tienes notificaciones nuevas"
+  },
   "footer": {
     "tagline": "Experiencias de bienestar premium diseñadas para nutrir tu cuerpo, mente y espíritu.",
     "experiences": "Experiencias",

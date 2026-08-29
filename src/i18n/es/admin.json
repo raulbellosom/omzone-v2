@@ -674,7 +674,13 @@
       "alertsTitle": "Alertas",
       "alertTypeUnpaidOrder": "Orden no pagada",
       "alertTypeDuplicateScan": "Pase duplicado detectado",
-      "recentActivityTitle": "Actividad reciente"
+      "recentActivityTitle": "Actividad reciente",
+      "timingOnTime": "A tiempo",
+      "timingEarly": "Temprano",
+      "timingLate": "Tarde",
+      "sessionStarts": "Sesión inicia",
+      "operatedBy": "Operando: {name}",
+      "arrivalWelcomeSent": "✓ Bienvenida enviada"
     },
     "slots": {
       "title": "Agenda / Slots",

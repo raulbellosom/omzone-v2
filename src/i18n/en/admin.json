@@ -674,7 +674,13 @@
       "alertsTitle": "Alerts",
       "alertTypeUnpaidOrder": "Unpaid order",
       "alertTypeDuplicateScan": "Duplicate pass detected",
-      "recentActivityTitle": "Recent activity"
+      "recentActivityTitle": "Recent activity",
+      "timingOnTime": "On time",
+      "timingEarly": "Early",
+      "timingLate": "Late",
+      "sessionStarts": "Session starts",
+      "operatedBy": "Operated by: {name}",
+      "arrivalWelcomeSent": "✓ Welcome sent"
     },
     "slots": {
       "title": "Agenda / Slots",

@@ -75,6 +75,9 @@ const env = {
     "contact_messages",
   collectionHeroSlides:
     import.meta.env.VITE_APPWRITE_COLLECTION_HERO_SLIDES || "hero_slides",
+  collectionClientNotifications:
+    import.meta.env.VITE_APPWRITE_COLLECTION_CLIENT_NOTIFICATIONS ||
+    "client_notifications",
 
   // ─── Buckets ───
   bucketExperienceMedia:
