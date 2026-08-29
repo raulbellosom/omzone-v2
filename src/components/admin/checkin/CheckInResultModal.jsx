@@ -40,6 +40,17 @@ function invalidReasonKey(outcome) {
   return "reasonNotFound";
 }
 
+function timingChip(minutesFromStart, t) {
+  if (typeof minutesFromStart !== "number") return null;
+  if (minutesFromStart > 5) {
+    return { label: t("admin.checkin.timingEarly"), className: "bg-amber-100 text-amber-800" };
+  }
+  if (minutesFromStart < -5) {
+    return { label: t("admin.checkin.timingLate"), className: "bg-orange-100 text-orange-800" };
+  }
+  return { label: t("admin.checkin.timingOnTime"), className: "bg-emerald-100 text-emerald-800" };
+}
+
 export default function CheckInResultModal({
   state,
   onConfirm,
@@ -158,6 +169,27 @@ export default function CheckInResultModal({
                         <div className="flex justify-between text-sm">
                           <span className="text-charcoal-muted">{t("admin.checkin.previouslyCheckedIn").replace("{date}", "")}</span>
                           <span className="text-charcoal">{formatDateTime(data.usedAt)}</span>
+                        </div>
+                      )}
+                      {group === "valid" && data.schedule && (
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-charcoal-muted">{t("admin.checkin.sessionStarts")}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-charcoal">{formatDateTime(data.ticket.slotStartDatetime)}</span>
+                            {(() => {
+                              const chip = timingChip(data.schedule.minutesFromStart, t);
+                              return chip ? (
+                                <span className={cn("px-2 py-0.5 rounded-full text-xs font-semibold", chip.className)}>
+                                  {chip.label}
+                                </span>
+                              ) : null;
+                            })()}
+                          </div>
+                        </div>
+                      )}
+                      {group === "valid" && data.arrivalJustRecorded && (
+                        <div className="rounded-lg bg-emerald-50 border border-emerald-200 px-3 py-2 text-xs font-medium text-emerald-700 text-center">
+                          {t("admin.checkin.arrivalWelcomeSent")}
                         </div>
                       )}
                       {group === "schedule" && data.schedule && (
