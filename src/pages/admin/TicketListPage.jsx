@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAdminTickets } from "@/hooks/useAdminTickets";
 import { useExperiences } from "@/hooks/useExperiences";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 import { Card } from "@/components/common/Card";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
@@ -21,7 +21,7 @@ const STATUS_KEYS = [
 ];
 
 export default function TicketListPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
   const [experienceId, setExperienceId] = useState("");
@@ -50,7 +50,7 @@ export default function TicketListPage() {
     { value: "", label: t("admin.tickets.allExperiences") },
     ...experiences.map((exp) => ({
       value: exp.$id,
-      label: exp.titleEn || exp.titleEs || exp.$id,
+      label: localizedField(exp, "name", language) || exp.$id,
     })),
   ];
 

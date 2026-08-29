@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 import TicketStatusBadge from "./TicketStatusBadge";
+import { parseTicketSnapshot } from "@/lib/tickets";
 
 function formatDate(iso) {
   if (!iso) return "—";
@@ -74,7 +75,9 @@ export default function TicketTable({ tickets, loading }) {
                 </td>
                 <td className="px-4 py-3 hidden md:table-cell">
                   <p className="text-charcoal truncate max-w-50">
-                    {ticket.ticketSnapshot?.experienceName || ticket.experienceId || "—"}
+                    {parseTicketSnapshot(ticket)?.experienceName ||
+                      ticket.experienceId ||
+                      "—"}
                   </p>
                 </td>
                 <td className="px-4 py-3">

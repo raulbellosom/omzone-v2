@@ -26,6 +26,10 @@
  *   (checkin_window_before_minutes, checkin_window_after_minutes)
  * - Writes (action=confirm only): tickets (status → used, usedAt), bookings (status → checked-in, checkedInAt)
  * - Creates (action=confirm only): ticket_redemptions
+ * - Creates (best-effort, non-blocking): admin_activity_logs — one row per scan
+ *   outcome (checkin.scan_valid / scan_cancelled / scan_expired /
+ *   duplicate_scan_attempt / confirmed), entityType "ticket", so the admin
+ *   Ticket Detail page can show a full scan history + who confirmed it.
  *
  * @envVars
  * - APPWRITE_FUNCTION_API_ENDPOINT (built-in, auto-injected)
@@ -166,7 +170,7 @@ function _roleSnapshot(labels) {
   return "client";
 }
 
-async function logActivity(db, dbId, action, entityType, entityId, actorId, labels, details = {}) {
+async function logActivity(db, dbId, action, entityType, entityId, actorId, labels, details = {}, severity = "warn") {
   try {
     if (labels.includes("root")) return; // ghost-user rule
     const detailsStr = JSON.stringify(details).slice(0, 4000);
@@ -176,7 +180,7 @@ async function logActivity(db, dbId, action, entityType, entityId, actorId, labe
       entityType,
       entityId,
       details: detailsStr,
-      severity: "warn",
+      severity,
       result: "ok",
       source: "function",
       actorRoleSnapshot: _roleSnapshot(labels),
@@ -337,6 +341,10 @@ export default async ({ req, res, log, error }) => {
 
     if (ticket.status === "cancelled") {
       log(`Ticket cancelled: ${sanitizedCode}`);
+      await logActivity(db, DB, "checkin.scan_cancelled", "ticket", ticket.$id, userId, labels, {
+        ticketCode: sanitizedCode,
+        action,
+      });
       return res.json(
         {
           ok: false,
@@ -352,6 +360,10 @@ export default async ({ req, res, log, error }) => {
 
     if (ticket.status === "expired") {
       log(`Ticket expired: ${sanitizedCode}`);
+      await logActivity(db, DB, "checkin.scan_expired", "ticket", ticket.$id, userId, labels, {
+        ticketCode: sanitizedCode,
+        action,
+      });
       return res.json(
         {
           ok: false,
@@ -385,6 +397,10 @@ export default async ({ req, res, log, error }) => {
 
     // ── "check" action stops here — read-only ─────────────────────────────────
     if (action === "check") {
+      await logActivity(db, DB, "checkin.scan_valid", "ticket", ticket.$id, userId, labels, {
+        ticketCode: sanitizedCode,
+        withinWindow: schedule ? schedule.withinWindow : null,
+      }, "info");
       return res.json({
         ok: true,
         data: { ticket: extractSnapshotDisplay(ticket), schedule, confirmed: false },
@@ -413,11 +429,22 @@ export default async ({ req, res, log, error }) => {
       redemptionData.notes = notes.slice(0, 500);
     }
 
-    await db.createDocument(DB, COL_REDEMPTIONS, ID.unique(), redemptionData);
+    const redemption = await db.createDocument(
+      DB,
+      COL_REDEMPTIONS,
+      ID.unique(),
+      redemptionData,
+    );
 
     log(
       `Redemption recorded: ticket=${ticket.$id}, by=${userId}, method=${redemptionMethod}`,
     );
+
+    await logActivity(db, DB, "checkin.confirmed", "ticket", ticket.$id, userId, labels, {
+      ticketCode: sanitizedCode,
+      method: redemptionMethod,
+      redemptionId: redemption.$id,
+    }, "info");
 
     // ── Update associated booking if exists ──────────────────────────────────
     if (ticket.orderId && ticket.slotId) {
