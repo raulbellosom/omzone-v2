@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useTicketDetail, invalidateTicket } from "@/hooks/useAdminTickets";
 import { useAuth } from "@/hooks/useAuth";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
+import { parseTicketSnapshot } from "@/lib/tickets";
 import { getErrorMessage } from "@/lib/errors";
 import { ROLES } from "@/constants/roles";
 import { ROUTES } from "@/constants/routes";
@@ -56,7 +57,7 @@ export default function TicketDetailPage() {
   const { ticketId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { ticket, experience, slot, order, loading, error } =
     useTicketDetail(ticketId);
   const [actionError, setActionError] = useState(null);
@@ -106,11 +107,7 @@ export default function TicketDetailPage() {
     );
   }
 
-  const snapshot = ticket.ticketSnapshot
-    ? typeof ticket.ticketSnapshot === "string"
-      ? JSON.parse(ticket.ticketSnapshot)
-      : ticket.ticketSnapshot
-    : null;
+  const snapshot = parseTicketSnapshot(ticket);
 
   return (
     <div className="space-y-6">
@@ -191,34 +188,38 @@ export default function TicketDetailPage() {
           </Card>
 
           {/* Related experience */}
-          {experience && (
+          {(experience || snapshot?.experienceName) && (
             <Card className="p-5">
               <h2 className="text-base font-semibold text-charcoal mb-3">
                 {t("admin.ticketDetail.experience")}
               </h2>
               <DetailRow label={t("admin.ticketDetail.name")}>
-                {experience.titleEn || experience.titleEs || "—"}
+                {experience
+                  ? localizedField(experience, "name", language) || "—"
+                  : snapshot?.experienceName || "—"}
               </DetailRow>
               <DetailRow label={t("admin.ticketDetail.type")}>
-                {experience.type || "—"}
+                {experience?.type || "—"}
               </DetailRow>
             </Card>
           )}
 
           {/* Related slot */}
-          {slot && (
+          {(slot || snapshot?.slotStartDatetime) && (
             <Card className="p-5">
               <h2 className="text-base font-semibold text-charcoal mb-3">
                 {t("admin.ticketDetail.slot")}
               </h2>
               <DetailRow label={t("admin.ticketDetail.date")}>
-                {formatDate(slot.startDate)}
+                {formatDate(
+                  slot ? slot.startDatetime : snapshot?.slotStartDatetime,
+                )}
               </DetailRow>
               <DetailRow label={t("admin.ticketDetail.status")}>
-                {slot.status || "—"}
+                {slot?.status || "—"}
               </DetailRow>
               <DetailRow label={t("admin.ticketDetail.capacity")}>
-                {slot.capacity ?? "—"}
+                {slot?.capacity ?? "—"}
               </DetailRow>
             </Card>
           )}
