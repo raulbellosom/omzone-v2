@@ -12,6 +12,7 @@ import AlertsCard from "@/components/admin/checkin/AlertsCard";
 import RecentActivityList from "@/components/admin/checkin/RecentActivityList";
 import CheckInResultModal from "@/components/admin/checkin/CheckInResultModal";
 import KioskOverlay from "@/components/admin/checkin/KioskOverlay";
+import StaffBadge from "@/components/admin/checkin/StaffBadge";
 import Button from "@/components/common/Button";
 import { ScanLine, Maximize2 } from "lucide-react";
 
@@ -120,10 +121,13 @@ export default function CheckInPage() {
             <p className="text-sm text-charcoal-muted">{t("admin.checkin.subtitle")}</p>
           </div>
         </div>
-        <Button variant="outline" size="sm" onClick={() => setKioskMode(true)}>
-          <Maximize2 className="h-4 w-4 mr-1.5" />
-          {t("admin.checkin.kioskEnter")}
-        </Button>
+        <div className="flex items-center gap-3">
+          <StaffBadge />
+          <Button variant="outline" size="sm" onClick={() => setKioskMode(true)}>
+            <Maximize2 className="h-4 w-4 mr-1.5" />
+            {t("admin.checkin.kioskEnter")}
+          </Button>
+        </div>
       </div>
 
       {/* Camera on top under lg, side-by-side with manual input + summary at lg+ */}

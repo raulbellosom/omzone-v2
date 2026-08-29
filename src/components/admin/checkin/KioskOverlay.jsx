@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
+import StaffBadge from "@/components/admin/checkin/StaffBadge";
 
 function useClock() {
   const [now, setNow] = useState(new Date());
@@ -42,12 +43,15 @@ export default function KioskOverlay({
           </div>
           <div className="text-xs text-charcoal-muted mt-1 capitalize">{dateLabel}</div>
         </div>
-        <button
-          onClick={onExit}
-          className="h-14 px-6 rounded-xl border border-sand-dark bg-white text-sm font-semibold text-charcoal hover:bg-warm-gray transition-colors cursor-pointer"
-        >
-          {t("admin.checkin.kioskExit")}
-        </button>
+        <div className="flex items-center gap-3">
+          <StaffBadge />
+          <button
+            onClick={onExit}
+            className="h-14 px-6 rounded-xl border border-sand-dark bg-white text-sm font-semibold text-charcoal hover:bg-warm-gray transition-colors cursor-pointer"
+          >
+            {t("admin.checkin.kioskExit")}
+          </button>
+        </div>
       </div>
       <div className="flex-1 overflow-auto p-6 flex items-start justify-center">
         <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 items-start">
