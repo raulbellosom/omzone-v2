@@ -39,7 +39,7 @@ function actorDisplayName(profile, fallbackId) {
 
 export default function TicketActivityCard({ ticketId }) {
   const { t, language } = useLanguage();
-  const { redemption, activity, actors, loading } = useTicketActivity(ticketId);
+  const { redemption, activity, actors, loading, error } = useTicketActivity(ticketId);
 
   if (loading) {
     return (
@@ -62,11 +62,21 @@ export default function TicketActivityCard({ ticketId }) {
 
   return (
     <Card className="p-5 space-y-5">
+      <h2 className="text-lg font-semibold text-charcoal">
+        {t("admin.ticketDetail.activity")}
+      </h2>
+
+      {error && (
+        <div className="p-3 rounded-lg border border-red-200 bg-red-50">
+          <p className="text-sm text-red-700">{error}</p>
+        </div>
+      )}
+
       <div>
-        <h2 className="text-base font-semibold text-charcoal mb-3 flex items-center gap-2">
+        <h3 className="text-base font-semibold text-charcoal mb-3 flex items-center gap-2">
           <UserCheck className="h-4 w-4 text-charcoal-muted" />
           {t("admin.ticketDetail.confirmedBy")}
-        </h2>
+        </h3>
         {redemption ? (
           <div className="space-y-1 text-sm">
             <p className="font-medium text-charcoal">
@@ -78,6 +88,7 @@ export default function TicketActivityCard({ ticketId }) {
               )}
             </p>
             <p className="text-charcoal-muted">
+              {t("admin.ticketDetail.redeemedAt")}:{" "}
               {formatDateTime(redemption.redeemedAt, language)}
             </p>
             <p className="text-charcoal-muted">
@@ -85,7 +96,9 @@ export default function TicketActivityCard({ ticketId }) {
               {t(`admin.ticketDetail.${METHOD_LABEL_KEYS[redemption.method] || "methodManual"}`)}
             </p>
             {redemption.notes && (
-              <p className="text-xs text-charcoal-subtle mt-1">{redemption.notes}</p>
+              <p className="text-xs text-charcoal-subtle mt-1">
+                {t("admin.ticketDetail.notes")}: {redemption.notes}
+              </p>
             )}
           </div>
         ) : (
@@ -96,10 +109,10 @@ export default function TicketActivityCard({ ticketId }) {
       </div>
 
       <div>
-        <h2 className="text-base font-semibold text-charcoal mb-3 flex items-center gap-2">
+        <h3 className="text-base font-semibold text-charcoal mb-3 flex items-center gap-2">
           <History className="h-4 w-4 text-charcoal-muted" />
           {t("admin.ticketDetail.scanHistory")}
-        </h2>
+        </h3>
         {activity.length === 0 ? (
           <p className="text-sm text-charcoal-subtle">
             {t("admin.ticketDetail.noActivity")}
