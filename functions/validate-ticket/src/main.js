@@ -170,7 +170,7 @@ function _roleSnapshot(labels) {
   return "client";
 }
 
-async function logActivity(db, dbId, action, entityType, entityId, actorId, labels, details = {}) {
+async function logActivity(db, dbId, action, entityType, entityId, actorId, labels, details = {}, severity = "warn") {
   try {
     if (labels.includes("root")) return; // ghost-user rule
     const detailsStr = JSON.stringify(details).slice(0, 4000);
@@ -180,7 +180,7 @@ async function logActivity(db, dbId, action, entityType, entityId, actorId, labe
       entityType,
       entityId,
       details: detailsStr,
-      severity: "warn",
+      severity,
       result: "ok",
       source: "function",
       actorRoleSnapshot: _roleSnapshot(labels),
@@ -343,6 +343,7 @@ export default async ({ req, res, log, error }) => {
       log(`Ticket cancelled: ${sanitizedCode}`);
       await logActivity(db, DB, "checkin.scan_cancelled", "ticket", ticket.$id, userId, labels, {
         ticketCode: sanitizedCode,
+        action,
       });
       return res.json(
         {
@@ -361,6 +362,7 @@ export default async ({ req, res, log, error }) => {
       log(`Ticket expired: ${sanitizedCode}`);
       await logActivity(db, DB, "checkin.scan_expired", "ticket", ticket.$id, userId, labels, {
         ticketCode: sanitizedCode,
+        action,
       });
       return res.json(
         {
@@ -398,7 +400,7 @@ export default async ({ req, res, log, error }) => {
       await logActivity(db, DB, "checkin.scan_valid", "ticket", ticket.$id, userId, labels, {
         ticketCode: sanitizedCode,
         withinWindow: schedule ? schedule.withinWindow : null,
-      });
+      }, "info");
       return res.json({
         ok: true,
         data: { ticket: extractSnapshotDisplay(ticket), schedule, confirmed: false },
@@ -442,7 +444,7 @@ export default async ({ req, res, log, error }) => {
       ticketCode: sanitizedCode,
       method: redemptionMethod,
       redemptionId: redemption.$id,
-    });
+    }, "info");
 
     // ── Update associated booking if exists ──────────────────────────────────
     if (ticket.orderId && ticket.slotId) {
