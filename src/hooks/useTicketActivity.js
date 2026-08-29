@@ -62,13 +62,18 @@ export function useTicketActivity(ticketId) {
 
         let profileMap = {};
         if (userIds.length > 0) {
-          const profilesRes = await databases.listDocuments(DB, COL_PROFILES, [
-            Query.equal("$id", userIds),
-            Query.limit(userIds.length),
-          ]);
-          profileMap = Object.fromEntries(
-            profilesRes.documents.map((p) => [p.$id, p]),
-          );
+          try {
+            const profilesRes = await databases.listDocuments(DB, COL_PROFILES, [
+              Query.equal("$id", userIds),
+              Query.limit(userIds.length),
+            ]);
+            profileMap = Object.fromEntries(
+              profilesRes.documents.map((p) => [p.$id, p]),
+            );
+          } catch {
+            // non-fatal — actor names are a display nicety, don't discard
+            // the already-fetched redemption/activity data over this
+          }
         }
 
         if (cancelled) return;
