@@ -14,6 +14,8 @@ import TicketStatusBadge from "@/components/admin/tickets/TicketStatusBadge";
 import TicketActivityCard from "@/components/admin/tickets/TicketActivityCard";
 import SnapshotViewer from "@/components/admin/orders/SnapshotViewer";
 import TicketQR from "@/components/common/TicketQR";
+import TypeChip from "@/components/admin/experiences/TypeChip";
+import OrderStatusBadge from "@/components/admin/orders/OrderStatusBadge";
 import { ArrowLeft, Ticket, Ban } from "lucide-react";
 
 function formatDate(iso) {
@@ -200,7 +202,7 @@ export default function TicketDetailPage() {
                   : snapshot?.experienceName || "—"}
               </DetailRow>
               <DetailRow label={t("admin.ticketDetail.type")}>
-                {experience?.type || "—"}
+                {experience?.type ? <TypeChip type={experience.type} /> : "—"}
               </DetailRow>
             </Card>
           )}
@@ -217,7 +219,7 @@ export default function TicketDetailPage() {
                 )}
               </DetailRow>
               <DetailRow label={t("admin.ticketDetail.status")}>
-                {slot?.status || "—"}
+                {slot?.status ? t(`admin.statuses.${slot.status}`) : "—"}
               </DetailRow>
               <DetailRow label={t("admin.ticketDetail.capacity")}>
                 {slot?.capacity ?? "—"}
@@ -243,7 +245,7 @@ export default function TicketDetailPage() {
                 </Link>
               </DetailRow>
               <DetailRow label={t("admin.ticketDetail.orderStatus")}>
-                {order.status || "—"}
+                {order.status ? <OrderStatusBadge status={order.status} /> : "—"}
               </DetailRow>
             </Card>
           )}
