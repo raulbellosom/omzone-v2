@@ -47,6 +47,9 @@ const env = {
     import.meta.env.VITE_APPWRITE_COLLECTION_PAYMENTS || "payments",
   collectionTickets:
     import.meta.env.VITE_APPWRITE_COLLECTION_TICKETS || "tickets",
+  collectionTicketRedemptions:
+    import.meta.env.VITE_APPWRITE_COLLECTION_TICKET_REDEMPTIONS ||
+    "ticket_redemptions",
   collectionRefunds:
     import.meta.env.VITE_APPWRITE_COLLECTION_REFUNDS || "refunds",
   collectionPublications:
