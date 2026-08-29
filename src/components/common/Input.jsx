@@ -34,7 +34,9 @@ const Input = forwardRef(
     const showTemporalPlaceholder = isTemporal && !value && !focused;
 
     return (
-      <div className={cn("relative min-w-0 w-full", containerClassName)}>
+      <div
+        className={cn("relative min-w-0 max-w-full w-full", containerClassName)}
+      >
         {hasIcon && (
           <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-charcoal-subtle">
             <Icon size={18} strokeWidth={1.8} />
@@ -53,13 +55,13 @@ const Input = forwardRef(
             onBlur?.(event);
           }}
           className={cn(
-            "flex h-11 min-w-0 max-w-full w-full rounded-xl border border-sand-dark bg-white py-2 text-sm text-charcoal placeholder:text-charcoal-subtle transition-colors",
+            "block h-11 min-w-0 max-w-full w-full rounded-xl border border-sand-dark bg-white py-2 text-sm text-charcoal placeholder:text-charcoal-subtle transition-colors",
             "focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20",
             "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-warm-gray",
             hasIcon ? "pl-10 pr-4" : "px-4",
             hasRight && !hasIcon ? "pl-4 pr-10" : "",
             hasRight && hasIcon ? "pr-10" : "",
-            isTemporal && "[color-scheme:light]",
+            isTemporal && "temporal-input [color-scheme:light]",
             showTemporalPlaceholder &&
               "text-transparent [&::-webkit-datetime-edit]:text-transparent",
             className,

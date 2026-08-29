@@ -223,7 +223,7 @@ export default function SlotListPage() {
       <ExperienceDetailTabs />
 
       {/* Filters + View toggle */}
-      <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center">
+      <div className="grid min-w-0 grid-cols-1 gap-3 sm:flex sm:flex-wrap sm:items-center">
         <AdminSelect
           value={statusFilter}
           onChange={setStatusFilter}
@@ -232,7 +232,7 @@ export default function SlotListPage() {
             label: t(o.i18nKey),
           }))}
           minWidth="min-w-0 sm:min-w-[160px]"
-          className="col-span-2 sm:w-auto"
+          className="sm:w-auto"
         />
         <Input
           type="date"
@@ -250,7 +250,7 @@ export default function SlotListPage() {
           aria-label={t("admin.slots.dateTo")}
           containerClassName="sm:w-40"
         />
-        <div className="col-span-2 ml-auto flex gap-1 sm:col-span-1">
+        <div className="ml-auto flex gap-1">
           <button
             onClick={() => setView("table")}
             className={cn(
