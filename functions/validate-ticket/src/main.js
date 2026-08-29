@@ -23,9 +23,15 @@
  *
  * @entities
  * - Reads: tickets (by ticketCode), bookings (by orderId + slotId), settings
- *   (checkin_window_before_minutes, checkin_window_after_minutes)
+ *   (checkin_window_before_minutes, checkin_window_after_minutes), user_profiles
+ *   (for arrival-notification language)
+ * - Writes (action=check, first scan only): tickets.arrivedAt (one-shot)
  * - Writes (action=confirm only): tickets (status → used, usedAt), bookings (status → checked-in, checkedInAt)
  * - Creates (action=confirm only): ticket_redemptions
+ * - Creates (action=check, first scan only): client_notifications
+ * - Writes: admin_activity_logs (one entry per outcome: checkin.rejected_not_found,
+ *   checkin.duplicate_scan_attempt, checkin.rejected_cancelled, checkin.rejected_expired,
+ *   checkin.rejected_schedule, checkin.arrived, checkin.valid_scan, checkin.confirmed)
  *
  * @envVars
  * - APPWRITE_FUNCTION_API_ENDPOINT (built-in, auto-injected)
@@ -36,6 +42,9 @@
  * - APPWRITE_COLLECTION_TICKET_REDEMPTIONS (project-level global)
  * - APPWRITE_COLLECTION_BOOKINGS (project-level global)
  * - APPWRITE_COLLECTION_SETTINGS (project-level global)
+ * - APPWRITE_COLLECTION_CLIENT_NOTIFICATIONS (project-level global)
+ * - APPWRITE_COLLECTION_USER_PROFILES (project-level global)
+ * - APPWRITE_FUNCTION_SEND_NOTIFICATION (project-level global)
  *
  * @errors
  * - 400: Missing/invalid ticketCode, ticket status not "valid"
@@ -46,8 +55,10 @@
  * - 410: Ticket cancelled or expired
  * - 500: Internal error
  *
- * @idempotent "check" is always idempotent (read-only). "confirm" on an already-used
- *   ticket returns 409 without duplicating redemptions.
+ * @idempotent "check" is read-only except for a guarded one-shot arrival side effect
+ *   (tickets.arrivedAt, welcome email/notification) that only fires once per ticket
+ *   regardless of re-scans. "confirm" on an already-used ticket returns 409 without
+ *   duplicating redemptions.
  * @returns {Object} { ok: true, data: { ticket: {...}, schedule: {...}|null, confirmed: boolean } }
  */
 
@@ -701,6 +712,17 @@ export default async ({ req, res, log, error }) => {
         );
       }
     }
+
+    await logActivity(
+      db, DB, "checkin.confirmed", "ticket", ticket.$id, userId, labels, "info",
+      buildAuditDetails({
+        ticket: { ...ticket, status: "used", usedAt: now },
+        schedule,
+        caller,
+        participantCount,
+        extra: { redemptionMethod, previousStatus: "valid" },
+      }),
+    );
 
     // ── Return success with display data ─────────────────────────────────────
     const displayData = extractSnapshotDisplay({
