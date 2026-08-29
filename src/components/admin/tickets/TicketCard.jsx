@@ -1,6 +1,7 @@
 import Card from "../../common/Card";
 import TicketStatusBadge from "./TicketStatusBadge";
 import { Link } from "react-router-dom";
+import { parseTicketSnapshot } from "@/lib/tickets";
 
 function formatDate(iso) {
   if (!iso) return "—";
@@ -28,7 +29,9 @@ export default function TicketCard({ ticket }) {
 
       <div className="flex items-center justify-between mt-3 pt-3 border-t border-sand-dark/40">
         <p className="text-xs text-charcoal-subtle truncate max-w-[60%]">
-          {ticket.ticketSnapshot?.experienceName || ticket.experienceId || "—"}
+          {parseTicketSnapshot(ticket)?.experienceName ||
+            ticket.experienceId ||
+            "—"}
         </p>
         <p className="text-xs text-charcoal-subtle">{formatDate(ticket.$createdAt)}</p>
       </div>
