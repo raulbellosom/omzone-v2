@@ -11,6 +11,7 @@ import { auditAction } from "@/lib/audit";
 import { Card } from "@/components/common/Card";
 import Button from "@/components/common/Button";
 import TicketStatusBadge from "@/components/admin/tickets/TicketStatusBadge";
+import TicketActivityCard from "@/components/admin/tickets/TicketActivityCard";
 import SnapshotViewer from "@/components/admin/orders/SnapshotViewer";
 import TicketQR from "@/components/common/TicketQR";
 import { ArrowLeft, Ticket, Ban } from "lucide-react";
@@ -277,6 +278,9 @@ export default function TicketDetailPage() {
               </Button>
             </Card>
           )}
+
+          {/* Ticket activity (who confirmed it, scan history) */}
+          {isAdmin && <TicketActivityCard ticketId={ticket.$id} />}
         </div>
       </div>
     </div>
