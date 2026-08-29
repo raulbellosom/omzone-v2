@@ -11,6 +11,9 @@ const ACTION_LABEL_KEYS = {
   "checkin.duplicate_scan_attempt": "actionScanDuplicate",
   "checkin.confirmed": "actionConfirmed",
   "ticket.invalidate": "actionInvalidate",
+  "checkin.arrived": "actionArrived",
+  "checkin.rejected_not_found": "actionRejectedNotFound",
+  "checkin.rejected_schedule": "actionRejectedSchedule",
 };
 
 const METHOD_LABEL_KEYS = {

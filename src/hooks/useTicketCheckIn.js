@@ -67,6 +67,7 @@ export function useTicketCheckIn() {
         ticketCode: sanitized,
         ticket: body.data.ticket,
         schedule,
+        arrivalJustRecorded: body.data.arrivalJustRecorded ?? false,
       };
       setState({ phase: "result", data: result, error: null });
       return result;

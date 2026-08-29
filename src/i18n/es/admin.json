@@ -593,7 +593,10 @@
       "actionScanExpired": "Intento de escaneo — ticket expirado",
       "actionScanDuplicate": "Intento de escaneo — ya usado",
       "actionConfirmed": "Entrada confirmada",
-      "actionInvalidate": "Ticket invalidado"
+      "actionInvalidate": "Ticket invalidado",
+      "actionArrived": "Llegada registrada",
+      "actionRejectedNotFound": "Intento de escaneo — código no encontrado",
+      "actionRejectedSchedule": "Intento de escaneo — fuera de horario"
     },
     "bookingRequests": {
       "title": "Solicitudes de reserva",
@@ -692,7 +695,13 @@
       "alertsTitle": "Alertas",
       "alertTypeUnpaidOrder": "Orden no pagada",
       "alertTypeDuplicateScan": "Pase duplicado detectado",
-      "recentActivityTitle": "Actividad reciente"
+      "recentActivityTitle": "Actividad reciente",
+      "timingOnTime": "A tiempo",
+      "timingEarly": "Temprano",
+      "timingLate": "Tarde",
+      "sessionStarts": "Sesión inicia",
+      "operatedBy": "Operando: {name}",
+      "arrivalWelcomeSent": "✓ Bienvenida enviada"
     },
     "slots": {
       "title": "Agenda / Slots",

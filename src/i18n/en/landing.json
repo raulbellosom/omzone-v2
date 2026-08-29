@@ -13,6 +13,11 @@
     "myOrders": "My Orders",
     "myTickets": "My Tickets"
   },
+  "notifications": {
+    "bellLabel": "Notifications",
+    "title": "Notifications",
+    "empty": "You have no new notifications"
+  },
   "footer": {
     "tagline": "Premium experiences designed to nurture your body, mind and spirit.",
     "experiences": "Experiences",

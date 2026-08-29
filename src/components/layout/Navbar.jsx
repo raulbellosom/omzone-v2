@@ -6,6 +6,7 @@ import { ROUTES } from "@/constants/routes";
 import Button from "@/components/common/Button";
 import UserMenuDropdown from "@/components/common/UserMenuDropdown";
 import LanguageSwitcher from "@/components/common/LanguageSwitcher";
+import NotificationBell from "@/components/common/NotificationBell";
 import {
   Sheet,
   SheetTrigger,
@@ -103,6 +104,7 @@ export default function Navbar() {
       {!loading && (
         <div className="hidden lg:flex items-center gap-3">
           <LanguageSwitcher transparent={isTransparent} />
+          {user && isClient && <NotificationBell transparent={isTransparent} />}
           {!user ? (
             <>
               <Link
@@ -212,6 +214,12 @@ export default function Navbar() {
                   )}
                   {isClient && (
                     <>
+                      <div className="flex items-center justify-between px-3 py-2">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-charcoal-muted">
+                          {t("notifications.title")}
+                        </span>
+                        <NotificationBell />
+                      </div>
                       <Link
                         to={ROUTES.PORTAL}
                         onClick={() => setMobileOpen(false)}

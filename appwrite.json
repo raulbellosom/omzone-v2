@@ -138,7 +138,9 @@
                 "documents.read",
                 "documents.write",
                 "collections.read",
-                "databases.read"
+                "databases.read",
+                "functions.write",
+                "execution.write"
             ],
             "events": [],
             "timeout": 15,
@@ -4548,6 +4550,101 @@
                     "status": "available",
                     "columns": [
                         "arrivedAt"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "client_notifications",
+            "$permissions": [
+                "read(\"label:root\")",
+                "read(\"label:admin\")",
+                "create(\"label:root\")",
+                "create(\"label:admin\")"
+            ],
+            "databaseId": "omzone_db",
+            "name": "client_notifications",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "title",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "body",
+                    "type": "text",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "ticketId",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "isRead",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "readAt",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "format": ""
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "idx_userId",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "userId"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "idx_userId_isRead",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "userId",
+                        "isRead"
                     ],
                     "orders": []
                 }
