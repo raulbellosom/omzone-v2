@@ -16,6 +16,7 @@ import SlotCalendarView from "@/components/admin/slots/SlotCalendarView";
 import { Button } from "@/components/common/Button";
 import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
+import { Input } from "@/components/common/Input";
 import AdminSelect from "@/components/common/AdminSelect";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -222,7 +223,7 @@ export default function SlotListPage() {
       <ExperienceDetailTabs />
 
       {/* Filters + View toggle */}
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center">
         <AdminSelect
           value={statusFilter}
           onChange={setStatusFilter}
@@ -230,23 +231,26 @@ export default function SlotListPage() {
             ...o,
             label: t(o.i18nKey),
           }))}
-          fullWidth={false}
+          minWidth="min-w-0 sm:min-w-[160px]"
+          className="col-span-2 sm:w-auto"
         />
-        <input
+        <Input
           type="date"
           value={dateFrom}
           onChange={(e) => setDateFrom(e.target.value)}
-          className="h-11 rounded-xl border border-sand-dark bg-white px-3 py-2 text-sm text-charcoal focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20"
-          placeholder="Desde"
+          placeholder={t("admin.slots.dateFrom")}
+          aria-label={t("admin.slots.dateFrom")}
+          containerClassName="sm:w-40"
         />
-        <input
+        <Input
           type="date"
           value={dateTo}
           onChange={(e) => setDateTo(e.target.value)}
-          className="h-11 rounded-xl border border-sand-dark bg-white px-3 py-2 text-sm text-charcoal focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20"
-          placeholder="Hasta"
+          placeholder={t("admin.slots.dateTo")}
+          aria-label={t("admin.slots.dateTo")}
+          containerClassName="sm:w-40"
         />
-        <div className="ml-auto flex gap-1">
+        <div className="col-span-2 ml-auto flex gap-1 sm:col-span-1">
           <button
             onClick={() => setView("table")}
             className={cn(

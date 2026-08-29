@@ -725,7 +725,9 @@
       "status": "Estado",
       "actions": "Acciones",
       "tableView": "Vista tabla",
-      "calendarView": "Vista calendario"
+      "calendarView": "Vista calendario",
+      "dateFrom": "Desde",
+      "dateTo": "Hasta"
     },
     "slotForm": {
       "sectionBasicInfo": "Información básica",

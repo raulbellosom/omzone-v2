@@ -60,13 +60,18 @@ export default function AdminFormLayout({
 
   return (
     <form onSubmit={onSubmit}>
-      <div className="lg:flex lg:gap-6 lg:items-start">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         {/* Left: form fields */}
         <div className="space-y-6 lg:flex-1 min-w-0">{children}</div>
 
-        {/* Right: desktop aside */}
-        <aside className="hidden lg:block lg:w-72 xl:w-80 shrink-0 self-start sticky top-0 space-y-4">
-          <div className="rounded-2xl border border-sand-dark/40 bg-white p-4 shadow-sm space-y-3">
+        {/* Secondary fields remain editable on mobile; actions stay in the sticky bar. */}
+        <aside
+          className={cn(
+            "order-first space-y-4 lg:order-none lg:w-72 xl:w-80 lg:shrink-0 lg:self-start lg:sticky lg:top-0",
+            !asideChildren && "hidden lg:block",
+          )}
+        >
+          <div className="hidden lg:block rounded-2xl border border-sand-dark/40 bg-white p-4 shadow-sm space-y-3">
             <p className="text-xs font-semibold text-charcoal-subtle uppercase tracking-wider">
               {t("admin.common.actions")}
             </p>

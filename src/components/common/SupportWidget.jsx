@@ -96,10 +96,10 @@ export default function SupportWidget() {
   if (dismissed) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div className="fixed bottom-[calc(env(safe-area-inset-bottom)+6.25rem)] right-4 z-50 flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
       {/* Popover panel */}
       {open && (
-        <div className="w-80 bg-white rounded-2xl shadow-xl border border-sand/60 overflow-hidden">
+        <div className="w-[calc(100vw-2rem)] max-w-80 max-h-[calc(100dvh-9rem)] overflow-y-auto bg-white rounded-2xl shadow-xl border border-sand/60 sm:max-h-[calc(100dvh-6rem)]">
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-sand/60 bg-charcoal">
             <div>
@@ -113,7 +113,7 @@ export default function SupportWidget() {
             <button
               type="button"
               onClick={handleClose}
-              className="text-charcoal-muted hover:text-cream transition-colors"
+              className="-mr-2 inline-flex h-11 w-11 items-center justify-center text-charcoal-muted hover:text-cream transition-colors"
               aria-label={t("supportWidget.dismiss")}
             >
               <X className="h-4 w-4" />
@@ -231,14 +231,15 @@ export default function SupportWidget() {
                 <button
                   type="button"
                   onClick={() => setView("menu")}
-                  className="flex-1 rounded-lg border border-sand px-3 py-2 text-xs text-charcoal-muted hover:border-charcoal-muted transition-colors"
+                  className="min-h-11 flex-1 rounded-lg border border-sand px-3 py-2 text-xs text-charcoal-muted hover:border-charcoal-muted transition-colors"
+                  aria-label={t("common.back")}
                 >
                   ←
                 </button>
                 <button
                   type="submit"
                   disabled={sending}
-                  className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-charcoal px-4 py-2 text-xs font-medium uppercase tracking-wider text-cream disabled:opacity-60 hover:bg-olive transition-colors"
+                  className="min-h-11 flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-charcoal px-4 py-2 text-xs font-medium uppercase tracking-wider text-cream disabled:opacity-60 hover:bg-olive transition-colors"
                 >
                   {sending ? (
                     <Loader2 className="h-3 w-3 animate-spin" />

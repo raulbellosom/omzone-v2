@@ -725,7 +725,9 @@
       "status": "Status",
       "actions": "Actions",
       "tableView": "Table view",
-      "calendarView": "Calendar view"
+      "calendarView": "Calendar view",
+      "dateFrom": "From",
+      "dateTo": "To"
     },
     "slotForm": {
       "sectionBasicInfo": "Basic information",

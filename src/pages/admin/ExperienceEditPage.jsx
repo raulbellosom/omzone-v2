@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import ExperienceForm from "@/components/admin/experiences/ExperienceForm";
 import ExperienceDetailTabs from "@/components/admin/experiences/ExperienceDetailTabs";
 import { useExperience, updateExperience } from "@/hooks/useExperiences";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage, localizedField } from "@/hooks/useLanguage";
 import { getErrorMessage } from "@/lib/errors";
 import { auditAction, diffFields } from "@/lib/audit";
 import { Card } from "@/components/common/Card";
@@ -28,7 +28,7 @@ function LoadingSkeleton() {
 export default function ExperienceEditPage() {
   const { id } = useParams();
   const { data: experience, loading, error: loadError } = useExperience(id);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState(null);
 
@@ -74,7 +74,7 @@ export default function ExperienceEditPage() {
           {t("admin.experiences.editTitle")}
         </h1>
         <p className="text-sm text-charcoal-subtle mt-0.5 truncate">
-          {experience.publicName}
+          {localizedField(experience, "publicName", language)}
         </p>
       </div>
 
