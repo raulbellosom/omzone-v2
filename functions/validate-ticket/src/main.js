@@ -472,6 +472,15 @@ export default async ({ req, res, log, error }) => {
 
     if (ticketResult.total === 0) {
       log(`Ticket not found: ${sanitizedCode} (by ${userId})`);
+      await logActivity(
+        db, DB, "checkin.rejected_not_found", "ticket", sanitizedCode, userId, labels, "warn",
+        {
+          ticketCode: sanitizedCode,
+          staffUserId: caller.$id,
+          staffName: caller.name || null,
+          staffEmail: caller.email || null,
+        },
+      );
       return res.json(
         {
           ok: false,
@@ -485,15 +494,21 @@ export default async ({ req, res, log, error }) => {
     }
 
     const ticket = ticketResult.documents[0];
+    const participantCount = await fetchParticipantCount(db, DB, COL_BOOKINGS, ticket);
 
     // ── Check ticket status ──────────────────────────────────────────────────
     if (ticket.status === "used") {
       log(`Ticket already used: ${sanitizedCode} (usedAt: ${ticket.usedAt})`);
-      await logActivity(db, DB, "checkin.duplicate_scan_attempt", "ticket", ticket.$id, userId, labels, {
-        ticketCode: sanitizedCode,
-        participantName: ticket.participantName || null,
-        originalUsedAt: ticket.usedAt,
-      });
+      await logActivity(
+        db, DB, "checkin.duplicate_scan_attempt", "ticket", ticket.$id, userId, labels, "warn",
+        buildAuditDetails({
+          ticket,
+          schedule: null,
+          caller,
+          participantCount,
+          extra: { originalUsedAt: ticket.usedAt },
+        }),
+      );
       return res.json(
         {
           ok: false,
@@ -510,6 +525,10 @@ export default async ({ req, res, log, error }) => {
 
     if (ticket.status === "cancelled") {
       log(`Ticket cancelled: ${sanitizedCode}`);
+      await logActivity(
+        db, DB, "checkin.rejected_cancelled", "ticket", ticket.$id, userId, labels, "warn",
+        buildAuditDetails({ ticket, schedule: null, caller, participantCount }),
+      );
       return res.json(
         {
           ok: false,
@@ -525,6 +544,10 @@ export default async ({ req, res, log, error }) => {
 
     if (ticket.status === "expired") {
       log(`Ticket expired: ${sanitizedCode}`);
+      await logActivity(
+        db, DB, "checkin.rejected_expired", "ticket", ticket.$id, userId, labels, "warn",
+        buildAuditDetails({ ticket, schedule: null, caller, participantCount }),
+      );
       return res.json(
         {
           ok: false,
