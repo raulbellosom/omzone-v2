@@ -51,7 +51,7 @@
  * @returns {Object} { ok: true, data: { ticket: {...}, schedule: {...}|null, confirmed: boolean } }
  */
 
-import { Client, Databases, Query, ID, Users } from "node-appwrite";
+import { Client, Databases, Query, ID, Users, Functions, Permission, Role } from "node-appwrite";
 import {
   DEFAULT_CHECKIN_WINDOW_BEFORE_MINUTES,
   DEFAULT_CHECKIN_WINDOW_AFTER_MINUTES,
@@ -111,6 +111,7 @@ function extractSnapshotDisplay(ticket) {
     orderNumber: snapshot?.orderNumber || null,
     status: ticket.status,
     usedAt: ticket.usedAt || null,
+    arrivedAt: ticket.arrivedAt || null,
   };
 }
 
@@ -166,7 +167,7 @@ function _roleSnapshot(labels) {
   return "client";
 }
 
-async function logActivity(db, dbId, action, entityType, entityId, actorId, labels, details = {}) {
+async function logActivity(db, dbId, action, entityType, entityId, actorId, labels, severity, details = {}) {
   try {
     if (labels.includes("root")) return; // ghost-user rule
     const detailsStr = JSON.stringify(details).slice(0, 4000);
@@ -176,13 +177,181 @@ async function logActivity(db, dbId, action, entityType, entityId, actorId, labe
       entityType,
       entityId,
       details: detailsStr,
-      severity: "warn",
+      severity,
       result: "ok",
       source: "function",
       actorRoleSnapshot: _roleSnapshot(labels),
     });
   } catch {
     /* non-critical — never let logging break the check-in flow */
+  }
+}
+
+/**
+ * Assembles the shared audit-details payload for every check-in-related
+ * admin_activity_logs entry: client identity, session context, group-size
+ * signal, and staff identity — so every outcome (not just the failure
+ * cases) carries enough context to investigate without a follow-up query.
+ */
+function buildAuditDetails({ ticket, schedule, caller, participantCount, extra = {} }) {
+  const snapshot = safeParseSnapshot(ticket);
+  return {
+    ticketCode: ticket.ticketCode,
+    ticketId: ticket.$id,
+    participantName: ticket.participantName || null,
+    participantEmail: ticket.participantEmail || null,
+    clientUserId: ticket.userId || null,
+    experienceName: snapshot?.experienceName || null,
+    roomName: snapshot?.roomName || null,
+    locationName: snapshot?.locationName || null,
+    slotStartDatetime: snapshot?.slotStartDatetime || null,
+    timezone: snapshot?.timezone || null,
+    orderNumber: snapshot?.orderNumber || null,
+    isGroupBooking: typeof participantCount === "number" ? participantCount > 1 : null,
+    participantCount: typeof participantCount === "number" ? participantCount : null,
+    staffUserId: caller?.$id || null,
+    staffName: caller?.name || null,
+    staffEmail: caller?.email || null,
+    schedule: schedule
+      ? {
+          withinWindow: schedule.withinWindow,
+          reason: schedule.reason || null,
+          minutesFromStart: schedule.minutesFromStart,
+        }
+      : null,
+    ...extra,
+  };
+}
+
+/**
+ * Looks up the booking tied to this ticket's order+slot to read
+ * participantCount (the only group-size signal in the schema today).
+ * Read-only, best-effort — a missing/failed lookup must never break check-in.
+ */
+async function fetchParticipantCount(db, dbId, colBookings, ticket) {
+  if (!ticket.orderId || !ticket.slotId) return null;
+  try {
+    const res = await db.listDocuments(dbId, colBookings, [
+      Query.equal("orderId", ticket.orderId),
+      Query.equal("slotId", ticket.slotId),
+      Query.limit(1),
+    ]);
+    if (res.total === 0) return null;
+    return typeof res.documents[0].participantCount === "number"
+      ? res.documents[0].participantCount
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Resolves which language to use for the arrival welcome (in-app + email),
+ * mirroring send-notification's profile-language lookup but scoped to the
+ * one field needed here since we already have the client's userId.
+ */
+async function resolveClientLanguage(db, dbId, colProfiles, userId) {
+  if (!userId) return "en";
+  try {
+    const profile = await db.getDocument(dbId, colProfiles, userId);
+    const lang = String(profile.language || profile.locale || "").toLowerCase();
+    return lang.startsWith("es") ? "es" : "en";
+  } catch {
+    return "en";
+  }
+}
+
+/**
+ * Fires the two arrival side effects (welcome email + in-app notification)
+ * for a ticket's first scan. Both are independently best-effort: a failure
+ * in one must never block the other or the check-in response.
+ */
+async function triggerArrivalNotifications({
+  client,
+  db,
+  log,
+  error,
+  dbId,
+  colClientNotifications,
+  colUserProfiles,
+  ticket,
+  minutesUntilSession,
+}) {
+  const snapshot = safeParseSnapshot(ticket);
+  const language = await resolveClientLanguage(db, dbId, colUserProfiles, ticket.userId);
+  const isSpanish = language === "es";
+  const minutesLabel =
+    typeof minutesUntilSession === "number" ? String(Math.max(0, minutesUntilSession)) : "—";
+
+  if (ticket.participantEmail) {
+    try {
+      const functions = new Functions(client);
+      const FUNC_SEND_NOTIFICATION =
+        process.env.APPWRITE_FUNCTION_SEND_NOTIFICATION || "send-notification";
+      const execution = await functions.createExecution(
+        FUNC_SEND_NOTIFICATION,
+        JSON.stringify({
+          templateKey: "arrival-welcome",
+          recipientEmail: ticket.participantEmail,
+          recipientName: ticket.participantName || "",
+          language,
+          userId: ticket.userId || null,
+          vars: {
+            participantName: ticket.participantName || "",
+            experienceName: snapshot?.experienceName || "",
+            roomName: snapshot?.roomName || "",
+            minutesUntilSession: minutesLabel,
+          },
+        }),
+        false,
+        "/",
+        "POST",
+      );
+      log(
+        `Triggered arrival-welcome notification for ticket ${ticket.$id} (execution: ${execution.$id})`,
+      );
+    } catch (err) {
+      error(
+        `arrival-welcome email trigger failed (non-blocking) for ticket ${ticket.$id}: ${err.message}`,
+      );
+    }
+  } else {
+    log(`Skipping arrival-welcome email for ticket ${ticket.$id}: no participantEmail`);
+  }
+
+  try {
+    const title = isSpanish ? "¡Bienvenido a OMZONE!" : "Welcome to OMZONE!";
+    const body = snapshot?.experienceName
+      ? isSpanish
+        ? `Registramos tu llegada. Tu sesión de ${snapshot.experienceName} comenzará en ${minutesLabel} minutos.`
+        : `We've recorded your arrival. Your ${snapshot.experienceName} session starts in ${minutesLabel} minutes.`
+      : isSpanish
+        ? "Registramos tu llegada a nuestras instalaciones."
+        : "We've recorded your arrival at our facility.";
+
+    await db.createDocument(
+      dbId,
+      colClientNotifications,
+      ID.unique(),
+      {
+        userId: ticket.userId,
+        type: "arrival_welcome",
+        title,
+        body,
+        ticketId: ticket.$id,
+        isRead: false,
+      },
+      [
+        Permission.read(Role.user(ticket.userId)),
+        Permission.update(Role.user(ticket.userId)),
+        Permission.read(Role.label("admin")),
+        Permission.read(Role.label("root")),
+      ],
+    );
+  } catch (err) {
+    error(
+      `client_notifications create failed (non-blocking) for ticket ${ticket.$id}: ${err.message}`,
+    );
   }
 }
 
@@ -210,6 +379,10 @@ export default async ({ req, res, log, error }) => {
     process.env.APPWRITE_COLLECTION_TICKET_REDEMPTIONS || "ticket_redemptions";
   const COL_BOOKINGS = process.env.APPWRITE_COLLECTION_BOOKINGS || "bookings";
   const COL_SETTINGS = process.env.APPWRITE_COLLECTION_SETTINGS || "settings";
+  const COL_CLIENT_NOTIFICATIONS =
+    process.env.APPWRITE_COLLECTION_CLIENT_NOTIFICATIONS || "client_notifications";
+  const COL_USER_PROFILES =
+    process.env.APPWRITE_COLLECTION_USER_PROFILES || "user_profiles";
 
   try {
     // ── Parse input ──────────────────────────────────────────────────────────
