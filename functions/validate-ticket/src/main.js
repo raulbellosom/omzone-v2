@@ -579,11 +579,66 @@ export default async ({ req, res, log, error }) => {
       checkInWindow.afterMinutes,
     );
 
-    // ── "check" action stops here — read-only ─────────────────────────────────
+    // ── "check" action stops here — read-only, except for the one-shot ───────
+    // facility-arrival side effect below, guarded by ticket.arrivedAt so it
+    // only ever runs once per ticket no matter how many times it's re-scanned.
     if (action === "check") {
+      let arrivalJustRecorded = false;
+
+      if (!ticket.arrivedAt) {
+        const arrivedAt = new Date().toISOString();
+        try {
+          await db.updateDocument(DB, COL_TICKETS, ticket.$id, { arrivedAt });
+          ticket.arrivedAt = arrivedAt;
+          arrivalJustRecorded = true;
+        } catch (err) {
+          log(`WARN: Failed to record arrival for ticket ${ticket.$id}: ${err.message}`);
+        }
+
+        if (arrivalJustRecorded) {
+          const minutesUntilSession = schedule ? schedule.minutesFromStart : null;
+
+          await logActivity(
+            db, DB, "checkin.arrived", "ticket", ticket.$id, userId, labels, "info",
+            buildAuditDetails({
+              ticket, schedule, caller, participantCount, extra: { minutesUntilSession },
+            }),
+          );
+
+          await triggerArrivalNotifications({
+            client,
+            db,
+            log,
+            error,
+            dbId: DB,
+            colClientNotifications: COL_CLIENT_NOTIFICATIONS,
+            colUserProfiles: COL_USER_PROFILES,
+            ticket,
+            minutesUntilSession,
+          });
+        }
+      }
+
+      if (schedule && !schedule.withinWindow) {
+        await logActivity(
+          db, DB, "checkin.rejected_schedule", "ticket", ticket.$id, userId, labels, "warn",
+          buildAuditDetails({ ticket, schedule, caller, participantCount }),
+        );
+      } else if (!arrivalJustRecorded) {
+        await logActivity(
+          db, DB, "checkin.valid_scan", "ticket", ticket.$id, userId, labels, "info",
+          buildAuditDetails({ ticket, schedule, caller, participantCount }),
+        );
+      }
+
       return res.json({
         ok: true,
-        data: { ticket: extractSnapshotDisplay(ticket), schedule, confirmed: false },
+        data: {
+          ticket: extractSnapshotDisplay(ticket),
+          schedule,
+          confirmed: false,
+          arrivalJustRecorded,
+        },
       });
     }
 
