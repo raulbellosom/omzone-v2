@@ -57,6 +57,24 @@ const oneMinuteAfterClose = computeScheduleState(
 assert.equal(oneMinuteAfterClose.withinWindow, false);
 assert.equal(oneMinuteAfterClose.reason, "too_late");
 
+// ── minutesFromStart ─────────────────────────────────────────────────────────
+// Same slotStart = 2026-08-27T09:00:00.000Z as above.
+
+const fifteenEarly = computeScheduleState(
+  slotStart, 60, 30, new Date("2026-08-27T08:45:00.000Z"),
+);
+assert.equal(fifteenEarly.minutesFromStart, 15);
+
+const tenLate = computeScheduleState(
+  slotStart, 60, 30, new Date("2026-08-27T09:10:00.000Z"),
+);
+assert.equal(tenLate.minutesFromStart, -10);
+
+const exactlyOnTime = computeScheduleState(
+  slotStart, 60, 30, new Date("2026-08-27T09:00:00.000Z"),
+);
+assert.equal(exactlyOnTime.minutesFromStart, 0);
+
 // ── Defaults sanity ──────────────────────────────────────────────────────────
 
 assert.equal(DEFAULT_CHECKIN_WINDOW_BEFORE_MINUTES, 60);

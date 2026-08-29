@@ -44,6 +44,7 @@ export function computeScheduleState(
 
   const windowStart = new Date(start.getTime() - beforeMinutes * 60 * 1000);
   const windowEnd = new Date(start.getTime() + afterMinutes * 60 * 1000);
+  const minutesFromStart = Math.round((start.getTime() - now.getTime()) / 60000);
 
   if (now < windowStart) {
     return {
@@ -52,6 +53,7 @@ export function computeScheduleState(
       validFrom: windowStart.toISOString(),
       validUntil: windowEnd.toISOString(),
       now: now.toISOString(),
+      minutesFromStart,
     };
   }
   if (now > windowEnd) {
@@ -61,6 +63,7 @@ export function computeScheduleState(
       validFrom: windowStart.toISOString(),
       validUntil: windowEnd.toISOString(),
       now: now.toISOString(),
+      minutesFromStart,
     };
   }
   return {
@@ -68,5 +71,6 @@ export function computeScheduleState(
     validFrom: windowStart.toISOString(),
     validUntil: windowEnd.toISOString(),
     now: now.toISOString(),
+    minutesFromStart,
   };
 }
