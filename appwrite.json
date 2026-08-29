@@ -138,7 +138,9 @@
                 "documents.read",
                 "documents.write",
                 "collections.read",
-                "databases.read"
+                "databases.read",
+                "functions.write",
+                "execution.write"
             ],
             "events": [],
             "timeout": 15,
