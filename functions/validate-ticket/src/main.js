@@ -176,14 +176,18 @@ async function fetchCheckInWindowMinutes(db, dbId, colSettings) {
 }
 
 function _roleSnapshot(labels) {
+  if (labels.includes("root")) return "root";
   if (labels.includes("admin")) return "admin";
   if (labels.includes("operator")) return "operator";
   return "client";
 }
 
+// Unlike the ghost-user rule used elsewhere in the admin panel, check-in
+// actions are audited regardless of the caller's label — root is a common
+// account for the technical owner to test with, and a facility's real
+// front-desk staff scanning tickets should never be silently unaudited.
 async function logActivity(db, dbId, action, entityType, entityId, actorId, labels, severity, details = {}) {
   try {
-    if (labels.includes("root")) return; // ghost-user rule
     const detailsStr = JSON.stringify(details).slice(0, 4000);
     await db.createDocument(dbId, "admin_activity_logs", ID.unique(), {
       userId: actorId,
