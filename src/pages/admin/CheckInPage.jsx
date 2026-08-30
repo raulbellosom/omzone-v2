@@ -107,23 +107,30 @@ export default function CheckInPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 max-w-full space-y-6 overflow-x-clip">
       {/* Header */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-sage/10 flex items-center justify-center">
+      <div className="flex min-w-0 flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sage/10">
             <ScanLine className="h-5 w-5 text-sage" />
           </div>
-          <div>
+          <div className="min-w-0">
             <h1 className="text-xl md:text-2xl font-display font-bold text-charcoal">
               {t("admin.checkin.title")}
             </h1>
-            <p className="text-sm text-charcoal-muted">{t("admin.checkin.subtitle")}</p>
+            <p className="text-sm text-charcoal-muted">
+              {t("admin.checkin.subtitle")}
+            </p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <StaffBadge />
-          <Button variant="outline" size="sm" onClick={() => setKioskMode(true)}>
+        <div className="grid min-w-0 grid-cols-1 gap-2 sm:flex sm:w-auto sm:items-center sm:gap-3">
+          <StaffBadge className="w-full sm:w-auto" />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setKioskMode(true)}
+            className="min-h-11 w-full sm:min-h-0 sm:w-auto"
+          >
             <Maximize2 className="h-4 w-4 mr-1.5" />
             {t("admin.checkin.kioskEnter")}
           </Button>
@@ -131,9 +138,9 @@ export default function CheckInPage() {
       </div>
 
       {/* Camera on top under lg, side-by-side with manual input + summary at lg+ */}
-      <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 items-start">
+      <div className="grid min-w-0 max-w-full grid-cols-1 items-start gap-6 lg:grid-cols-[3fr_2fr]">
         {scanner}
-        <div className="flex flex-col gap-6">
+        <div className="flex min-w-0 max-w-full flex-col gap-6">
           {manualInput}
           {summaryPanel}
         </div>

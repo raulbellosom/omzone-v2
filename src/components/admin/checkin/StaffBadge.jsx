@@ -10,10 +10,10 @@ export default function StaffBadge({ className = "" }) {
 
   return (
     <div
-      className={`flex items-center gap-2 rounded-full border border-sand-dark bg-white px-3 py-1.5 text-xs font-medium text-charcoal ${className}`}
+      className={`flex min-w-0 max-w-full items-center gap-2 rounded-full border border-sand-dark bg-white px-3 py-1.5 text-xs font-medium text-charcoal ${className}`}
     >
-      <UserCircle2 className="h-4 w-4 text-sage" />
-      <span className="truncate max-w-40">
+      <UserCircle2 className="h-4 w-4 shrink-0 text-sage" />
+      <span className="min-w-0 max-w-40 truncate">
         {t("admin.checkin.operatedBy").replace("{name}", user.name || user.email)}
       </span>
     </div>

@@ -32,8 +32,8 @@ export default function KioskOverlay({
   });
 
   return (
-    <div className="fixed inset-0 z-40 flex flex-col bg-[#F4F1EA]">
-      <div className="flex items-center justify-between px-8 py-5 border-b border-sand-dark/40 bg-white/70 backdrop-blur">
+    <div className="fixed inset-0 z-40 flex min-w-0 max-w-full flex-col overflow-hidden bg-[#F4F1EA]">
+      <div className="flex min-w-0 flex-col items-stretch gap-3 border-b border-sand-dark/40 bg-white/70 px-4 py-3 backdrop-blur sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:py-5">
         <span className="font-display text-2xl font-semibold tracking-wide text-charcoal">
           OMZONE
         </span>
@@ -43,20 +43,20 @@ export default function KioskOverlay({
           </div>
           <div className="text-xs text-charcoal-muted mt-1 capitalize">{dateLabel}</div>
         </div>
-        <div className="flex items-center gap-3">
-          <StaffBadge />
+        <div className="grid min-w-0 grid-cols-1 gap-2 sm:flex sm:items-center sm:gap-3">
+          <StaffBadge className="w-full sm:w-auto" />
           <button
             onClick={onExit}
-            className="h-14 px-6 rounded-xl border border-sand-dark bg-white text-sm font-semibold text-charcoal hover:bg-warm-gray transition-colors cursor-pointer"
+            className="h-11 w-full rounded-xl border border-sand-dark bg-white px-4 text-sm font-semibold text-charcoal transition-colors hover:bg-warm-gray sm:h-14 sm:w-auto sm:px-6 cursor-pointer"
           >
             {t("admin.checkin.kioskExit")}
           </button>
         </div>
       </div>
-      <div className="flex-1 overflow-auto p-6 flex items-start justify-center">
-        <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 items-start">
+      <div className="flex min-w-0 flex-1 items-start justify-center overflow-auto p-3 sm:p-6">
+        <div className="grid w-full min-w-0 max-w-5xl grid-cols-1 items-start gap-4 sm:gap-6 lg:grid-cols-[3fr_2fr]">
           {scanner}
-          <div className="flex flex-col gap-6">
+          <div className="flex min-w-0 max-w-full flex-col gap-6">
             {manualInput}
             <div className="hidden lg:flex lg:flex-col lg:gap-6">{summaryPanel}</div>
           </div>

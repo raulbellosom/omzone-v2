@@ -171,13 +171,13 @@ export default function ScannerCard({ onSubmitCode }) {
   const isError = cameraState === "error";
 
   return (
-    <div className="bg-white rounded-2xl border border-sand-dark/30 shadow-sm overflow-hidden">
+    <div className="min-w-0 max-w-full overflow-hidden rounded-2xl border border-sand-dark/30 bg-white shadow-sm">
       {/* ── Camera ─────────────────────────────────────────────── */}
-      <div className="relative w-full aspect-4/3 bg-[#0c0e13] overflow-hidden">
+      <div className="relative aspect-4/3 w-full min-w-0 max-w-full overflow-hidden bg-[#0c0e13]">
         {/* html5-qrcode mount */}
         <div
           id={elementId}
-          className="absolute inset-0 [&_video]:absolute [&_video]:inset-0 [&_video]:w-full [&_video]:h-full [&_video]:object-cover"
+          className="absolute inset-0 max-w-full overflow-hidden [&_video]:absolute [&_video]:inset-0 [&_video]:h-full [&_video]:max-w-full [&_video]:object-cover [&_video]:w-full"
         />
 
         {/* Radial vignette */}
