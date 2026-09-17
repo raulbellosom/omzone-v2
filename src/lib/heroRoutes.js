@@ -4,6 +4,8 @@
  */
 const EXACT = new Set([
   "/",
+  "/es",
+  "/es/",
   "/experiences",
   "/about",
   "/contact",

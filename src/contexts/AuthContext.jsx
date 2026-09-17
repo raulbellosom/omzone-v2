@@ -2,8 +2,8 @@ import { createContext, useState, useEffect, useCallback } from "react";
 import { account, ID, functions, syncLocale } from "@/lib/appwrite";
 import { ROLES } from "@/constants/roles";
 
-const VERIFY_URL = `${window.location.origin}/verify-email`;
-const RECOVERY_URL = `${window.location.origin}/reset-password`;
+const verificationUrl = () => `${window.location.origin}/verify-email`;
+const recoveryUrl = () => `${window.location.origin}/reset-password`;
 
 export const AuthContext = createContext(null);
 
@@ -53,7 +53,7 @@ export function AuthProvider({ children }) {
       // Send a fresh verification email while we still have a session
       try {
         syncLocale();
-        await account.createVerification(VERIFY_URL);
+        await account.createVerification(verificationUrl());
       } catch {
         /* verification email may already be pending */
       }
@@ -123,7 +123,7 @@ export function AuthProvider({ children }) {
     let verificationSent = true;
     try {
       syncLocale();
-      await account.createVerification(VERIFY_URL);
+      await account.createVerification(verificationUrl());
     } catch {
       verificationSent = false;
     }
@@ -148,7 +148,7 @@ export function AuthProvider({ children }) {
   async function resendVerification() {
     // Caller must ensure there's an active session or handle the error
     syncLocale();
-    await account.createVerification(VERIFY_URL);
+    await account.createVerification(verificationUrl());
   }
 
   async function resendVerificationWithCredentials(email, password) {
@@ -156,7 +156,7 @@ export function AuthProvider({ children }) {
     await account.createEmailPasswordSession(email, password);
     try {
       syncLocale();
-      await account.createVerification(VERIFY_URL);
+      await account.createVerification(verificationUrl());
     } finally {
       await account.deleteSession("current").catch(() => {});
     }
@@ -178,7 +178,7 @@ export function AuthProvider({ children }) {
 
   async function requestPasswordRecovery(email) {
     syncLocale();
-    await account.createRecovery(email, RECOVERY_URL);
+    await account.createRecovery(email, recoveryUrl());
   }
 
   async function confirmPasswordRecovery(userId, secret, newPassword) {

@@ -3,7 +3,7 @@ title: Slides del hero
 description: Cómo gestionar el carrusel principal de la landing de OMZONE desde el panel de administración
 section: admin
 order: 18
-lastUpdated: 2026-05-25
+lastUpdated: 2026-09-16
 ---
 
 # Slides del hero
@@ -19,6 +19,16 @@ En el menú lateral ve a **Contenido → Slides del hero**.
 ---
 
 ## La lista de slides
+
+La pantalla **Home / Hero** tiene dos pestañas. **Contenido** permite editar el título principal y su descripción en inglés y español; debajo conserva el carrusel. **SEO** permite editar título SEO y meta description en ambos idiomas, además de una imagen opcional para compartir.
+
+Completa ambos idiomas y pulsa **Guardar y publicar**. Ese botón guarda conjuntamente los textos de las dos pestañas; las acciones del carrusel tienen su propio guardado. Si falla la publicación se conservan tus cambios. Puedes usar **Recargar contenido publicado** para recuperar la última versión almacenada; se solicita confirmación si tienes cambios pendientes.
+
+La Home en inglés está en `/` y la española en `/es`. Una vez activado el renderer en producción, las nuevas visitas reciben los textos y metadatos publicados en el HTML inicial, sin necesidad de recompilar. Las pestañas abiertas se actualizan al recargar. La actualización de resultados en buscadores puede tardar; la vista previa SEO es orientativa.
+
+Solo los administradores pueden publicar. Evita editar al mismo tiempo que otro administrador: el último guardado exitoso prevalece. El título SEO añade automáticamente la marca OMZONE, por lo que no necesitas escribirla al final.
+
+### Carrusel
 
 La lista muestra todos los slides en su orden actual de visualización. El número a la izquierda de cada tarjeta indica su posición en el carrusel — el slide 1 se muestra primero.
 

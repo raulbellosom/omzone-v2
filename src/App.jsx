@@ -211,6 +211,7 @@ export default function App() {
           {/* Public routes */}
           <Route element={<PublicLayout />}>
             <Route index element={<HomePage />} />
+            <Route path="/es" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />

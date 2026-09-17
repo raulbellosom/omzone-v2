@@ -1,3 +1,4 @@
+import { homePath } from "@/lib/homeContent";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -10,7 +11,7 @@ import { ROUTES } from "@/constants/routes";
 
 export default function ForgotPasswordPage() {
   const { requestPasswordRecovery } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
@@ -42,7 +43,7 @@ export default function ForgotPasswordPage() {
       <div className="mx-auto max-w-md animate-fade-in-up">
         {/* Brand */}
         <div className="text-center mb-8">
-          <Link to={ROUTES.HOME} className="inline-block">
+          <Link to={homePath(language)} reloadDocument className="inline-block">
             <span className="font-display text-3xl font-bold text-white tracking-widest">
               OMZONE
             </span>

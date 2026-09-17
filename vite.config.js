@@ -6,7 +6,7 @@ import fs from "fs";
 
 /** Writes public/version.json at build time with unique build hash */
 function versionPlugin() {
-  const buildId = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  const buildId = process.env.OMZONE_BUILD_ID || Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
   return {
     name: "omzone-version",
     apply: "build",
@@ -22,7 +22,7 @@ function versionPlugin() {
   };
 }
 
-export default defineConfig(async ({ mode }) => {
+export default defineConfig(async ({ mode, isSsrBuild }) => {
   const visualizer =
     mode === "analyze"
       ? (await import("rollup-plugin-visualizer")).visualizer
@@ -31,6 +31,8 @@ export default defineConfig(async ({ mode }) => {
 
   const mapped = {};
   for (const [key, val] of Object.entries(env)) {
+    // APPWRITE_* includes API keys locally. Only identifiers/config reach JS.
+    if (key.startsWith("APPWRITE_") && !/^APPWRITE_(ENDPOINT|PROJECT_ID|DATABASE_ID|COLLECTION_\w+|BUCKET_\w+|FUNCTION_\w+)$/.test(key)) continue;
     if (key.startsWith("APPWRITE_") && !key.startsWith("VITE_")) {
       mapped[`import.meta.env.VITE_${key}`] = JSON.stringify(val);
     }
@@ -44,7 +46,16 @@ export default defineConfig(async ({ mode }) => {
     plugins: [
       react(),
       tailwindcss(),
-      versionPlugin(),
+      {
+        name: "omzone-preview-robots",
+        transformIndexHtml() {
+          const project = env.VITE_APPWRITE_PROJECT_ID || env.APPWRITE_PROJECT_ID || "omzone-dev";
+          return project === "omzone" ? [] : [{
+            tag: "meta", attrs: { name: "robots", content: "noindex,nofollow" }, injectTo: "head",
+          }];
+        },
+      },
+      !isSsrBuild && versionPlugin(),
       mode === "analyze" &&
         visualizer({
           open: true,
@@ -52,7 +63,7 @@ export default defineConfig(async ({ mode }) => {
           gzipSize: true,
         }),
     ].filter(Boolean),
-    define: mapped,
+    define: { ...mapped, ...(isSsrBuild ? { __APP_BUILD_ID__: JSON.stringify(process.env.OMZONE_BUILD_ID || "server") } : {}) },
     envPrefix: "__OMZONE_ENV_DISABLED__",
     resolve: {
       alias: {
@@ -65,7 +76,7 @@ export default defineConfig(async ({ mode }) => {
     build: {
       rollupOptions: {
         output: {
-          manualChunks: {
+          manualChunks: isSsrBuild ? undefined : {
             "vendor-react": ["react", "react-dom", "react-router-dom"],
             "vendor-query": ["@tanstack/react-query"],
             "vendor-appwrite": ["appwrite"],

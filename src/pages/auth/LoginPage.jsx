@@ -1,3 +1,4 @@
+import { homePath } from "@/lib/homeContent";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -12,7 +13,7 @@ export default function LoginPage() {
   const { login, getLandingRoute } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
@@ -75,7 +76,7 @@ export default function LoginPage() {
       <div className="mx-auto max-w-md animate-fade-in-up">
         {/* Brand */}
         <div className="text-center mb-8">
-          <Link to={ROUTES.HOME} className="inline-block">
+          <Link to={homePath(language)} reloadDocument className="inline-block">
             <span className="font-display text-3xl font-bold text-white tracking-widest">
               OMZONE
             </span>
@@ -89,7 +90,7 @@ export default function LoginPage() {
         <div className="backdrop-blur-xl bg-white/90 rounded-2xl border border-white/40 shadow-premium p-6 sm:p-8 md:p-10">
           {/* Back to home — inside card */}
           <Link
-            to={ROUTES.HOME}
+            to={homePath(language)} reloadDocument
             className="inline-flex items-center gap-1.5 text-xs text-charcoal-subtle hover:text-charcoal transition-colors mb-5"
           >
             <ArrowLeft size={14} />

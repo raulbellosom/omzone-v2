@@ -43,7 +43,7 @@ const FALLBACK_SLIDES = [
   },
 ];
 
-export default function HeroSection() {
+export default function HeroSection({ title, description }) {
   const { t, language } = useLanguage();
   const { data: slidesFromDB, loading: slidesLoading } = useHeroSlides();
   const [current, setCurrent] = useState(0);
@@ -175,11 +175,11 @@ export default function HeroSection() {
       {/* Centered global content — H1, subtitle, CTA (always constant for SEO) */}
       <div className="relative z-30 container-shell text-center px-6 py-32 md:py-40">
         <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight max-w-4xl mx-auto animate-fade-in-up">
-          {t("home.hero.title")}
+          {title || t("home.hero.title")}
         </h1>
 
         <p className="mt-6 md:mt-8 text-base sm:text-lg md:text-xl text-white/85 max-w-2xl mx-auto leading-relaxed font-light animate-fade-in-up [animation-delay:0.1s]">
-          {t("home.hero.subtitle")}
+          {description || t("home.hero.subtitle")}
         </p>
 
         <div className="mt-10 md:mt-12 animate-fade-in-up [animation-delay:0.2s]">

@@ -6236,6 +6236,111 @@
                     ]
                 }
             ]
+        },
+        {
+            "$id": "home_content",
+            "$permissions": [
+                "read(\"any\")",
+                "update(\"label:root\")",
+                "update(\"label:admin\")"
+            ],
+            "databaseId": "omzone_db",
+            "name": "home_content",
+            "enabled": true,
+            "rowSecurity": false,
+            "columns": [
+                {
+                    "key": "heroTitle",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 160,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "heroTitleEs",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 160,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "heroDescription",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 600,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "heroDescriptionEs",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 600,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "seoTitle",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 120,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "seoTitleEs",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 120,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "seoDescription",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 320,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "seoDescriptionEs",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 320,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "ogImageId",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "ogBucketId",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": []
         }
     ],
     "buckets": [

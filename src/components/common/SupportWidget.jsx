@@ -22,13 +22,14 @@ export default function SupportWidget() {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [view, setView] = useState("menu"); // menu | form | success
-  const [dismissed, setDismissed] = useState(() => {
+  const [dismissed, setDismissed] = useState(false);
+  useEffect(() => {
     try {
-      return sessionStorage.getItem(DISMISS_KEY) === "1";
+      setDismissed(sessionStorage.getItem(DISMISS_KEY) === "1");
     } catch {
-      return false;
+      // Restricted browser storage.
     }
-  });
+  }, []);
 
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [errors, setErrors] = useState({});

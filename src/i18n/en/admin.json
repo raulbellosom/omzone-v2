@@ -2005,6 +2005,35 @@
       "copyFiscalData": "Copy fiscal data",
       "copiedFiscalData": "Copied!",
       "viewOrder": "View order in admin"
+    },
+    "homeContent": {
+      "title": "Home / Hero",
+      "intro": "Edit the main message and search metadata in English and Spanish. Saving publishes both tabs together.",
+      "content": "Content",
+      "seo": "SEO",
+      "heroTitle": "Main title",
+      "heroDescription": "Description",
+      "seoTitle": "SEO title",
+      "seoDescription": "Meta description",
+      "publish": "Save and publish",
+      "reload": "Reload published content",
+      "view": "View Home",
+      "updated": "Last published",
+      "unsaved": "You have unpublished changes.",
+      "saved": "Content published. New visits will show the updated content.",
+      "saveError": "Could not save or reload. Your changes have been preserved.",
+      "loadError": "Could not load Home content. Check the connection and that Home content has been initialized.",
+      "loading": "Loading Home content…",
+      "retry": "Try again",
+      "leave": "Leave without saving your changes?",
+      "required": "This field is required.",
+      "tooLong": "This text exceeds the allowed length.",
+      "invalidImage": "Choose an image from the public media library.",
+      "preview": "Search preview (appearance may vary)",
+      "image": "Social sharing image",
+      "imageHint": "Optional, shared by both languages. Without a selection, the default Home image is used.",
+      "defaultImage": "Default Home sharing image",
+      "slidesHint": "Carousel images and captions have their own save controls. Editing slides does not publish changes to the main text."
     }
   }
 }

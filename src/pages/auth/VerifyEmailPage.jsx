@@ -1,3 +1,4 @@
+import { homePath } from "@/lib/homeContent";
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -9,7 +10,7 @@ import { ROUTES } from "@/constants/routes";
 
 export default function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [status, setStatus] = useState("loading"); // loading | success | error
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function VerifyEmailPage() {
       <div className="mx-auto max-w-md animate-fade-in-up">
         {/* Brand */}
         <div className="text-center mb-8">
-          <Link to={ROUTES.HOME} className="inline-block">
+          <Link to={homePath(language)} reloadDocument className="inline-block">
             <span className="font-display text-3xl font-bold text-white tracking-widest">
               OMZONE
             </span>

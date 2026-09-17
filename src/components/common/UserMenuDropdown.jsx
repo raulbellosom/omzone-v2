@@ -12,6 +12,8 @@ import {
   BookOpen,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
+import { homePath } from "@/lib/homeContent";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useAvatarUpload } from "@/hooks/useAvatarUpload";
 import { displayRoleName } from "@/constants/roles";
@@ -39,6 +41,7 @@ function getInitials(name) {
 }
 
 export default function UserMenuDropdown({ transparent = false }) {
+  const { language } = useLanguage();
   const { user, labels, logout, isAdmin, isClient, isRoot } = useAuth();
   const { profile } = useUserProfile();
   const { getPreviewUrl } = useAvatarUpload();
@@ -167,7 +170,7 @@ export default function UserMenuDropdown({ transparent = false }) {
 
         {/* Navigation */}
         <DropdownMenuItem asChild>
-          <Link to={ROUTES.HOME}>
+          <Link to={homePath(language)} reloadDocument>
             <Globe className="h-4 w-4 text-charcoal-muted" />
             Ir a la landing
           </Link>

@@ -1,3 +1,4 @@
+import { homePath } from "@/lib/homeContent";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -14,7 +15,7 @@ import { ROUTES } from "@/constants/routes";
 export default function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const [form, setForm] = useState({
     firstName: "",
@@ -123,7 +124,7 @@ export default function RegisterPage() {
       <div className="mx-auto max-w-md animate-fade-in-up">
         {/* Brand */}
         <div className="text-center mb-8">
-          <Link to={ROUTES.HOME} className="inline-block">
+          <Link to={homePath(language)} reloadDocument className="inline-block">
             <span className="font-display text-3xl font-bold text-white tracking-widest">
               OMZONE
             </span>
@@ -137,7 +138,7 @@ export default function RegisterPage() {
         <div className="backdrop-blur-xl bg-white/90 rounded-2xl border border-white/40 shadow-premium p-6 sm:p-8 md:p-10">
           {/* Back to home — inside card */}
           <Link
-            to={ROUTES.HOME}
+            to={homePath(language)} reloadDocument
             className="inline-flex items-center gap-1.5 text-xs text-charcoal-subtle hover:text-charcoal transition-colors mb-5"
           >
             <ArrowLeft size={14} />

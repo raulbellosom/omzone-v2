@@ -17,6 +17,7 @@ import {
 import { Menu, ArrowRight } from "lucide-react";
 import UserAvatar from "@/components/common/UserAvatar";
 import isHeroRoute from "@/lib/heroRoutes";
+import { homePath } from "@/lib/homeContent";
 
 const NAV_LINKS = [
   { to: ROUTES.HOME, key: "nav.home", end: true },
@@ -27,7 +28,8 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const { user, isAdmin, isClient, isOperator, loading, logout } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const homeUrl = homePath(language);
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -47,7 +49,7 @@ export default function Navbar() {
   async function handleLogout() {
     setMobileOpen(false);
     await logout();
-    navigate(ROUTES.HOME, { replace: true });
+    navigate(homeUrl, { replace: true });
   }
 
   return (
@@ -66,7 +68,8 @@ export default function Navbar() {
       )}
       {/* Logo */}
       <Link
-        to={ROUTES.HOME}
+        to={homeUrl}
+        reloadDocument
         className={`font-display text-lg font-semibold tracking-widest transition-colors duration-300 ${
           isTransparent ? "text-white" : "text-charcoal"
         }`}
@@ -79,7 +82,8 @@ export default function Navbar() {
         {NAV_LINKS.map(({ to, key, end }) => (
           <NavLink
             key={to}
-            to={to}
+            to={to === ROUTES.HOME ? homeUrl : to}
+            reloadDocument={to === ROUTES.HOME}
             end={end}
             className={({ isActive }) =>
               `px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
@@ -100,10 +104,12 @@ export default function Navbar() {
 
       <div className="flex-1" />
 
+      {/* Language links are available in the initial HTML, before auth resolves. */}
+      <LanguageSwitcher className="mr-3" transparent={isTransparent} />
+
       {/* Desktop auth area */}
       {!loading && (
         <div className="hidden lg:flex items-center gap-3">
-          <LanguageSwitcher transparent={isTransparent} />
           {user && isClient && <NotificationBell transparent={isTransparent} />}
           {!user ? (
             <>
@@ -153,7 +159,8 @@ export default function Navbar() {
               {NAV_LINKS.map(({ to, key, end }) => (
                 <NavLink
                   key={to}
-                  to={to}
+                  to={to === ROUTES.HOME ? homeUrl : to}
+                  reloadDocument={to === ROUTES.HOME}
                   end={end}
                   onClick={() => setMobileOpen(false)}
                   className={({ isActive }) =>

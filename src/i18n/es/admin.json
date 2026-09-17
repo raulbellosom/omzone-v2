@@ -2005,6 +2005,35 @@
       "copyFiscalData": "Copiar datos fiscales",
       "copiedFiscalData": "¡Copiado!",
       "viewOrder": "Ver orden en el admin"
+    },
+    "homeContent": {
+      "title": "Home / Hero",
+      "intro": "Edita el mensaje principal y los metadatos de búsqueda en inglés y español. Al guardar se publican ambas pestañas juntas.",
+      "content": "Contenido",
+      "seo": "SEO",
+      "heroTitle": "Título principal",
+      "heroDescription": "Descripción",
+      "seoTitle": "Título SEO",
+      "seoDescription": "Meta description",
+      "publish": "Guardar y publicar",
+      "reload": "Recargar contenido publicado",
+      "view": "Ver Home",
+      "updated": "Última publicación",
+      "unsaved": "Tienes cambios sin publicar.",
+      "saved": "Contenido publicado. Las nuevas visitas mostrarán el contenido actualizado.",
+      "saveError": "No se pudo guardar o recargar. Tus cambios se han conservado.",
+      "loadError": "No se pudo cargar el contenido de Home. Revisa la conexión y que se haya inicializado el contenido.",
+      "loading": "Cargando contenido de Home…",
+      "retry": "Reintentar",
+      "leave": "¿Salir sin guardar tus cambios?",
+      "required": "Este campo es obligatorio.",
+      "tooLong": "El texto supera la longitud permitida.",
+      "invalidImage": "Selecciona una imagen de la biblioteca multimedia pública.",
+      "preview": "Vista previa de búsqueda (la apariencia puede variar)",
+      "image": "Imagen para compartir",
+      "imageHint": "Opcional y compartida por ambos idiomas. Sin selección se utiliza la imagen predeterminada de Home.",
+      "defaultImage": "Imagen predeterminada para compartir Home",
+      "slidesHint": "Las imágenes y leyendas del carrusel tienen sus propios controles de guardado. Editar slides no publica cambios del texto principal."
     }
   }
 }

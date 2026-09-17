@@ -16,8 +16,9 @@ import {
 import { useLanguage } from "@/hooks/useLanguage";
 import { getErrorMessage } from "@/lib/errors";
 import { auditAction, diffFields } from "@/lib/audit";
+import HomeContentEditor from "@/components/admin/home/HomeContentEditor";
 
-export default function HeroSlidesPage() {
+function HeroSlidesManager() {
   const { t } = useLanguage();
   const { data: slides, loading, error, refetch } = useAdminHeroSlides();
 
@@ -155,9 +156,9 @@ export default function HeroSlidesPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div className="space-y-1">
-          <h1 className="text-2xl font-display font-semibold text-charcoal">
+          <h2 className="text-xl font-display font-semibold text-charcoal">
             {t("admin.heroSlides.pageTitle")}
-          </h1>
+          </h2>
           <p className="text-sm text-charcoal-subtle max-w-2xl">
             {t("admin.heroSlides.pageDescription")}
           </p>
@@ -256,4 +257,8 @@ export default function HeroSlidesPage() {
       )}
     </div>
   );
+}
+
+export default function HeroSlidesPage() {
+  return <HomeContentEditor><HeroSlidesManager /></HomeContentEditor>;
 }

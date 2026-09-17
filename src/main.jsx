@@ -1,14 +1,11 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthProvider } from "@/contexts/AuthContext";
-import { LanguageProvider } from "@/contexts/LanguageContext";
-import AppUpdateBanner from "@/components/common/AppUpdateBanner";
+import { Fragment, StrictMode } from "react";
+import { createRoot, hydrateRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import AppProviders from "@/AppProviders";
+import RouteErrorFallback from "@/components/common/RouteErrorFallback";
+import env from "@/config/env";
 import { captureError } from "@/lib/audit";
 
-import App from "@/App";
 import "@/styles/globals.css";
 
 // ── Global error capture ───────────────────────────────────────────────────
@@ -27,29 +24,31 @@ if (typeof window !== "undefined") {
   });
 }
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000,
-      refetchOnWindowFocus: false,
-      retry: 1,
-    },
+const initialData = document.getElementById("omzone-home-data");
+const bootstrap = initialData ? JSON.parse(initialData.textContent) : {
+  config: {
+    siteUrl: window.location.origin,
+    appwriteEndpoint: env.appwriteEndpoint,
+    appwriteProjectId: env.appwriteProjectId,
+    noindex: window.location.origin !== "https://omzone.com",
   },
-});
-
-createRoot(document.getElementById("root")).render(
+};
+// A data router enables the editor's navigation blocker, including Back/Forward.
+// Existing route declarations stay in App; public SSR still uses StaticRouter.
+const router = createBrowserRouter([{
+  path: "*", element: <AppProviders Router={Fragment} bootstrap={bootstrap} />,
+  errorElement: <RouteErrorFallback />,
+}]);
+const app = (
   <StrictMode>
-    <HelmetProvider>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <LanguageProvider>
-            <AuthProvider>
-              <App />
-              <AppUpdateBanner />
-            </AuthProvider>
-          </LanguageProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
-    </HelmetProvider>
-  </StrictMode>,
+    <RouterProvider router={router} />
+  </StrictMode>
 );
+const root = document.getElementById("root");
+if (initialData) hydrateRoot(root, app);
+else {
+  // React 19 owns metadata after mount. Remove the static fallback to avoid
+  // duplicate descriptions/canonicals on the Appwrite Sites preview too.
+  document.head.querySelectorAll('title, meta[name="description"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"], link[rel="canonical"], link[rel="alternate"]').forEach((tag) => tag.remove());
+  createRoot(root).render(app);
+}

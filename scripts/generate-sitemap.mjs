@@ -10,7 +10,8 @@
  *   export APPWRITE_API_KEY=$(grep APPWRITE_API_KEY .env | cut -d= -f2)
  *   node scripts/generate-sitemap.mjs
  *
- * Runs automatically via the "build" npm script.
+ * Run explicitly when publishing experiences/publications; regular builds copy
+ * the existing sitemap. Home text edits do not need a sitemap rebuild.
  */
 
 import { Client, Databases, Query } from "node-appwrite";
@@ -39,6 +40,7 @@ if (!API_KEY) {
 
 const STATIC_PAGES = [
   { loc: "/", changefreq: "weekly", priority: "1.0" },
+  { loc: "/es", changefreq: "weekly", priority: "1.0" },
   { loc: "/experiences", changefreq: "daily", priority: "0.9" },
   { loc: "/about", changefreq: "monthly", priority: "0.5" },
   { loc: "/contact", changefreq: "monthly", priority: "0.5" },

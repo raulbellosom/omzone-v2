@@ -5,6 +5,8 @@ import {
   useCallback,
   useMemo,
 } from "react";
+import { useLocation } from "react-router-dom";
+import { homeLanguage } from "@/lib/homeContent";
 
 // EN partitions
 import enCommon from "@/i18n/en/common.json";
@@ -44,7 +46,10 @@ function resolve(obj, path) {
 }
 
 export function LanguageProvider({ children }) {
-  const [language, setLanguageState] = useState(() => {
+  const { pathname } = useLocation();
+  const routeLanguage = homeLanguage(pathname);
+  const [preference, setLanguageState] = useState(() => {
+    if (routeLanguage) return routeLanguage;
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored && VALID_LANGS.includes(stored)) return stored;
@@ -53,9 +58,11 @@ export function LanguageProvider({ children }) {
     }
     return DEFAULT_LANG;
   });
+  const language = routeLanguage || preference;
 
   // Persist to localStorage on change
   useEffect(() => {
+    document.documentElement.lang = language;
     try {
       localStorage.setItem(STORAGE_KEY, language);
     } catch {

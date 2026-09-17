@@ -1,3 +1,4 @@
+import { homePath } from "@/lib/homeContent";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -13,7 +14,7 @@ export default function VerifyEmailPendingPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { resendVerificationWithCredentials } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const email = location.state?.email || "";
   const vpRef = useRef(location.state?._vp || "");
   const verificationFailed = location.state?.verificationFailed || false;
@@ -63,7 +64,7 @@ export default function VerifyEmailPendingPage() {
       <div className="mx-auto max-w-md animate-fade-in-up">
         {/* Brand */}
         <div className="text-center mb-8">
-          <Link to={ROUTES.HOME} className="inline-block">
+          <Link to={homePath(language)} reloadDocument className="inline-block">
             <span className="font-display text-3xl font-bold text-white tracking-widest">
               OMZONE
             </span>

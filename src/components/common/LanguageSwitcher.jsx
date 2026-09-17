@@ -1,5 +1,7 @@
 import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
+import { useLocation } from "react-router-dom";
+import { homeLanguage, homePath } from "@/lib/homeContent";
 
 const LANGS = [
   { code: "en", label: "EN" },
@@ -8,6 +10,7 @@ const LANGS = [
 
 export default function LanguageSwitcher({ className, transparent = false }) {
   const { language, setLanguage } = useLanguage();
+  const onHome = !!homeLanguage(useLocation().pathname);
 
   return (
     <div
@@ -21,10 +24,13 @@ export default function LanguageSwitcher({ className, transparent = false }) {
       role="radiogroup"
       aria-label="Language"
     >
-      {LANGS.map(({ code, label }) => (
-        <button
+      {LANGS.map(({ code, label }) => {
+        const Tag = onHome ? "a" : "button";
+        return (
+        <Tag
           key={code}
-          type="button"
+          type={onHome ? undefined : "button"}
+          href={onHome ? homePath(code) : undefined}
           role="radio"
           aria-checked={language === code}
           onClick={() => setLanguage(code)}
@@ -40,8 +46,9 @@ export default function LanguageSwitcher({ className, transparent = false }) {
           )}
         >
           {label}
-        </button>
-      ))}
+        </Tag>
+        );
+      })}
     </div>
   );
 }

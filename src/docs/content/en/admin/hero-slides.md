@@ -3,7 +3,7 @@ title: Hero Slides
 description: How to manage the hero carousel on the OMZONE landing page from the admin panel
 section: admin
 order: 18
-lastUpdated: 2026-05-25
+lastUpdated: 2026-09-16
 ---
 
 # Hero Slides
@@ -19,6 +19,16 @@ In the sidebar go to **Content → Hero Slides**.
 ---
 
 ## The slides list
+
+The **Home / Hero** screen has two tabs. **Content** edits the main heading and description in English and Spanish, with the existing carousel below. **SEO** edits the search title and meta description in both languages, plus an optional sharing image.
+
+Complete both languages and choose **Save and publish**. This saves all text fields across both tabs together; carousel actions have separate save controls. Failed saves preserve your changes. **Reload published content** restores the latest stored version and asks before discarding unsaved edits.
+
+English Home lives at `/` and Spanish Home at `/es`. Once the production renderer is activated, new visits receive published content and metadata in the initial HTML without rebuilding. Existing tabs update on reload. Search engines may take time to update their results; the SEO preview is illustrative.
+
+Only administrators can publish. Avoid simultaneous edits: the last successful save wins. The SEO title automatically appends OMZONE, so you do not need to add the brand at the end.
+
+### Carousel
 
 The list shows all slides in their current display order. The number at the left of each card represents its position in the carousel — slide 1 is shown first.
 

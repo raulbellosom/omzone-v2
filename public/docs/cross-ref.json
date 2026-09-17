@@ -2205,6 +2205,10 @@
       {
         "slug": "agenda-y-horarios",
         "title": "Agenda & schedules"
+      },
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
       }
     ]
   },
@@ -51077,6 +51081,10 @@
         "title": "Experiences"
       },
       {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      },
+      {
         "slug": "precios",
         "title": "Pricing"
       },
@@ -64933,6 +64941,15 @@
     ]
   },
   {
+    "term": "/es",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
     "term": "/experiences",
     "pages": [
       {
@@ -64974,6 +64991,71 @@
   },
   {
     "term": "content → hero slides",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "home / hero",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "content",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      },
+      {
+        "slug": "publicaciones",
+        "title": "Publications"
+      },
+      {
+        "slug": "recorrido-del-panel",
+        "title": "Admin panel tour"
+      },
+      {
+        "slug": "ayuda-y-faq",
+        "title": "Help & FAQ"
+      },
+      {
+        "slug": "estructura-de-la-landing",
+        "title": "How the public site is structured"
+      },
+      {
+        "slug": "archivado-y-eliminacion",
+        "title": "Archiving & Deletion"
+      }
+    ]
+  },
+  {
+    "term": "seo",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "save and publish",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "reload published content",
     "pages": [
       {
         "slug": "hero-slides",
@@ -65238,6 +65320,15 @@
     ]
   },
   {
+    "term": "carousel",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
     "term": "creating a slide",
     "pages": [
       {
@@ -65482,6 +65573,2409 @@
   },
   {
     "term": "hero slides.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "home hero",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "home hero screen",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "home hero screen tabs.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "hero screen",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "hero screen tabs.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "hero screen tabs. content",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "screen tabs.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "screen tabs. content",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "screen tabs. content edits",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tabs. content",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tabs. content edits",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tabs. content edits main",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "content edits",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "content edits main",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "content edits main heading",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "edits main",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "edits main heading",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "edits main heading description",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "main heading",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "main heading description",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "main heading description english",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "heading description",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "heading description english",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "heading description english spanish,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "description english",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "description english spanish,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "description english spanish, existing",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "english spanish,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "english spanish, existing",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "english spanish, existing carousel",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "spanish, existing",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "spanish, existing carousel",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "spanish, existing carousel below.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "existing carousel",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "existing carousel below.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "existing carousel below. edits",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carousel below.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carousel below. edits",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carousel below. edits search",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "below. edits",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "below. edits search",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "below. edits search title",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "edits search",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "edits search title",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "edits search title meta",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "search title",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "search title meta",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "search title meta description",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "title meta",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "title meta description",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "title meta description languages,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "meta description",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "meta description languages,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "meta description languages, plus",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "description languages,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "description languages, plus",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "description languages, plus optional",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "languages, plus",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "languages, plus optional",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "languages, plus optional sharing",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "plus optional",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "plus optional sharing",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "plus optional sharing image.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "optional sharing",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "optional sharing image.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "sharing image.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "complete languages",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "complete languages choose",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "complete languages choose save",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "languages choose",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "languages choose save",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "languages choose save publish.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "choose save",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "choose save publish.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "choose save publish. saves",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "save publish.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "save publish. saves",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "save publish. saves text",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publish. saves",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publish. saves text",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publish. saves text fields",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "saves text",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "saves text fields",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "saves text fields across",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "text fields",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "text fields across",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "text fields across tabs",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "fields across",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "fields across tabs",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "fields across tabs together;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "across tabs",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "across tabs together;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "across tabs together; carousel",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tabs together;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tabs together; carousel",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tabs together; carousel actions",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "together; carousel",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "together; carousel actions",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "together; carousel actions separate",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carousel actions",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carousel actions separate",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carousel actions separate save",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "actions separate",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "actions separate save",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "actions separate save controls.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "separate save",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "separate save controls.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "separate save controls. failed",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "save controls.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "save controls. failed",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "save controls. failed saves",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "controls. failed",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "controls. failed saves",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "controls. failed saves preserve",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "failed saves",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "failed saves preserve",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "failed saves preserve changes.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "saves preserve",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "saves preserve changes.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "saves preserve changes. reload",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "preserve changes.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "preserve changes. reload",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "preserve changes. reload published",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "changes. reload",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "changes. reload published",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "changes. reload published content",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "reload published",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "reload published content restores",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "published content",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "published content restores",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "published content restores latest",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "content restores",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "content restores latest",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "content restores latest stored",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "restores latest",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "restores latest stored",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "restores latest stored version",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "latest stored",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "latest stored version",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "latest stored version asks",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "stored version",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "stored version asks",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "stored version asks discarding",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "version asks",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "version asks discarding",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "version asks discarding unsaved",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "asks discarding",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "asks discarding unsaved",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "asks discarding unsaved edits.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "discarding unsaved",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "discarding unsaved edits.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "unsaved edits.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "english home",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "english home lives",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "english home lives spanish",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "home lives",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "home lives spanish",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "home lives spanish home",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "lives spanish",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "lives spanish home",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "lives spanish home production",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "spanish home",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "spanish home production",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "spanish home production renderer",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "home production",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "home production renderer",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "home production renderer activated,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "production renderer",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "production renderer activated,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "production renderer activated, visits",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "renderer activated,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "renderer activated, visits",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "renderer activated, visits receive",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "activated, visits",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "activated, visits receive",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "activated, visits receive published",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "visits receive",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "visits receive published",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "visits receive published content",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "receive published",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "receive published content",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "receive published content metadata",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "published content metadata",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "published content metadata initial",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "content metadata",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "content metadata initial",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "content metadata initial html",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "metadata initial",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "metadata initial html",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "metadata initial html without",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "initial html",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "initial html without",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "initial html without rebuilding.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "html without",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "html without rebuilding.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "html without rebuilding. existing",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "without rebuilding.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "without rebuilding. existing",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "without rebuilding. existing tabs",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "rebuilding. existing",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "rebuilding. existing tabs",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "rebuilding. existing tabs update",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "existing tabs",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "existing tabs update",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "existing tabs update reload.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tabs update",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tabs update reload.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tabs update reload. search",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "update reload.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "update reload. search",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "update reload. search engines",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "reload. search",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "reload. search engines",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "reload. search engines time",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "search engines",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "search engines time",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "search engines time update",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "engines time",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "engines time update",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "engines time update results;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "time update results;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "time update results; preview",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "update results;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "update results; preview",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "update results; preview illustrative.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "results; preview",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "results; preview illustrative.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "preview illustrative.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "administrators publish.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "administrators publish. avoid",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "administrators publish. avoid simultaneous",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publish. avoid",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publish. avoid simultaneous",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publish. avoid simultaneous edits:",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "avoid simultaneous",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "avoid simultaneous edits:",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "avoid simultaneous edits: last",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "simultaneous edits:",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "simultaneous edits: last",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "simultaneous edits: last successful",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "edits: last",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "edits: last successful",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "edits: last successful save",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "last successful",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "last successful save",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "last successful save wins.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "successful save",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "successful save wins.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "successful save wins. title",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "save wins.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "save wins. title",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "save wins. title automatically",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "wins. title",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "wins. title automatically",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "wins. title automatically appends",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "title automatically",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "title automatically appends",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "title automatically appends omzone,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "automatically appends",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "automatically appends omzone,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "automatically appends omzone, brand",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "appends omzone,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "appends omzone, brand",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "appends omzone, brand end.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "omzone, brand",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "omzone, brand end.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "brand end.",
     "pages": [
       {
         "slug": "hero-slides",
@@ -67902,6 +70396,49 @@
     ]
   },
   {
+    "term": "contenido",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      },
+      {
+        "slug": "publicaciones",
+        "title": "Publications"
+      },
+      {
+        "slug": "recorrido-del-panel",
+        "title": "Admin panel tour"
+      },
+      {
+        "slug": "ayuda-y-faq",
+        "title": "Help & FAQ"
+      },
+      {
+        "slug": "archivado-y-eliminacion",
+        "title": "Archiving & Deletion"
+      }
+    ]
+  },
+  {
+    "term": "guardar y publicar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "recargar contenido publicado",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
     "term": "reordenar",
     "pages": [
       {
@@ -68030,6 +70567,15 @@
   },
   {
     "term": "la lista de slides",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carrusel",
     "pages": [
       {
         "slug": "hero-slides",
@@ -68290,6 +70836,2771 @@
   },
   {
     "term": "slides hero.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pantalla home",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pantalla home hero",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pantalla home hero tiene",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "home hero tiene",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "home hero tiene pestañas.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "hero tiene",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "hero tiene pestañas.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "hero tiene pestañas. contenido",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tiene pestañas.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tiene pestañas. contenido",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tiene pestañas. contenido permite",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pestañas. contenido",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pestañas. contenido permite",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pestañas. contenido permite editar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "contenido permite",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "contenido permite editar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "contenido permite editar título",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "permite editar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "permite editar título",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "permite editar título principal",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "editar título",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "editar título principal",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "editar título principal descripción",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "título principal",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      },
+      {
+        "slug": "publicaciones",
+        "title": "Publications"
+      }
+    ]
+  },
+  {
+    "term": "título principal descripción",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "título principal descripción inglés",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "principal descripción",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "principal descripción inglés",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "principal descripción inglés español;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "descripción inglés",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "descripción inglés español;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "descripción inglés español; debajo",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "inglés español;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "inglés español; debajo",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "inglés español; debajo conserva",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "español; debajo",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "español; debajo conserva",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "español; debajo conserva carrusel.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "debajo conserva",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "debajo conserva carrusel.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "debajo conserva carrusel. permite",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "conserva carrusel.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "conserva carrusel. permite",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "conserva carrusel. permite editar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carrusel. permite",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carrusel. permite editar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carrusel. permite editar título",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "permite editar título meta",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "editar título meta",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "editar título meta description",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "título meta",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "título meta description",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "título meta description ambos",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "meta description ambos",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "meta description ambos idiomas,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "description ambos",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "description ambos idiomas,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "description ambos idiomas, además",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "ambos idiomas,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "ambos idiomas, además",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "ambos idiomas, además imagen",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "idiomas, además",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "idiomas, además imagen",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "idiomas, además imagen opcional",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "además imagen",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "además imagen opcional",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "además imagen opcional para",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "imagen opcional",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "imagen opcional para",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "imagen opcional para compartir.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "opcional para",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      },
+      {
+        "slug": "archivado-y-eliminacion",
+        "title": "Archiving & Deletion"
+      }
+    ]
+  },
+  {
+    "term": "opcional para compartir.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "para compartir.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "completa ambos",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "completa ambos idiomas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "completa ambos idiomas pulsa",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "ambos idiomas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      },
+      {
+        "slug": "email-templates",
+        "title": "Email Templates"
+      }
+    ]
+  },
+  {
+    "term": "ambos idiomas pulsa",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "ambos idiomas pulsa guardar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "idiomas pulsa",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "idiomas pulsa guardar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "idiomas pulsa guardar publicar.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pulsa guardar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pulsa guardar publicar.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pulsa guardar publicar. botón",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "guardar publicar.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "guardar publicar. botón",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "guardar publicar. botón guarda",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publicar. botón",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publicar. botón guarda",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publicar. botón guarda conjuntamente",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "botón guarda",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "botón guarda conjuntamente",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "botón guarda conjuntamente textos",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "guarda conjuntamente",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "guarda conjuntamente textos",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "guarda conjuntamente textos pestañas;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "conjuntamente textos",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "conjuntamente textos pestañas;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "conjuntamente textos pestañas; acciones",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "textos pestañas;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "textos pestañas; acciones",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "textos pestañas; acciones carrusel",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pestañas; acciones",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pestañas; acciones carrusel",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pestañas; acciones carrusel tienen",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "acciones carrusel",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "acciones carrusel tienen",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "acciones carrusel tienen propio",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carrusel tienen",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carrusel tienen propio",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carrusel tienen propio guardado.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tienen propio",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tienen propio guardado.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tienen propio guardado. falla",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "propio guardado.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "propio guardado. falla",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "propio guardado. falla publicación",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "guardado. falla",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "guardado. falla publicación",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "guardado. falla publicación conservan",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "falla publicación",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "falla publicación conservan",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "falla publicación conservan cambios.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publicación conservan",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publicación conservan cambios.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publicación conservan cambios. puedes",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "conservan cambios.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "conservan cambios. puedes",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "conservan cambios. puedes usar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "cambios. puedes",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "cambios. puedes usar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "cambios. puedes usar recargar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "puedes usar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      },
+      {
+        "slug": "multimedia",
+        "title": "Media"
+      }
+    ]
+  },
+  {
+    "term": "puedes usar recargar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "puedes usar recargar contenido",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "usar recargar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "usar recargar contenido",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "usar recargar contenido publicado",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "recargar contenido",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "recargar contenido publicado para",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "contenido publicado",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "contenido publicado para",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "contenido publicado para recuperar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publicado para",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publicado para recuperar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publicado para recuperar versión",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "para recuperar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "para recuperar versión",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "para recuperar versión almacenada;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "recuperar versión",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "recuperar versión almacenada;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "recuperar versión almacenada; solicita",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "versión almacenada;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "versión almacenada; solicita",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "versión almacenada; solicita confirmación",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "almacenada; solicita",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "almacenada; solicita confirmación",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "almacenada; solicita confirmación tienes",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "solicita confirmación",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "solicita confirmación tienes",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "solicita confirmación tienes cambios",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "confirmación tienes",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "confirmación tienes cambios",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "confirmación tienes cambios pendientes.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tienes cambios",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tienes cambios pendientes.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "cambios pendientes.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "home inglés",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "home inglés está",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "home inglés está española",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "inglés está",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "inglés está española",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "inglés está española activado",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "está española",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "está española activado",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "está española activado renderer",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "española activado",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "española activado renderer",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "española activado renderer producción,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "activado renderer",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "activado renderer producción,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "activado renderer producción, nuevas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "renderer producción,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "renderer producción, nuevas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "renderer producción, nuevas visitas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "producción, nuevas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "producción, nuevas visitas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "producción, nuevas visitas reciben",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "nuevas visitas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "nuevas visitas reciben",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "nuevas visitas reciben textos",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "visitas reciben",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "visitas reciben textos",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "visitas reciben textos metadatos",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "reciben textos",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "reciben textos metadatos",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "reciben textos metadatos publicados",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "textos metadatos",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "textos metadatos publicados",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "textos metadatos publicados html",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "metadatos publicados",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "metadatos publicados html",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "metadatos publicados html inicial,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publicados html",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publicados html inicial,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publicados html inicial, necesidad",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "html inicial,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "html inicial, necesidad",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "html inicial, necesidad recompilar.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "inicial, necesidad",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "inicial, necesidad recompilar.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "inicial, necesidad recompilar. pestañas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "necesidad recompilar.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "necesidad recompilar. pestañas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "necesidad recompilar. pestañas abiertas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "recompilar. pestañas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "recompilar. pestañas abiertas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "recompilar. pestañas abiertas actualizan",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pestañas abiertas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pestañas abiertas actualizan",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pestañas abiertas actualizan recargar.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "abiertas actualizan",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "abiertas actualizan recargar.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "abiertas actualizan recargar. actualización",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "actualizan recargar.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "actualizan recargar. actualización",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "actualizan recargar. actualización resultados",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "recargar. actualización",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "recargar. actualización resultados",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "recargar. actualización resultados buscadores",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "actualización resultados",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "actualización resultados buscadores",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "actualización resultados buscadores puede",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "resultados buscadores",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "resultados buscadores puede",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "resultados buscadores puede tardar;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "buscadores puede",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "buscadores puede tardar;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "buscadores puede tardar; vista",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "puede tardar;",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "puede tardar; vista",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "puede tardar; vista previa",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tardar; vista",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tardar; vista previa",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tardar; vista previa orientativa.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "vista previa",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      },
+      {
+        "slug": "publicaciones",
+        "title": "Publications"
+      }
+    ]
+  },
+  {
+    "term": "vista previa orientativa.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "previa orientativa.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "solo administradores",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "solo administradores pueden",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "solo administradores pueden publicar.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "administradores pueden",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "administradores pueden publicar.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "administradores pueden publicar. evita",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pueden publicar.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pueden publicar. evita",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pueden publicar. evita editar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publicar. evita",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publicar. evita editar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "publicar. evita editar mismo",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "evita editar",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "evita editar mismo",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "evita editar mismo tiempo",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "editar mismo",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "editar mismo tiempo",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "editar mismo tiempo otro",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "mismo tiempo otro",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "mismo tiempo otro administrador:",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tiempo otro",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tiempo otro administrador:",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tiempo otro administrador: guardado",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "otro administrador:",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "otro administrador: guardado",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "otro administrador: guardado exitoso",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "administrador: guardado",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "administrador: guardado exitoso",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "administrador: guardado exitoso prevalece.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "guardado exitoso",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "guardado exitoso prevalece.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "guardado exitoso prevalece. título",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "exitoso prevalece.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "exitoso prevalece. título",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "exitoso prevalece. título añade",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "prevalece. título",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "prevalece. título añade",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "prevalece. título añade automáticamente",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "título añade",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "título añade automáticamente",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "título añade automáticamente marca",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "añade automáticamente",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "añade automáticamente marca",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "añade automáticamente marca omzone,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "automáticamente marca",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "automáticamente marca omzone,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "automáticamente marca omzone, necesitas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "marca omzone,",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "marca omzone, necesitas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "marca omzone, necesitas escribirla",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "omzone, necesitas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "omzone, necesitas escribirla",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "omzone, necesitas escribirla final.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "necesitas escribirla",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "necesitas escribirla final.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "escribirla final.",
     "pages": [
       {
         "slug": "hero-slides",
@@ -72024,7 +77335,7 @@
     ]
   },
   {
-    "term": "slides. slides list list",
+    "term": "slides. slides list home",
     "pages": [
       {
         "slug": "hero-slides",
@@ -72042,7 +77353,7 @@
     ]
   },
   {
-    "term": "slides list list",
+    "term": "slides list home",
     "pages": [
       {
         "slug": "hero-slides",
@@ -72051,7 +77362,7 @@
     ]
   },
   {
-    "term": "slides list list shows",
+    "term": "slides list home hero",
     "pages": [
       {
         "slug": "hero-slides",
@@ -72060,33 +77371,268 @@
     ]
   },
   {
-    "term": "list list",
+    "term": "list home",
     "pages": [
       {
         "slug": "hero-slides",
         "title": "Hero Slides"
-      },
-      {
-        "slug": "mensajes",
-        "title": "Contact Messages"
       }
     ]
   },
   {
-    "term": "list list shows",
+    "term": "list home hero",
     "pages": [
       {
         "slug": "hero-slides",
         "title": "Hero Slides"
-      },
-      {
-        "slug": "mensajes",
-        "title": "Contact Messages"
       }
     ]
   },
   {
-    "term": "list list shows slides",
+    "term": "list home hero screen",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "optional sharing image. complete",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "sharing image. complete",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "sharing image. complete languages",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "image. complete",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "image. complete languages",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "image. complete languages choose",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "discarding unsaved edits. english",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "unsaved edits. english",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "unsaved edits. english home",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "edits. english",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "edits. english home",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "edits. english home lives",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "results; preview illustrative. administrators",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "preview illustrative. administrators",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "preview illustrative. administrators publish.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "illustrative. administrators",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "illustrative. administrators publish.",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "illustrative. administrators publish. avoid",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "omzone, brand end. carousel",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "brand end. carousel",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "brand end. carousel list",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "end. carousel",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "end. carousel list",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "end. carousel list shows",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carousel list",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carousel list shows",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carousel list shows slides",
     "pages": [
       {
         "slug": "hero-slides",
@@ -75952,19 +81498,6 @@
     ]
   },
   {
-    "term": "opcional para",
-    "pages": [
-      {
-        "slug": "hero-slides",
-        "title": "Hero Slides"
-      },
-      {
-        "slug": "archivado-y-eliminacion",
-        "title": "Archiving & Deletion"
-      }
-    ]
-  },
-  {
     "term": "opcional para solo",
     "pages": [
       {
@@ -76215,7 +81748,7 @@
     ]
   },
   {
-    "term": "hero. lista slides lista",
+    "term": "hero. lista slides pantalla",
     "pages": [
       {
         "slug": "hero-slides",
@@ -76233,7 +81766,7 @@
     ]
   },
   {
-    "term": "lista slides lista",
+    "term": "lista slides pantalla",
     "pages": [
       {
         "slug": "hero-slides",
@@ -76242,7 +81775,7 @@
     ]
   },
   {
-    "term": "lista slides lista muestra",
+    "term": "lista slides pantalla home",
     "pages": [
       {
         "slug": "hero-slides",
@@ -76251,7 +81784,7 @@
     ]
   },
   {
-    "term": "slides lista",
+    "term": "slides pantalla",
     "pages": [
       {
         "slug": "hero-slides",
@@ -76260,7 +81793,7 @@
     ]
   },
   {
-    "term": "slides lista muestra",
+    "term": "slides pantalla home",
     "pages": [
       {
         "slug": "hero-slides",
@@ -76269,7 +81802,250 @@
     ]
   },
   {
-    "term": "slides lista muestra todos",
+    "term": "slides pantalla home hero",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "opcional para compartir. completa",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "para compartir. completa",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "para compartir. completa ambos",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "compartir. completa",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "compartir. completa ambos",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "compartir. completa ambos idiomas",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "tienes cambios pendientes. home",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "cambios pendientes. home",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "cambios pendientes. home inglés",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pendientes. home",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pendientes. home inglés",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "pendientes. home inglés está",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "vista previa orientativa. solo",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "previa orientativa. solo",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "previa orientativa. solo administradores",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "orientativa. solo",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "orientativa. solo administradores",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "orientativa. solo administradores pueden",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "necesitas escribirla final. carrusel",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "escribirla final. carrusel",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "escribirla final. carrusel lista",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "final. carrusel",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "final. carrusel lista",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "final. carrusel lista muestra",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carrusel lista",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carrusel lista muestra",
+    "pages": [
+      {
+        "slug": "hero-slides",
+        "title": "Hero Slides"
+      }
+    ]
+  },
+  {
+    "term": "carrusel lista muestra todos",
     "pages": [
       {
         "slug": "hero-slides",
@@ -88028,6 +93804,24 @@
   },
   {
     "term": "messages list list shows",
+    "pages": [
+      {
+        "slug": "mensajes",
+        "title": "Contact Messages"
+      }
+    ]
+  },
+  {
+    "term": "list list",
+    "pages": [
+      {
+        "slug": "mensajes",
+        "title": "Contact Messages"
+      }
+    ]
+  },
+  {
+    "term": "list list shows",
     "pages": [
       {
         "slug": "mensajes",
@@ -107571,15 +113365,6 @@
   },
   {
     "term": "rápido. puedes usar herramientas",
-    "pages": [
-      {
-        "slug": "multimedia",
-        "title": "Media"
-      }
-    ]
-  },
-  {
-    "term": "puedes usar",
     "pages": [
       {
         "slug": "multimedia",
@@ -160042,31 +165827,6 @@
     ]
   },
   {
-    "term": "content",
-    "pages": [
-      {
-        "slug": "publicaciones",
-        "title": "Publications"
-      },
-      {
-        "slug": "recorrido-del-panel",
-        "title": "Admin panel tour"
-      },
-      {
-        "slug": "ayuda-y-faq",
-        "title": "Help & FAQ"
-      },
-      {
-        "slug": "estructura-de-la-landing",
-        "title": "How the public site is structured"
-      },
-      {
-        "slug": "archivado-y-eliminacion",
-        "title": "Archiving & Deletion"
-      }
-    ]
-  },
-  {
     "term": "publication status",
     "pages": [
       {
@@ -164256,27 +170016,6 @@
       {
         "slug": "secciones-y-bloques",
         "title": "Sections & blocks"
-      }
-    ]
-  },
-  {
-    "term": "contenido",
-    "pages": [
-      {
-        "slug": "publicaciones",
-        "title": "Publications"
-      },
-      {
-        "slug": "recorrido-del-panel",
-        "title": "Admin panel tour"
-      },
-      {
-        "slug": "ayuda-y-faq",
-        "title": "Help & FAQ"
-      },
-      {
-        "slug": "archivado-y-eliminacion",
-        "title": "Archiving & Deletion"
       }
     ]
   },
@@ -179678,15 +185417,6 @@
     ]
   },
   {
-    "term": "título principal",
-    "pages": [
-      {
-        "slug": "publicaciones",
-        "title": "Publications"
-      }
-    ]
-  },
-  {
     "term": "título principal necesitas).",
     "pages": [
       {
@@ -180120,15 +185850,6 @@
   },
   {
     "term": "imagen vista previa imagen",
-    "pages": [
-      {
-        "slug": "publicaciones",
-        "title": "Publications"
-      }
-    ]
-  },
-  {
-    "term": "vista previa",
     "pages": [
       {
         "slug": "publicaciones",
@@ -481551,15 +487272,6 @@
   },
   {
     "term": "siempre estilos en línea",
-    "pages": [
-      {
-        "slug": "email-templates",
-        "title": "Email Templates"
-      }
-    ]
-  },
-  {
-    "term": "ambos idiomas",
     "pages": [
       {
         "slug": "email-templates",

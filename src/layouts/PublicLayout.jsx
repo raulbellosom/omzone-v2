@@ -6,6 +6,9 @@ import { useLanguage } from "@/hooks/useLanguage";
 import env from "@/config/env";
 import { ROUTES } from "@/constants/routes";
 import isHeroRoute from "@/lib/heroRoutes";
+import { useContext } from "react";
+import { HomeContentContext } from "@/contexts/HomeContentContext";
+import { homePath } from "@/lib/homeContent";
 
 const ORGANIZATION_SCHEMA = {
   "@context": "https://schema.org",
@@ -33,12 +36,13 @@ const ORGANIZATION_SCHEMA = {
 
 export default function PublicLayout() {
   const location = useLocation();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const { config } = useContext(HomeContentContext);
   const heroPage = isHeroRoute(location.pathname);
 
   return (
     <div className="min-h-screen flex flex-col bg-cream">
-      <StructuredData data={ORGANIZATION_SCHEMA} />
+      <StructuredData data={{ ...ORGANIZATION_SCHEMA, url: config.siteUrl, logo: `${config.siteUrl}/logo.png` }} />
       <Navbar />
 
       <main className={heroPage ? "flex-1" : "flex-1 pt-20"}>
@@ -53,7 +57,8 @@ export default function PublicLayout() {
             {/* Brand */}
             <div className="sm:col-span-2 lg:col-span-1">
               <Link
-                to={ROUTES.HOME}
+                to={homePath(language)}
+                reloadDocument
                 className="font-display text-xl font-bold text-charcoal tracking-widest"
               >
                 OMZONE

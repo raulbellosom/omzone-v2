@@ -1,4 +1,5 @@
 const env = {
+  collectionHomeContent: import.meta.env.VITE_APPWRITE_COLLECTION_HOME_CONTENT || "home_content",
   // ─── Site ───
   siteUrl: import.meta.env.VITE_SITE_URL || "https://omzone.com",
   siteName: "OMZONE",
