@@ -4,16 +4,20 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { Card } from "@/components/common/Card";
 import TemplateEditor from "@/components/admin/settings/TemplateEditor";
 import SystemInfoPanel from "@/components/admin/settings/SystemInfoPanel";
-import { Mail, Settings, Bell, Loader2, Clock } from "lucide-react";
+import { Mail, Settings, Bell, Loader2, Clock, ShieldCheck } from "lucide-react";
 import { auditAction } from "@/lib/audit";
 import CheckInWindowPanel from "@/components/admin/settings/CheckInWindowPanel";
+import RootControlsPanel from "@/components/admin/settings/RootControlsPanel";
+import { useAuth } from "@/hooks/useAuth";
+import { ROLES } from "@/constants/roles";
 
-const SECTION_TABS = ["templates", "checkin", "system"];
+const SECTION_TABS = ["templates", "checkin", "system", "root"];
 
 const TAB_META = {
   templates: { icon: Bell, labelKey: "admin.settings.notificationTemplates" },
   checkin: { icon: Clock, labelKey: "admin.settings.checkinTab" },
   system: { icon: Settings, labelKey: "admin.settings.systemInfo" },
+  root: { icon: ShieldCheck, labelKey: "admin.settings.rootTab" },
 };
 
 function TemplateBadge({ type }) {
@@ -42,6 +46,8 @@ function ActiveDot({ active }) {
 
 export default function SettingsPage() {
   const { t } = useLanguage();
+  const { labels } = useAuth();
+  const isRoot = labels.includes(ROLES.ROOT);
   const { templates, loading, error, updateTemplate } =
     useNotificationTemplates();
 
@@ -71,7 +77,7 @@ export default function SettingsPage() {
 
       {/* Section tabs */}
       <div className="flex gap-1 border-b border-sand-dark/30">
-        {SECTION_TABS.map((tab) => {
+        {SECTION_TABS.filter((tab) => tab !== "root" || isRoot).map((tab) => {
           const { icon: Icon, labelKey } = TAB_META[tab];
           return (
             <button
@@ -209,6 +215,9 @@ export default function SettingsPage() {
 
       {/* System info section */}
       {activeTab === "system" && <SystemInfoPanel />}
+
+      {/* Root-only controls */}
+      {activeTab === "root" && isRoot && <RootControlsPanel />}
     </div>
   );
 }

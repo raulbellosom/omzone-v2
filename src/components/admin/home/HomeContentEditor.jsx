@@ -7,6 +7,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { HOME_BUCKETS, readHomeContent, saveHomeContent } from "@/hooks/useHomeContent";
 import { HOME_FIELDS, normalizeHomeContent, validateHomeContent } from "@/lib/homeContent";
 import { auditAction, diffFields } from "@/lib/audit";
+import { useSeoAccess } from "@/hooks/useSeoAccess";
 import env from "@/config/env";
 
 export default function HomeContentEditor({ children }) {
@@ -36,6 +37,7 @@ export default function HomeContentEditor({ children }) {
 function Editor({ record, onSaved, children }) {
   const { t } = useLanguage();
   const [form, setForm] = useState(() => normalizeHomeContent(record));
+  const { canEditSeo } = useSeoAccess();
   const [tab, setTab] = useState("content");
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
@@ -74,7 +76,7 @@ function Editor({ record, onSaved, children }) {
     setErrors(validation.errors);
     if (!validation.valid) {
       const first = Object.keys(validation.errors)[0];
-      setTab(first.startsWith("hero") ? "content" : "seo");
+      setTab(first.startsWith("hero") || !canEditSeo ? "content" : "seo");
       requestAnimationFrame(() => document.getElementById(`home-${first}`)?.focus());
       return;
     }
@@ -96,11 +98,13 @@ function Editor({ record, onSaved, children }) {
     }
   }
 
-  const tabKeys = ["content", "seo"];
+  // Non-root admins only get the SEO tab when root enabled the flag.
+  const tabKeys = canEditSeo ? ["content", "seo"] : ["content"];
+  const activeTab = tabKeys.includes(tab) ? tab : "content";
   function tabKeyDown(event, index) {
     if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
     event.preventDefault();
-    const next = event.key === "Home" ? 0 : event.key === "End" ? 1 : 1 - index;
+    const next = event.key === "Home" ? 0 : event.key === "End" ? tabKeys.length - 1 : (index + 1) % tabKeys.length;
     setTab(tabKeys[next]);
     document.getElementById(`home-tab-${tabKeys[next]}`)?.focus();
   }
@@ -113,17 +117,17 @@ function Editor({ record, onSaved, children }) {
       </div>
       <div role="tablist" aria-label={tr("title")} className="flex gap-1 border-b border-sand-dark">
         {tabKeys.map((key, index) => (
-          <button key={key} id={`home-tab-${key}`} role="tab" type="button" aria-selected={tab === key}
-            aria-controls={`home-panel-${key}`} tabIndex={tab === key ? 0 : -1}
+          <button key={key} id={`home-tab-${key}`} role="tab" type="button" aria-selected={activeTab === key}
+            aria-controls={`home-panel-${key}`} tabIndex={activeTab === key ? 0 : -1}
             onKeyDown={(event) => tabKeyDown(event, index)} onClick={() => setTab(key)}
-            className={`px-5 py-3 text-sm font-medium border-b-2 ${tab === key ? "border-sage text-sage" : "border-transparent text-charcoal-muted"}`}>
+            className={`px-5 py-3 text-sm font-medium border-b-2 ${activeTab === key ? "border-sage text-sage" : "border-transparent text-charcoal-muted"}`}>
             {tr(key)}
           </button>
         ))}
       </div>
       <form onSubmit={publish} noValidate className="space-y-5">
         {tabKeys.map((key) => (
-          <section key={key} id={`home-panel-${key}`} role="tabpanel" aria-labelledby={`home-tab-${key}`} hidden={tab !== key}>
+          <section key={key} id={`home-panel-${key}`} role="tabpanel" aria-labelledby={`home-tab-${key}`} hidden={activeTab !== key}>
             <div className="grid gap-5 lg:grid-cols-2">
               {["en", "es"].map((locale) => (
                 <Card key={locale} className="p-5 space-y-5">
@@ -184,7 +188,7 @@ function Editor({ record, onSaved, children }) {
           {failed && <p role="alert" className="text-sm text-red-600">{tr("saveError")}</p>}
         </div>
       </form>
-      <section hidden={tab !== "content"} className="border-t border-sand-dark pt-6">
+      <section hidden={activeTab !== "content"} className="border-t border-sand-dark pt-6">
         <p className="mb-4 text-sm text-charcoal-muted">{tr("slidesHint")}</p>
         {children}
       </section>
