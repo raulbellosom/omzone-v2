@@ -45,4 +45,4 @@ temp/
 *.txt
 
 # Git worktrees (superpowers)
-.worktrees/
+.worktrees/planymaps_overwritten_backup_*/
