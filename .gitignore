@@ -46,3 +46,4 @@ temp/
 
 # Git worktrees (superpowers)
 .worktrees/planymaps_overwritten_backup_*/
+planymaps_overwritten_backup_*/
